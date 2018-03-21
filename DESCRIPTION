@@ -1,9 +1,11 @@
 Package: igvShiny
-Title: What the Package Does (one line, title case)
-Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Title: igvShiny
+Version: 0.99.2
+Date: 2018-03-21
+Author: Paul Shannon
+Maintainer: Paul Shannon <pshannon@systemsbiology.org>
+Description: igv.js as a shiny widget
 Depends: R (>= 3.4.2)
-License: What license is it under?
+License: MIT
 Encoding: UTF-8
 LazyData: true

@@ -1,7 +1,12 @@
-# (uncomment to add a dependency)
-# dependencies:
-#  - name:
-#    version:
-#    src:
-#    script:
-#    stylesheet:
+dependencies:
+  - name: igv
+    version: 1.0.10
+    src: htmlwidgets
+    script: ./lib/igv.js
+    stylesheet: ./lib/igv.css
+  - name: fontawesome
+    version: 4.2.0
+    src: htmlwidgets
+    stylesheet: ./lib/font-awesome.min.css
+
+
