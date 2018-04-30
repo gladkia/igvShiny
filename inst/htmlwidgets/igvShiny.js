@@ -26,7 +26,7 @@ HTMLWidgets.widget({
                   format: 'gtf',
                   visibilityWindow: 2000000,
                   displayMode: 'EXPANDED',
-                  height: 300
+                  height: 30
                   },
                  ]
               }; // options
