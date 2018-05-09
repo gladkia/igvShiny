@@ -11,7 +11,7 @@ HTMLWidgets.widget({
           console.log("igv.js renderValue, wh: " + width + ", " + height)
           var igvDiv, options;
           igvDiv = el; // $("#igvDiv")[0];
-          options = {locus: "MEF2C",
+          options = {//locus: "MEF2C",
                minimumBases: 5,
                flanking: 1000,
                showRuler: true,
