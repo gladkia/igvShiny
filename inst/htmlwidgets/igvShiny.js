@@ -47,11 +47,10 @@ HTMLWidgets.widget({
                          console.log("--- about to contact Shiny")
                          var message = {id: id, date: Date()};
                          var messageName = "trackClick"
-                          Shiny.onInputChange(messageName, message);
-                         //Shiny.onInputChange("jsValue", {"value": Date() + id});
+                         Shiny.onInputChange(messageName, message);
                          console.log("--- after contacting Shiny")
-                         return "<h4> " + id + "</h4>";
-                         }
+                         //return "<h4> " + id + "</h4>";
+                         } // tfbs-snp
                      } // if a value field
                  } // if just one element
               console.log("click! 810");
