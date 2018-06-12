@@ -1,25 +1,3 @@
-(function () {
-
-    var css =  '.igv-color-swatch {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  width: 24px;\n  height: 24px;\n  border-style: solid;\n  border-width: 1px;\n  border-color: transparent; }\n  .igv-color-swatch i.fa {\n    display: block; }\n  .igv-color-swatch i.fa:hover,\n  .igv-color-swatch i.fa:focus,\n  .igv-color-swatch i.fa:active {\n    cursor: pointer;\n    color: #0f0f0f; }\n\n.igv-color-swatch:hover,\n.igv-color-swatch:focus,\n.igv-color-swatch:active {\n  border-color: #dddddd; }\n\n.igv-colorpicker-menu-close-button {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: flex-end;\n  align-items: center;\n  width: 100%;\n  height: 32px;\n  margin-top: 4px;\n  margin-bottom: 4px;\n  padding-right: 8px; }\n  .igv-colorpicker-menu-close-button i.fa {\n    display: block;\n    margin-left: 4px;\n    margin-right: 4px;\n    color: #5f5f5f; }\n  .igv-colorpicker-menu-close-button i.fa:hover,\n  .igv-colorpicker-menu-close-button i.fa:focus,\n  .igv-colorpicker-menu-close-button i.fa:active {\n    cursor: pointer;\n    color: #0f0f0f; }\n\n.igv-position-absolute {\n  position: absolute;\n  top: 0;\n  left: 0; }\n\n.igv-generic-container {\n  width: 256px;\n  z-index: 5000;\n  background-color: white;\n  border-style: solid;\n  border-width: thin;\n  border-color: #dddddd;\n  cursor: pointer;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: flex-start;\n  align-items: center; }\n  .igv-generic-container div:first-child {\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-end;\n    align-items: center;\n    height: 24px;\n    width: 100%;\n    background-color: #dddddd; }\n    .igv-generic-container div:first-child i.fa {\n      margin-right: 4px;\n      display: block;\n      color: #5f5f5f; }\n    .igv-generic-container div:first-child i.fa:hover,\n    .igv-generic-container div:first-child i.fa:focus,\n    .igv-generic-container div:first-child i.fa:active {\n      cursor: pointer;\n      color: #0f0f0f; }\n\n.igv-file-load-widget-container-igvjs-position {\n  z-index: 2048;\n  position: absolute;\n  top: 64px;\n  left: 0;\n  height: 400px;\n  border-color: #7F7F7F; }\n\n.igv-file-load-widget-container-embed-position {\n  position: relative;\n  height: calc(0.65 * 400px);\n  border-color: transparent; }\n\n.igv-file-load-widget-container {\n  width: 720px;\n  color: #7F7F7F;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 16px;\n  font-weight: 200;\n  border-style: solid;\n  border-width: thin;\n  background-color: white;\n  display: flex;\n  flex-flow: column;\n  flex-wrap: nowrap;\n  justify-content: flex-start;\n  align-items: center; }\n  .igv-file-load-widget-container #igv-file-load-widget-header {\n    width: 100%;\n    height: 24px;\n    background-color: #bfbfbf;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-end;\n    align-items: center; }\n    .igv-file-load-widget-container #igv-file-load-widget-header div {\n      height: 24px;\n      width: 16px;\n      margin-right: 6px;\n      text-align: center;\n      line-height: 24px;\n      color: #373737; }\n    .igv-file-load-widget-container #igv-file-load-widget-header div:hover {\n      cursor: pointer; }\n  .igv-file-load-widget-container .igv-flw-input-container {\n    width: 95%;\n    margin-top: 24px;\n    margin-bottom: 0;\n    display: flex;\n    flex-flow: column;\n    flex-wrap: nowrap;\n    justify-content: flex-start;\n    align-items: center; }\n    .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row {\n      height: 36px;\n      width: 100%;\n      margin-top: 8px;\n      padding-top: 4px;\n      padding-bottom: 4px;\n      display: flex;\n      flex-flow: row;\n      flex-wrap: nowrap;\n      justify-content: flex-start;\n      align-items: center;\n      border-color: white;\n      border-style: solid;\n      border-width: thin;\n      border-radius: calc(2 * 2px); }\n      .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row .igv-flw-input-label {\n        color: rgba(0, 0, 0, 0.76);\n        font-weight: 400;\n        margin-left: 8px;\n        width: 128px;\n        height: 36px;\n        line-height: 36px;\n        text-align: left; }\n      .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row input {\n        display: block;\n        height: 100%;\n        width: 100%;\n        padding-left: 4px;\n        font-family: \"Open Sans\", sans-serif;\n        font-weight: 200;\n        font-size: 16px;\n        color: #373737;\n        text-align: left;\n        outline: none;\n        border-style: solid;\n        border-width: thin;\n        border-color: #7F7F7F;\n        background-color: white; }\n      .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row input {\n        width: 410px;\n        height: calc(36px - 12px); }\n      .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row .igv-flw-file-chooser-container {\n        position: relative;\n        display: block;\n        width: 130px;\n        height: calc(36px - 8px);\n        border-color: #7F7F7F;\n        border-style: solid;\n        border-width: thin;\n        border-radius: calc(2 * 2px); }\n        .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row .igv-flw-file-chooser-container label {\n          position: relative;\n          top: 6px;\n          left: 16px; }\n        .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row .igv-flw-file-chooser-container label:hover {\n          cursor: pointer;\n          font-weight: 400; }\n        .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row .igv-flw-file-chooser-container input.igv-flw-file-chooser-input {\n          width: 0.1px;\n          height: 0.1px;\n          opacity: 0;\n          overflow: hidden;\n          position: absolute;\n          z-index: -1; }\n      .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row .igv-flw-drag-drop-target {\n        cursor: default;\n        margin-left: 8px;\n        width: 120px;\n        height: calc(36px - 8px);\n        line-height: calc(36px - 8px);\n        text-align: center;\n        border-color: #7F7F7F;\n        border-style: dashed;\n        border-width: thin;\n        border-radius: calc(2 * 2px); }\n      .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row .igv-flw-local-file-name-container {\n        width: 275px;\n        height: 36px;\n        color: #373737;\n        line-height: 36px;\n        text-align: left;\n        font-weight: 400;\n        margin-left: 8px;\n        white-space: nowrap;\n        overflow: hidden;\n        text-overflow: ellipsis; }\n    .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row-hover-state {\n      background-color: #efefef;\n      border-color: #7F7F7F; }\n  .igv-file-load-widget-container .igv-flw-error-message-container {\n    margin-top: 8px;\n    width: 95%;\n    height: 24px;\n    padding-left: 8px;\n    color: white;\n    font-size: 14px;\n    background-color: rgba(59, 92, 127, 0.5);\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-between;\n    align-items: center; }\n    .igv-file-load-widget-container .igv-flw-error-message-container div:first-child.igv-flw-error-message {\n      height: 24px;\n      width: 600px;\n      font-style: italic;\n      line-height: 24px;\n      text-align: left; }\n    .igv-file-load-widget-container .igv-flw-error-message-container div:last-child {\n      height: 24px;\n      width: 16px;\n      margin-right: 6px;\n      text-align: center;\n      line-height: 24px;\n      color: #373737; }\n    .igv-file-load-widget-container .igv-flw-error-message-container div:hover {\n      cursor: pointer; }\n  .igv-file-load-widget-container .igv-file-load-widget-ok-cancel {\n    width: 100%;\n    height: 28px;\n    margin-top: 32px;\n    color: white;\n    font-size: 14px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-end;\n    align-items: center; }\n    .igv-file-load-widget-container .igv-file-load-widget-ok-cancel div {\n      width: 75px;\n      height: 28px;\n      line-height: 28px;\n      text-align: center;\n      border-color: transparent;\n      border-style: solid;\n      border-width: thin;\n      border-radius: 2px;\n      margin-right: 16px; }\n    .igv-file-load-widget-container .igv-file-load-widget-ok-cancel div:first-child {\n      background-color: #5ea4e0; }\n    .igv-file-load-widget-container .igv-file-load-widget-ok-cancel div:first-child:hover {\n      cursor: pointer;\n      background-color: #3b5c7f; }\n    .igv-file-load-widget-container .igv-file-load-widget-ok-cancel div:last-child {\n      margin-right: 22px;\n      background-color: #c4c4c4; }\n    .igv-file-load-widget-container .igv-file-load-widget-ok-cancel div:last-child:hover {\n      cursor: pointer;\n      background-color: #7f7f7f; }\n\n#igvControlDiv {\n  position: relative; }\n\n#igv-content-header {\n  position: relative;\n  height: 16px;\n  clear: both;\n  margin-top: 10px;\n  white-space: nowrap; }\n  #igv-content-header .igv-ideogram-left-shim {\n    position: relative;\n    height: 100%;\n    width: 50px;\n    display: inline-block;\n    background-color: white; }\n  #igv-content-header .igv-ideogram-content-div {\n    position: relative;\n    height: 100%;\n    display: inline-block;\n    background-color: white; }\n    #igv-content-header .igv-ideogram-content-div canvas {\n      width: 100%;\n      height: 100%; }\n  #igv-content-header .igv-ideogram-content-div-border-right {\n    border-right-color: #292929;\n    border-right-style: solid;\n    border-right-width: 1px; }\n\n.igv-multi-locus-panel-border {\n  position: absolute;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 1px;\n  background-color: green;\n  border-right-color: #ff0000;\n  border-right-style: solid;\n  border-right-width: 1px; }\n\n#igv-navbar {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: space-between;\n  align-items: center;\n  margin-top: 2px;\n  margin-bottom: 4px;\n  position: relative;\n  top: 0;\n  left: 0;\n  height: 32px;\n  width: 100%;\n  border-style: solid;\n  border-radius: 3px;\n  border-width: thin;\n  border-color: #bfbfbf;\n  background-color: #f3f3f3; }\n  #igv-navbar i {\n    cursor: pointer;\n    color: #666666; }\n  #igv-navbar i:hover,\n  #igv-navbar i:focus,\n  #igv-navbar i:active {\n    color: #434343; }\n  #igv-navbar #igv-nav-bar-left-container {\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-between;\n    align-items: center; }\n    #igv-navbar #igv-nav-bar-left-container #igv-logo {\n      width: 34px;\n      height: 16px;\n      margin-left: 8px;\n      margin-right: 32px; }\n    #igv-navbar #igv-nav-bar-left-container #igv-drag-and-drop-presentation-button {\n      margin-right: 32px; }\n    #igv-navbar #igv-nav-bar-left-container #igv-current_genome {\n      height: 32px;\n      margin-right: 16px;\n      color: #444;\n      font-family: \"Open Sans\", sans-serif;\n      font-size: 12px;\n      font-weight: 400;\n      line-height: 32px;\n      text-align: center; }\n    #igv-navbar #igv-nav-bar-left-container #igv-genomic-location {\n      display: flex;\n      flex-flow: row;\n      flex-wrap: nowrap;\n      justify-content: space-between;\n      align-items: center; }\n      #igv-navbar #igv-nav-bar-left-container #igv-genomic-location #igv-chromosome-select-widget-container {\n        height: 90%;\n        width: 96px;\n        margin-right: 4px; }\n        #igv-navbar #igv-nav-bar-left-container #igv-genomic-location #igv-chromosome-select-widget-container select {\n          outline: none;\n          font-family: \"Open Sans\", sans-serif;\n          font-size: 12px;\n          font-weight: 400;\n          color: #444;\n          width: 100%;\n          height: 100%; }\n      #igv-navbar #igv-nav-bar-left-container #igv-genomic-location #igv-locus-size-group {\n        display: flex;\n        flex-flow: row;\n        flex-wrap: nowrap;\n        justify-content: space-between;\n        align-items: center; }\n        #igv-navbar #igv-nav-bar-left-container #igv-genomic-location #igv-locus-size-group #igv-search-container {\n          height: 90%;\n          width: 260px;\n          display: flex;\n          flex-flow: row;\n          flex-wrap: nowrap;\n          justify-content: flex-start;\n          align-items: center; }\n          #igv-navbar #igv-nav-bar-left-container #igv-genomic-location #igv-locus-size-group #igv-search-container input {\n            display: block;\n            height: 20px;\n            width: 85%;\n            padding-left: 8px;\n            margin-right: 8px;\n            line-height: 20px;\n            text-align: left;\n            font-family: \"Open Sans\", sans-serif;\n            font-size: 12px;\n            font-weight: 400;\n            color: #444;\n            outline: none;\n            border-style: solid;\n            border-radius: 3px;\n            border-width: thin;\n            border-color: #bfbfbf;\n            background-color: white; }\n          #igv-navbar #igv-nav-bar-left-container #igv-genomic-location #igv-locus-size-group #igv-search-container div {\n            height: 100%; }\n            #igv-navbar #igv-nav-bar-left-container #igv-genomic-location #igv-locus-size-group #igv-search-container div i {\n              font-size: 18px; }\n        #igv-navbar #igv-nav-bar-left-container #igv-genomic-location #igv-locus-size-group #igv-windowsizepanel-content-div {\n          margin-left: 4px;\n          font-family: \"Open Sans\", sans-serif;\n          font-size: 12px;\n          font-weight: 400;\n          color: #444; }\n  #igv-navbar #igv-nav-bar-right-container {\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-between;\n    align-items: center; }\n    #igv-navbar #igv-nav-bar-right-container #igv-nav-bar-toggle-button-container {\n      display: flex;\n      flex-flow: row;\n      flex-wrap: nowrap;\n      justify-content: space-between;\n      align-items: center;\n      margin-right: 8px; }\n      #igv-navbar #igv-nav-bar-right-container #igv-nav-bar-toggle-button-container div {\n        margin-left: 0;\n        margin-right: 4px; }\n      #igv-navbar #igv-nav-bar-right-container #igv-nav-bar-toggle-button-container div:last-child {\n        margin-left: 0;\n        margin-right: 0; }\n    #igv-navbar #igv-nav-bar-right-container #igv-zoom-widget {\n      display: flex;\n      flex-flow: row;\n      flex-wrap: nowrap;\n      justify-content: space-between;\n      align-items: center;\n      width: 44px;\n      margin-left: 16px;\n      margin-right: 8px; }\n      #igv-navbar #igv-nav-bar-right-container #igv-zoom-widget div i {\n        font-size: 24px; }\n\n.igv-nav-bar-button {\n  height: 18px;\n  min-width: 96px;\n  text-transform: capitalize;\n  line-height: 18px;\n  text-align: center;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 11px;\n  font-weight: 200;\n  color: #737373;\n  border-color: #737373;\n  background-color: #f3f3f3;\n  border-style: solid;\n  border-width: thin;\n  border-radius: 10px; }\n\n.igv-nav-bar-button-clicked {\n  cursor: pointer;\n  color: white;\n  border-color: #737373;\n  background-color: #737373; }\n\n.igv-nav-bar-button:hover {\n  cursor: pointer;\n  color: white;\n  border-color: #737373;\n  background-color: #737373; }\n\n#igv-logo-nonav {\n  margin-left: 4px;\n  margin-top: 12px;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 34px;\n  height: 16px; }\n\n.igv-search-results {\n  position: absolute;\n  top: 32px;\n  left: 2px;\n  height: 320px;\n  width: 213px;\n  background-color: white;\n  border-color: #7F7F7F;\n  border-style: solid;\n  border-width: thin;\n  overflow-x: hidden;\n  overflow-y: auto;\n  z-index: 9999; }\n  .igv-search-results tr {\n    font-family: \"Open Sans\", sans-serif;\n    font-size: small;\n    font-weight: 400;\n    color: #444; }\n  .igv-search-results tr:hover,\n  .igv-search-results tr:focus,\n  .igv-search-results tr:active {\n    cursor: pointer;\n    font-weight: 700;\n    color: #141414; }\n\n.igv-karyo-div {\n  position: relative;\n  left: 0;\n  top: 0;\n  height: 200px; }\n\n.igv-karyo-hide {\n  height: 0;\n  overflow: hidden; }\n\n.igv-karyo-content-div {\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%; }\n\n.igv-karyo-canvas {\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%; }\n\n.igv-root-div {\n  position: relative;\n  left: 0;\n  right: 0;\n  height: auto;\n  margin-left: 10px;\n  margin-right: 10px;\n  padding-top: 4px; }\n\n.igv-content-div {\n  position: relative;\n  width: 100%;\n  height: 100%; }\n\n.igv-track-container-div {\n  position: relative;\n  clear: both; }\n\n.igv-track-div {\n  position: relative;\n  width: 100%;\n  margin-top: 2px;\n  margin-bottom: 2px; }\n\n.igv-viewport-container {\n  position: absolute;\n  left: 50px;\n  right: 50px;\n  height: 100%;\n  white-space: nowrap;\n  overflow-x: hidden;\n  overflow-y: hidden; }\n\n.igv-viewport-div {\n  position: relative;\n  display: inline-block;\n  height: 100%;\n  overflow-x: hidden;\n  overflow-y: hidden; }\n\n.igv-viewport-content-div {\n  position: absolute;\n  width: 100%; }\n\n.igv-viewport-message {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  color: rgba(0, 0, 0, 0.15);\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 25px;\n  font-weight: bold;\n  user-select: none; }\n\n.igv-whole-genome-container {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: space-between;\n  width: 100%;\n  height: 100%;\n  background-color: white; }\n  .igv-whole-genome-container div {\n    font-family: \"Open Sans\", sans-serif;\n    font-size: 10px;\n    font-weight: 400;\n    color: #444;\n    height: 100%;\n    text-align: center;\n    border-right-color: #bfbfbf;\n    border-right-style: solid;\n    border-right-width: thin; }\n    .igv-whole-genome-container div span {\n      display: block;\n      padding-top: 6px;\n      text-overflow: ellipsis; }\n  .igv-whole-genome-container div:last-child {\n    border-right-color: transparent; }\n  .igv-whole-genome-container div:hover,\n  .igv-whole-genome-container div:focus,\n  .igv-whole-genome-container div:active {\n    cursor: pointer;\n    background-color: #efefef; }\n\n.igv-viewport-div-border-right {\n  border-right-color: #292929;\n  border-right-style: solid;\n  border-right-width: 1px; }\n\n.igv-viewport-fa-close {\n  position: absolute;\n  top: 4px;\n  right: 4px;\n  font-size: 16px;\n  color: #666666;\n  z-index: 1000; }\n\n.igv-viewport-fa-close:hover {\n  cursor: pointer;\n  color: #434343; }\n\n.igv-viewport-content-ruler-div {\n  position: absolute;\n  left: 50%;\n  top: 25%;\n  transform: translate(-50%, -25%);\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 12px;\n  font-weight: 200;\n  text-align: center;\n  min-width: 16px;\n  z-index: 64;\n  color: #0066ff;\n  background-color: white;\n  padding: 1px; }\n\n.igv-viewport-content-ruler-div:hover,\n.igv-viewport-content-ruler-div:focus,\n.igv-viewport-content-ruler-div:active {\n  cursor: pointer;\n  color: white;\n  background-color: #0066ff; }\n\n.igv-viewport-ruler {\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 10px;\n  font-weight: 200;\n  text-align: center; }\n  .igv-viewport-ruler > div {\n    height: 100%; }\n\n.igv-viewport-sequence {\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 8px;\n  font-weight: 200;\n  text-align: center; }\n\n.igv-viewport-spinner {\n  pointer-events: none;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  z-index: 1024;\n  color: #737373; }\n\n.igv-ruler-sweeper-div {\n  display: none;\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 0;\n  height: 100%;\n  z-index: 99999;\n  background-color: rgba(68, 134, 247, 0.25); }\n\n.igv-right-hand-gutter {\n  position: absolute;\n  right: 0;\n  width: 36px;\n  height: 100%;\n  background: white;\n  text-align: center; }\n  .igv-right-hand-gutter i {\n    position: absolute;\n    top: 0;\n    right: 0;\n    padding-right: 6px;\n    font-size: 20px;\n    cursor: pointer;\n    color: grey; }\n  .igv-right-hand-gutter i:hover,\n  .igv-right-hand-gutter i:focus,\n  .igv-right-hand-gutter i:active {\n    color: #333333; }\n\n.igv-left-hand-gutter {\n  position: absolute;\n  left: 0;\n  width: 50px;\n  height: 100%; }\n  .igv-left-hand-gutter canvas {\n    position: absolute; }\n\n.igv-track-menu-container {\n  background-color: white;\n  border-bottom-left-radius: 4px;\n  border-bottom-right-radius: 4px; }\n  .igv-track-menu-container div {\n    padding-left: 4px;\n    padding-right: 4px;\n    padding-top: 2px;\n    padding-bottom: 2px;\n    background-color: white; }\n    .igv-track-menu-container div i {\n      padding-right: 2px; }\n  .igv-track-menu-container div:hover,\n  .igv-track-menu-container div:focus,\n  .igv-track-menu-container div:active {\n    cursor: pointer;\n    background-color: #efefef; }\n  .igv-track-menu-container a {\n    color: inherit;\n    text-decoration: none; }\n\n.igv-track-menu-border-top {\n  border-top-color: #a2a2a2;\n  border-top-style: solid;\n  border-top-width: thin; }\n\n.igv-track-menu-category {\n  padding-left: 4px;\n  font-weight: 400; }\n\n.igv-track-drag-scrim {\n  position: absolute;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  z-index: 256;\n  background-color: rgba(68, 134, 247, 0.25); }\n\n.igv-track-manipulation-handle {\n  cursor: pointer;\n  position: absolute;\n  right: 36px;\n  width: 12px;\n  margin-left: 2px;\n  height: 100%;\n  box-sizing: border-box;\n  font-size: medium;\n  border-color: #c4c4c4;\n  border-style: solid;\n  border-width: thin;\n  border-top-right-radius: 6px;\n  border-bottom-right-radius: 6px;\n  z-index: 512;\n  background-color: #c4c4c4; }\n\n.igv-track-manipulation-handle:hover,\n.igv-track-manipulation-handle:focus,\n.igv-track-manipulation-handle:active {\n  border-color: #7e7e7e;\n  background-color: #7e7e7e; }\n\n.igv-track-label {\n  position: absolute;\n  left: 8px;\n  top: 4px;\n  width: auto;\n  height: auto;\n  max-width: 200px;\n  padding-left: 4px;\n  padding-right: 4px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: small;\n  font-weight: 400;\n  text-align: center;\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  border-color: #444;\n  border-radius: 2px;\n  border-style: solid;\n  border-width: thin;\n  background-color: white;\n  z-index: 128;\n  cursor: pointer; }\n\n.igv-track-label:hover,\n.igv-track-label:focus,\n.igv-track-label:active {\n  background-color: rgba(0, 0, 0, 0.05); }\n\n.igv-scrollbar-outer-div {\n  position: absolute;\n  top: 0;\n  right: 0;\n  width: 14px;\n  height: 100%;\n  background-color: white; }\n  .igv-scrollbar-outer-div div {\n    position: absolute;\n    top: 0;\n    left: 3px;\n    width: 8px;\n    border-style: solid;\n    border-width: thin;\n    border-color: #c4c4c4;\n    border-top-left-radius: 4px;\n    border-top-right-radius: 4px;\n    border-bottom-left-radius: 4px;\n    border-bottom-right-radius: 4px;\n    background-color: white; }\n  .igv-scrollbar-outer-div div:hover,\n  .igv-scrollbar-outer-div div:focus,\n  .igv-scrollbar-outer-div div:active {\n    cursor: pointer;\n    background-color: #c4c4c4; }\n\n.zoom-in-notice-container {\n  position: absolute;\n  top: 25%;\n  left: 50%; }\n  .zoom-in-notice-container div {\n    position: relative;\n    left: -50%;\n    font-family: \"Open Sans\", sans-serif;\n    font-size: medium;\n    font-weight: 400;\n    color: #3f3f3f;\n    background-color: rgba(255, 255, 255, 0.51);\n    z-index: 64; }\n\n.igv-center-guide {\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 50%;\n  width: 8px;\n  z-index: 8;\n  display: none;\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  border-left-style: dashed;\n  border-left-width: thin;\n  border-right-style: dashed;\n  border-right-width: thin; }\n\n.igv-center-guide-wide {\n  background-color: transparent;\n  border-left-color: rgba(127, 127, 127, 0.51);\n  border-right-color: rgba(127, 127, 127, 0.51); }\n\n.igv-center-guide-thin {\n  left: 50%;\n  width: 1px;\n  background-color: transparent;\n  border-left-color: rgba(127, 127, 127, 0.51);\n  border-right-color: transparent;\n  /*background-color: rgba(127, 127, 127, 0.51);*/\n  /*border-left-color: rgba(0,0,0,0);*/\n  /*border-right-color: rgba(0,0,0,0);*/ }\n\n.igv-cursor-tracking-guide {\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 50%;\n  width: 1px;\n  z-index: 1;\n  border-left-style: dotted;\n  border-left-width: thin;\n  border-left-color: rgba(127, 127, 127, 0.76);\n  display: none;\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none; }\n\n.igv-clickable {\n  cursor: pointer;\n  background-color: white; }\n\n#color-by-tag {\n  color: #444; }\n\n#color-by-tag:hover,\n#color-by-tag:focus,\n#color-by-tag:active {\n  cursor: pointer;\n  padding-left: 2px;\n  padding-right: 2px;\n  color: white;\n  border-color: #444;\n  border-radius: 2px;\n  border-style: solid;\n  border-width: thin;\n  background-color: #7f7f7f; }\n\n.igv-user-feedback {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  width: 36em;\n  height: 27em;\n  margin-top: -9em;\n  /*set to a negative number 1/2 of your height*/\n  margin-left: -15em;\n  /*set to a negative number 1/2 of your width*/\n  background-color: white;\n  border-color: #a2a2a2;\n  border-style: solid;\n  border-width: thin;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: medium;\n  font-weight: 400;\n  color: #444; }\n  .igv-user-feedback div:first-child {\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    width: 100%;\n    height: 32px;\n    border-bottom-color: #a2a2a2;\n    border-bottom-style: solid;\n    border-bottom-width: thin;\n    background-color: white; }\n    .igv-user-feedback div:first-child i {\n      font-size: 20px; }\n    .igv-user-feedback div:first-child i:first-child {\n      position: absolute;\n      top: 0;\n      left: 0;\n      padding: 8px;\n      color: red; }\n    .igv-user-feedback div:first-child i:last-child {\n      position: absolute;\n      top: 0;\n      right: 0;\n      padding: 8px;\n      cursor: pointer;\n      color: grey; }\n    .igv-user-feedback div:first-child i:last-child:hover,\n    .igv-user-feedback div:first-child i:last-child:focus,\n    .igv-user-feedback div:first-child i:last-child:active {\n      color: #333333; }\n  .igv-user-feedback div:last-child {\n    padding-left: 48px;\n    padding-top: 8px;\n    padding-right: 48px;\n    padding-bottom: 8px;\n    position: absolute;\n    top: 33px;\n    left: 0;\n    right: 0;\n    bottom: 0;\n    background-color: white; }\n\n.igv-ellipsis {\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis; }\n\n.igv-generic-dialog-container {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 300px;\n  height: 200px;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: medium;\n  font-weight: 200;\n  border-color: #7F7F7F;\n  border-radius: 4px;\n  border-style: solid;\n  border-width: thin;\n  z-index: 2048;\n  background-color: white;\n  display: flex;\n  flex-flow: column;\n  flex-wrap: nowrap;\n  justify-content: flex-start;\n  align-items: center; }\n  .igv-generic-dialog-container .igv-generic-dialog-header {\n    width: 100%;\n    height: 24px;\n    cursor: move;\n    border-color: #c4c4c4;\n    border-top-left-radius: 4px;\n    border-top-right-radius: 4px;\n    border-style: solid;\n    border-width: thin;\n    background-color: #c4c4c4;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-end;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-header div {\n      height: 24px;\n      width: 16px;\n      margin-right: 6px;\n      text-align: center;\n      line-height: 24px;\n      color: #444;\n      font-size: medium; }\n    .igv-generic-dialog-container .igv-generic-dialog-header div:hover {\n      cursor: pointer; }\n  .igv-generic-dialog-container .igv-generic-dialog-one-liner {\n    margin-top: 8px;\n    width: 95%;\n    color: #373737;\n    line-height: 24px;\n    text-align: left;\n    padding-left: 8px;\n    background-color: white; }\n  .igv-generic-dialog-container .igv-generic-dialog-label-input {\n    margin-top: 8px;\n    width: 95%;\n    height: 24px;\n    color: #373737;\n    line-height: 24px;\n    padding-left: 8px;\n    background-color: white;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-start;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-label-input div {\n      width: 30%;\n      height: 100%;\n      font-size: 16px;\n      text-align: right;\n      padding-right: 8px;\n      background-color: white; }\n    .igv-generic-dialog-container .igv-generic-dialog-label-input input {\n      display: block;\n      height: 100%;\n      width: 100%;\n      padding-left: 4px;\n      font-family: \"Open Sans\", sans-serif;\n      font-weight: 400;\n      color: #373737;\n      text-align: left;\n      outline: none;\n      border-style: solid;\n      border-width: thin;\n      border-color: #7F7F7F;\n      background-color: white; }\n    .igv-generic-dialog-container .igv-generic-dialog-label-input input {\n      width: 50%;\n      font-size: 16px; }\n  .igv-generic-dialog-container .igv-generic-dialog-input {\n    margin-top: 8px;\n    width: calc(100% - 16px);\n    height: 24px;\n    color: #373737;\n    line-height: 24px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-around;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-input input {\n      display: block;\n      height: 100%;\n      width: 100%;\n      padding-left: 4px;\n      font-family: \"Open Sans\", sans-serif;\n      font-weight: 400;\n      color: #373737;\n      text-align: left;\n      outline: none;\n      border-style: solid;\n      border-width: thin;\n      border-color: #7F7F7F;\n      background-color: white; }\n    .igv-generic-dialog-container .igv-generic-dialog-input input {\n      font-size: 16px; }\n  .igv-generic-dialog-container .igv-generic-dialog-ok-cancel {\n    width: 100%;\n    height: 28px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-around;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div {\n      margin-top: 32px;\n      color: white;\n      font-family: \"Open Sans\", sans-serif;\n      font-size: 14px;\n      font-weight: 200;\n      width: 75px;\n      height: 28px;\n      line-height: 28px;\n      text-align: center;\n      border-color: transparent;\n      border-style: solid;\n      border-width: thin;\n      border-radius: 2px; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:first-child {\n      margin-left: 32px;\n      margin-right: 0;\n      background-color: #5ea4e0; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:last-child {\n      margin-left: 0;\n      margin-right: 32px;\n      background-color: #c4c4c4; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:first-child:hover {\n      cursor: pointer;\n      background-color: #3b5c7f; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:last-child:hover {\n      cursor: pointer;\n      background-color: #7f7f7f; }\n  .igv-generic-dialog-container .igv-generic-dialog-ok {\n    width: 100%;\n    height: 36px;\n    margin-top: 32px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-around;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok div {\n      width: 98px;\n      height: 36px;\n      line-height: 36px;\n      text-align: center;\n      color: white;\n      font-family: \"Open Sans\", sans-serif;\n      font-size: medium;\n      font-weight: 200;\n      border-color: white;\n      border-style: solid;\n      border-width: thin;\n      border-radius: 4px;\n      background-color: #2B81AF; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok div:hover {\n      cursor: pointer;\n      background-color: #25597f; }\n\n.igv-popover {\n  position: absolute;\n  top: 0;\n  left: 0;\n  min-width: 128px;\n  z-index: 4096;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: small;\n  font-weight: 400;\n  color: #444;\n  background: white;\n  border-radius: 4px;\n  border-color: #7F7F7F;\n  border-style: solid;\n  border-width: thin;\n  display: none; }\n\n.igv-popover-header {\n  position: relative;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 20px;\n  border-top-left-radius: 4px;\n  border-top-right-radius: 4px;\n  border-bottom-color: #7F7F7F;\n  border-bottom-style: solid;\n  border-bottom-width: thin;\n  background-color: #eee; }\n  .igv-popover-header div {\n    position: absolute;\n    top: 3px;\n    right: 3px;\n    height: 100%;\n    width: 16px;\n    text-align: center;\n    line-height: 100%;\n    cursor: pointer;\n    color: #444;\n    font-size: small; }\n  .igv-popover-header div:hover {\n    color: white; }\n\n.igv-popover-track-popup-content {\n  position: relative;\n  top: 0;\n  left: 0;\n  max-height: 384px;\n  overflow-x: hidden;\n  overflow-y: auto; }\n\n.igv-popover-name-value {\n  cursor: default;\n  text-wrap: none;\n  white-space: nowrap;\n  max-width: 384px; }\n\n.igv-popover-name {\n  font-weight: bold;\n  padding-right: 4px;\n  float: left; }\n\n.igv-popover-value {\n  padding-left: 4px;\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  max-width: 256px;\n  display: inline-block; }\n\n.igv-spinner-container {\n  color: #3f3f3f;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  padding-top: 8px;\n  font-size: 24px;\n  z-index: 512; }\n\n.igv-fa-check-hidden {\n  color: rgba(255, 255, 255, 0); }\n\n.validateTips {\n  border: 1px solid transparent;\n  padding: 0.3em; }\n  .validateTips fieldset {\n    border: 0; }\n\n.igv-spacer-10 {\n  height: 10px;\n  width: 100%;\n  font-size: 0;\n  margin: 0;\n  padding: 0;\n  border: 0;\n  display: block; }\n\n/*# sourceMappingURL=igv.css.map */\n\n/*!\n * Font Awesome Free 5.0.8 by @fontawesome - https://fontawesome.com\n * License - https://fontawesome.com/license (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)\n */\nsvg:not(:root).svg-inline--fa5 {\n  overflow: visible;\n  }\n\n.svg-inline--fa5 {\n  display: inline-block;\n  font-size: inherit;\n  height: 1em;\n  overflow: visible;\n  vertical-align: -.125em; }\n  .svg-inline--fa5.fa5-lg {\n    vertical-align: -.225em; }\n  .svg-inline--fa5.fa5-w-1 {\n    width: 0.0625em; }\n  .svg-inline--fa5.fa5-w-2 {\n    width: 0.125em; }\n  .svg-inline--fa5.fa5-w-3 {\n    width: 0.1875em; }\n  .svg-inline--fa5.fa5-w-4 {\n    width: 0.25em; }\n  .svg-inline--fa5.fa5-w-5 {\n    width: 0.3125em; }\n  .svg-inline--fa5.fa5-w-6 {\n    width: 0.375em; }\n  .svg-inline--fa5.fa5-w-7 {\n    width: 0.4375em; }\n  .svg-inline--fa5.fa5-w-8 {\n    width: 0.5em; }\n  .svg-inline--fa5.fa5-w-9 {\n    width: 0.5625em; }\n  .svg-inline--fa5.fa5-w-10 {\n    width: 0.625em; }\n  .svg-inline--fa5.fa5-w-11 {\n    width: 0.6875em; }\n  .svg-inline--fa5.fa5-w-12 {\n    width: 0.75em; }\n  .svg-inline--fa5.fa5-w-13 {\n    width: 0.8125em; }\n  .svg-inline--fa5.fa5-w-14 {\n    width: 0.875em; }\n  .svg-inline--fa5.fa5-w-15 {\n    width: 0.9375em; }\n  .svg-inline--fa5.fa5-w-16 {\n    /* width: 1em; */\n    }\n  .svg-inline--fa5.fa5-w-17 {\n    width: 1.0625em; }\n  .svg-inline--fa5.fa5-w-18 {\n    width: 1.125em; }\n  .svg-inline--fa5.fa5-w-19 {\n    width: 1.1875em; }\n  .svg-inline--fa5.fa5-w-20 {\n    width: 1.25em; }\n  .svg-inline--fa5.fa5-pull-left {\n    margin-right: .3em;\n    width: auto; }\n  .svg-inline--fa5.fa5-pull-right {\n    margin-left: .3em;\n    width: auto; }\n  .svg-inline--fa5.fa5-border {\n    height: 1.5em; }\n  .svg-inline--fa5.fa5-li {\n    width: 2em; }\n  .svg-inline--fa5.fa5-fw {\n    width: 1.25em; }\n\n.fa5-layers svg.svg-inline--fa5 {\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  position: absolute;\n  right: 0;\n  top: 0; }\n\n.fa5-layers {\n  display: inline-block;\n  height: 1em;\n  position: relative;\n  text-align: center;\n  vertical-align: -.125em;\n  width: 1em; }\n  .fa5-layers svg.svg-inline--fa5 {\n    -webkit-transform-origin: center center;\n            transform-origin: center center; }\n\n.fa5-layers-text, .fa5-layers-counter {\n  display: inline-block;\n  position: absolute;\n  text-align: center; }\n\n.fa5-layers-text {\n  left: 50%;\n  top: 50%;\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n  -webkit-transform-origin: center center;\n          transform-origin: center center; }\n\n.fa5-layers-counter {\n  background-color: #ff253a;\n  border-radius: 1em;\n  color: #fff;\n  height: 1.5em;\n  line-height: 1;\n  max-width: 5em;\n  min-width: 1.5em;\n  overflow: hidden;\n  padding: .25em;\n  right: 0;\n  text-overflow: ellipsis;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top right;\n          transform-origin: top right; }\n\n.fa5-layers-bottom-right {\n  bottom: 0;\n  right: 0;\n  top: auto;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: bottom right;\n          transform-origin: bottom right; }\n\n.fa5-layers-bottom-left {\n  bottom: 0;\n  left: 0;\n  right: auto;\n  top: auto;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: bottom left;\n          transform-origin: bottom left; }\n\n.fa5-layers-top-right {\n  right: 0;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top right;\n          transform-origin: top right; }\n\n.fa5-layers-top-left {\n  left: 0;\n  right: auto;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top left;\n          transform-origin: top left; }\n\n.fa5-lg {\n  font-size: 1.33333em;\n  line-height: 0.75em;\n  vertical-align: -.0667em; }\n\n.fa5-xs {\n  font-size: .75em; }\n\n.fa5-sm {\n  font-size: .875em; }\n\n.fa5-1x {\n  font-size: 1em; }\n\n.fa5-2x {\n  font-size: 2em; }\n\n.fa5-3x {\n  font-size: 3em; }\n\n.fa5-4x {\n  font-size: 4em; }\n\n.fa5-5x {\n  font-size: 5em; }\n\n.fa5-6x {\n  font-size: 6em; }\n\n.fa5-7x {\n  font-size: 7em; }\n\n.fa5-8x {\n  font-size: 8em; }\n\n.fa5-9x {\n  font-size: 9em; }\n\n.fa5-10x {\n  font-size: 10em; }\n\n.fa5-fw {\n  text-align: center;\n  width: 1.25em; }\n\n.fa5-ul {\n  list-style-type: none;\n  margin-left: 2.5em;\n  padding-left: 0; }\n  .fa5-ul > li {\n    position: relative; }\n\n.fa5-li {\n  left: -2em;\n  position: absolute;\n  text-align: center;\n  width: 2em;\n  line-height: inherit; }\n\n.fa5-border {\n  border: solid 0.08em #eee;\n  border-radius: .1em;\n  padding: .2em .25em .15em; }\n\n.fa5-pull-left {\n  float: left; }\n\n.fa5-pull-right {\n  float: right; }\n\n.fa5.fa5-pull-left,\n.fas.fa5-pull-left,\n.far.fa5-pull-left,\n.fal.fa5-pull-left,\n.fab.fa5-pull-left {\n  margin-right: .3em; }\n\n.fa5.fa5-pull-right,\n.fas.fa5-pull-right,\n.far.fa5-pull-right,\n.fal.fa5-pull-right,\n.fab.fa5-pull-right {\n  margin-left: .3em; }\n\n.fa5-spin {\n  -webkit-animation: fa5-spin 2s infinite linear;\n          animation: fa5-spin 2s infinite linear; }\n\n.fa5-pulse {\n  -webkit-animation: fa5-spin 1s infinite steps(8);\n          animation: fa5-spin 1s infinite steps(8); }\n\n@-webkit-keyframes fa5-spin {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg); }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg); } }\n\n@keyframes fa5-spin {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg); }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg); } }\n\n.fa5-rotate-90 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=1)\";\n  -webkit-transform: rotate(90deg);\n          transform: rotate(90deg); }\n\n.fa5-rotate-180 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2)\";\n  -webkit-transform: rotate(180deg);\n          transform: rotate(180deg); }\n\n.fa5-rotate-270 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=3)\";\n  -webkit-transform: rotate(270deg);\n          transform: rotate(270deg); }\n\n.fa5-flip-horizontal {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)\";\n  -webkit-transform: scale(-1, 1);\n          transform: scale(-1, 1); }\n\n.fa5-flip-vertical {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)\";\n  -webkit-transform: scale(1, -1);\n          transform: scale(1, -1); }\n\n.fa5-flip-horizontal.fa5-flip-vertical {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)\";\n  -webkit-transform: scale(-1, -1);\n          transform: scale(-1, -1); }\n\n:root .fa5-rotate-90,\n:root .fa5-rotate-180,\n:root .fa5-rotate-270,\n:root .fa5-flip-horizontal,\n:root .fa5-flip-vertical {\n  -webkit-filter: none;\n          filter: none; }\n\n.fa5-stack {\n  display: inline-block;\n  height: 2em;\n  position: relative;\n  width: 2em; }\n\n.fa5-stack-1x,\n.fa5-stack-2x {\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  position: absolute;\n  right: 0;\n  top: 0; }\n\n.svg-inline--fa5.fa5-stack-1x {\n  height: 1em;\n  width: 1em; }\n\n.svg-inline--fa5.fa5-stack-2x {\n  height: 2em;\n  width: 2em; }\n\n.fa5-inverse {\n  color: #fff; }\n\n.sr-only {\n  border: 0;\n  clip: rect(0, 0, 0, 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px; }\n\n.sr-only-focusable:active, .sr-only-focusable:focus {\n  clip: auto;\n  height: auto;\n  margin: 0;\n  overflow: visible;\n  position: static;\n  width: auto; }\n';
-    
-    var style = document.createElement('style');
-    style.setAttribute('type', 'text/css');
-    style.innerHTML = css;
-
-    var headChildren = document.head.childNodes;
-    var beforeChild = null;
-
-    for (var i = headChildren.length - 1; i > -1; i--) {
-        var child = headChildren[i];
-        var tagName = (child.tagName || '').toUpperCase();
-        if (['STYLE', 'LINK'].indexOf(tagName) > -1) {
-            beforeChild = child;
-        }
-    }
-
-    document.head.insertBefore(style, beforeChild);
-
-})();
 /* Module header based on https://github.com/umdjs/umd/blob/master/templates/returnExports.js
  */
 
@@ -47,6 +25,28 @@
 
 
 
+(function () {
+
+    var css =  '.igv-color-swatch {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  width: 24px;\n  height: 24px;\n  border-style: solid;\n  border-width: 1px;\n  border-color: transparent; }\n  .igv-color-swatch i.fa {\n    display: block; }\n  .igv-color-swatch i.fa:hover,\n  .igv-color-swatch i.fa:focus,\n  .igv-color-swatch i.fa:active {\n    cursor: pointer;\n    color: #0f0f0f; }\n\n.igv-color-swatch:hover,\n.igv-color-swatch:focus,\n.igv-color-swatch:active {\n  border-color: #dddddd; }\n\n.igv-colorpicker-menu-close-button {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: flex-end;\n  align-items: center;\n  width: 100%;\n  height: 32px;\n  margin-top: 4px;\n  margin-bottom: 4px;\n  padding-right: 8px; }\n  .igv-colorpicker-menu-close-button i.fa {\n    display: block;\n    margin-left: 4px;\n    margin-right: 4px;\n    color: #5f5f5f; }\n  .igv-colorpicker-menu-close-button i.fa:hover,\n  .igv-colorpicker-menu-close-button i.fa:focus,\n  .igv-colorpicker-menu-close-button i.fa:active {\n    cursor: pointer;\n    color: #0f0f0f; }\n\n.igv-position-absolute {\n  position: absolute;\n  top: 0;\n  left: 0; }\n\n.igv-generic-container {\n  width: 256px;\n  z-index: 5000;\n  background-color: white;\n  border-style: solid;\n  border-width: thin;\n  border-color: #dddddd;\n  cursor: pointer;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: flex-start;\n  align-items: center; }\n  .igv-generic-container div:first-child {\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-end;\n    align-items: center;\n    height: 24px;\n    width: 100%;\n    background-color: #dddddd; }\n    .igv-generic-container div:first-child i.fa {\n      margin-right: 4px;\n      display: block;\n      color: #5f5f5f; }\n    .igv-generic-container div:first-child i.fa:hover,\n    .igv-generic-container div:first-child i.fa:focus,\n    .igv-generic-container div:first-child i.fa:active {\n      cursor: pointer;\n      color: #0f0f0f; }\n\n.igv-file-load-widget-container-igvjs-position {\n  position: absolute;\n  top: 64px;\n  left: 0;\n  border-color: #7F7F7F;\n  width: 720px;\n  z-index: 2048; }\n\n.igv-file-load-widget-container-embed-position {\n  position: relative;\n  border-color: transparent;\n  width: 720px; }\n\n.igv-file-load-widget-container {\n  padding-bottom: 20px;\n  color: #7F7F7F;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 16px;\n  font-weight: 200;\n  border-style: solid;\n  border-width: thin;\n  background-color: white;\n  display: flex;\n  flex-flow: column;\n  flex-wrap: nowrap;\n  justify-content: flex-start;\n  align-items: center; }\n  .igv-file-load-widget-container .igv-file-load-widget-header {\n    width: 100%;\n    height: 24px;\n    background-color: #bfbfbf;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-end;\n    align-items: center; }\n    .igv-file-load-widget-container .igv-file-load-widget-header div {\n      height: 24px;\n      width: 16px;\n      margin-right: 6px;\n      text-align: center;\n      line-height: 24px;\n      color: #373737; }\n    .igv-file-load-widget-container .igv-file-load-widget-header div:hover {\n      cursor: pointer; }\n  .igv-file-load-widget-container .igv-flw-input-container {\n    width: 95%;\n    margin-top: 24px;\n    margin-bottom: 0;\n    display: flex;\n    flex-flow: column;\n    flex-wrap: nowrap;\n    justify-content: flex-start;\n    align-items: center; }\n    .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row {\n      height: 36px;\n      width: 100%;\n      margin-top: 8px;\n      padding-top: 4px;\n      padding-bottom: 4px;\n      display: flex;\n      flex-flow: row;\n      flex-wrap: nowrap;\n      justify-content: flex-start;\n      align-items: center;\n      border-color: white;\n      border-style: solid;\n      border-width: thin;\n      border-radius: calc(2 * 2px); }\n      .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row .igv-flw-input-label {\n        color: rgba(0, 0, 0, 0.76);\n        font-weight: 400;\n        margin-left: 8px;\n        width: 128px;\n        height: 36px;\n        line-height: 36px;\n        text-align: left; }\n      .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row input {\n        display: block;\n        height: 100%;\n        width: 100%;\n        padding-left: 4px;\n        font-family: \"Open Sans\", sans-serif;\n        font-weight: 200;\n        font-size: 16px;\n        color: #373737;\n        text-align: left;\n        outline: none;\n        border-style: solid;\n        border-width: thin;\n        border-color: #7F7F7F;\n        background-color: white; }\n      .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row input {\n        width: 410px;\n        height: calc(36px - 12px); }\n      .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row .igv-flw-file-chooser-container {\n        position: relative;\n        display: block;\n        width: 130px;\n        height: calc(36px - 8px);\n        border-color: #7F7F7F;\n        border-style: solid;\n        border-width: thin;\n        border-radius: calc(2 * 2px); }\n        .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row .igv-flw-file-chooser-container label {\n          position: relative;\n          top: 6px;\n          left: 16px; }\n        .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row .igv-flw-file-chooser-container label:hover {\n          cursor: pointer;\n          font-weight: 400; }\n        .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row .igv-flw-file-chooser-container input.igv-flw-file-chooser-input {\n          width: 0.1px;\n          height: 0.1px;\n          opacity: 0;\n          overflow: hidden;\n          position: absolute;\n          z-index: -1; }\n      .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row .igv-flw-drag-drop-target {\n        cursor: default;\n        margin-left: 8px;\n        width: 120px;\n        height: calc(36px - 8px);\n        line-height: calc(36px - 8px);\n        text-align: center;\n        border-color: #7F7F7F;\n        border-style: dashed;\n        border-width: thin;\n        border-radius: calc(2 * 2px); }\n      .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row .igv-flw-local-file-name-container {\n        max-width: 400px;\n        height: 36px;\n        color: #373737;\n        line-height: 36px;\n        text-align: left;\n        font-weight: 400;\n        margin-left: 8px;\n        white-space: nowrap;\n        overflow: hidden;\n        text-overflow: ellipsis; }\n    .igv-file-load-widget-container .igv-flw-input-container .igv-flw-input-row-hover-state {\n      background-color: #efefef;\n      border-color: #7F7F7F; }\n  .igv-file-load-widget-container .igv-flw-error-message-container {\n    margin-top: 8px;\n    width: 95%;\n    height: 24px;\n    padding-left: 8px;\n    color: white;\n    font-size: 14px;\n    background-color: rgba(59, 92, 127, 0.5);\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-between;\n    align-items: center; }\n    .igv-file-load-widget-container .igv-flw-error-message-container div:first-child.igv-flw-error-message {\n      height: 24px;\n      width: 600px;\n      font-style: italic;\n      line-height: 24px;\n      text-align: left; }\n    .igv-file-load-widget-container .igv-flw-error-message-container div:last-child {\n      height: 24px;\n      width: 16px;\n      margin-right: 6px;\n      text-align: center;\n      line-height: 24px;\n      color: #373737; }\n    .igv-file-load-widget-container .igv-flw-error-message-container div:hover {\n      cursor: pointer; }\n  .igv-file-load-widget-container .igv-file-load-widget-ok-cancel {\n    width: 100%;\n    height: 28px;\n    margin-top: 32px;\n    color: white;\n    font-size: 14px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-end;\n    align-items: center; }\n    .igv-file-load-widget-container .igv-file-load-widget-ok-cancel div {\n      width: 75px;\n      height: 28px;\n      line-height: 28px;\n      text-align: center;\n      border-color: transparent;\n      border-style: solid;\n      border-width: thin;\n      border-radius: 2px;\n      margin-right: 16px; }\n    .igv-file-load-widget-container .igv-file-load-widget-ok-cancel div:first-child {\n      background-color: #5ea4e0; }\n    .igv-file-load-widget-container .igv-file-load-widget-ok-cancel div:first-child:hover {\n      cursor: pointer;\n      background-color: #3b5c7f; }\n    .igv-file-load-widget-container .igv-file-load-widget-ok-cancel div:last-child {\n      margin-right: 22px;\n      background-color: #c4c4c4; }\n    .igv-file-load-widget-container .igv-file-load-widget-ok-cancel div:last-child:hover {\n      cursor: pointer;\n      background-color: #7f7f7f; }\n\n#igvControlDiv {\n  position: relative; }\n\n#igv-content-header {\n  position: relative;\n  height: 16px;\n  clear: both;\n  margin-top: 10px;\n  white-space: nowrap; }\n  #igv-content-header .igv-ideogram-left-shim {\n    position: relative;\n    height: 100%;\n    width: 50px;\n    display: inline-block;\n    background-color: white; }\n  #igv-content-header .igv-ideogram-content-div {\n    position: relative;\n    height: 100%;\n    display: inline-block;\n    background-color: white; }\n    #igv-content-header .igv-ideogram-content-div canvas {\n      width: 100%;\n      height: 100%; }\n  #igv-content-header .igv-ideogram-content-div-border-right {\n    border-right-color: #292929;\n    border-right-style: solid;\n    border-right-width: 1px; }\n\n.igv-multi-locus-panel-border {\n  position: absolute;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 1px;\n  background-color: green;\n  border-right-color: #ff0000;\n  border-right-style: solid;\n  border-right-width: 1px; }\n\n#igv-navbar {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: space-between;\n  align-items: center;\n  margin-top: 2px;\n  margin-bottom: 4px;\n  position: relative;\n  top: 0;\n  left: 0;\n  height: 32px;\n  width: 100%;\n  border-style: solid;\n  border-radius: 3px;\n  border-width: thin;\n  border-color: #bfbfbf;\n  background-color: #f3f3f3; }\n  #igv-navbar i {\n    cursor: pointer;\n    color: #666666; }\n  #igv-navbar i:hover,\n  #igv-navbar i:focus,\n  #igv-navbar i:active {\n    color: #434343; }\n  #igv-navbar #igv-nav-bar-left-container {\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-between;\n    align-items: center;\n    height: 32px; }\n    #igv-navbar #igv-nav-bar-left-container #igv-logo {\n      width: 34px;\n      height: 16px;\n      margin-left: 8px;\n      margin-right: 32px; }\n    #igv-navbar #igv-nav-bar-left-container #igv-drag-and-drop-presentation-button {\n      margin-right: 32px; }\n    #igv-navbar #igv-nav-bar-left-container #igv-current_genome {\n      height: 32px;\n      margin-right: 16px;\n      color: #444;\n      font-family: \"Open Sans\", sans-serif;\n      font-size: 12px;\n      font-weight: 400;\n      line-height: 32px;\n      text-align: center; }\n    #igv-navbar #igv-nav-bar-left-container #igv-genomic-location {\n      display: flex;\n      flex-flow: row;\n      flex-wrap: nowrap;\n      justify-content: space-between;\n      align-items: center;\n      height: 32px; }\n      #igv-navbar #igv-nav-bar-left-container #igv-genomic-location #igv-chromosome-select-widget-container {\n        width: 96px;\n        margin-right: 4px;\n        height: 70%; }\n        #igv-navbar #igv-nav-bar-left-container #igv-genomic-location #igv-chromosome-select-widget-container select {\n          display: block;\n          outline: none;\n          font-family: \"Open Sans\", sans-serif;\n          font-size: 12px;\n          font-weight: 400;\n          color: #444;\n          width: 100%;\n          height: 100%; }\n      #igv-navbar #igv-nav-bar-left-container #igv-genomic-location #igv-locus-size-group {\n        display: flex;\n        flex-flow: row;\n        flex-wrap: nowrap;\n        justify-content: space-between;\n        align-items: center;\n        height: 75%; }\n        #igv-navbar #igv-nav-bar-left-container #igv-genomic-location #igv-locus-size-group #igv-search-container {\n          width: 260px;\n          display: flex;\n          flex-flow: row;\n          flex-wrap: nowrap;\n          justify-content: flex-start;\n          align-items: center; }\n          #igv-navbar #igv-nav-bar-left-container #igv-genomic-location #igv-locus-size-group #igv-search-container input {\n            display: block;\n            width: 85%;\n            padding-left: 8px;\n            margin-right: 8px;\n            line-height: 20px;\n            text-align: left;\n            font-family: \"Open Sans\", sans-serif;\n            font-size: 12px;\n            font-weight: 400;\n            color: #444;\n            outline: none;\n            border-style: solid;\n            border-radius: 3px;\n            border-width: thin;\n            border-color: #bfbfbf;\n            background-color: white; }\n          #igv-navbar #igv-nav-bar-left-container #igv-genomic-location #igv-locus-size-group #igv-search-container div {\n            height: 100%; }\n            #igv-navbar #igv-nav-bar-left-container #igv-genomic-location #igv-locus-size-group #igv-search-container div i {\n              font-size: 18px; }\n        #igv-navbar #igv-nav-bar-left-container #igv-genomic-location #igv-locus-size-group #igv-windowsizepanel-content-div {\n          margin-left: 4px;\n          font-family: \"Open Sans\", sans-serif;\n          font-size: 12px;\n          font-weight: 400;\n          color: #444; }\n  #igv-navbar #igv-nav-bar-right-container {\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-between;\n    align-items: center; }\n    #igv-navbar #igv-nav-bar-right-container #igv-nav-bar-toggle-button-container {\n      display: flex;\n      flex-flow: row;\n      flex-wrap: nowrap;\n      justify-content: space-between;\n      align-items: center;\n      margin-right: 8px; }\n      #igv-navbar #igv-nav-bar-right-container #igv-nav-bar-toggle-button-container div {\n        margin-left: 0;\n        margin-right: 4px; }\n      #igv-navbar #igv-nav-bar-right-container #igv-nav-bar-toggle-button-container div:last-child {\n        margin-left: 0;\n        margin-right: 0; }\n    #igv-navbar #igv-nav-bar-right-container #igv-zoom-widget {\n      display: flex;\n      flex-flow: row;\n      flex-wrap: nowrap;\n      justify-content: space-between;\n      align-items: center;\n      width: 44px;\n      margin-left: 16px;\n      margin-right: 8px; }\n      #igv-navbar #igv-nav-bar-right-container #igv-zoom-widget div i {\n        font-size: 24px; }\n\n.igv-nav-bar-button {\n  height: 18px;\n  min-width: 96px;\n  text-transform: capitalize;\n  line-height: 18px;\n  text-align: center;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 11px;\n  font-weight: 200;\n  color: #737373;\n  border-color: #737373;\n  background-color: #f3f3f3;\n  border-style: solid;\n  border-width: thin;\n  border-radius: 10px; }\n\n.igv-nav-bar-button-clicked {\n  cursor: pointer;\n  color: white;\n  border-color: #737373;\n  background-color: #737373; }\n\n.igv-nav-bar-button:hover {\n  cursor: pointer;\n  color: white;\n  border-color: #737373;\n  background-color: #737373; }\n\n#igv-logo-nonav {\n  margin-left: 4px;\n  margin-top: 12px;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 34px;\n  height: 16px; }\n\n.igv-search-results {\n  position: absolute;\n  top: 32px;\n  left: 2px;\n  height: 320px;\n  width: 213px;\n  background-color: white;\n  border-color: #7F7F7F;\n  border-style: solid;\n  border-width: thin;\n  overflow-x: hidden;\n  overflow-y: auto;\n  z-index: 9999; }\n  .igv-search-results tr {\n    font-family: \"Open Sans\", sans-serif;\n    font-size: small;\n    font-weight: 400;\n    color: #444; }\n  .igv-search-results tr:hover,\n  .igv-search-results tr:focus,\n  .igv-search-results tr:active {\n    cursor: pointer;\n    font-weight: 700;\n    color: #141414; }\n\n.igv-karyo-div {\n  position: relative;\n  left: 0;\n  top: 0;\n  height: 200px; }\n\n.igv-karyo-hide {\n  height: 0;\n  overflow: hidden; }\n\n.igv-karyo-content-div {\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%; }\n\n.igv-karyo-canvas {\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%; }\n\n.igv-root-div {\n  position: relative;\n  left: 0;\n  right: 0;\n  height: auto;\n  margin-left: 10px;\n  margin-right: 10px;\n  padding-top: 4px; }\n\n.igv-content-div {\n  position: relative;\n  width: 100%;\n  height: 100%; }\n\n.igv-track-container-div {\n  position: relative;\n  clear: both; }\n\n.igv-track-div {\n  position: relative;\n  width: 100%;\n  margin-top: 2px;\n  margin-bottom: 2px; }\n\n.igv-viewport-container {\n  position: absolute;\n  left: 50px;\n  right: 50px;\n  height: 100%;\n  white-space: nowrap;\n  overflow-x: hidden;\n  overflow-y: hidden; }\n\n.igv-viewport-div {\n  position: relative;\n  display: inline-block;\n  height: 100%;\n  overflow-x: hidden;\n  overflow-y: hidden; }\n\n.igv-viewport-content-div {\n  position: absolute;\n  width: 100%; }\n\n.igv-viewport-message {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  color: rgba(0, 0, 0, 0.15);\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 25px;\n  font-weight: bold;\n  user-select: none; }\n\n.igv-whole-genome-container {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: space-between;\n  width: 100%;\n  height: 100%;\n  background-color: white; }\n  .igv-whole-genome-container div {\n    font-family: \"Open Sans\", sans-serif;\n    font-size: 10px;\n    font-weight: 400;\n    color: #444;\n    height: 100%;\n    text-align: center;\n    border-right-color: #bfbfbf;\n    border-right-style: solid;\n    border-right-width: thin; }\n    .igv-whole-genome-container div span {\n      display: block;\n      padding-top: 6px;\n      text-overflow: ellipsis; }\n  .igv-whole-genome-container div:last-child {\n    border-right-color: transparent; }\n  .igv-whole-genome-container div:hover,\n  .igv-whole-genome-container div:focus,\n  .igv-whole-genome-container div:active {\n    cursor: pointer;\n    background-color: #efefef; }\n\n.igv-viewport-div-border-right {\n  border-right-color: #292929;\n  border-right-style: solid;\n  border-right-width: 1px; }\n\n.igv-viewport-fa-close {\n  position: absolute;\n  top: 4px;\n  right: 4px;\n  font-size: 16px;\n  color: #666666;\n  z-index: 1000; }\n\n.igv-viewport-fa-close:hover {\n  cursor: pointer;\n  color: #434343; }\n\n.igv-viewport-content-ruler-div {\n  position: absolute;\n  left: 50%;\n  top: 25%;\n  transform: translate(-50%, -25%);\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 12px;\n  font-weight: 200;\n  text-align: center;\n  min-width: 16px;\n  z-index: 64;\n  color: #0066ff;\n  background-color: white;\n  padding: 1px; }\n\n.igv-viewport-content-ruler-div:hover,\n.igv-viewport-content-ruler-div:focus,\n.igv-viewport-content-ruler-div:active {\n  cursor: pointer;\n  color: white;\n  background-color: #0066ff; }\n\n.igv-viewport-ruler {\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 10px;\n  font-weight: 200;\n  text-align: center; }\n  .igv-viewport-ruler > div {\n    height: 100%; }\n\n.igv-viewport-sequence {\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 8px;\n  font-weight: 200;\n  text-align: center; }\n\n.igv-viewport-spinner {\n  pointer-events: none;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  z-index: 1024;\n  color: #737373; }\n\n.igv-ruler-sweeper-div {\n  display: none;\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 0;\n  height: 100%;\n  z-index: 99999;\n  background-color: rgba(68, 134, 247, 0.25); }\n\n.igv-right-hand-gutter {\n  position: absolute;\n  right: 0;\n  width: 36px;\n  height: 100%;\n  background: white;\n  text-align: center; }\n  .igv-right-hand-gutter i {\n    position: absolute;\n    top: 0;\n    right: 0;\n    padding-right: 6px;\n    font-size: 20px;\n    cursor: pointer;\n    color: grey; }\n  .igv-right-hand-gutter i:hover,\n  .igv-right-hand-gutter i:focus,\n  .igv-right-hand-gutter i:active {\n    color: #333333; }\n\n.igv-left-hand-gutter {\n  position: absolute;\n  left: 0;\n  width: 50px;\n  height: 100%; }\n  .igv-left-hand-gutter canvas {\n    position: absolute; }\n\n.igv-track-menu-container {\n  background-color: white;\n  border-bottom-left-radius: 4px;\n  border-bottom-right-radius: 4px; }\n  .igv-track-menu-container div {\n    padding-left: 4px;\n    padding-right: 4px;\n    padding-top: 2px;\n    padding-bottom: 2px;\n    background-color: white; }\n    .igv-track-menu-container div i {\n      padding-right: 2px; }\n  .igv-track-menu-container div:hover,\n  .igv-track-menu-container div:focus,\n  .igv-track-menu-container div:active {\n    cursor: pointer;\n    background-color: #efefef; }\n  .igv-track-menu-container a {\n    color: inherit;\n    text-decoration: none; }\n\n.igv-track-menu-border-top {\n  border-top-color: #a2a2a2;\n  border-top-style: solid;\n  border-top-width: thin; }\n\n.igv-track-menu-category {\n  padding-left: 4px;\n  font-weight: 400; }\n\n.igv-track-drag-scrim {\n  position: absolute;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  z-index: 256;\n  background-color: rgba(68, 134, 247, 0.25); }\n\n.igv-track-manipulation-handle {\n  cursor: pointer;\n  position: absolute;\n  right: 36px;\n  width: 12px;\n  margin-left: 2px;\n  height: 100%;\n  box-sizing: border-box;\n  font-size: medium;\n  border-color: #c4c4c4;\n  border-style: solid;\n  border-width: thin;\n  border-top-right-radius: 6px;\n  border-bottom-right-radius: 6px;\n  z-index: 512;\n  background-color: #c4c4c4; }\n\n.igv-track-manipulation-handle:hover,\n.igv-track-manipulation-handle:focus,\n.igv-track-manipulation-handle:active {\n  border-color: #7e7e7e;\n  background-color: #7e7e7e; }\n\n.igv-track-label {\n  position: absolute;\n  left: 8px;\n  top: 4px;\n  width: auto;\n  height: auto;\n  max-width: 200px;\n  padding-left: 4px;\n  padding-right: 4px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: small;\n  font-weight: 400;\n  text-align: center;\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  border-color: #444;\n  border-radius: 2px;\n  border-style: solid;\n  border-width: thin;\n  background-color: white;\n  z-index: 128;\n  cursor: pointer; }\n\n.igv-track-label:hover,\n.igv-track-label:focus,\n.igv-track-label:active {\n  background-color: rgba(0, 0, 0, 0.05); }\n\n.igv-scrollbar-outer-div {\n  position: absolute;\n  top: 0;\n  right: 0;\n  width: 14px;\n  height: 100%;\n  background-color: white; }\n  .igv-scrollbar-outer-div div {\n    position: absolute;\n    top: 0;\n    left: 3px;\n    width: 8px;\n    border-style: solid;\n    border-width: thin;\n    border-color: #c4c4c4;\n    border-top-left-radius: 4px;\n    border-top-right-radius: 4px;\n    border-bottom-left-radius: 4px;\n    border-bottom-right-radius: 4px;\n    background-color: white; }\n  .igv-scrollbar-outer-div div:hover,\n  .igv-scrollbar-outer-div div:focus,\n  .igv-scrollbar-outer-div div:active {\n    cursor: pointer;\n    background-color: #c4c4c4; }\n\n.zoom-in-notice-container {\n  position: absolute;\n  top: 25%;\n  left: 50%; }\n  .zoom-in-notice-container div {\n    position: relative;\n    left: -50%;\n    font-family: \"Open Sans\", sans-serif;\n    font-size: medium;\n    font-weight: 400;\n    color: #3f3f3f;\n    background-color: rgba(255, 255, 255, 0.51);\n    z-index: 64; }\n\n.igv-center-guide {\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 50%;\n  width: 8px;\n  z-index: 8;\n  display: none;\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  border-left-style: dashed;\n  border-left-width: thin;\n  border-right-style: dashed;\n  border-right-width: thin; }\n\n.igv-center-guide-wide {\n  background-color: transparent;\n  border-left-color: rgba(127, 127, 127, 0.51);\n  border-right-color: rgba(127, 127, 127, 0.51); }\n\n.igv-center-guide-thin {\n  left: 50%;\n  width: 1px;\n  background-color: transparent;\n  border-left-color: rgba(127, 127, 127, 0.51);\n  border-right-color: transparent;\n  /*background-color: rgba(127, 127, 127, 0.51);*/\n  /*border-left-color: rgba(0,0,0,0);*/\n  /*border-right-color: rgba(0,0,0,0);*/ }\n\n.igv-cursor-tracking-guide {\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 50%;\n  width: 1px;\n  z-index: 1;\n  border-left-style: dotted;\n  border-left-width: thin;\n  border-left-color: rgba(127, 127, 127, 0.76);\n  display: none;\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none; }\n\n.igv-clickable {\n  cursor: pointer;\n  background-color: white; }\n\n#color-by-tag {\n  color: #444; }\n\n#color-by-tag:hover,\n#color-by-tag:focus,\n#color-by-tag:active {\n  cursor: pointer;\n  padding-left: 2px;\n  padding-right: 2px;\n  color: white;\n  border-color: #444;\n  border-radius: 2px;\n  border-style: solid;\n  border-width: thin;\n  background-color: #7f7f7f; }\n\n.igv-user-feedback {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  width: 36em;\n  height: 27em;\n  margin-top: -9em;\n  /*set to a negative number 1/2 of your height*/\n  margin-left: -15em;\n  /*set to a negative number 1/2 of your width*/\n  background-color: white;\n  border-color: #a2a2a2;\n  border-style: solid;\n  border-width: thin;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: medium;\n  font-weight: 400;\n  color: #444; }\n  .igv-user-feedback div:first-child {\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    width: 100%;\n    height: 32px;\n    border-bottom-color: #a2a2a2;\n    border-bottom-style: solid;\n    border-bottom-width: thin;\n    background-color: white; }\n    .igv-user-feedback div:first-child i {\n      font-size: 20px; }\n    .igv-user-feedback div:first-child i:first-child {\n      position: absolute;\n      top: 0;\n      left: 0;\n      padding: 8px;\n      color: red; }\n    .igv-user-feedback div:first-child i:last-child {\n      position: absolute;\n      top: 0;\n      right: 0;\n      padding: 8px;\n      cursor: pointer;\n      color: grey; }\n    .igv-user-feedback div:first-child i:last-child:hover,\n    .igv-user-feedback div:first-child i:last-child:focus,\n    .igv-user-feedback div:first-child i:last-child:active {\n      color: #333333; }\n  .igv-user-feedback div:last-child {\n    padding-left: 48px;\n    padding-top: 8px;\n    padding-right: 48px;\n    padding-bottom: 8px;\n    position: absolute;\n    top: 33px;\n    left: 0;\n    right: 0;\n    bottom: 0;\n    background-color: white; }\n\n.igv-ellipsis {\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis; }\n\n.igv-generic-dialog-container {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 300px;\n  height: 200px;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: medium;\n  font-weight: 200;\n  border-color: #7F7F7F;\n  border-radius: 4px;\n  border-style: solid;\n  border-width: thin;\n  z-index: 2048;\n  background-color: white;\n  display: flex;\n  flex-flow: column;\n  flex-wrap: nowrap;\n  justify-content: flex-start;\n  align-items: center; }\n  .igv-generic-dialog-container .igv-generic-dialog-header {\n    width: 100%;\n    height: 24px;\n    cursor: move;\n    border-color: #c4c4c4;\n    border-top-left-radius: 4px;\n    border-top-right-radius: 4px;\n    border-style: solid;\n    border-width: thin;\n    background-color: #c4c4c4;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-end;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-header div {\n      height: 24px;\n      width: 16px;\n      margin-right: 6px;\n      text-align: center;\n      line-height: 24px;\n      color: #444;\n      font-size: medium; }\n    .igv-generic-dialog-container .igv-generic-dialog-header div:hover {\n      cursor: pointer; }\n  .igv-generic-dialog-container .igv-generic-dialog-one-liner {\n    margin-top: 8px;\n    width: 95%;\n    color: #373737;\n    line-height: 24px;\n    text-align: left;\n    padding-left: 8px;\n    background-color: white; }\n  .igv-generic-dialog-container .igv-generic-dialog-label-input {\n    margin-top: 8px;\n    width: 95%;\n    height: 24px;\n    color: #373737;\n    line-height: 24px;\n    padding-left: 8px;\n    background-color: white;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-start;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-label-input div {\n      width: 30%;\n      height: 100%;\n      font-size: 16px;\n      text-align: right;\n      padding-right: 8px;\n      background-color: white; }\n    .igv-generic-dialog-container .igv-generic-dialog-label-input input {\n      display: block;\n      height: 100%;\n      width: 100%;\n      padding-left: 4px;\n      font-family: \"Open Sans\", sans-serif;\n      font-weight: 400;\n      color: #373737;\n      text-align: left;\n      outline: none;\n      border-style: solid;\n      border-width: thin;\n      border-color: #7F7F7F;\n      background-color: white; }\n    .igv-generic-dialog-container .igv-generic-dialog-label-input input {\n      width: 50%;\n      font-size: 16px; }\n  .igv-generic-dialog-container .igv-generic-dialog-input {\n    margin-top: 8px;\n    width: calc(100% - 16px);\n    height: 24px;\n    color: #373737;\n    line-height: 24px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-around;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-input input {\n      display: block;\n      height: 100%;\n      width: 100%;\n      padding-left: 4px;\n      font-family: \"Open Sans\", sans-serif;\n      font-weight: 400;\n      color: #373737;\n      text-align: left;\n      outline: none;\n      border-style: solid;\n      border-width: thin;\n      border-color: #7F7F7F;\n      background-color: white; }\n    .igv-generic-dialog-container .igv-generic-dialog-input input {\n      font-size: 16px; }\n  .igv-generic-dialog-container .igv-generic-dialog-ok-cancel {\n    width: 100%;\n    height: 28px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-around;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div {\n      margin-top: 32px;\n      color: white;\n      font-family: \"Open Sans\", sans-serif;\n      font-size: 14px;\n      font-weight: 200;\n      width: 75px;\n      height: 28px;\n      line-height: 28px;\n      text-align: center;\n      border-color: transparent;\n      border-style: solid;\n      border-width: thin;\n      border-radius: 2px; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:first-child {\n      margin-left: 32px;\n      margin-right: 0;\n      background-color: #5ea4e0; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:last-child {\n      margin-left: 0;\n      margin-right: 32px;\n      background-color: #c4c4c4; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:first-child:hover {\n      cursor: pointer;\n      background-color: #3b5c7f; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:last-child:hover {\n      cursor: pointer;\n      background-color: #7f7f7f; }\n  .igv-generic-dialog-container .igv-generic-dialog-ok {\n    width: 100%;\n    height: 36px;\n    margin-top: 32px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-around;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok div {\n      width: 98px;\n      height: 36px;\n      line-height: 36px;\n      text-align: center;\n      color: white;\n      font-family: \"Open Sans\", sans-serif;\n      font-size: medium;\n      font-weight: 200;\n      border-color: white;\n      border-style: solid;\n      border-width: thin;\n      border-radius: 4px;\n      background-color: #2B81AF; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok div:hover {\n      cursor: pointer;\n      background-color: #25597f; }\n\n.igv-popover {\n  position: absolute;\n  top: 0;\n  left: 0;\n  min-width: 128px;\n  z-index: 4096;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: small;\n  font-weight: 400;\n  color: #444;\n  background: white;\n  border-radius: 4px;\n  border-color: #7F7F7F;\n  border-style: solid;\n  border-width: thin;\n  display: none; }\n\n.igv-popover-header {\n  position: relative;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 20px;\n  border-top-left-radius: 4px;\n  border-top-right-radius: 4px;\n  border-bottom-color: #7F7F7F;\n  border-bottom-style: solid;\n  border-bottom-width: thin;\n  background-color: #eee; }\n  .igv-popover-header div {\n    position: absolute;\n    top: 3px;\n    right: 3px;\n    height: 100%;\n    width: 16px;\n    text-align: center;\n    line-height: 100%;\n    cursor: pointer;\n    color: #444;\n    font-size: small; }\n  .igv-popover-header div:hover {\n    color: white; }\n\n.igv-popover-track-popup-content {\n  position: relative;\n  top: 0;\n  left: 0;\n  max-height: 384px;\n  overflow-x: hidden;\n  overflow-y: auto; }\n\n.igv-popover-name-value {\n  cursor: default;\n  text-wrap: none;\n  white-space: nowrap;\n  max-width: 384px; }\n\n.igv-popover-name {\n  font-weight: bold;\n  padding-right: 4px;\n  float: left; }\n\n.igv-popover-value {\n  padding-left: 4px;\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  max-width: 256px;\n  display: inline-block; }\n\n.igv-spinner-container {\n  color: #3f3f3f;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  padding-top: 8px;\n  font-size: 24px;\n  z-index: 512; }\n\n.igv-fa-check-hidden {\n  color: rgba(255, 255, 255, 0); }\n\n.validateTips {\n  border: 1px solid transparent;\n  padding: 0.3em; }\n  .validateTips fieldset {\n    border: 0; }\n\n.igv-spacer-10 {\n  height: 10px;\n  width: 100%;\n  font-size: 0;\n  margin: 0;\n  padding: 0;\n  border: 0;\n  display: block; }\n\n/*# sourceMappingURL=igv.css.map */\n\n/*!\n * Font Awesome Free 5.0.8 by @fontawesome - https://fontawesome.com\n * License - https://fontawesome.com/license (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)\n */\nsvg:not(:root).svg-inline--fa5 {\n  overflow: visible;\n  }\n\n.svg-inline--fa5 {\n  display: inline-block;\n  font-size: inherit;\n  height: 1em;\n  overflow: visible;\n  vertical-align: -.125em; }\n  .svg-inline--fa5.fa5-lg {\n    vertical-align: -.225em; }\n  .svg-inline--fa5.fa5-w-1 {\n    width: 0.0625em; }\n  .svg-inline--fa5.fa5-w-2 {\n    width: 0.125em; }\n  .svg-inline--fa5.fa5-w-3 {\n    width: 0.1875em; }\n  .svg-inline--fa5.fa5-w-4 {\n    width: 0.25em; }\n  .svg-inline--fa5.fa5-w-5 {\n    width: 0.3125em; }\n  .svg-inline--fa5.fa5-w-6 {\n    width: 0.375em; }\n  .svg-inline--fa5.fa5-w-7 {\n    width: 0.4375em; }\n  .svg-inline--fa5.fa5-w-8 {\n    width: 0.5em; }\n  .svg-inline--fa5.fa5-w-9 {\n    width: 0.5625em; }\n  .svg-inline--fa5.fa5-w-10 {\n    width: 0.625em; }\n  .svg-inline--fa5.fa5-w-11 {\n    width: 0.6875em; }\n  .svg-inline--fa5.fa5-w-12 {\n    width: 0.75em; }\n  .svg-inline--fa5.fa5-w-13 {\n    width: 0.8125em; }\n  .svg-inline--fa5.fa5-w-14 {\n    width: 0.875em; }\n  .svg-inline--fa5.fa5-w-15 {\n    width: 0.9375em; }\n  .svg-inline--fa5.fa5-w-16 {\n    /* width: 1em; */\n    }\n  .svg-inline--fa5.fa5-w-17 {\n    width: 1.0625em; }\n  .svg-inline--fa5.fa5-w-18 {\n    width: 1.125em; }\n  .svg-inline--fa5.fa5-w-19 {\n    width: 1.1875em; }\n  .svg-inline--fa5.fa5-w-20 {\n    width: 1.25em; }\n  .svg-inline--fa5.fa5-pull-left {\n    margin-right: .3em;\n    width: auto; }\n  .svg-inline--fa5.fa5-pull-right {\n    margin-left: .3em;\n    width: auto; }\n  .svg-inline--fa5.fa5-border {\n    height: 1.5em; }\n  .svg-inline--fa5.fa5-li {\n    width: 2em; }\n  .svg-inline--fa5.fa5-fw {\n    width: 1.25em; }\n\n.fa5-layers svg.svg-inline--fa5 {\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  position: absolute;\n  right: 0;\n  top: 0; }\n\n.fa5-layers {\n  display: inline-block;\n  height: 1em;\n  position: relative;\n  text-align: center;\n  vertical-align: -.125em;\n  width: 1em; }\n  .fa5-layers svg.svg-inline--fa5 {\n    -webkit-transform-origin: center center;\n            transform-origin: center center; }\n\n.fa5-layers-text, .fa5-layers-counter {\n  display: inline-block;\n  position: absolute;\n  text-align: center; }\n\n.fa5-layers-text {\n  left: 50%;\n  top: 50%;\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n  -webkit-transform-origin: center center;\n          transform-origin: center center; }\n\n.fa5-layers-counter {\n  background-color: #ff253a;\n  border-radius: 1em;\n  color: #fff;\n  height: 1.5em;\n  line-height: 1;\n  max-width: 5em;\n  min-width: 1.5em;\n  overflow: hidden;\n  padding: .25em;\n  right: 0;\n  text-overflow: ellipsis;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top right;\n          transform-origin: top right; }\n\n.fa5-layers-bottom-right {\n  bottom: 0;\n  right: 0;\n  top: auto;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: bottom right;\n          transform-origin: bottom right; }\n\n.fa5-layers-bottom-left {\n  bottom: 0;\n  left: 0;\n  right: auto;\n  top: auto;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: bottom left;\n          transform-origin: bottom left; }\n\n.fa5-layers-top-right {\n  right: 0;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top right;\n          transform-origin: top right; }\n\n.fa5-layers-top-left {\n  left: 0;\n  right: auto;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top left;\n          transform-origin: top left; }\n\n.fa5-lg {\n  font-size: 1.33333em;\n  line-height: 0.75em;\n  vertical-align: -.0667em; }\n\n.fa5-xs {\n  font-size: .75em; }\n\n.fa5-sm {\n  font-size: .875em; }\n\n.fa5-1x {\n  font-size: 1em; }\n\n.fa5-2x {\n  font-size: 2em; }\n\n.fa5-3x {\n  font-size: 3em; }\n\n.fa5-4x {\n  font-size: 4em; }\n\n.fa5-5x {\n  font-size: 5em; }\n\n.fa5-6x {\n  font-size: 6em; }\n\n.fa5-7x {\n  font-size: 7em; }\n\n.fa5-8x {\n  font-size: 8em; }\n\n.fa5-9x {\n  font-size: 9em; }\n\n.fa5-10x {\n  font-size: 10em; }\n\n.fa5-fw {\n  text-align: center;\n  width: 1.25em; }\n\n.fa5-ul {\n  list-style-type: none;\n  margin-left: 2.5em;\n  padding-left: 0; }\n  .fa5-ul > li {\n    position: relative; }\n\n.fa5-li {\n  left: -2em;\n  position: absolute;\n  text-align: center;\n  width: 2em;\n  line-height: inherit; }\n\n.fa5-border {\n  border: solid 0.08em #eee;\n  border-radius: .1em;\n  padding: .2em .25em .15em; }\n\n.fa5-pull-left {\n  float: left; }\n\n.fa5-pull-right {\n  float: right; }\n\n.fa5.fa5-pull-left,\n.fas.fa5-pull-left,\n.far.fa5-pull-left,\n.fal.fa5-pull-left,\n.fab.fa5-pull-left {\n  margin-right: .3em; }\n\n.fa5.fa5-pull-right,\n.fas.fa5-pull-right,\n.far.fa5-pull-right,\n.fal.fa5-pull-right,\n.fab.fa5-pull-right {\n  margin-left: .3em; }\n\n.fa5-spin {\n  -webkit-animation: fa5-spin 2s infinite linear;\n          animation: fa5-spin 2s infinite linear; }\n\n.fa5-pulse {\n  -webkit-animation: fa5-spin 1s infinite steps(8);\n          animation: fa5-spin 1s infinite steps(8); }\n\n@-webkit-keyframes fa5-spin {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg); }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg); } }\n\n@keyframes fa5-spin {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg); }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg); } }\n\n.fa5-rotate-90 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=1)\";\n  -webkit-transform: rotate(90deg);\n          transform: rotate(90deg); }\n\n.fa5-rotate-180 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2)\";\n  -webkit-transform: rotate(180deg);\n          transform: rotate(180deg); }\n\n.fa5-rotate-270 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=3)\";\n  -webkit-transform: rotate(270deg);\n          transform: rotate(270deg); }\n\n.fa5-flip-horizontal {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)\";\n  -webkit-transform: scale(-1, 1);\n          transform: scale(-1, 1); }\n\n.fa5-flip-vertical {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)\";\n  -webkit-transform: scale(1, -1);\n          transform: scale(1, -1); }\n\n.fa5-flip-horizontal.fa5-flip-vertical {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)\";\n  -webkit-transform: scale(-1, -1);\n          transform: scale(-1, -1); }\n\n:root .fa5-rotate-90,\n:root .fa5-rotate-180,\n:root .fa5-rotate-270,\n:root .fa5-flip-horizontal,\n:root .fa5-flip-vertical {\n  -webkit-filter: none;\n          filter: none; }\n\n.fa5-stack {\n  display: inline-block;\n  height: 2em;\n  position: relative;\n  width: 2em; }\n\n.fa5-stack-1x,\n.fa5-stack-2x {\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  position: absolute;\n  right: 0;\n  top: 0; }\n\n.svg-inline--fa5.fa5-stack-1x {\n  height: 1em;\n  width: 1em; }\n\n.svg-inline--fa5.fa5-stack-2x {\n  height: 2em;\n  width: 2em; }\n\n.fa5-inverse {\n  color: #fff; }\n\n.sr-only {\n  border: 0;\n  clip: rect(0, 0, 0, 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px; }\n\n.sr-only-focusable:active, .sr-only-focusable:focus {\n  clip: auto;\n  height: auto;\n  margin: 0;\n  overflow: visible;\n  position: static;\n  width: auto; }\n';
+    
+    var style = document.createElement('style');
+    style.setAttribute('type', 'text/css');
+    style.innerHTML = css;
+
+    var headChildren = document.head.childNodes;
+    var beforeChild = null;
+
+    for (var i = headChildren.length - 1; i > -1; i--) {
+        var child = headChildren[i];
+        var tagName = (child.tagName || '').toUpperCase();
+        if (['STYLE', 'LINK'].indexOf(tagName) > -1) {
+            beforeChild = child;
+        }
+    }
+
+    document.head.insertBefore(style, beforeChild);
+
+})();
 /*!
  * jQuery JavaScript Library v1.12.4
  * http://jquery.com/
@@ -29918,13 +29918,13 @@ var igv = (function (igv) {
         }
     }
 
-    igv.Browser.hasKnownFileExtension = function (config) {
+    igv.hasKnownFileExtension = function (config) {
         var extension = igv.getExtension(config);
 
         if (undefined === extension) {
             return false;
         }
-        return igv.Browser.knownFileExtensions.has(extension);
+        return igv.knownFileExtensions.has(extension);
     };
 
     //
@@ -30040,7 +30040,7 @@ var igv = (function (igv) {
                 return Promise.resolve(undefined);
             }
 
-            filename = (typeof urlOrFile === 'string' ? urlOrFile : urlOrFile.name);
+            filename = (typeof urlOrFile === 'string' ? igv.getFilename(urlOrFile) : urlOrFile.name);
 
             if (filename.startsWith("blob:")) {
                 var json = igv.Browser.uncompressSession(urlOrFile.substring(5));
@@ -30291,29 +30291,35 @@ var igv = (function (igv) {
     igv.Browser.prototype.loadTrackList = function (configList) {
 
         var self = this,
-            loadedTracks = [],
-            groupAutoscaleViews;
+            groupAutoscaleViews,
+            promises;
 
+        promises = [];
         configList.forEach(function (config) {
-            var track = self.loadTrack(config);
-            if (track) {
-                loadedTracks.push(track);
-
-            }
+            promises.push(self.loadTrack(config));
         });
 
-        groupAutoscaleViews = this.trackViews.filter(function (trackView) {
-            return trackView.track.autoscaleGroup
-        })
+        return Promise.all(promises)
+            .then(function (loadedTracks) {
 
-        if (groupAutoscaleViews.length > 0) {
-            this.updateViews(this.genomicStateList[0], groupAutoscaleViews);
-        }
+                groupAutoscaleViews = self.trackViews.filter(function (trackView) {
+                    return trackView.track.autoscaleGroup
+                })
 
+                if (groupAutoscaleViews.length > 0) {
+                    this.updateViews(self.genomicStateList[0], groupAutoscaleViews);
+                }
 
-        return loadedTracks;
+                return loadedTracks;
+            })
     };
 
+    /**
+     * Return a promise to load a track
+     *
+     * @param config
+     * @returns {*}
+     */
     igv.Browser.prototype.loadTrack = function (config) {
 
         var self = this,
@@ -30321,36 +30327,75 @@ var igv = (function (igv) {
             property,
             newTrack;
 
-        igv.inferTrackTypes(config);
+        return resolveTrackProperties(config)
 
-        // Set defaults if specified
-        if (this.trackDefaults && config.type) {
-            settings = this.trackDefaults[config.type];
-            if (settings) {
-                for (property in settings) {
-                    if (settings.hasOwnProperty(property) && config[property] === undefined) {
-                        config[property] = settings[property];
+            .then(function (config) {
+                igv.inferTrackTypes(config);
+
+                // Set defaults if specified
+                if (self.trackDefaults && config.type) {
+                    settings = self.trackDefaults[config.type];
+                    if (settings) {
+                        for (property in settings) {
+                            if (settings.hasOwnProperty(property) && config[property] === undefined) {
+                                config[property] = settings[property];
+                            }
+                        }
                     }
                 }
+
+                newTrack = igv.createTrack(config);
+
+                if (undefined === newTrack) {
+                    igv.presentAlert("Unknown file type: " + config.url, undefined);
+                    return newTrack;
+                }
+
+                // Set order field of track here.  Otherwise track order might get shuffled during asynchronous load
+                if (undefined === newTrack.order) {
+                    newTrack.order = self.trackViews.length;
+                }
+
+                self.addTrack(newTrack);
+
+                return newTrack;
+            })
+
+        function resolveTrackProperties(config) {
+            if (typeof config.url === 'string' && config.url.startsWith("https://drive.google.com")) {
+
+                return igv.Google.getDriveFileInfo(config.url)
+
+                    .then(function (json) {
+                        var format;
+
+                        if (!config.name) {
+                            config.name = json.originalFileName;
+                        }
+                        if (!config.format) {
+                            config.format = igv.inferFileFormat(config.name);
+                        }
+                        if(!config.format) {
+                            igv.presentAlert("Unknown file format: " + config.format);
+                        }
+
+                        config.url = "https://www.googleapis.com/drive/v3/files/" + json.id + "?alt=media";
+
+                        if(config.indexURL) {
+                            config.indexURL = igv.Google.driveDownloadURL(config.indexURL);
+                        }
+
+                        return config;
+                    })
+
+
+            }
+            else {
+                return Promise.resolve(config);
             }
         }
-
-        newTrack = igv.createTrack(config);
-
-        if (undefined === newTrack) {
-            igv.presentAlert("Unknown file type: " + config.url, undefined);
-            return newTrack;
-        }
-
-        // Set order field of track here.  Otherwise track order might get shuffled during asynchronous load
-        if (undefined === newTrack.order) {
-            newTrack.order = this.trackViews.length;
-        }
-
-        self.addTrack(newTrack);
-
-        return newTrack;
     };
+
 
     /**
      * Add a new track.  Each track is associated with the following DOM elements
@@ -30779,66 +30824,6 @@ var igv = (function (igv) {
         return this.config.minimumBases;
     };
 
-    igv.Browser.prototype.goto = function (chrName, start, end) {
-
-        var genomicState,
-            viewportWidth,
-            referenceFrame,
-            width,
-            maxBpPerPixel;
-
-        // Translate chr to official name
-        if (undefined === this.genome) {
-            console.log('Missing genome - bailing ...');
-            return;
-        }
-
-        genomicState = this.genomicStateList[0];
-        genomicState.chromosome = this.genome.getChromosome(chrName);
-        viewportWidth = igv.browser.viewportContainerWidth() / this.genomicStateList.length;
-
-        referenceFrame = genomicState.referenceFrame;
-        referenceFrame.chrName = genomicState.chromosome.name;
-
-        // If end is undefined,  interpret start as the new center, otherwise compute scale.
-        if (undefined === end) {
-            width = Math.round(viewportWidth * referenceFrame.bpPerPixel / 2);
-            start = Math.max(0, start - width);
-        } else {
-            referenceFrame.bpPerPixel = (end - start) / viewportWidth;
-            referenceFrame.end = end;      // Remember in case bpPerPixel needs re-computed.
-        }
-
-        if (!genomicState.chromosome) {
-
-            if (console && console.log) {
-                console.log("Could not find chromsome " + referenceFrame.chrName);
-            }
-        } else {
-
-            if (!genomicState.chromosome.bpLength) {
-                genomicState.chromosome.bpLength = 1;
-            }
-
-            maxBpPerPixel = genomicState.chromosome.bpLength / viewportWidth;
-            if (referenceFrame.bpPerPixel > maxBpPerPixel) {
-                referenceFrame.bpPerPixel = maxBpPerPixel;
-            }
-
-            if (undefined === end) {
-                end = start + viewportWidth * referenceFrame.bpPerPixel;
-            }
-
-            if (genomicState.chromosome && end > genomicState.chromosome.bpLength) {
-                start -= (end - genomicState.chromosome.bpLength);
-            }
-        }
-
-        referenceFrame.start = start;
-
-        this.updateViews();
-
-    };
 
     // Zoom in by a factor of 2, keeping the same center location
     igv.Browser.prototype.zoomIn = function () {
@@ -31150,6 +31135,10 @@ var igv = (function (igv) {
 
     };
 
+    igv.Browser.prototype.goto = function (chrName, start, end) {
+        return this.search(chrName + ":" + start + "-" + end);
+    };
+
     igv.Browser.prototype.search = function (string, init) {
 
         var self = this,
@@ -31159,7 +31148,7 @@ var igv = (function (igv) {
 
         loci = string.split(' ');
 
-        return createGenomicStateList.call(this, loci)
+        return createGenomicStateList(loci)
 
             .then(function (genomicStateList) {
 
@@ -31210,7 +31199,7 @@ var igv = (function (igv) {
          */
         function createGenomicStateList(loci) {
 
-            var self = this, searchConfig, geneNameLoci, genomicState, result, unique, promises, ordered, dictionary;
+            var searchConfig, geneNameLoci, genomicState, result, unique, promises, ordered, dictionary;
 
             searchConfig = igv.browser.searchConfig,
                 ordered = {};
@@ -31231,6 +31220,7 @@ var igv = (function (igv) {
             // Try locus string first  (e.g.  chr1:100-200)
             unique.forEach(function (locus) {
                 genomicState = isLocusChrNameStartEnd(locus, self.genome);
+
                 if (genomicState) {
                     genomicState.locusSearchString = locus;
                     result.push(genomicState);
@@ -31251,13 +31241,19 @@ var igv = (function (igv) {
                 // Try local feature cache first.  This is created from feature tracks tagged "searchable"
                 promises = [];
                 geneNameLoci.forEach(function (locus) {
-                    var feature,
-                        genomicState;
+                    var feature, genomicState, chromosome;
 
                     feature = self.featureDB[locus.toLowerCase()];
                     if (feature) {
-                        genomicState = processSearchResult(feature, locus);
-                        if (genomicState) {
+                        chromosome = self.genome.getChromosome(feature.chr);
+                        if (chromosome) {
+                            genomicState = {
+                                chromosome: chromosome,
+                                start: feature.start,
+                                end: feature.end,
+                                locusSearchString: locus
+                            }
+                            igv.Browser.validateLocusExtent(genomicState.chromosome, genomicState);
                             result.push(genomicState);
                             dictionary[locus] = genomicState;
                         }
@@ -31416,12 +31412,7 @@ var igv = (function (igv) {
 
             function isLocusChrNameStartEnd(locus, genome) {
 
-                var a,
-                    b,
-                    numeric,
-                    chr,
-                    chromosome,
-                    locusObject;
+                var a, b, numeric, chr, chromosome, locusObject;
 
                 locusObject = {};
                 a = locus.split(':');
@@ -31429,7 +31420,7 @@ var igv = (function (igv) {
                 chr = a[0];
                 chromosome = genome.getChromosome(chr);  // Map chr to official name from (possible) alias
                 if (!chromosome) {
-                    return false;          // Unknown chromosome
+                    return undefined;          // Unknown chromosome
                 }
                 locusObject.chromosome = chromosome;     // Map chr to offical name from possible alias
                 locusObject.start = 0;
@@ -31440,17 +31431,17 @@ var igv = (function (igv) {
                     return locusObject;
                 } else {
 
-                    b = _.last(a).split('-');
+                    b = a[1].split('-');
 
                     if (b.length > 2) {
-                        return false;                 // Not a locus string
+                        return undefined;                 // Not a locus string
                     } else {
 
                         locusObject.start = locusObject.end = undefined;
 
                         numeric = b[0].replace(/\,/g, '');
                         if (isNaN(numeric)) {
-                            return false;
+                            return undefined;
                         }
 
                         locusObject.start = parseInt(numeric, 10) - 1;
@@ -31580,6 +31571,32 @@ var igv = (function (igv) {
         if (ext === 'fam') {
             igv.sampleInformation.loadPlinkFile(url);
         }
+    };
+
+    igv.Browser.prototype.createFileLoadWidget = function (config, fileLoadManager, $parent, $buttonParent) {
+
+        var isHidden,
+            isEmbedded,
+            fileLoadWidgetConfig;
+
+        isHidden = (undefined === config.hidden) ? true : config.hidden;
+
+        if (false === isHidden) {
+
+            isEmbedded = (undefined === config.embed) ? false : config.embed;
+
+            // load local file
+            fileLoadWidgetConfig =
+                {
+                    mode: config.mode,
+                    embed: isEmbedded,
+                    $widgetParent: config.$widgetParent || $parent,
+                    $buttonParent: isEmbedded ? undefined : $buttonParent
+                };
+
+            return new igv.FileLoadWidget(fileLoadWidgetConfig, fileLoadManager)
+        }
+
     };
 
     // EVENTS
@@ -35194,11 +35211,11 @@ var igv = (function (igv) {
     };
 
     igv.FeatureTrack.prototype.getFeatures = function (chr, bpStart, bpEnd, bpPerPixel) {
-        
+
         var self = this;
-        
+
         return this.getFileHeader()
-            
+
             .then(function (header) {
                 return self.featureSource.getFeatures(chr, bpStart, bpEnd, bpPerPixel);
             });
@@ -35293,18 +35310,16 @@ var igv = (function (igv) {
         // feature is not already loaded this won't work,  but the user wouldn't be mousing over it either.
         if (config.viewport.tile.features) {
 
-            var genomicLocation = config.genomicLocation,
-                yOffset = config.y,
-                referenceFrame = config.viewport.genomicState.referenceFrame,
-                tolerance,
-                featureList,
-                row,
-                popupData,
-                ss,
-                ee;
+            var genomicLocation, yOffset, referenceFrame, tolerance, featureList, row, data, ss, ee, hits;
 
-            // We need some tolerance around genomicLocation, start with +/- 2 pixels
-            tolerance = 2 * referenceFrame.bpPerPixel;
+            data = [];
+
+            genomicLocation = config.genomicLocation;
+            yOffset = config.y;
+            referenceFrame = config.viewport.genomicState.referenceFrame;
+
+            // We need some tolerance around genomicLocation
+            tolerance = 3 * referenceFrame.bpPerPixel;
             ss = genomicLocation - tolerance;
             ee = genomicLocation + tolerance;
             //featureList = this.featureSource.featureCache.queryFeatures(referenceFrame.chrName, ss, ee);
@@ -35317,43 +35332,30 @@ var igv = (function (igv) {
 
             if (featureList && featureList.length > 0) {
 
-                // filtered = _.filter(featureList, function (ff) {
-                //     return ff.end >= ss && ff.start <= ee;
-                // });
-                //
-                // mapped = _.map(filtered, function (f) {
-                //     return f.row;
-                // });
-                //
-                // str = mapped.join(' ');
+                hits = featureList.filter(function (feature) {
+                    return (feature.end >= ss && feature.start <= ee) &&
+                        (row === undefined || feature.row === undefined || row === feature.row);
+                })
 
-                popupData = [];
-                featureList.forEach(function (feature) {
+                hits.forEach(function (feature) {
                     var featureData;
 
-                    if (feature.end >= ss && feature.start <= ee) {
-
-                        // console.log('row ' + row + ' feature-rows ' + str + ' features ' + _.size(featureList));
-
-                        if (row === undefined || feature.row === undefined || row === feature.row) {
-
-                            if (feature.popupData) {
-                                featureData = feature.popupData(genomicLocation);
-                            } else {
-                                featureData = extractPopupData(feature);
-                            }
-                            if (featureData) {
-                                if (popupData.length > 0) {
-                                    popupData.push("<HR>");
-                                }
-                                Array.prototype.push.apply(popupData, featureData);
-                            }
-
-                        }
+                    if (feature.popupData) {
+                        featureData = feature.popupData(genomicLocation);
+                    } else {
+                        featureData = extractPopupData(feature);
                     }
+                    if (featureData) {
+                        if (data.length > 0) {
+                            data.push("<HR>");
+                        }
+                        Array.prototype.push.apply(data, featureData);
+                    }
+
+
                 });
 
-                return popupData;
+                return data;
             }
 
         }
@@ -35395,7 +35397,7 @@ var igv = (function (igv) {
             });
         }
 
-        menuItems.push({ object: $('<div class="igv-track-menu-border-top">') });
+        menuItems.push({object: $('<div class="igv-track-menu-border-top">')});
 
         ["COLLAPSED", "SQUISHED", "EXPANDED"].forEach(function (displayMode) {
             var lut =
@@ -35462,13 +35464,15 @@ var igv = (function (igv) {
      * @returns {{px: number, px1: number, pw: number, h: number, py: number}}
      */
     function calculateFeatureCoordinates(feature, bpStart, xScale) {
-        var px = Math.round((feature.start - bpStart) / xScale),
-            px1 = Math.round((feature.end - bpStart) / xScale),
+        var px = (feature.start - bpStart) / xScale,
+            px1 = (feature.end - bpStart) / xScale,
+            //px = Math.round((feature.start - bpStart) / xScale),
+            //px1 = Math.round((feature.end - bpStart) / xScale),
             pw = px1 - px;
 
         if (pw < 3) {
             pw = 3;
-            px -= 1;
+            px -= 1.5;
         }
 
         return {
@@ -35630,7 +35634,7 @@ var igv = (function (igv) {
         if ((feature.name !== undefined && feature.name.toUpperCase() === selectedFeatureName) ||
             ((textFitsInBox || geneColor) && this.displayMode !== "SQUISHED" && feature.name !== undefined)) {
             geneFontStyle = {
-               // font: '10px PT Sans',
+                // font: '10px PT Sans',
                 textAlign: 'center',
                 fillStyle: geneColor || feature.color || this.color,
                 strokeStyle: geneColor || feature.color || this.color
@@ -39715,8 +39719,30 @@ var igv = (function (igv) {
                 endPoint = "https://www.googleapis.com/drive/v2/files/" + id;
 
             return igv.xhr.loadJson(endPoint, igv.buildOptions({}));
+        },
+
+        loadGoogleProperties: function (propertiesURL) {
+
+            return igv.xhr.loadArrayBuffer(propertiesURL)
+                .then(function (arrayBuffer) {
+                    var inflate, plain, str;
+
+                    inflate = new Zlib.Gunzip(new Uint8Array(arrayBuffer));
+                    plain = inflate.decompress();
+                    str = String.fromCharCode.apply(null, plain);
+                    igv.Google.properties = JSON.parse(str);
+
+                    return igv.Google.properties;
+
+                })
         }
     }
+
+
+    igv.oauth = {
+        google: {}
+    };
+
 
     function getGoogleDriveFileID(link) {
 
@@ -39730,7 +39756,7 @@ var igv = (function (igv) {
                 return link.substring(i1, i2)
             }
             else if (i1 > 0) {
-                 return link.substring(i1);
+                return link.substring(i1);
             }
 
         }
@@ -43434,6 +43460,10 @@ var igv = (function (igv) {
         igv.oauth.google.access_token = token;
     }
 
+    igv.getGoogleOauthToken = function () {
+        return igv.oauth.google.access_token;
+    }
+
     function setTrackOrder(conf) {
 
         var trackOrder = 1;
@@ -43509,11 +43539,9 @@ var igv = (function (igv) {
 
     function createStandardControls(browser, config) {
 
-        var fileLoadWidgetConfig,
-            $div,
+        var $div,
             $igv_nav_bar_left_container,
             $igv_nav_bar_right_container,
-            $current_genome,
             $genomic_location,
             $locus_size_group,
             $toggle_button_container,
@@ -43522,9 +43550,7 @@ var igv = (function (igv) {
             $karyo,
             $navigation,
             $searchContainer,
-            $faSearch,
-            isEmbedded,
-            isHidden;
+            $faSearch;
 
         $controls = $('<div id="igvControlDiv">');
 
@@ -43545,26 +43571,9 @@ var igv = (function (igv) {
             logoDiv.append(logoSvg);
             $igv_nav_bar_left_container.append(logoDiv);
 
+            // file load widget
             if (config.fileLoadWidget) {
-
-                isHidden = (undefined === config.fileLoadWidget.hidden) ? true : config.fileLoadWidget.hidden;
-
-                if (false === isHidden) {
-
-                    isEmbedded = (undefined === config.fileLoadWidget.embed) ? false : config.fileLoadWidget.embed;
-
-                    // load local file
-                    fileLoadWidgetConfig =
-                    {
-                        embed: isEmbedded,
-                        $widgetParent: config.fileLoadWidget.$widgetParent || browser.$root,
-                        $buttonParent: isEmbedded ? undefined : $igv_nav_bar_left_container
-                    };
-
-                    browser.trackFileLoad = new igv.FileLoadWidget(fileLoadWidgetConfig);
-
-                }
-
+                browser.trackFileLoad = browser.createFileLoadWidget(config.fileLoadWidget, new igv.FileLoadManager(), browser.$root, $igv_nav_bar_left_container);
             }
 
             // current genome
@@ -45202,8 +45211,29 @@ var igv = (function (igv) {
         return index < 0 ? filename : filename.substr(1 + index);
     };
 
+    /**
+     * Return the filename from the path.   Example
+     *   https://foo.com/bar.bed?param=2   => bar.bed
+     * @param path
+     */
+    igv.getFilename = function (path) {
+
+        var index, filename;
+
+        index = path.lastIndexOf("/");
+        filename = index < 0 ? path : path.substr(index+1);
+
+        //Strip parameters -- handle local files later
+        index = filename.indexOf("?");
+        if (index > 0) {
+            filename = filename.substr(0, index);
+        }
+
+        return filename;
+    }
+
     igv.filenameOrURLHasSuffix = function  (fileOrURL, suffix) {
-        var str = (fileOrURL instanceof File) ? fileOrURL.name : fileOrURL;
+        var str = (fileOrURL instanceof File) ? fileOrURL.name : igv.getFilename(fileOrURL);
         return str.toLowerCase().endsWith( suffix )
     };
 
@@ -47082,26 +47112,6 @@ var igv = (function (igv) {
     return igv;
 })
 (igv || {});
-
-/**
- * OAuth object provided for example pages.
- */
-
-var igv = (function (igv) {
-
-
-    igv.oauth = {
-        google: {}
-    };
-
-
-    return igv;
-})
-(igv || {});
-
-
-
-
 
 /*
  * The MIT License (MIT)
@@ -50065,11 +50075,42 @@ var igv = (function (igv) {
 // Generic functions applicable to all track types
 
 var igv = (function (igv) {
+    var list;
 
-    var knownFileExtensions = new Set(["narrowpeak", "broadpeak", "peaks", "bedgraph", "wig", "gff3", "gff",
-        "gtf", "aneu", "fusionjuncspan", "refflat", "seg", "bed", "vcf", "bb", "bigbed", "bw", "bigwig", "bam", "tdf",
-        "refgene", "genepred", "genepredext"]);
+    list =
+        [
+            "narrowpeak",
+            "broadpeak",
+            "peaks",
+            "bedgraph",
+            "wig",
+            "gff3",
+            "gff",
+            "gtf",
+            "aneu",
+            "fusionjuncspan",
+            "refflat",
+            "seg",
+            "bed",
+            "vcf",
+            "bb",
+            "bigbed",
+            "bw",
+            "bigwig",
+            "bam",
+            "tdf",
+            "refgene",
+            "genepred",
+            "genepredext"
+        ];
 
+    igv.knownFileExtensions = new Set(list);
+
+    /**
+     * Return a custom format object with the given name.
+     * @param name
+     * @returns {*}
+     */
     igv.getFormat = function (name) {
 
         if (undefined === igv.browser || undefined === igv.browser.formats) {
@@ -50171,10 +50212,7 @@ var igv = (function (igv) {
 
         function inferFileFormat(config) {
 
-            var path,
-                fn,
-                idx,
-                ext;
+            var path;
 
             if (config.format) {
                 config.format = config.format.toLowerCase();
@@ -50182,46 +50220,8 @@ var igv = (function (igv) {
             }
 
             path = igv.isFilePath(config.url) ? config.url.name : config.url;
-            fn = path.toLowerCase();
 
-            // Special case -- UCSC refgene files
-            if (fn.endsWith("refgene.txt.gz") || fn.endsWith("refgene.txt")) {
-                config.format = "refgene";
-                return;
-            }
-
-
-            //Strip parameters -- handle local files later
-            idx = fn.indexOf("?");
-            if (idx > 0) {
-                fn = fn.substr(0, idx);
-            }
-
-            //Strip aux extensions .gz, .tab, and .txt
-            if (fn.endsWith(".gz")) {
-                fn = fn.substr(0, fn.length - 3);
-            }
-
-            if (fn.endsWith(".txt") || fn.endsWith(".tab")) {
-                fn = fn.substr(0, fn.length - 4);
-            }
-
-
-            idx = fn.lastIndexOf(".");
-            ext = idx < 0 ? fn : fn.substr(idx + 1);
-
-            switch (ext.toLowerCase()) {
-                case "bw":
-                    config.format = "bigwig";
-                    break;
-                case "bb":
-                    config.format = "bigbed";
-
-                default:
-                    if (knownFileExtensions.has(ext)) {
-                        config.format = ext;
-                    }
-            }
+            config.format = igv.inferFileFormat(path);
         }
 
         function inferTrackType(config) {
@@ -50268,6 +50268,55 @@ var igv = (function (igv) {
             inferTrackType(config);
         }
 
+
+    };
+
+    igv.inferFileFormat = function (fn) {
+
+        var idx, ext;
+
+        fn = fn.toLowerCase();
+
+        // Special case -- UCSC refgene files
+        if (fn.endsWith("refgene.txt.gz") || fn.endsWith("refgene.txt")) {
+            return "refgene";
+            return;
+        }
+
+
+        //Strip parameters -- handle local files later
+        idx = fn.indexOf("?");
+        if (idx > 0) {
+            fn = fn.substr(0, idx);
+        }
+
+        //Strip aux extensions .gz, .tab, and .txt
+        if (fn.endsWith(".gz")) {
+            fn = fn.substr(0, fn.length - 3);
+        }
+
+        if (fn.endsWith(".txt") || fn.endsWith(".tab")) {
+            fn = fn.substr(0, fn.length - 4);
+        }
+
+
+        idx = fn.lastIndexOf(".");
+        ext = idx < 0 ? fn : fn.substr(idx + 1);
+
+        switch (ext) {
+            case "bw":
+                return "bigwig";
+            case "bb":
+                return "bigbed";
+
+            default:
+                if (igv.knownFileExtensions.has(ext)) {
+                    return ext;
+                }
+                else {
+                    return undefined;
+                }
+        }
 
     };
 
@@ -50337,7 +50386,7 @@ var igv = (function (igv) {
         var vp,
             txt;
 
-        vp = track.trackView.viewports[ 0 ];
+        vp = track.trackView.viewports[0];
         txt = vp.$trackLabel.text();
 
         return txt;
@@ -50552,7 +50601,7 @@ var igv = (function (igv) {
         clickHandler = function () {
 
             igv.inputDialog.configure(dialogLabelHandler, dialogInputValue, dialogClickHandler, undefined, undefined);
-            igv.inputDialog.show( $(trackView.trackDiv) );
+            igv.inputDialog.show($(trackView.trackDiv));
 
         };
 
@@ -50572,7 +50621,7 @@ var igv = (function (igv) {
             trackView.browser.removeTrack(trackView.track);
         };
 
-        return { object: $e, click: menuClickHandler };
+        return {object: $e, click: menuClickHandler};
 
     };
 
@@ -50586,7 +50635,7 @@ var igv = (function (igv) {
 
         clickHandler = function () {
             // igv.dataRangeDialog.configureWithTrackView(trackView);
-            igv.dataRangeDialog.configure({ trackView: trackView });
+            igv.dataRangeDialog.configure({trackView: trackView});
             igv.dataRangeDialog.present($(trackView.trackDiv));
         };
 
@@ -50627,15 +50676,19 @@ var igv = (function (igv) {
 
                 value = ('' === value || undefined === value) ? 'untitled' : value;
 
-                igv.setTrackLabel(trackView.viewports[ 0 ].$trackLabel, trackView.track, value);
+                igv.setTrackLabel(trackView.viewports[0].$trackLabel, trackView.track, value);
             };
 
-            igv.inputDialog.configure({ label:'Track Name', input:(igv.getTrackLabelText(trackView.track) || 'unnamed'), click:dialogClickHandler });
-            igv.inputDialog.present( $(trackView.trackDiv) );
+            igv.inputDialog.configure({
+                label: 'Track Name',
+                input: (igv.getTrackLabelText(trackView.track) || 'unnamed'),
+                click: dialogClickHandler
+            });
+            igv.inputDialog.present($(trackView.trackDiv));
 
         };
 
-        return { object: $e, click: menuClickHandler };
+        return {object: $e, click: menuClickHandler};
 
 
     };
@@ -50680,12 +50733,16 @@ var igv = (function (igv) {
             };
 
 
-            igv.inputDialog.configure({ label:'Track Height', input:trackView.trackDiv.clientHeight, click:dialogClickHandler });
-            igv.inputDialog.present( $(trackView.trackDiv) );
+            igv.inputDialog.configure({
+                label: 'Track Height',
+                input: trackView.trackDiv.clientHeight,
+                click: dialogClickHandler
+            });
+            igv.inputDialog.present($(trackView.trackDiv));
 
         };
 
-        return { object: $e, click: menuClickHandler };
+        return {object: $e, click: menuClickHandler};
 
 
     };
@@ -52044,17 +52101,20 @@ var igv = (function (igv) {
  * Created by dat on 4/8/18.
  */
 var igv = (function (igv) {
-    igv.FileLoadWidget = function (config) {
+    igv.FileLoadWidget = function (config, fileLoadManager) {
         var self = this,
             obj,
             $header,
             $div,
-            classes;
+            classes,
+            hasURLContainer,
+            hasLocalFileContainer;
 
         this.config = config;
         this.$parent = config.$widgetParent;
 
-        this.fileLoadManager = new igv.FileLoadManager(this);
+        this.fileLoadManager = fileLoadManager;
+        this.fileLoadManager.fileLoadWidget = this;
 
         // file load navbar button
         if (false === config.embed) {
@@ -52082,7 +52142,7 @@ var igv = (function (igv) {
         if (false === config.embed) {
 
             // header
-            $header = $("<div>", { id:"igv-file-load-widget-header" });
+            $header = $("<div>", { class:"igv-file-load-widget-header" });
             this.$container.append($header);
             // header - dismiss button
             igv.attachDialogCloseHandlerWithParent($header, function () {
@@ -52091,22 +52151,32 @@ var igv = (function (igv) {
 
         }
 
-        // local data/index
-        obj =
-            {
-                dataTitle: 'Local data file',
-                indexTitle: 'Local index file'
-            };
-        createInputContainer.call(this, this.$container, obj);
 
-        // url data/index
-        obj =
-            {
-                doURL: true,
-                dataTitle: 'Data URL',
-                indexTitle: 'Index URL'
-            };
-        createInputContainer.call(this, this.$container, obj);
+        hasLocalFileContainer = config.mode ? 'localFile' === config.mode : true;
+
+        if (hasLocalFileContainer) {
+            // local data/index
+            obj =
+                {
+                    dataTitle: 'Data file',
+                    indexTitle: 'Index file',
+                    doEmbed: config.embed || false
+                };
+            createInputContainer.call(this, this.$container, obj);
+        }
+
+        hasURLContainer = config.mode ? 'url' === config.mode : true;
+
+        if (hasURLContainer) {
+            // url data/index
+            obj =
+                {
+                    doURL: true,
+                    dataTitle: 'Data URL',
+                    indexTitle: 'Index URL'
+                };
+            createInputContainer.call(this, this.$container, obj);
+        }
 
         // error message container
         this.$error_message = $("<div>", { class:"igv-flw-error-message-container" });
@@ -52130,7 +52200,11 @@ var igv = (function (igv) {
             $div.append(this.$ok);
             this.$ok.text('OK');
             this.$ok.on('click', function () {
-                self.okHandler();
+
+                if (self.okHandler()) {
+                    self.dismiss();
+                }
+
             });
 
             // cancel
@@ -52154,7 +52228,7 @@ var igv = (function (igv) {
         var obj;
         obj = this.fileLoadManager.trackLoadConfiguration();
         if (obj) {
-            this.dismiss();
+            // this.dismiss();
             extractName(obj)
                 .then(function (name) {
                     obj.name = name;
@@ -52167,6 +52241,7 @@ var igv = (function (igv) {
                 })
         }
 
+        return obj;
     };
 
     igv.FileLoadWidget.prototype.presentErrorMessage = function(message) {
@@ -52177,6 +52252,33 @@ var igv = (function (igv) {
     igv.FileLoadWidget.prototype.dismissErrorMessage = function() {
         this.$error_message.hide();
         this.$error_message.find('.igv-flw-error-message').text('');
+    };
+
+    igv.FileLoadWidget.prototype.present = function () {
+        this.$container.show();
+    };
+
+    igv.FileLoadWidget.prototype.dismiss = function () {
+
+        this.dismissErrorMessage();
+
+        this.$container.find('input').val(undefined);
+        this.$container.find('.igv-flw-local-file-name-container').hide();
+
+        if (false === this.config.embed) {
+            this.$container.hide();
+        }
+
+        this.fileLoadManager.reset();
+
+        if (false === this.config.embed) {
+            this.$container.css({ top:'64px', left:0 });
+        }
+
+    };
+
+    igv.FileLoadWidget.prototype.customizeLayout = function (customizer) {
+        customizer(this.$container);
     };
 
     function createInputContainer($parent, config) {
@@ -52240,6 +52342,9 @@ var igv = (function (igv) {
         $parent.append($data_drop_target);
         $data_drop_target.text('or drop URL');
 
+        // TODO: Eventually discard this?
+        $data_drop_target.hide();
+
         $parent
             .on('drag dragstart dragend dragover dragenter dragleave drop', function (e) {
                 var data;
@@ -52268,21 +52373,27 @@ var igv = (function (igv) {
             $data_drop_target,
             $label,
             $input,
-            $file_name;
+            $file_name,
+            str;
 
         $file_chooser_container = $("<div>", { class:"igv-flw-file-chooser-container" });
         $parent.append($file_chooser_container);
 
-        $label = $('<label>', { for:id });
+        str = id + igv.guid();
+
+        $label = $('<label>', { for:str });
         $file_chooser_container.append($label);
         $label.text('Choose file...');
 
-        $input = $('<input>', { class:"igv-flw-file-chooser-input", id:id, name:id, type:'file' });
+        $input = $('<input>', { class:"igv-flw-file-chooser-input", id:str, name:str, type:'file' });
         $file_chooser_container.append($input);
 
         $data_drop_target = $("<div>", { class:"igv-flw-drag-drop-target" });
         $parent.append($data_drop_target);
         $data_drop_target.text('or drop file');
+
+        // TODO: Eventually discard this?
+        $data_drop_target.hide();
 
         $file_name = $("<div>", { class:"igv-flw-local-file-name-container" });
         $parent.append($file_name);
@@ -52341,32 +52452,7 @@ var igv = (function (igv) {
 
     }
 
-    igv.FileLoadWidget.prototype.present = function () {
-        this.$container.show();
-    };
-
-    igv.FileLoadWidget.prototype.dismiss = function () {
-
-        this.dismissErrorMessage();
-
-        this.$container.find('input').val(undefined);
-        this.$container.find('.igv-flw-local-file-name-container').hide();
-
-        if (false === this.config.embed) {
-            this.$container.hide();
-        }
-
-        this.fileLoadManager.reset();
-
-        if (false === this.config.embed) {
-            this.$container.css({ top:'64px', left:0 });
-        }
-
-    };
-
-    igv.FileLoadManager = function (fileLoadWidget) {
-
-        this.fileLoadWidget = fileLoadWidget;
+    igv.FileLoadManager = function () {
 
         this.dictionary = {};
 
@@ -52413,10 +52499,6 @@ var igv = (function (igv) {
     igv.FileLoadManager.prototype.dataName = function () {
         return itemName(this.dictionary.data);
     };
-
-    function itemName (item) {
-        return igv.isFilePath(item) ? item.name : item;
-    }
 
     igv.FileLoadManager.prototype.reset = function () {
         this.dictionary = {};
@@ -52496,6 +52578,10 @@ var igv = (function (igv) {
         return _.contains(_.keys(this.indexExtensionToKey), extension);
     }
 
+    function itemName (item) {
+        return igv.isFilePath(item) ? item.name : item;
+    }
+
     function isIndexable(fileOrURL) {
 
         var extension;
@@ -52552,8 +52638,7 @@ var igv = (function (igv) {
 
             return idx > 0 ? str.substring(idx + 1) : str;
         }
-    };
-
+    }
 
     function extractQuery (uri) {
         var i1, i2, i, j, s, query, tokens;
@@ -55287,7 +55372,7 @@ var igv = (function (igv) {
                 xOrigin;
 
             viewportCoords = igv.translateMouseCoordinates(e, viewport.$viewport);
-            genomicLocation = Math.floor((referenceFrame.start) + referenceFrame.toBP(viewportCoords.x));
+            genomicLocation = ((referenceFrame.start) + referenceFrame.toBP(viewportCoords.x));  //Math.floor
 
             if (undefined === genomicLocation || null === viewport.tile) {
                 return undefined;
