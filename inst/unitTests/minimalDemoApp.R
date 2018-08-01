@@ -4,14 +4,15 @@ library(htmlwidgets)
 #----------------------------------------------------------------------------------------------------
 ui = shinyUI(fluidPage(
 
-  includeScript("message-handler.js"),
+  # includeScript("message-handler.js"),
 
-  tags$head(
-          tags$link(rel = "stylesheet", type = "text/css",
-                    href = "http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css")),
+  #tags$head(
+  #        tags$link(rel = "stylesheet", type = "text/css",
+  #                  href = "http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css")),
   sidebarLayout(
      sidebarPanel(
-        actionButton("randomRoiButton", "Random roi"),
+        textInput("roi", label=""),
+        actionButton("searchButton", "Search"),
         hr(),
         width=2
         ),
@@ -24,17 +25,15 @@ ui = shinyUI(fluidPage(
 #----------------------------------------------------------------------------------------------------
 server = function(input, output, session) {
 
-   observeEvent(input$randomRoiButton, {
-      input$randomRoiButton
-      tss <- 88883200
-      shoulder <- as.integer(runif(1, 0, 1000))
-      roi.string <- sprintf("chr5:%d-%d", tss - shoulder, tss + shoulder)
-      session$sendCustomMessage(type="showGenomicRegion", message=(list(roi=roi.string)))
+   observeEvent(input$searchButton, {
+      printf("---- input$roi")
+      searchString = isolate(input$roi)
+      session$sendCustomMessage(type="showGenomicRegion", message=list(roi=searchString))
       })
 
   output$value <- renderPrint({ input$action })
   output$igvShiny <- renderIgvShiny(
-    igvShiny("hello shinyApp")
+    igvShiny(list(roi="chr5:88,466,402-89,135,305"))
     )
 
 } # server

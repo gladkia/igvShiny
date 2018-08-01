@@ -6,32 +6,35 @@ HTMLWidgets.widget({
 
   factory: function(el, width, height) {
     return {
-      renderValue: function(x) {
+      renderValue: function(options) {
           console.log("---- ~/github/igvShiny/inst/htmlwidgets, renderValue");
           console.log("igv.js renderValue, wh: " + width + ", " + height)
-          var igvDiv, options;
+          console.log("--------- options");
+          console.log(options)
+          var igvDiv;
           igvDiv = el; // $("#igvDiv")[0];
-          options = {//locus: "MEF2C",
-               minimumBases: 5,
-               flanking: 1000,
-               doubleClickDelay: 1,
-               showRuler: true,
-               reference: {id: "hg38",
-                     fastaURL: "https://s3.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg38/hg38.fa",
-                  cytobandURL: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg38/cytoBandIdeo.txt"
-                  },
-               tracks: [
-                 {name: 'Gencode v24',
-                       url: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg38/genes/gencode.v24.annotation.sorted.gtf.gz",
-                  indexURL: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg38/genes/gencode.v24.annotation.sorted.gtf.gz.tbi",
-                  format: 'gtf',
-                  visibilityWindow: 2000000,
-                  displayMode: 'EXPANDED',
-                  height: 300
-                  },
-                 ]
-              }; // options
-           igvBrowser = igv.createBrowser(igvDiv, options);
+          var fullOptions = {
+              locus: options.roi,
+              minimumBases: 5,
+              flanking: 1000,
+              doubleClickDelay: 1,
+              showRuler: true,
+              reference: {id: "hg38",
+                    fastaURL: "https://s3.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg38/hg38.fa",
+                 cytobandURL: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg38/cytoBandIdeo.txt"
+                 },
+              tracks: [
+                {name: 'Gencode v24',
+                      url: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg38/genes/gencode.v24.annotation.sorted.gtf.gz",
+                 indexURL: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg38/genes/gencode.v24.annotation.sorted.gtf.gz.tbi",
+                 format: 'gtf',
+                 visibilityWindow: 2000000,
+                 displayMode: 'EXPANDED',
+                 height: 300
+                 },
+                ]
+              }; // fullOptions
+           igvBrowser = igv.createBrowser(igvDiv, fullOptions);
            igvBrowser.on('trackclick', function (track, popoverData){
               var x = popoverData;
               if(x.length == 1){
@@ -67,3 +70,12 @@ HTMLWidgets.widget({
     };
   }
 });  // widget
+
+Shiny.addCustomMessageHandler("showGenomicRegion",
+    function(message) {
+       window.igvBrowser.search(message.roi);
+       }
+    );
+
+
+

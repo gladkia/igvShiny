@@ -1,15 +1,15 @@
 #----------------------------------------------------------------------------------------------------
-igvShiny <- function(message, width = NULL, height = NULL, elementId = NULL)
+igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL)
 {
   printf("--- ~/github/igvShiny/R/igvShiny ctor");
-  x <- list(
-    message = message
-    )
+  #x <- list(
+  #  message = message
+  #  )
 
   # create widget
   htmlwidgets::createWidget(
     name = 'igvShiny',
-    x,
+    options,
     width = width,
     height = height,
     package = 'igvShiny',
