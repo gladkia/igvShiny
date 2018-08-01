@@ -35,6 +35,10 @@ HTMLWidgets.widget({
                 ]
               }; // fullOptions
            igvBrowser = igv.createBrowser(igvDiv, fullOptions);
+
+           Shiny.addCustomMessageHandler("showGenomicRegion", function(message) {
+                window.igvBrowser.search(message.roi);});
+
            igvBrowser.on('trackclick', function (track, popoverData){
               var x = popoverData;
               if(x.length == 1){
@@ -71,11 +75,6 @@ HTMLWidgets.widget({
   }
 });  // widget
 
-Shiny.addCustomMessageHandler("showGenomicRegion",
-    function(message) {
-       window.igvBrowser.search(message.roi);
-       }
-    );
 
 
 
