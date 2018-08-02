@@ -1,6 +1,12 @@
 #----------------------------------------------------------------------------------------------------
 igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL)
 {
+
+  supportedOptions <- c("genomeName", "initialLocus")
+  stopifnot(all(supportedOptions %in% names(options)))
+  supportedGenomes <- c("hg38", "hg19", "mm10", "tair10")
+  stopifnot(options$genomeName %in% supportedGenomes)
+
   printf("--- ~/github/igvShiny/R/igvShiny ctor");
   #x <- list(
   #  message = message

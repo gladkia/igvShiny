@@ -4,11 +4,6 @@ library(htmlwidgets)
 #----------------------------------------------------------------------------------------------------
 ui = shinyUI(fluidPage(
 
-  # includeScript("message-handler.js"),
-
-  #tags$head(
-  #        tags$link(rel = "stylesheet", type = "text/css",
-  #                  href = "http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css")),
   sidebarLayout(
      sidebarPanel(
         textInput("roi", label=""),
@@ -17,7 +12,8 @@ ui = shinyUI(fluidPage(
         width=2
         ),
      mainPanel(
-        igvShinyOutput('igvShiny'),
+        igvShinyOutput('igvShiny.0'),
+        # igvShinyOutput('igvShiny.1'),
         width=10
         )
      ) # sidebarLayout
@@ -31,10 +27,25 @@ server = function(input, output, session) {
       session$sendCustomMessage(type="showGenomicRegion", message=list(roi=searchString))
       })
 
-  output$value <- renderPrint({ input$action })
-  output$igvShiny <- renderIgvShiny(
-    igvShiny(list(roi="chr5:88,466,402-89,135,305"))
-    )
+   output$value <- renderPrint({ input$action })
+
+   genomes <- c("hg38", "hg19", "mm10", "tair10")
+   loci <- c("chr5:88,466,402-89,135,305", "MEF2C", "Mef2c", "chr1")
+   i <- 3
+
+   output$igvShiny.0 <- renderIgvShiny(
+     igvShiny(list(
+        genomeName=genomes[i],
+        initialLocus=loci[i]
+        ))
+      )
+
+   #output$igvShiny.1 <- renderIgvShiny(
+   #  igvShiny(list(
+   #     genomeName="hg38",
+   #     initialLocus="chr2:232,983,999-233,283,872"
+   #     ))
+   #)
 
 } # server
 #----------------------------------------------------------------------------------------------------
