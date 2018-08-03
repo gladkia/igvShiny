@@ -18,17 +18,14 @@ HTMLWidgets.widget({
           var igvDiv;
           igvDiv = el; // $("#igvDiv")[0];
           var fullOptions = genomeSpecificOptions(options.genomeName, options.initialLocus)
-          igvWidget = igv.createBrowser(igvDiv, fullOptions);
 
-           Shiny.addCustomMessageHandler("showGenomicRegion", function(message) {
-               //window.igvBrowser.search(message.roi);
-              igvWidget.search(message.roi)
-              });
-
-           igvWidget.on('trackclick', function (track, popoverData){
-              var x = popoverData;
-              if(x.length == 1){
-                  if(Object.getOwnPropertyNames(x[0]).includes("value")){
+         igv.createBrowser(igvDiv, fullOptions)
+             .then(function (browser) {
+                igvWidget = browser;
+                igvWidget.on('trackclick', function (track, popoverData){
+                var x = popoverData;
+                if(x.length == 1){
+                   if(Object.getOwnPropertyNames(x[0]).includes("value")){
                       var id = x[0].value;
                       console.log("in click handler, id:" + id);
                       if(id.indexOf("rs") == 0){
@@ -45,12 +42,19 @@ HTMLWidgets.widget({
                          //return "<h4> " + id + "</h4>";
                          } // tfbs-snp
                      } // if a value field
-                 } // if just one element
-              console.log("click! 810");
-              console.log(x);
-              //return undefined;   // true, false: default popup disabled; undefined: default popup ensues.
+                  } // if just one element
+                 console.log("click! 810");
+                console.log(x);
                return undefined;
+              }); // on
+
+             }); // then: promise fulflled
+             // igvWidget = igv.createBrowser(igvDiv, fullOptions);
+           Shiny.addCustomMessageHandler("showGenomicRegion", function(message) {
+               //window.igvBrowser.search(message.roi);
+              igvWidget.search(message.roi)
               });
+
 
           },
       resize: function(width, height) {
@@ -113,13 +117,13 @@ function genomeSpecificOptions(genomeName, initialLocus)
          minimumBases: 5,
          showRuler: true,
          reference: {id: "mm10",
-                     fastaURL: "http://trena.systemsbiology.net/mm10/GRCm38.primary_assembly.genome.fa",
-                     cytobandURL: "http://trena.systemsbiology.net/mm10/cytoBand.txt"
+                     fastaURL: "http://trena:60051/static/mm10/GRCm38.primary_assembly.genome.fa",
+                     cytobandURL: "http://trena:60051/static/mm10/cytoBand.txt"
                      },
          tracks: [
             {name: 'Gencode vM14',
-             url: "http://trena.systemsbiology.net/mm10/gencode.vM14.basic.annotation.sorted.gtf.gz",
-             indexURL: "http://trena.systemsbiology.net/mm10/gencode.vM14.basic.annotation.sorted.gtf.gz.tbi",
+             url: "http://trena:60051/static/mm10/gencode.vM14.basic.annotation.sorted.gtf.gz",
+             indexURL: "http://trena:60051/static/mm10/gencode.vM14.basic.annotation.sorted.gtf.gz.tbi",
              indexed: true,
              type: 'annotation',
              format: 'gtf',
@@ -139,15 +143,15 @@ function genomeSpecificOptions(genomeName, initialLocus)
          minimumBases: 5,
          showRuler: true,
          reference: {id: "TAIR10",
-                fastaURL: "http://trena.systemsbiology.net/tair10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa",
-                indexURL: "http://trena.systemsbiology.net/tair10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.fai",
-                aliasURL: "http://trena.systemsbiology.net/tair10/chromosomeAliases.txt"
+                fastaURL: "http://trena:60051/static/tair10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa",
+                indexURL: "http://trena:60051/static/tair10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.fai",
+                aliasURL: "http://trena:60051/static/tair10/chromosomeAliases.txt"
                 },
          tracks: [
            {name: 'Genes TAIR10',
             type: 'annotation',
             visibilityWindow: 500000,
-            url: "http://trena.systemsbiology.net/tair10/TAIR10_genes.sorted.chrLowered.gff3.gz",
+            url: "http://trena:60051/static/tair10/TAIR10_genes.sorted.chrLowered.gff3.gz",
             color: "darkred",
             indexed: true,
             height: 200,
@@ -155,6 +159,30 @@ function genomeSpecificOptions(genomeName, initialLocus)
             },
             ]
           }; // tair10_options
+
+   var rhos_options = {
+         locus: initialLocus,
+         flanking: 2000,
+	 showKaryo: false,
+         showNavigation: true,
+         minimumBases: 5,
+         showRuler: true,
+         reference: {id: "Rhodobacter sphaeroides",
+                     fastaURL: "http://trena:60051/static/rhos/GCF_000012905.2_ASM1290v2_genomic.fna",
+                     indexURL: "http://trena:60051/static/rhos/GCF_000012905.2_ASM1290v2_genomic.fna.fai"
+                },
+         tracks: [
+           {name: 'Genes',
+            type: 'annotation',
+            visibilityWindow: 500000,
+            url: "http://trena:60051/static/rhos/GCF_000012905.2_ASM1290v2_genomic.gff.gz",
+            color: "darkred",
+            indexed: true,
+            height: 200,
+            displayMode: "EXPANDED"
+            },
+            ]
+          }; // rhos_options
 
    var igvOptions = null;
 
@@ -170,6 +198,9 @@ function genomeSpecificOptions(genomeName, initialLocus)
          break;
        case "tair10":
          igvOptions = tair10_options;
+         break;
+       case "rhos":
+         igvOptions = rhos_options;
          break;
          } // switch on genomeName
 

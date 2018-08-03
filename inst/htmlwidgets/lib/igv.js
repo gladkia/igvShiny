@@ -2,6 +2,7 @@
  */
 
 (function (root, factory) {
+   
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define([], factory);
@@ -9196,746 +9197,6 @@ var $, jQuery;
         return inspect(options.dataTypes[0]) || !inspected["*"] && inspect("*");
     }
 
-// A special extend for ajax options
-// that takes "flat" options (not to be deep extended)
-// Fixes #9887
-    function ajaxExtend(target, src) {
-        var deep, key,
-            flatOptions = jQuery.ajaxSettings.flatOptions || {};
-
-        for (key in src) {
-            if (src[key] !== undefined) {
-                ( flatOptions[key] ? target : ( deep || ( deep = {} ) ) )[key] = src[key];
-            }
-        }
-        if (deep) {
-            jQuery.extend(true, target, deep);
-        }
-
-        return target;
-    }
-
-    /* Handles responses to an ajax request:
-     * - finds the right dataType (mediates between content-type and expected dataType)
-     * - returns the corresponding response
-     */
-    function ajaxHandleResponses(s, jqXHR, responses) {
-        var firstDataType, ct, finalDataType, type,
-            contents = s.contents,
-            dataTypes = s.dataTypes;
-
-        // Remove auto dataType and get content-type in the process
-        while (dataTypes[0] === "*") {
-            dataTypes.shift();
-            if (ct === undefined) {
-                ct = s.mimeType || jqXHR.getResponseHeader("Content-Type");
-            }
-        }
-
-        // Check if we're dealing with a known content-type
-        if (ct) {
-            for (type in contents) {
-                if (contents[type] && contents[type].test(ct)) {
-                    dataTypes.unshift(type);
-                    break;
-                }
-            }
-        }
-
-        // Check to see if we have a response for the expected dataType
-        if (dataTypes[0] in responses) {
-            finalDataType = dataTypes[0];
-        } else {
-
-            // Try convertible dataTypes
-            for (type in responses) {
-                if (!dataTypes[0] || s.converters[type + " " + dataTypes[0]]) {
-                    finalDataType = type;
-                    break;
-                }
-                if (!firstDataType) {
-                    firstDataType = type;
-                }
-            }
-
-            // Or just use first one
-            finalDataType = finalDataType || firstDataType;
-        }
-
-        // If we found a dataType
-        // We add the dataType to the list if needed
-        // and return the corresponding response
-        if (finalDataType) {
-            if (finalDataType !== dataTypes[0]) {
-                dataTypes.unshift(finalDataType);
-            }
-            return responses[finalDataType];
-        }
-    }
-
-    /* Chain conversions given the request and the original response
-     * Also sets the responseXXX fields on the jqXHR instance
-     */
-    function ajaxConvert(s, response, jqXHR, isSuccess) {
-        var conv2, current, conv, tmp, prev,
-            converters = {},
-
-        // Work with a copy of dataTypes in case we need to modify it for conversion
-            dataTypes = s.dataTypes.slice();
-
-        // Create converters map with lowercased keys
-        if (dataTypes[1]) {
-            for (conv in s.converters) {
-                converters[conv.toLowerCase()] = s.converters[conv];
-            }
-        }
-
-        current = dataTypes.shift();
-
-        // Convert to each sequential dataType
-        while (current) {
-
-            if (s.responseFields[current]) {
-                jqXHR[s.responseFields[current]] = response;
-            }
-
-            // Apply the dataFilter if provided
-            if (!prev && isSuccess && s.dataFilter) {
-                response = s.dataFilter(response, s.dataType);
-            }
-
-            prev = current;
-            current = dataTypes.shift();
-
-            if (current) {
-
-                // There's only work to do if current dataType is non-auto
-                if (current === "*") {
-
-                    current = prev;
-
-                    // Convert response if prev dataType is non-auto and differs from current
-                } else if (prev !== "*" && prev !== current) {
-
-                    // Seek a direct converter
-                    conv = converters[prev + " " + current] || converters["* " + current];
-
-                    // If none found, seek a pair
-                    if (!conv) {
-                        for (conv2 in converters) {
-
-                            // If conv2 outputs current
-                            tmp = conv2.split(" ");
-                            if (tmp[1] === current) {
-
-                                // If prev can be converted to accepted input
-                                conv = converters[prev + " " + tmp[0]] ||
-                                    converters["* " + tmp[0]];
-                                if (conv) {
-
-                                    // Condense equivalence converters
-                                    if (conv === true) {
-                                        conv = converters[conv2];
-
-                                        // Otherwise, insert the intermediate dataType
-                                    } else if (converters[conv2] !== true) {
-                                        current = tmp[0];
-                                        dataTypes.unshift(tmp[1]);
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                    // Apply converter (if not an equivalence)
-                    if (conv !== true) {
-
-                        // Unless errors are allowed to bubble, catch and return them
-                        if (conv && s["throws"]) { // jscs:ignore requireDotNotation
-                            response = conv(response);
-                        } else {
-                            try {
-                                response = conv(response);
-                            } catch (e) {
-                                return {
-                                    state: "parsererror",
-                                    error: conv ? e : "No conversion from " + prev + " to " + current
-                                };
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return {state: "success", data: response};
-    }
-
-    jQuery.extend({
-
-        // Counter for holding the number of active queries
-        active: 0,
-
-        // Last-Modified header cache for next request
-        lastModified: {},
-        etag: {},
-
-        ajaxSettings: {
-            url: ajaxLocation,
-            type: "GET",
-            isLocal: rlocalProtocol.test(ajaxLocParts[1]),
-            global: true,
-            processData: true,
-            async: true,
-            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-            /*
-             timeout: 0,
-             data: null,
-             dataType: null,
-             username: null,
-             password: null,
-             cache: null,
-             throws: false,
-             traditional: false,
-             headers: {},
-             */
-
-            accepts: {
-                "*": allTypes,
-                text: "text/plain",
-                html: "text/html",
-                xml: "application/xml, text/xml",
-                json: "application/json, text/javascript"
-            },
-
-            contents: {
-                xml: /\bxml\b/,
-                html: /\bhtml/,
-                json: /\bjson\b/
-            },
-
-            responseFields: {
-                xml: "responseXML",
-                text: "responseText",
-                json: "responseJSON"
-            },
-
-            // Data converters
-            // Keys separate source (or catchall "*") and destination types with a single space
-            converters: {
-
-                // Convert anything to text
-                "* text": String,
-
-                // Text to html (true = no transformation)
-                "text html": true,
-
-                // Evaluate text as a json expression
-                "text json": jQuery.parseJSON,
-
-                // Parse text as xml
-                "text xml": jQuery.parseXML
-            },
-
-            // For options that shouldn't be deep extended:
-            // you can add your own custom options here if
-            // and when you create one that shouldn't be
-            // deep extended (see ajaxExtend)
-            flatOptions: {
-                url: true,
-                context: true
-            }
-        },
-
-        // Creates a full fledged settings object into target
-        // with both ajaxSettings and settings fields.
-        // If target is omitted, writes into ajaxSettings.
-        ajaxSetup: function (target, settings) {
-            return settings ?
-
-                // Building a settings object
-                ajaxExtend(ajaxExtend(target, jQuery.ajaxSettings), settings) :
-
-                // Extending ajaxSettings
-                ajaxExtend(jQuery.ajaxSettings, target);
-        },
-
-        ajaxPrefilter: addToPrefiltersOrTransports(prefilters),
-        ajaxTransport: addToPrefiltersOrTransports(transports),
-
-        // Main method
-        ajax: function (url, options) {
-
-            // If url is an object, simulate pre-1.5 signature
-            if (typeof url === "object") {
-                options = url;
-                url = undefined;
-            }
-
-            // Force options to be an object
-            options = options || {};
-
-            var
-
-            // Cross-domain detection vars
-                parts,
-
-            // Loop variable
-                i,
-
-            // URL without anti-cache param
-                cacheURL,
-
-            // Response headers as string
-                responseHeadersString,
-
-            // timeout handle
-                timeoutTimer,
-
-            // To know if global events are to be dispatched
-                fireGlobals,
-
-                transport,
-
-            // Response headers
-                responseHeaders,
-
-            // Create the final options object
-                s = jQuery.ajaxSetup({}, options),
-
-            // Callbacks context
-                callbackContext = s.context || s,
-
-            // Context for global events is callbackContext if it is a DOM node or jQuery collection
-                globalEventContext = s.context &&
-                ( callbackContext.nodeType || callbackContext.jquery ) ?
-                    jQuery(callbackContext) :
-                    jQuery.event,
-
-            // Deferreds
-                deferred = jQuery.Deferred(),
-                completeDeferred = jQuery.Callbacks("once memory"),
-
-            // Status-dependent callbacks
-                statusCode = s.statusCode || {},
-
-            // Headers (they are sent all at once)
-                requestHeaders = {},
-                requestHeadersNames = {},
-
-            // The jqXHR state
-                state = 0,
-
-            // Default abort message
-                strAbort = "canceled",
-
-            // Fake xhr
-                jqXHR = {
-                    readyState: 0,
-
-                    // Builds headers hashtable if needed
-                    getResponseHeader: function (key) {
-                        var match;
-                        if (state === 2) {
-                            if (!responseHeaders) {
-                                responseHeaders = {};
-                                while (( match = rheaders.exec(responseHeadersString) )) {
-                                    responseHeaders[match[1].toLowerCase()] = match[2];
-                                }
-                            }
-                            match = responseHeaders[key.toLowerCase()];
-                        }
-                        return match == null ? null : match;
-                    },
-
-                    // Raw string
-                    getAllResponseHeaders: function () {
-                        return state === 2 ? responseHeadersString : null;
-                    },
-
-                    // Caches the header
-                    setRequestHeader: function (name, value) {
-                        var lname = name.toLowerCase();
-                        if (!state) {
-                            name = requestHeadersNames[lname] = requestHeadersNames[lname] || name;
-                            requestHeaders[name] = value;
-                        }
-                        return this;
-                    },
-
-                    // Overrides response content-type header
-                    overrideMimeType: function (type) {
-                        if (!state) {
-                            s.mimeType = type;
-                        }
-                        return this;
-                    },
-
-                    // Status-dependent callbacks
-                    statusCode: function (map) {
-                        var code;
-                        if (map) {
-                            if (state < 2) {
-                                for (code in map) {
-
-                                    // Lazy-add the new callback in a way that preserves old ones
-                                    statusCode[code] = [statusCode[code], map[code]];
-                                }
-                            } else {
-
-                                // Execute the appropriate callbacks
-                                jqXHR.always(map[jqXHR.status]);
-                            }
-                        }
-                        return this;
-                    },
-
-                    // Cancel the request
-                    abort: function (statusText) {
-                        var finalText = statusText || strAbort;
-                        if (transport) {
-                            transport.abort(finalText);
-                        }
-                        done(0, finalText);
-                        return this;
-                    }
-                };
-
-            // Attach deferreds
-            deferred.promise(jqXHR).complete = completeDeferred.add;
-            jqXHR.success = jqXHR.done;
-            jqXHR.error = jqXHR.fail;
-
-            // Remove hash character (#7531: and string promotion)
-            // Add protocol if not provided (#5866: IE7 issue with protocol-less urls)
-            // Handle falsy url in the settings object (#10093: consistency with old signature)
-            // We also use the url parameter if available
-            s.url = ( ( url || s.url || ajaxLocation ) + "" )
-                .replace(rhash, "")
-                .replace(rprotocol, ajaxLocParts[1] + "//");
-
-            // Alias method option to type as per ticket #12004
-            s.type = options.method || options.type || s.method || s.type;
-
-            // Extract dataTypes list
-            s.dataTypes = jQuery.trim(s.dataType || "*").toLowerCase().match(rnotwhite) || [""];
-
-            // A cross-domain request is in order when we have a protocol:host:port mismatch
-            if (s.crossDomain == null) {
-                parts = rurl.exec(s.url.toLowerCase());
-                s.crossDomain = !!( parts &&
-                    ( parts[1] !== ajaxLocParts[1] || parts[2] !== ajaxLocParts[2] ||
-                    ( parts[3] || ( parts[1] === "http:" ? "80" : "443" ) ) !==
-                    ( ajaxLocParts[3] || ( ajaxLocParts[1] === "http:" ? "80" : "443" ) ) )
-                );
-            }
-
-            // Convert data if not already a string
-            if (s.data && s.processData && typeof s.data !== "string") {
-                s.data = jQuery.param(s.data, s.traditional);
-            }
-
-            // Apply prefilters
-            inspectPrefiltersOrTransports(prefilters, s, options, jqXHR);
-
-            // If request was aborted inside a prefilter, stop there
-            if (state === 2) {
-                return jqXHR;
-            }
-
-            // We can fire global events as of now if asked to
-            // Don't fire events if jQuery.event is undefined in an AMD-usage scenario (#15118)
-            fireGlobals = jQuery.event && s.global;
-
-            // Watch for a new set of requests
-            if (fireGlobals && jQuery.active++ === 0) {
-                jQuery.event.trigger("ajaxStart");
-            }
-
-            // Uppercase the type
-            s.type = s.type.toUpperCase();
-
-            // Determine if request has content
-            s.hasContent = !rnoContent.test(s.type);
-
-            // Save the URL in case we're toying with the If-Modified-Since
-            // and/or If-None-Match header later on
-            cacheURL = s.url;
-
-            // More options handling for requests with no content
-            if (!s.hasContent) {
-
-                // If data is available, append data to url
-                if (s.data) {
-                    cacheURL = ( s.url += ( rquery.test(cacheURL) ? "&" : "?" ) + s.data );
-
-                    // #9682: remove data so that it's not used in an eventual retry
-                    delete s.data;
-                }
-
-                // Add anti-cache in url if needed
-                if (s.cache === false) {
-                    s.url = rts.test(cacheURL) ?
-
-                        // If there is already a '_' parameter, set its value
-                        cacheURL.replace(rts, "$1_=" + nonce++) :
-
-                        // Otherwise add one to the end
-                    cacheURL + ( rquery.test(cacheURL) ? "&" : "?" ) + "_=" + nonce++;
-                }
-            }
-
-            // Set the If-Modified-Since and/or If-None-Match header, if in ifModified mode.
-            if (s.ifModified) {
-                if (jQuery.lastModified[cacheURL]) {
-                    jqXHR.setRequestHeader("If-Modified-Since", jQuery.lastModified[cacheURL]);
-                }
-                if (jQuery.etag[cacheURL]) {
-                    jqXHR.setRequestHeader("If-None-Match", jQuery.etag[cacheURL]);
-                }
-            }
-
-            // Set the correct header, if data is being sent
-            if (s.data && s.hasContent && s.contentType !== false || options.contentType) {
-                jqXHR.setRequestHeader("Content-Type", s.contentType);
-            }
-
-            // Set the Accepts header for the server, depending on the dataType
-            jqXHR.setRequestHeader(
-                "Accept",
-                s.dataTypes[0] && s.accepts[s.dataTypes[0]] ?
-                s.accepts[s.dataTypes[0]] +
-                ( s.dataTypes[0] !== "*" ? ", " + allTypes + "; q=0.01" : "" ) :
-                    s.accepts["*"]
-            );
-
-            // Check for headers option
-            for (i in s.headers) {
-                jqXHR.setRequestHeader(i, s.headers[i]);
-            }
-
-            // Allow custom headers/mimetypes and early abort
-            if (s.beforeSend &&
-                ( s.beforeSend.call(callbackContext, jqXHR, s) === false || state === 2 )) {
-
-                // Abort if not done already and return
-                return jqXHR.abort();
-            }
-
-            // aborting is no longer a cancellation
-            strAbort = "abort";
-
-            // Install callbacks on deferreds
-            for (i in {success: 1, error: 1, complete: 1}) {
-                jqXHR[i](s[i]);
-            }
-
-            // Get transport
-            transport = inspectPrefiltersOrTransports(transports, s, options, jqXHR);
-
-            // If no transport, we auto-abort
-            if (!transport) {
-                done(-1, "No Transport");
-            } else {
-                jqXHR.readyState = 1;
-
-                // Send global event
-                if (fireGlobals) {
-                    globalEventContext.trigger("ajaxSend", [jqXHR, s]);
-                }
-
-                // If request was aborted inside ajaxSend, stop there
-                if (state === 2) {
-                    return jqXHR;
-                }
-
-                // Timeout
-                if (s.async && s.timeout > 0) {
-                    timeoutTimer = window.setTimeout(function () {
-                        jqXHR.abort("timeout");
-                    }, s.timeout);
-                }
-
-                try {
-                    state = 1;
-                    transport.send(requestHeaders, done);
-                } catch (e) {
-
-                    // Propagate exception as error if not done
-                    if (state < 2) {
-                        done(-1, e);
-
-                        // Simply rethrow otherwise
-                    } else {
-                        throw e;
-                    }
-                }
-            }
-
-            // Callback for when everything is done
-            function done(status, nativeStatusText, responses, headers) {
-                var isSuccess, success, error, response, modified,
-                    statusText = nativeStatusText;
-
-                // Called once
-                if (state === 2) {
-                    return;
-                }
-
-                // State is "done" now
-                state = 2;
-
-                // Clear timeout if it exists
-                if (timeoutTimer) {
-                    window.clearTimeout(timeoutTimer);
-                }
-
-                // Dereference transport for early garbage collection
-                // (no matter how long the jqXHR object will be used)
-                transport = undefined;
-
-                // Cache response headers
-                responseHeadersString = headers || "";
-
-                // Set readyState
-                jqXHR.readyState = status > 0 ? 4 : 0;
-
-                // Determine if successful
-                isSuccess = status >= 200 && status < 300 || status === 304;
-
-                // Get response data
-                if (responses) {
-                    response = ajaxHandleResponses(s, jqXHR, responses);
-                }
-
-                // Convert no matter what (that way responseXXX fields are always set)
-                response = ajaxConvert(s, response, jqXHR, isSuccess);
-
-                // If successful, handle type chaining
-                if (isSuccess) {
-
-                    // Set the If-Modified-Since and/or If-None-Match header, if in ifModified mode.
-                    if (s.ifModified) {
-                        modified = jqXHR.getResponseHeader("Last-Modified");
-                        if (modified) {
-                            jQuery.lastModified[cacheURL] = modified;
-                        }
-                        modified = jqXHR.getResponseHeader("etag");
-                        if (modified) {
-                            jQuery.etag[cacheURL] = modified;
-                        }
-                    }
-
-                    // if no content
-                    if (status === 204 || s.type === "HEAD") {
-                        statusText = "nocontent";
-
-                        // if not modified
-                    } else if (status === 304) {
-                        statusText = "notmodified";
-
-                        // If we have data, let's convert it
-                    } else {
-                        statusText = response.state;
-                        success = response.data;
-                        error = response.error;
-                        isSuccess = !error;
-                    }
-                } else {
-
-                    // We extract error from statusText
-                    // then normalize statusText and status for non-aborts
-                    error = statusText;
-                    if (status || !statusText) {
-                        statusText = "error";
-                        if (status < 0) {
-                            status = 0;
-                        }
-                    }
-                }
-
-                // Set data for the fake xhr object
-                jqXHR.status = status;
-                jqXHR.statusText = ( nativeStatusText || statusText ) + "";
-
-                // Success/Error
-                if (isSuccess) {
-                    deferred.resolveWith(callbackContext, [success, statusText, jqXHR]);
-                } else {
-                    deferred.rejectWith(callbackContext, [jqXHR, statusText, error]);
-                }
-
-                // Status-dependent callbacks
-                jqXHR.statusCode(statusCode);
-                statusCode = undefined;
-
-                if (fireGlobals) {
-                    globalEventContext.trigger(isSuccess ? "ajaxSuccess" : "ajaxError",
-                        [jqXHR, s, isSuccess ? success : error]);
-                }
-
-                // Complete
-                completeDeferred.fireWith(callbackContext, [jqXHR, statusText]);
-
-                if (fireGlobals) {
-                    globalEventContext.trigger("ajaxComplete", [jqXHR, s]);
-
-                    // Handle the global AJAX counter
-                    if (!( --jQuery.active )) {
-                        jQuery.event.trigger("ajaxStop");
-                    }
-                }
-            }
-
-            return jqXHR;
-        },
-
-        getJSON: function (url, data, callback) {
-            return jQuery.get(url, data, callback, "json");
-        },
-
-        getScript: function (url, callback) {
-            return jQuery.get(url, undefined, callback, "script");
-        }
-    });
-
-    jQuery.each(["get", "post"], function (i, method) {
-        jQuery[method] = function (url, data, callback, type) {
-
-            // shift arguments if data argument was omitted
-            if (jQuery.isFunction(data)) {
-                type = type || callback;
-                callback = data;
-                data = undefined;
-            }
-
-            // The url can be an options object (which then must have .url)
-            return jQuery.ajax(jQuery.extend({
-                url: url,
-                type: method,
-                dataType: type,
-                data: data,
-                success: callback
-            }, jQuery.isPlainObject(url) && url));
-        };
-    });
-
-
-    jQuery._evalUrl = function (url) {
-        return jQuery.ajax({
-            url: url,
-
-            // Make this explicit, since user can override this through ajaxSetup (#11264)
-            type: "GET",
-            dataType: "script",
-            cache: true,
-            async: false,
-            global: false,
-            "throws": true
-        });
-    };
-
 
     jQuery.fn.extend({
         wrapAll: function (html) {
@@ -10155,412 +9416,6 @@ var $, jQuery;
     });
 
 
-// Create the request object
-// (This is still attached to ajaxSettings for backward compatibility)
-    jQuery.ajaxSettings.xhr = window.ActiveXObject !== undefined ?
-
-        // Support: IE6-IE8
-        function () {
-
-            // XHR cannot access local files, always use ActiveX for that case
-            if (this.isLocal) {
-                return createActiveXHR();
-            }
-
-            // Support: IE 9-11
-            // IE seems to error on cross-domain PATCH requests when ActiveX XHR
-            // is used. In IE 9+ always use the native XHR.
-            // Note: this condition won't catch Edge as it doesn't define
-            // document.documentMode but it also doesn't support ActiveX so it won't
-            // reach this code.
-            if (document.documentMode > 8) {
-                return createStandardXHR();
-            }
-
-            // Support: IE<9
-            // oldIE XHR does not support non-RFC2616 methods (#13240)
-            // See http://msdn.microsoft.com/en-us/library/ie/ms536648(v=vs.85).aspx
-            // and http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9
-            // Although this check for six methods instead of eight
-            // since IE also does not support "trace" and "connect"
-            return /^(get|post|head|put|delete|options)$/i.test(this.type) &&
-                createStandardXHR() || createActiveXHR();
-        } :
-
-        // For all other browsers, use the standard XMLHttpRequest object
-        createStandardXHR;
-
-    var xhrId = 0,
-        xhrCallbacks = {},
-        xhrSupported = jQuery.ajaxSettings.xhr();
-
-// Support: IE<10
-// Open requests must be manually aborted on unload (#5280)
-// See https://support.microsoft.com/kb/2856746 for more info
-    if (window.attachEvent) {
-        window.attachEvent("onunload", function () {
-            for (var key in xhrCallbacks) {
-                xhrCallbacks[key](undefined, true);
-            }
-        });
-    }
-
-// Determine support properties
-    support.cors = !!xhrSupported && ( "withCredentials" in xhrSupported );
-    xhrSupported = support.ajax = !!xhrSupported;
-
-// Create transport if the browser can provide an xhr
-    if (xhrSupported) {
-
-        jQuery.ajaxTransport(function (options) {
-
-            // Cross domain only allowed if supported through XMLHttpRequest
-            if (!options.crossDomain || support.cors) {
-
-                var callback;
-
-                return {
-                    send: function (headers, complete) {
-                        var i,
-                            xhr = options.xhr(),
-                            id = ++xhrId;
-
-                        // Open the socket
-                        xhr.open(
-                            options.type,
-                            options.url,
-                            options.async,
-                            options.username,
-                            options.password
-                        );
-
-                        // Apply custom fields if provided
-                        if (options.xhrFields) {
-                            for (i in options.xhrFields) {
-                                xhr[i] = options.xhrFields[i];
-                            }
-                        }
-
-                        // Override mime type if needed
-                        if (options.mimeType && xhr.overrideMimeType) {
-                            xhr.overrideMimeType(options.mimeType);
-                        }
-
-                        // X-Requested-With header
-                        // For cross-domain requests, seeing as conditions for a preflight are
-                        // akin to a jigsaw puzzle, we simply never set it to be sure.
-                        // (it can always be set on a per-request basis or even using ajaxSetup)
-                        // For same-domain requests, won't change header if already provided.
-                        if (!options.crossDomain && !headers["X-Requested-With"]) {
-                            headers["X-Requested-With"] = "XMLHttpRequest";
-                        }
-
-                        // Set headers
-                        for (i in headers) {
-
-                            // Support: IE<9
-                            // IE's ActiveXObject throws a 'Type Mismatch' exception when setting
-                            // request header to a null-value.
-                            //
-                            // To keep consistent with other XHR implementations, cast the value
-                            // to string and ignore `undefined`.
-                            if (headers[i] !== undefined) {
-                                xhr.setRequestHeader(i, headers[i] + "");
-                            }
-                        }
-
-                        // Do send the request
-                        // This may raise an exception which is actually
-                        // handled in jQuery.ajax (so no try/catch here)
-                        xhr.send(( options.hasContent && options.data ) || null);
-
-                        // Listener
-                        callback = function (_, isAbort) {
-                            var status, statusText, responses;
-
-                            // Was never called and is aborted or complete
-                            if (callback && ( isAbort || xhr.readyState === 4 )) {
-
-                                // Clean up
-                                delete xhrCallbacks[id];
-                                callback = undefined;
-                                xhr.onreadystatechange = jQuery.noop;
-
-                                // Abort manually if needed
-                                if (isAbort) {
-                                    if (xhr.readyState !== 4) {
-                                        xhr.abort();
-                                    }
-                                } else {
-                                    responses = {};
-                                    status = xhr.status;
-
-                                    // Support: IE<10
-                                    // Accessing binary-data responseText throws an exception
-                                    // (#11426)
-                                    if (typeof xhr.responseText === "string") {
-                                        responses.text = xhr.responseText;
-                                    }
-
-                                    // Firefox throws an exception when accessing
-                                    // statusText for faulty cross-domain requests
-                                    try {
-                                        statusText = xhr.statusText;
-                                    } catch (e) {
-
-                                        // We normalize with Webkit giving an empty statusText
-                                        statusText = "";
-                                    }
-
-                                    // Filter status for non standard behaviors
-
-                                    // If the request is local and we have data: assume a success
-                                    // (success with no data won't get notified, that's the best we
-                                    // can do given current implementations)
-                                    if (!status && options.isLocal && !options.crossDomain) {
-                                        status = responses.text ? 200 : 404;
-
-                                        // IE - #1450: sometimes returns 1223 when it should be 204
-                                    } else if (status === 1223) {
-                                        status = 204;
-                                    }
-                                }
-                            }
-
-                            // Call complete if needed
-                            if (responses) {
-                                complete(status, statusText, responses, xhr.getAllResponseHeaders());
-                            }
-                        };
-
-                        // Do send the request
-                        // `xhr.send` may raise an exception, but it will be
-                        // handled in jQuery.ajax (so no try/catch here)
-                        if (!options.async) {
-
-                            // If we're in sync mode we fire the callback
-                            callback();
-                        } else if (xhr.readyState === 4) {
-
-                            // (IE6 & IE7) if it's in cache and has been
-                            // retrieved directly we need to fire the callback
-                            window.setTimeout(callback);
-                        } else {
-
-                            // Register the callback, but delay it in case `xhr.send` throws
-                            // Add to the list of active xhr callbacks
-                            xhr.onreadystatechange = xhrCallbacks[id] = callback;
-                        }
-                    },
-
-                    abort: function () {
-                        if (callback) {
-                            callback(undefined, true);
-                        }
-                    }
-                };
-            }
-        });
-    }
-
-// Functions to create xhrs
-    function createStandardXHR() {
-        try {
-            return new window.XMLHttpRequest();
-        } catch (e) {
-        }
-    }
-
-    function createActiveXHR() {
-        try {
-            return new window.ActiveXObject("Microsoft.XMLHTTP");
-        } catch (e) {
-        }
-    }
-
-
-// Install script dataType
-    jQuery.ajaxSetup({
-        accepts: {
-            script: "text/javascript, application/javascript, " +
-            "application/ecmascript, application/x-ecmascript"
-        },
-        contents: {
-            script: /\b(?:java|ecma)script\b/
-        },
-        converters: {
-            "text script": function (text) {
-                jQuery.globalEval(text);
-                return text;
-            }
-        }
-    });
-
-// Handle cache's special case and global
-    jQuery.ajaxPrefilter("script", function (s) {
-        if (s.cache === undefined) {
-            s.cache = false;
-        }
-        if (s.crossDomain) {
-            s.type = "GET";
-            s.global = false;
-        }
-    });
-
-// Bind script tag hack transport
-    jQuery.ajaxTransport("script", function (s) {
-
-        // This transport only deals with cross domain requests
-        if (s.crossDomain) {
-
-            var script,
-                head = document.head || jQuery("head")[0] || document.documentElement;
-
-            return {
-
-                send: function (_, callback) {
-
-                    script = document.createElement("script");
-
-                    script.async = true;
-
-                    if (s.scriptCharset) {
-                        script.charset = s.scriptCharset;
-                    }
-
-                    script.src = s.url;
-
-                    // Attach handlers for all browsers
-                    script.onload = script.onreadystatechange = function (_, isAbort) {
-
-                        if (isAbort || !script.readyState || /loaded|complete/.test(script.readyState)) {
-
-                            // Handle memory leak in IE
-                            script.onload = script.onreadystatechange = null;
-
-                            // Remove the script
-                            if (script.parentNode) {
-                                script.parentNode.removeChild(script);
-                            }
-
-                            // Dereference the script
-                            script = null;
-
-                            // Callback if not abort
-                            if (!isAbort) {
-                                callback(200, "success");
-                            }
-                        }
-                    };
-
-                    // Circumvent IE6 bugs with base elements (#2709 and #4378) by prepending
-                    // Use native DOM manipulation to avoid our domManip AJAX trickery
-                    head.insertBefore(script, head.firstChild);
-                },
-
-                abort: function () {
-                    if (script) {
-                        script.onload(undefined, true);
-                    }
-                }
-            };
-        }
-    });
-
-
-    var oldCallbacks = [],
-        rjsonp = /(=)\?(?=&|$)|\?\?/;
-
-// Default jsonp settings
-    jQuery.ajaxSetup({
-        jsonp: "callback",
-        jsonpCallback: function () {
-            var callback = oldCallbacks.pop() || ( jQuery.expando + "_" + ( nonce++ ) );
-            this[callback] = true;
-            return callback;
-        }
-    });
-
-// Detect, normalize options and install callbacks for jsonp requests
-    jQuery.ajaxPrefilter("json jsonp", function (s, originalSettings, jqXHR) {
-
-        var callbackName, overwritten, responseContainer,
-            jsonProp = s.jsonp !== false && ( rjsonp.test(s.url) ?
-                        "url" :
-                    typeof s.data === "string" &&
-                    ( s.contentType || "" )
-                        .indexOf("application/x-www-form-urlencoded") === 0 &&
-                    rjsonp.test(s.data) && "data"
-                );
-
-        // Handle iff the expected data type is "jsonp" or we have a parameter to set
-        if (jsonProp || s.dataTypes[0] === "jsonp") {
-
-            // Get callback name, remembering preexisting value associated with it
-            callbackName = s.jsonpCallback = jQuery.isFunction(s.jsonpCallback) ?
-                s.jsonpCallback() :
-                s.jsonpCallback;
-
-            // Insert callback into url or form data
-            if (jsonProp) {
-                s[jsonProp] = s[jsonProp].replace(rjsonp, "$1" + callbackName);
-            } else if (s.jsonp !== false) {
-                s.url += ( rquery.test(s.url) ? "&" : "?" ) + s.jsonp + "=" + callbackName;
-            }
-
-            // Use data converter to retrieve json after script execution
-            s.converters["script json"] = function () {
-                if (!responseContainer) {
-                    jQuery.error(callbackName + " was not called");
-                }
-                return responseContainer[0];
-            };
-
-            // force json dataType
-            s.dataTypes[0] = "json";
-
-            // Install callback
-            overwritten = window[callbackName];
-            window[callbackName] = function () {
-                responseContainer = arguments;
-            };
-
-            // Clean-up function (fires after converters)
-            jqXHR.always(function () {
-
-                // If previous value didn't exist - remove it
-                if (overwritten === undefined) {
-                    jQuery(window).removeProp(callbackName);
-
-                    // Otherwise restore preexisting value
-                } else {
-                    window[callbackName] = overwritten;
-                }
-
-                // Save back as free
-                if (s[callbackName]) {
-
-                    // make sure that re-using the options doesn't screw things around
-                    s.jsonpCallback = originalSettings.jsonpCallback;
-
-                    // save the callback name for future use
-                    oldCallbacks.push(callbackName);
-                }
-
-                // Call if it was a function and we have a response
-                if (responseContainer && jQuery.isFunction(overwritten)) {
-                    overwritten(responseContainer[0]);
-                }
-
-                responseContainer = overwritten = undefined;
-            });
-
-            // Delegate to script
-            return "script";
-        }
-    });
-
-
 // data: string of html
 // context (optional): If specified, the fragment will be created in this context,
 // defaults to document
@@ -10591,92 +9446,6 @@ var $, jQuery;
 
         return jQuery.merge([], parsed.childNodes);
     };
-
-
-// Keep a copy of the old load method
-    var _load = jQuery.fn.load;
-
-    /**
-     * Load a url into a page
-     */
-    jQuery.fn.load = function (url, params, callback) {
-        if (typeof url !== "string" && _load) {
-            return _load.apply(this, arguments);
-        }
-
-        var selector, type, response,
-            self = this,
-            off = url.indexOf(" ");
-
-        if (off > -1) {
-            selector = jQuery.trim(url.slice(off, url.length));
-            url = url.slice(0, off);
-        }
-
-        // If it's a function
-        if (jQuery.isFunction(params)) {
-
-            // We assume that it's the callback
-            callback = params;
-            params = undefined;
-
-            // Otherwise, build a param string
-        } else if (params && typeof params === "object") {
-            type = "POST";
-        }
-
-        // If we have elements to modify, make the request
-        if (self.length > 0) {
-            jQuery.ajax({
-                url: url,
-
-                // If "type" variable is undefined, then "GET" method will be used.
-                // Make value of this field explicit since
-                // user can override it through ajaxSetup method
-                type: type || "GET",
-                dataType: "html",
-                data: params
-            }).done(function (responseText) {
-
-                // Save response for use in complete callback
-                response = arguments;
-
-                self.html(selector ?
-
-                    // If a selector was specified, locate the right elements in a dummy div
-                    // Exclude scripts to avoid IE 'Permission Denied' errors
-                    jQuery("<div>").append(jQuery.parseHTML(responseText)).find(selector) :
-
-                    // Otherwise use the full result
-                    responseText);
-
-                // If the request succeeds, this function gets "data", "status", "jqXHR"
-                // but they are ignored because response was set above.
-                // If it fails, this function gets "jqXHR", "status", "error"
-            }).always(callback && function (jqXHR, status) {
-                    self.each(function () {
-                        callback.apply(this, response || [jqXHR.responseText, status, jqXHR]);
-                    });
-                });
-        }
-
-        return this;
-    };
-
-
-// Attach a bunch of functions for handling common AJAX events
-    jQuery.each([
-        "ajaxStart",
-        "ajaxStop",
-        "ajaxComplete",
-        "ajaxError",
-        "ajaxSuccess",
-        "ajaxSend"
-    ], function (i, type) {
-        jQuery.fn[type] = function (fn) {
-            return this.on(type, fn);
-        };
-    });
 
 
     jQuery.expr.filters.animated = function (elem) {
@@ -20851,7 +19620,7 @@ Inflate.prototype.inflateInit = function(z, w){
     this.blocks = null;
 
     // handle undocumented nowrap option (no zlib header or check)
-    nowrap = 0;
+    let nowrap = 0;
     if(w < 0){
       w = - w;
       nowrap = 1;
@@ -21352,7 +20121,7 @@ InfBlocks.prototype.reset = function(z, c){
 	{b>>>=(14);k-=(14);}
 
 	this.index = 0;
-	mode = IB_BTREE;
+	this.mode = IB_BTREE;
       case IB_BTREE:
 	while (this.index < 4 + (this.table >>> 10)){
 	  while(k<(3)){
@@ -21544,7 +20313,7 @@ InfBlocks.prototype.reset = function(z, c){
 	  this.write=q;
 	  return this.inflate_flush(z, r);
 	}
-	mode = DONE;
+	this.mode = DONE;
       case IB_DONE:
 	r = Z_STREAM_END;
 
@@ -25561,7 +24330,9 @@ var igv = (function (igv) {
 
         this.alignmentTrack = new AlignmentTrack(config, this);
 
-        this.visibilityWindow = config.visibilityWindow || 30000;     // 30kb default
+        if (!igv.hasVisibilityWindow(this)) {
+            this.visibilityWindow = 30000;
+        }
 
         this.viewAsPairs = config.viewAsPairs;
 
@@ -25873,7 +24644,7 @@ var igv = (function (igv) {
         this.trackView = undefined;
     }
 
-    CoverageTrack = function (config, parent) {
+    var CoverageTrack = function (config, parent) {
 
         this.parent = parent;
         this.featureSource = parent.featureSource;
@@ -25990,19 +24761,15 @@ var igv = (function (igv) {
 
     CoverageTrack.prototype.popupData = function (config) {
 
-        var genomicLocation = config.genomicLocation,
-            xOffset = config.x,
-            yOffset = config.y,
+        let features = config.viewport.getCachedFeatures();
+        if(!features || features.length === 0) return;
+
+        let genomicLocation = config.genomicLocation,
             referenceFrame = config.viewport.genomicState.referenceFrame,
-            coverageMap = config.viewport.tile.features.coverageMap,
-            coverageMapIndex,
-            coverage,
+            coverageMap = features.coverageMap,
             nameValues = [],
-            tmp;
-
-
-        coverageMapIndex = genomicLocation - coverageMap.bpStart;
-        coverage = coverageMap.coverage[coverageMapIndex];
+            coverageMapIndex = genomicLocation - coverageMap.bpStart,
+            coverage = coverageMap.coverage[coverageMapIndex];
 
         if (coverage) {
 
@@ -26012,7 +24779,7 @@ var igv = (function (igv) {
             nameValues.push({name: 'Total Count', value: coverage.total});
 
             // A
-            tmp = coverage.posA + coverage.negA;
+            let tmp = coverage.posA + coverage.negA;
             if (tmp > 0)  tmp = tmp.toString() + " (" + Math.floor((tmp / coverage.total) * 100.0) + "%, " + coverage.posA + "+, " + coverage.negA + "- )";
             nameValues.push({name: 'A', value: tmp});
 
@@ -26044,7 +24811,7 @@ var igv = (function (igv) {
 
     };
 
-    AlignmentTrack = function (config, parent) {
+    var AlignmentTrack = function (config, parent) {
 
         this.parent = parent;
         this.featureSource = parent.featureSource;
@@ -26454,8 +25221,9 @@ var igv = (function (igv) {
         return list;
 
         function sortRows() {
+            if (!config.viewport.tile) return;
             self.sortOption = {sort: "NUCLEOTIDE"};
-            self.sortAlignmentRows(config.genomicLocation, self.sortOption, config.viewport.tile.features);
+            self.sortAlignmentRows(config.genomicLocation, self.sortOption, config.viewport.getCachedFeatures());
         }
 
         function viewMateInSplitScreen() {
@@ -26475,26 +25243,23 @@ var igv = (function (igv) {
 
     AlignmentTrack.prototype.getClickedObject = function (viewport, y, genomicLocation) {
 
-        var packedAlignmentRows,
-            downsampledIntervals,
-            packedAlignmentsIndex,
-            alignmentRow, clicked, i;
+        let features = viewport.getCachedFeatures();
+        if(!features || features.length === 0) return;
 
-        packedAlignmentRows = viewport.tile.features.packedAlignmentRows;
-        downsampledIntervals = viewport.tile.features.downsampledIntervals;
-
-        packedAlignmentsIndex = Math.floor((y - this.top - this.alignmentsYOffset) / this.alignmentRowHeight);
+        let packedAlignmentRows = features.packedAlignmentRows;
+        let downsampledIntervals = features.downsampledIntervals;
+        let packedAlignmentsIndex = Math.floor((y - this.top - this.alignmentsYOffset) / this.alignmentRowHeight);
 
         if (packedAlignmentsIndex < 0) {
-            for (i = 0; i < downsampledIntervals.length; i++) {
+            for (let i = 0; i < downsampledIntervals.length; i++) {
                 if (downsampledIntervals[i].start <= genomicLocation && (downsampledIntervals[i].end >= genomicLocation)) {
                     return downsampledIntervals[i];
                 }
             }
         } else if (packedAlignmentsIndex < packedAlignmentRows.length) {
 
-            alignmentRow = packedAlignmentRows[packedAlignmentsIndex];
-            clicked = alignmentRow.alignments.filter(function (alignment) {
+            let alignmentRow = packedAlignmentRows[packedAlignmentsIndex];
+            let clicked = alignmentRow.alignments.filter(function (alignment) {
                 return (genomicLocation >= alignment.start && genomicLocation <= (alignment.start + alignment.lengthOnRef));
             });
 
@@ -26974,7 +25739,7 @@ var igv = (function (igv) {
             var lines, i, j, len, tokens, blocks, pos, qualString, rnext, pnext, lengthOnRef,
                 alignment, cigarArray, started;
 
-            lines = sam.splitLines();
+            lines = igv.splitLines(sam);
             len = lines.length;
             started = false;
 
@@ -28617,7 +27382,7 @@ var igv = (function (igv) {
 
                     //Finally total data count
                     binaryParser.position = self.header.fullDataOffset - startOffset;
-                    self.dataCount = binaryParser.getInt();
+                    self.header.dataCount = binaryParser.getInt();
 
                     return self.header;
 
@@ -28843,6 +27608,14 @@ var igv = (function (igv) {
         var chromToId = {};
         var idToChrom = [];
 
+        this.header = {
+            magic: magic,
+            blockSize: blockSize,
+            keySize: keySize,
+            valSize: valSize,
+            itemCount: itemCount,
+            reserved: reserved
+        };
         this.chromToID = chromToId;
         this.idToChrom = idToChrom;
 
@@ -29091,7 +27864,7 @@ var igv = (function (igv) {
                 exons = [];
 
                 for (var i = 0; i < exonCount; i++) {
-                    eStart = start + parseInt(exonStarts[i]);
+                    eStart = chromStart + parseInt(exonStarts[i]);
                     eEnd = eStart + parseInt(exonSizes[i]);
                     exons.push({start: eStart, end: eEnd});
                 }
@@ -29217,6 +27990,31 @@ var igv = (function (igv) {
         }
         else {
             return undefined;
+        }
+    }
+
+    igv.BWSource.prototype.defaultVisibilityWindow = function () {
+
+        if (this.reader.type === 'bigwig') {
+            return Promise.resolve(undefined);
+        }
+        else {
+            let genomeSize = getGenomeLength();
+            return this.reader.loadHeader()
+                .then(function (header) {
+                    // Estimate window size to return ~ 1,000 features, assuming even distribution across the genome
+                    return 1000 * (genomeSize / header.dataCount);
+                })
+        }
+
+
+        function getGenomeLength() {
+            if (igv.browser && igv.browser.genome) {
+                return igv.browser.genome.getGenomeLength();
+            }
+            else {
+                return 3088286401;
+            }
         }
 
     }
@@ -29579,7 +28377,7 @@ var igv = (function (igv) {
                 chromosomeField: options.search.chromosomeField || "chromosome",
                 startField: options.search.startField || "start",
                 endField: options.search.endField || "end",
-                geneField: options.search.geneField || "geneSymbol",
+                geneField: options.search.geneField || "gene",
                 snpField: options.search.snpField || "snp",
                 resultsField: options.search.resultsField
             }
@@ -29603,7 +28401,9 @@ var igv = (function (igv) {
                 coords: 0,
                 chromosomeField: "chromosome",
                 startField: "start",
-                endField: "end"
+                endField: "end",
+                geneField: "gene",
+                snpField: "snp"
 
             }
         }
@@ -29672,21 +28472,17 @@ var igv = (function (igv) {
         return loadSessionFile(sessionURL)
 
             .then(function (session) {
-
                 // Merge session json with config object
                 if (session) {
                     Object.assign(config, session);
                 }
-
                 return config;
-
             })
 
             .then(function (config) {
-
                 return self.loadGenome(config.reference || config.genome, config.locus)
-
             })
+
             .then(function (genome) {
 
                 if (config.roi) {
@@ -29717,11 +28513,15 @@ var igv = (function (igv) {
                 self.windowSizePanel.updateWithGenomicState(self.genomicStateList[0]);
 
             })
+
             .then(function (ignore) {
+
                 igv.TrackView.DisableUpdates = false;
                 // Resize is called to address minor alignment problems with multi-locus view.
                 self.resize();
+
             })
+
             .catch(function (error) {
                 igv.presentAlert(error, undefined);
                 console.log(error);
@@ -29737,7 +28537,7 @@ var igv = (function (igv) {
 
             filename = (typeof urlOrFile === 'string' ? igv.getFilename(urlOrFile) : urlOrFile.name);
 
-            if (filename.startsWith("blob:")) {
+            if (filename.startsWith("blob:") || filename.startsWith("data:")) {
                 var json = igv.Browser.uncompressSession(urlOrFile.substring(5));
                 return Promise.resolve(JSON.parse(json));
             }
@@ -29789,9 +28589,7 @@ var igv = (function (igv) {
             .then(function (genome) {
 
                 genomeChange = self.genome && (self.genome.id !== genome.id);
-
                 self.genome = genome;
-
                 self.$current_genome.text(genome.id || '');
                 self.$current_genome.attr('title', genome.id || '');
                 self.chromosomeSelectWidget.update(genome);
@@ -29799,16 +28597,18 @@ var igv = (function (igv) {
                 if (genomeChange) {
                     self.removeAllTracks();
                 }
-
                 return genome;
-
             })
+
             .then(function (genome) {
-
                 self.genome = genome;
-
                 return self.search(getInitialLocus(initialLocus, genome), true);
+            })
 
+            .catch(function (error) {
+                // Couldn't find initial locus
+                console.error(error);
+                return self.search(self.genome.getHomeChromosomeName());
             })
 
             .then(function (genomicStateList) {
@@ -30068,6 +28868,56 @@ var igv = (function (igv) {
 
                 return newTrack;
             })
+            .then(function (newTrack) {
+                return postInit(newTrack)
+            })
+
+        function resolveTrackProperties(config) {
+
+            if (typeof config.url === 'string' && config.url.startsWith("https://drive.google.com")) {
+
+                return igv.Google.getDriveFileInfo(config.url)
+
+                    .then(function (json) {
+
+                        config.url = "https://www.googleapis.com/drive/v3/files/" + json.id + "?alt=media";
+
+                        if (!config.filename) {
+                            config.filename = json.originalFileName;
+                        }
+                        if (!config.format) {
+                            config.format = igv.inferFileFormat(config.filename);
+                        }
+                        if (config.indexURL && config.indexURL.startsWith("https://drive.google.com")) {
+                            config.indexURL = igv.Google.driveDownloadURL(config.indexURL);
+                        }
+
+                        return config;
+                    })
+
+
+            }
+            else {
+                if (config.url && !config.filename) {
+                    config.filename = igv.getFilename(config.url);
+                }
+
+                return Promise.resolve(config);
+            }
+
+
+        }
+
+        function postInit(track) {
+
+            if(track && typeof track.postInit === 'function') {
+                return track.postInit();
+            }
+            else {
+                return Promise.resolve(track);
+            }
+
+        }
 
 
         function resolveTrackProperties(config) {
@@ -30900,9 +29750,6 @@ var igv = (function (igv) {
 
                 return genomicStateList;
             })
-            .catch(function (error) {
-                igv.presentAlert(error);
-            });
 
 
         /**
@@ -30914,11 +29761,10 @@ var igv = (function (igv) {
          */
         function createGenomicStateList(loci) {
 
-            var searchConfig, geneNameLoci, genomicState, result, unique, promises, ordered, dictionary;
 
-            searchConfig = igv.browser.searchConfig,
-                ordered = {};
-            unique = [];
+            let searchConfig = igv.browser.searchConfig;
+            let ordered = {};
+            let unique = [];
 
             // prune duplicates as the order list is built
             loci.forEach(function (locus, index) {
@@ -30928,13 +29774,14 @@ var igv = (function (igv) {
                 }
             });
 
-            result = [];
-            geneNameLoci = [];
-            dictionary = {};
+            let result = [];
+            let geneNameLoci = [];
+            let dictionary = {};
 
             // Try locus string first  (e.g.  chr1:100-200)
             unique.forEach(function (locus) {
-                genomicState = isLocusChrNameStartEnd(locus, self.genome);
+
+                let genomicState = isLocusChrNameStartEnd(locus, self.genome);
 
                 if (genomicState) {
                     genomicState.locusSearchString = locus;
@@ -30954,7 +29801,7 @@ var igv = (function (igv) {
 
                 // Search based on feature symbol
                 // Try local feature cache first.  This is created from feature tracks tagged "searchable"
-                promises = [];
+                let promises = [];
                 geneNameLoci.forEach(function (locus) {
                     var feature, genomicState, chromosome;
 
@@ -30983,22 +29830,22 @@ var igv = (function (igv) {
                     return Promise.all(promises)
 
                         .then(function (searchResponses) {
-                            var cooked;
 
                             searchResponses.forEach(function (response) {
-                                var genomicState = processSearchResult(response.result, response.locusSearchString);
+
+                                const genomicState = processSearchResult(response.result, response.locusSearchString);
+
                                 if (genomicState) {
                                     result.push(genomicState);
                                     dictionary[genomicState.locusSearchString] = genomicState;
                                 }
                             });
 
-                            cooked = Array(Object.keys(dictionary).length);
+                            let cooked = Array(Object.keys(dictionary).length);
+
                             result.forEach(function (r) {
-                                var key,
-                                    index;
-                                key = r.locusSearchString;
-                                index = ordered[key];
+                                let key = r.locusSearchString;
+                                let index = ordered[key];
                                 cooked[index] = r;
                             });
 
@@ -31234,7 +30081,7 @@ var igv = (function (igv) {
             linesTrimmed = [],
             results = [];
 
-        lines = data.splitLines();
+        lines = igv.splitLines(data);
 
         lines.forEach(function (item) {
             if ("" === item) {
@@ -31376,8 +30223,8 @@ var igv = (function (igv) {
             var track, config;
 
             track = tv.track;
-            if (typeof track.getConfig === "function") {
-                config = track.getConfig();
+            if (typeof track.getState === "function") {
+                config = track.getState();
             }
             else {
                 config = track.config;
@@ -31438,7 +30285,7 @@ var igv = (function (igv) {
         path = window.location.href.slice();
         idx = path.indexOf("?");
 
-        surl = (idx > 0 ? path.substring(0, idx) : path) + "?sessionURL=blob:" + this.compressedSession();
+        surl = (idx > 0 ? path.substring(0, idx) : path) + "?sessionURL=data:" + this.compressedSession();
 
         return surl;
 
@@ -31530,271 +30377,6 @@ var igv = (function (igv) {
 (igv || {});
 
 
-
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2016-2017 The Regents of the University of California
- * Author: Jim Robinson
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-
-/**
- * Created by dat on 4/18/17.
- */
-var igv = (function (igv) {
-
-    igv.EncodeDataSource = function (columnFormat) {
-        this.columnFormat = columnFormat;
-    };
-
-    igv.EncodeDataSource.prototype.retrieveData = function (genomeID) {
-
-        var self = this,
-            fileFormat,
-            assembly;
-
-        fileFormat = 'bigWig';
-        assembly = genomeID;
-
-        return igv.xhr
-            .loadJson(urlString(assembly, fileFormat), {})
-            .then(function(json){
-                return parseJSONData(json, assembly, fileFormat);
-            })
-            .then(function (data) {
-                data.sort(encodeSort);
-                return Promise.resolve(data);
-            });
-    };
-
-    function urlString (assembly, fileFormat) {
-
-        var str;
-
-        // TODO - Test Error Handling with this URL.
-        // str = "https://www.encodeproject.org/search/?type=experiment&assembly=/work/ea14/juicer/references/genome_collection/Hs2-HiC.chrom.sizes&files.file_format=bigWig&format=json&field=lab.title&field=biosample_term_name&field=assay_term_name&field=target.label&field=files.file_format&field=files.output_type&field=files.href&field=files.replicate.technical_replicate_number&field=files.replicate.biological_replicate_number&field=files.assembly&limit=all";
-
-        str = "https://www.encodeproject.org/search/?" +
-            "type=experiment&" +
-            "assembly=" + assembly + "&" +
-            "files.file_format=" + fileFormat + "&" +
-            "format=json&" +
-            "field=lab.title&" +
-            "field=biosample_term_name&" +
-            "field=assay_term_name&" +
-            "field=target.label&" +
-            "field=files.file_format&" +
-            "field=files.output_type&" +
-            "field=files.href&" +
-            "field=files.replicate.technical_replicate_number&" +
-            "field=files.replicate.biological_replicate_number&" +
-            "field=files.assembly&" +
-            "limit=all";
-
-        return str;
-    }
-
-    function parseJSONData(json, assembly, fileFormat) {
-        var rows;
-
-        rows = [];
-        _.each(json["@graph"], function (record) {
-
-            var cellType,
-                target,
-                filtered,
-                mapped,
-                assayType;
-
-            cellType = record.biosample_term_name;
-            assayType = record.assay_term_name;
-            target = record.target ? record.target.label : undefined;
-
-            filtered = _.filter(record.files, function (file) {
-                return fileFormat === file.file_format && assembly === file.assembly;
-            });
-
-            mapped = filtered.map(function (file) {
-
-                var bioRep = file.replicate ? file.replicate.bioligcal_replicate_number : undefined,
-                    techRep = file.replicate ? file.replicate.technical_replicate_number : undefined,
-                    name = cellType || "";
-
-                if(target) {
-                    name += " " + target;
-                }
-                if(assayType && assayType.toLowerCase() !=="chip-seq") {
-                    name += " " + assayType;
-                }
-                if (bioRep) {
-                    name += " " + bioRep;
-                }
-
-                if (techRep) {
-                    name += (bioRep ? ":" : " 0:") + techRep;
-                }
-
-                return {
-                    "Assembly": file.assembly,
-                    "ExperimentID": record['@id'],
-                    "Cell Type": cellType || '',
-                    "Assay Type": record.assay_term_name,
-                    "Target": target || '',
-                    "Lab": record.lab ? record.lab.title : "",
-                    "Format": file.file_format,
-                    "Output Type": file.output_type,
-                    "url": "https://www.encodeproject.org" + file.href,
-                    "Bio Rep": bioRep,
-                    "Tech Rep": techRep,
-                    "Name": name
-                };
-
-            });
-
-            Array.prototype.push.apply(rows, mapped);
-
-        });
-
-        return _.map(rows, function (row) {
-            return _.mapObject(row, function (val) {
-                return (undefined === val || '' === val) ? '-' : val;
-            });
-        });
-
-    }
-
-    function encodeSort(a, b) {
-        var aa1,
-            aa2,
-            cc1,
-            cc2,
-            tt1,
-            tt2;
-
-        aa1 = a['Assay Type' ]; aa2 = b['Assay Type' ];
-        cc1 = a['Cell Type']; cc2 = b['Cell Type'];
-        tt1 = a['Target'   ]; tt2 = b['Target'   ];
-
-        if (aa1 === aa2) {
-            if (cc1 === cc2) {
-                if (tt1 === tt2) {
-                    return 0;
-                } else if (tt1 < tt2) {
-                    return -1;
-                } else {
-                    return 1;
-                }
-            } else if (cc1 < cc2) {
-                return -1;
-            } else {
-                return 1;
-            }
-        } else {
-            if (aa1 < aa2) {
-                return -1;
-            } else {
-                return 1;
-            }
-        }
-    }
-
-    igv.EncodeDataSource.prototype.tableData = function (data) {
-        var self = this,
-            mapped;
-
-        mapped = _.map(data, function (row) {
-
-            // Isolate the subset of the data for display in the table
-            return _.values(_.pick(row, _.map(self.columnFormat, function (column) {
-                return _.first(_.keys(column));
-            })));
-        });
-
-        return mapped;
-    };
-
-    igv.EncodeDataSource.prototype.tableColumns = function () {
-
-        var columns;
-
-        columns = _.map(this.columnFormat, function (obj) {
-            var key,
-                val;
-
-            key = _.first(_.keys(obj));
-            val = _.first(_.values(obj));
-            return { title: key, width: val }
-        });
-
-        return columns;
-    };
-
-    igv.EncodeDataSource.prototype.dataAtRowIndex = function (data, index) {
-        var row,
-            obj;
-
-        row =  data[ index ];
-
-        obj =
-            {
-                url: row[ 'url' ],
-                color: encodeAntibodyColor(row[ 'Target' ]),
-                name: row['Name']
-            };
-
-        return obj;
-
-        function encodeAntibodyColor (antibody) {
-
-            var colors,
-                key;
-
-            colors =
-                {
-                    DEFAULT: "rgb(3, 116, 178)",
-                    H3K27AC: "rgb(200, 0, 0)",
-                    H3K27ME3: "rgb(130, 0, 4)",
-                    H3K36ME3: "rgb(0, 0, 150)",
-                    H3K4ME1: "rgb(0, 150, 0)",
-                    H3K4ME2: "rgb(0, 150, 0)",
-                    H3K4ME3: "rgb(0, 150, 0)",
-                    H3K9AC: "rgb(100, 0, 0)",
-                    H3K9ME1: "rgb(100, 0, 0)"
-                };
-
-            if (undefined === antibody || '' === antibody || '-' === antibody) {
-                key = 'DEFAULT';
-            } else {
-                key = antibody.toUpperCase();
-            }
-
-            return colors[ key ];
-
-        }
-    };
-
-    return igv;
-
-})(igv || {});
 
 /*
  * The MIT License (MIT)
@@ -31969,7 +30551,7 @@ var igv = (function (igv) {
             } else {
                 igv.xhr.load(self.indexFile, igv.buildOptions(self.config))
                     .then(function (data) {
-                        var lines = data.splitLines();
+                        var lines = igv.splitLines(data);
                         var len = lines.length;
                         var lineNo = 0;
 
@@ -32024,7 +30606,7 @@ var igv = (function (igv) {
             self.chromosomes = {};
             self.sequences = {};
 
-            var lines = data.splitLines(),
+            var lines = igv.splitLines(data),
                 len = lines.length,
                 lineNo = 0,
                 nextLine,
@@ -32165,768 +30747,6 @@ var igv = (function (igv) {
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014 Broad Institute
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-
-var igv = (function (igv) {
-
-    /**
-     * feature source for "bed like" files (tab delimited files with 1 feature per line: bed, gff, vcf, etc)
-     *
-     * @param config
-     * @param thefilename
-     * @constructor
-     */
-    igv.AneuFeatureSource = function (config, thefilename) {
-
-        this.config = config || {};
-
-        if (igv.isFilePath(this.config.url)) {
-            this.filename = getPath(this.config.url.name) + thefilename;
-        } else {
-            this.config.url = getPath(this.config.url) + thefilename;
-            this.filename = thefilename;
-            this.headURL = this.config.headURL || thefilename;
-        }
-
-        this.parser = getParser("aneu");
-
-        function getPath(urlorfile) {
-            var last,
-                path;
-
-            last = urlorfile.lastIndexOf("/");
-            path = urlorfile.substring(0, last + 1);
-
-            return path;
-        }
-
-        function getParser(format) {
-            return new igv.FeatureParser(format);
-        }
-
-    };
-
-    /**
-     * Required function fo all data source objects.  Fetches features for the
-     * range requested and passes them on to the success function.  Usually this is
-     * a function that renders the features on the canvas
-     *
-     * @param chr
-     * @param bpStart
-     * @param bpEnd
-     * @param success -- function that takes an array of features as an argument
-     */
-    igv.AneuFeatureSource.prototype.getFeatures = function (chr, bpStart, bpEnd, success) {
-
-        var self = this,
-            range = new igv.GenomicInterval(chr, bpStart, bpEnd),
-            featureCache = this.featureCache;
-
-        if (featureCache && featureCache.containsRange(range)) {//}   featureCache.range.contains(queryChr, bpStart, bpEnd))) {
-            var features = this.featureCache.queryFeatures(chr, bpStart, bpEnd);
-            // console.log("getFeatures: got "+features.length+" cached features on chr "+chr);
-            success(features);
-
-        }
-        else {
-            //  console.log("getFeatures: calling loadFeatures");
-            this.loadFeatures(function (featureList) {
-                    //  console.log("Creating featureCache with "+featureList.length+ " features");
-                    self.featureCache = new igv.FeatureCache(featureList);   // Note - replacing previous cache with new one
-                    // Finally pass features for query interval to continuation
-
-                    var features = self.featureCache.queryFeatures(chr, bpStart, bpEnd);
-                    //  console.log("calling success "+success);
-                    //  console.log("features from queryCache "+features);
-                    success(features);
-
-                },
-                range);   // Currently loading at granularity of chromosome
-        }
-
-    };
-
-
-    /**
-     * Get the feature cache.  This method is exposed for use by cursor.  Loads all features (no index).
-     * @param success
-     */
-    igv.AneuFeatureSource.prototype.getFeatureCache = function (success) {
-
-        var self = this;
-
-        if (this.featureCache) {
-            success(this.featureCache);
-        }
-        else {
-            this.loadFeatures(function (featureList) {
-                //self.featureMap = featureMap;
-                self.featureCache = new igv.FeatureCache(featureList);
-                // Finally pass features for query interval to continuation
-                success(self.featureCache);
-
-            });
-        }
-    }
-
-    /**
-     *
-     * @param continuation
-     * @param range -- genomic range to load.
-     */
-    igv.AneuFeatureSource.prototype.loadFeatures = function (continuation, range) {
-
-        var self = this,
-            options,
-            success,
-            features;
-
-        options = igv.buildOptions(self.config, {tokens: self.config.tokensc});
-
-        success = function (data) {
-            self.header = self.parser.parseHeader(data);
-            features = self.parser.parseFeatures(data);
-            continuation(features);   // <= PARSING DONE HERE
-        };
-
-        igv.xhr.loadString(self.config.url, options).then(success);
-
-    };
-
-    return igv;
-})
-(igv || {});
-
-/*R
- * The MIT License (MIT)
- *
- * Copyright (c) 2014 Broad Institute
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-
-var igv = (function (igv) {
-
-    var debug = false;
-
-    var log = function (msg) {
-        if (debug) {
-            var d = new Date();
-            var time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-            if (typeof copy != "undefined") {
-                copy(msg);
-            }
-            if (typeof console != "undefined") {
-                console.log("AneuTrack: " + time + " " + msg);
-            }
-
-        }
-    };
-    var sortDirection = "ASC";
-
-    igv.AneuTrack = function (config) {
-
-        igv.configTrack(this, config);
-
-        this.maxHeight = config.maxHeight - 2 || 500;
-        this.sampleSquishHeight = config.sampleSquishHeight || 20;
-        this.sampleExpandHeight = config.sampleExpandHeight || 125;
-
-        this.sampleHeight = this.sampleExpandHeight;
-
-        this.highColor = config.highColor || 'rgb(30,30,255)';
-        this.lowColor = config.lowColor || 'rgb(220,0,0)';
-        this.midColor = config.midColor || 'rgb(150,150,150)';
-        this.posColorScale = config.posColorScale || new igv.GradientColorScale({
-                low: 0.1,
-                lowR: 255,
-                lowG: 255,
-                lowB: 255,
-                high: 1.5,
-                highR: 255,
-                highG: 0,
-                highB: 0
-            });
-        this.negColorScale = config.negColorScale || new igv.GradientColorScale({
-                low: -1.5,
-                lowR: 0,
-                lowG: 0,
-                lowB: 255,
-                high: -0.1,
-                highR: 255,
-                highG: 255,
-                highB: 255
-            });
-
-        this.sampleCount = 0;
-        this.samples = {};
-        this.sampleNames = [];
-
-        log("AneuTrack: config: " + JSON.stringify(config));
-        this.config = config;
-
-    };
-
-    igv.AneuTrack.prototype.getSummary = function (chr, bpStart, bpEnd, continuation) {
-       
-            filtersummary = function (redlinedata) {
-                var summarydata = [],
-                    i,
-                    len;
-
-                for (i = 0, len = redlinedata.length; i < len; i++) {
-                    var feature = redlinedata[i];
-                    if (Math.abs(feature.score - 2) > 0.5 && (feature.end - feature.start > 5000000)) {
-                        //log("adding summary: "+JSON.stringify(feature));
-                        summarydata.push(feature);
-                    }
-                }
-                continuation(summarydata);
-            };
-        if (this.featureSourceRed) {
-            this.featureSourceRed.getFeatures(chr, bpStart, bpEnd, filtersummary);
-        }
-        else {
-            log("Aneu track has no summary data yet");
-            continuation(null);
-        }
-    };
-
-    igv.AneuTrack.prototype.loadSummary = function (chr, bpStart, bpEnd, continuation) {
-        var self = this,
-            afterload;
-        if (this.featureSourceRed) {
-            this.featureSourceRed.getFeatures(chr, bpStart, bpEnd, continuation);
-        }
-        else {
-            //log("Data is not loaded yet. Loading json first. tokens are "+me.config.tokens);
-
-            var afterJsonLoaded = function (json) {
-                if (json) {
-                    json = JSON.parse(json);
-//        		log("Got json: " + JSON.stringify(json));
-                    self.featureSourceRed = new igv.AneuFeatureSource(config, json.redline);
-                    self.getSummary(chr, bpStart, bpEnd, continuation);
-                } else {
-                    //log("afterJsonLoaded: got no json result for "+config.url);
-                }
-            };
-
-            afterload = igv.buildOptions(self.config, {tokens: self.config.tokens, success: afterJsonLoaded});
-
-            igv.xhr.loadString(self.config.url, afterload);
-
-            return null;
-        }
-    };
-
-    igv.AneuTrack.prototype.getFeatures = function (chr, bpStart, bpEnd) {
-
-        var self = this;
-
-        return new Promise(function (fulfill, reject) {
-
-            loadJson.call(self).then(function () {
-                // first load diff file, then load redline file, THEN call
-                // continuation
-                var loadsecondfile = function (redlinedata) {
-                    // console.log("loadsecondfile: argument redlinedata:
-                    // "+JSON.stringify(redlinedata));
-                    self.redlinedata = redlinedata;
-                    // console.log("Now loading diff data, using original
-                    // continuation");
-                    self.featureSource.getFeatures(chr, bpStart, bpEnd, fulfill);
-                };
-                // console.log("About to load redline file");
-                self.featureSourceRed.getFeatures(chr, bpStart, bpEnd, loadsecondfile);
-
-
-            });
-        });
-    };
-
-    function loadJson() {
-
-        var self = this;
-
-        return new Promise(function (fulfill, reject) {
-
-            var afterJsonLoaded,
-                afterload;
-
-            if (self.featureSourceRed) {
-                fulfill();
-            } else {
-                afterJsonLoaded = function (json) {
-                    json = JSON.parse(json);
-                    log("Got json: " + json + ", diff :" + json.diff);
-                    self.featureSource = new igv.AneuFeatureSource(self.config, json.diff);
-                    self.featureSourceRed = new igv.AneuFeatureSource(self.config, json.redline);
-                    fulfill();
-                };
-
-                afterload = igv.buildOptions(self.config, {tokens: self.config.tokens});
-
-                igv.xhr.loadString(self.config.url, afterload).then(afterJsonLoaded);
-
-            }
-        });
-    }
-
-    igv.AneuTrack.prototype.getColor = function (value) {
-        var expected = 2,
-            color;
-
-        if (value < expected) {
-            color = this.lowColor;
-        } else if (value > expected) {
-            color = this.highColor;
-        }
-        else color = this.midColor;
-        return color;
-    };
-    igv.AneuTrack.prototype.paintAxis = function (ctx, pixelWidth, pixelHeight) {
-
-        var track = this,
-            yScale = (track.maxLogP - track.minLogP) / pixelHeight;
-
-        var font = {
-            'font': 'normal 10px Arial',
-            'textAlign': 'right',
-            'strokeStyle': "black"
-        };
-
-        igv.graphics.fillRect(ctx, 0, 0, pixelWidth, pixelHeight, {'fillStyle': "rgb(255, 255, 255)"});
-
-        function computeH(min, max, value, maxpixels) {
-            return maxpixels - Math.round((value - min) / max * maxpixels);
-        }
-
-        var max = track.max;
-        if (!max) max = 8;
-        var min = 0;
-        var x = 49;
-
-        igv.graphics.strokeLine(ctx, x, computeH(min, max, 0, track.maxheight), x, computeH(min, max, max, track.maxheight), font); // Offset
-
-        x = x - 5;
-        for (var p = 0; p <= max; p += 1) {
-            var h = computeH(min, max, p, track.maxheight);
-            igv.graphics.strokeLine(ctx, x, h, x + 5, h, font); // Offset dashes up by 2							// pixel
-            if (p > 0 && p < max) igv.graphics.fillText(ctx, p, x - 4, h + 3, font); // Offset
-        }
-
-        font['textAlign'] = 'center';
-        igv.graphics.fillText(ctx, "ploidy", x - 15, pixelHeight / 2, font, {rotate: {angle: -90}});
-
-
-    };
-
-    igv.AneuTrack.prototype.draw = function (options) {
-
-        var myself = this,
-            ctx,
-            bpPerPixel,
-            bpStart,
-            pixelWidth,
-            pixelHeight,
-            bpEnd,
-            segment,
-            len,
-            sample,
-            i,
-            y,
-            color,
-            value,
-            px,
-            px1,
-            pw,
-            xScale;
-
-        ctx = options.context;
-        pixelWidth = options.pixelWidth;
-        pixelHeight = options.pixelHeight;
-//	
-        var max = 4;
-        var min = 0;
-
-        var PLOIDYMAX = 10;
-        // deubugging
-        igv.graphics.fillRect(ctx, 0, 0, pixelWidth, pixelHeight, {'fillStyle': "rgb(255, 255, 255)"});
-
-        var track = this;
-        window.track = track;
-        var computeMinMax = function (featureList) {
-            for (i = 0, len = featureList.length; i < len; i++) {
-                sample = featureList[i].sample;
-                var value = featureList[i].value;
-                if (value > max) max = value;
-                if (value < min) min = value;
-            }
-            if (max > PLOIDYMAX) max = PLOIDYMAX;
-            min = Math.max(min, 0);
-            track.max = max;
-        };
-        var drawFeatureList = function (ctx, featureList, debug) {
-            bpPerPixel = options.bpPerPixel;
-            bpStart = options.bpStart;
-            bpEnd = bpStart + pixelWidth * bpPerPixel + 1;
-            xScale = bpPerPixel;
-
-            for (i = 0, len = featureList.length; i < len; i++) {
-                sample = featureList[i].sample;
-                if (sample && this.samples && this.samples.hasOwnProperty(sample)) {
-                    this.samples[sample] = myself.sampleCount;
-                    this.sampleNames.push(sample);
-                    this.sampleCount++;
-                }
-            }
-
-            checkForLog(featureList);
-            var expected = 2;
-            if (myself.isLog) {
-                min = 0;
-                expected = 0;
-            }
-            var maxheight = myself.height - 4;
-            myself.maxheight = maxheight;
-
-
-            var len = featureList.length;
-            //  log("AneuTrack: Drawing "+len+" features between "+bpStart+"-"+bpEnd+", maxheight="+maxheight);
-            // console.log("AneuTrack: Drawing: min ="+min+", max="+max);
-
-            for (i = 0; i < len; i++) {
-
-
-                segment = featureList[i];
-                if (segment.end < bpStart) continue;
-                if (segment.start > bpEnd) break;
-
-                if (segment.sample) {
-                    y = myself.samples[segment.sample] * myself.sampleHeight;
-                    log("Got sample y=" + y);
-                } else y = 0;
-
-                value = segment.score;
-                color = myself.midColor;
-                if (myself.isLog) {
-                    value = Math.log2(value / 2);
-                    if (value < expected - 0.1) {
-                        color = myself.negColorScale.getColor(value);
-                    } else if (value > expected + 0.1) {
-                        color = myself.posColorScale.getColor(value);
-                    }
-                } else {
-                    if (value < expected - 0.2) {
-                        color = myself.lowColor;
-                    } else if (value > expected + 0.2) {
-                        color = myself.highColor;
-                    }
-                }
-
-                //debug = i < 5 && value == 0;
-                //if (debug == true) log("Feature: " + JSON.stringify(segment));
-
-                px = Math.round((segment.start - bpStart) / xScale);
-                px1 = Math.round((segment.end - bpStart) / xScale);
-                pw = Math.max(2, px1 - px);
-
-                // the value determines the height
-                if (value <= max) {
-                    var h = computeH(min, max, value, maxheight);
-                    if (debug == true)
-                        log("       Got value " + value + ", h=" + h + ", y+h=" + (y + h) + ", px=" + px
-                            + ", px1=" + px1 + ", pw=" + pw + ", color=" + color + ", maxh=" + maxheight);
-                    // use different plot types
-                    igv.graphics.fillRect(ctx, px, y + h, pw, 2, {
-                        fillStyle: color
-                    });
-                }
-                //else log("Value is too large: "+value);
-
-            }
-        };
-        var maxheight = myself.height - 4;
-        var font = {
-            'font': 'normal 10px Arial',
-            'textAlign': 'right',
-            'strokeStyle': 'rgb(150,150,150)',
-            'fillStyle': 'rgb(150,150,150)'
-        };
-        if (options.features) {
-            computeMinMax(options.features);
-        }
-        if (this.redlinedata) {
-            // console.log("Drawing redline data on top");
-            computeMinMax(this.redlinedata);
-        }
-        //log("Got min/max: "+min+"-"+max);
-        if (min < 2 && 2 < max) {
-
-            var mid = computeH(min, max, 2.0, maxheight);
-            console.log("drawing dashed line and solid line at " + mid + " to " + pixelWidth);
-            igv.graphics.dashedLine(ctx, 20, mid, pixelWidth, mid, 4, font);
-            var zero = computeH(min, max, 0, maxheight);
-            igv.graphics.strokeLine(ctx, 20, zero, pixelWidth, zero, font);
-        }
-        else log("NOT drawing line at 2");
-        if (options.features) {
-
-            // console.log("Drawing diff data first");
-            drawFeatureList(ctx, options.features, false);
-        } else {
-            console.log("No diff feature list. options=" + JSON.stringify(options));
-        }
-        if (this.redlinedata) {
-            // console.log("Drawing redline data on top");
-            drawFeatureList(ctx, this.redlinedata, false);
-        } else {
-            console.log("No redline feature list");
-        }
-        // draw axis is in paitnControl
-
-        function computeH(min, max, value, maxpixels) {
-            // console.log("comptuteH. min/max="+min+"/"+max+",
-            // maxpixels="+maxpixels);
-            return maxpixels - Math.round((value - min) / max * maxpixels);
-        }
-
-        function checkForLog(featureList) {
-            var i;
-            if (myself.isLog === undefined) {
-                myself.isLog = false;
-                for (i = 0; i < featureList.length; i++) {
-                    if (featureList[i].value < 0) {
-                        myself.isLog = true;
-                        return;
-                    }
-                }
-            }
-        }
-    };
-
-    /**
-     * Optional method to compute pixel height to accomodate the list of
-     * features. The implementation below has side effects (modifiying the
-     * samples hash). This is unfortunate, but harmless.
-     *
-     * @param features
-     * @returns {number}
-     */
-    igv.AneuTrack.prototype.computePixelHeight = function (features) {
-        // console.log("computePixelHeight");
-
-        var i, len, sample;
-
-        for (i = 0, len = features.length; i < len; i++) {
-            sample = features[i].sample;
-            if (this.samples && !this.samples.hasOwnProperty(sample)) {
-                this.samples[sample] = this.sampleCount;
-                this.sampleNames.push(sample);
-                this.sampleCount++;
-            }
-        }
-        this.sampleCount = Math.max(1, this.sampleCount);
-        var h = Math.max(30, this.sampleCount * this.sampleHeight);
-        this.height = h;
-//	console.log("Computed height for " + features.length + " features, samplecount " + this.sampleCount
-//		+ " and height " + this.sampleHeight + ": " + h);
-        return h;
-    };
-
-    /**
-     * Sort samples by the average value over the genomic range in the direction
-     * indicated (1 = ascending, -1 descending)
-     */
-    igv.AneuTrack.prototype.sortSamples = function (chr, bpStart, bpEnd, direction, callback) {
-
-        var self = this, segment, min, max, f, i, s, sampleNames, len = bpEnd - bpStart, scores = {};
-
-        this.featureSource.getFeatures(chr, bpStart, bpEnd, function (featureList) {
-
-            // Compute weighted average score for each sample
-            for (i = 0, len = featureList.length; i < len; i++) {
-
-                segment = featureList[i];
-
-                if (segment.end < bpStart) continue;
-                if (segment.start > bpEnd) break;
-
-                min = Math.max(bpStart, segment.start);
-                max = Math.min(bpEnd, segment.end);
-                f = (max - min) / len;
-
-                s = scores[segment.sample];
-                if (!s) s = 0;
-                scores[segment.sample] = s + f * segment.value;
-
-            }
-
-            // Now sort sample names by score
-            sampleNames = Object.keys(self.samples);
-            sampleNames.sort(function (a, b) {
-
-                var s1 = scores[a];
-                var s2 = scores[b];
-                if (!s1) s1 = Number.MAX_VALUE;
-                if (!s2) s2 = Number.MAX_VALUE;
-
-                if (s1 == s2)
-                    return 0;
-                else if (s1 > s2)
-                    return direction;
-                else return direction * -1;
-
-            });
-
-            // Finally update sample hash
-            for (i = 0; i < sampleNames.length; i++) {
-                self.samples[sampleNames[i]] = i;
-            }
-            self.sampleNames = sampleNames;
-
-
-            callback();
-
-        });
-    };
-
-    /**
-     * Handle an alt-click. TODO perhaps generalize this for all tracks
-     * (optional).
-     *
-     * @param genomicLocation
-     * @param referenceFrame
-     * @param event
-     */
-    igv.AneuTrack.prototype.altClick = function (genomicLocation, referenceFrame, event) {
-
-        // Define a region 5 "pixels" wide in genomic coordinates
-        var bpWidth = referenceFrame.toBP(2.5);
-
-        this.sortSamples(referenceFrame.chr, genomicLocation - bpWidth, genomicLocation + bpWidth, sortDirection);
-        sortDirection = (sortDirection === "ASC" ? "DESC" : "ASC");
-    };
-
-
-    igv.AneuTrack.prototype.popupData = function (config) {
-
-        var genomicLocation = config.genomicLocation,
-            xOffset = config.x,
-            yOffset = config.y,
-            referenceFrame = config.viewport.genomicState.referenceFrame,
-            sampleName, row = Math.floor(yOffset / this.sampleHeight), items;
-
-        log("popupData for row " + row + ", sampleNames=" + JSON.stringify(this.sampleNames));
-        if (row < this.sampleNames.length) {
-
-            sampleName = this.sampleNames[row];
-
-            if (sampleName) {
-                items = [{
-                    name: "Sample",
-                    value: sampleName
-                }];
-
-            } else {
-                items = [];
-            }
-            // We use the featureCache property rather than method to avoid
-            // async load. If the
-            // feature is not already loaded this won't work, but the user
-            // wouldn't be mousing over it either.
-            if (this.featureSource.featureCache) {
-                var chr = referenceFrame.chrName,
-                    featureList = this.featureSource.featureCache.queryFeatures(chr, genomicLocation, genomicLocation);
-                featureList.forEach(function (f) {
-                    if (f.sample === sampleName) {
-                        items.push({
-                            name: "Value",
-                            value: f.value
-                        });
-                        items.push({
-                            name: "Start",
-                            value: f.start
-                        });
-                        items.push({
-                            name: "End",
-                            value: f.end
-                        });
-                    }
-                });
-            }
-            if (this.featureSourceRed.featureCache) {
-                var chr = referenceFrame.chrName,
-                    featureList = this.featureSourceRed.featureCache.queryFeatures(chr, genomicLocation, genomicLocation);
-                featureList.forEach(function (f) {
-                    if (f.sample === sampleName) {
-                        items.push({
-                            name: "Value",
-                            value: f.value
-                        });
-                        items.push({
-                            name: "Start",
-                            value: f.start
-                        });
-                        items.push({
-                            name: "End",
-                            value: f.end
-                        });
-                    }
-                });
-            }
-
-            return items;
-        }
-
-        return null;
-    };
-
-    return igv;
-
-})(igv || {});
-
-/*
- * The MIT License (MIT)
- *
  * Copyright (c) 2016 University of California San Diego
  * Author: Jim Robinson
  *
@@ -32959,6 +30779,7 @@ var igv = (function (igv) {
 
 
     igv.CustomServiceReader = function (config) {
+
         this.config = config;
 
         this.supportsWholeGenome = true;
@@ -32992,7 +30813,6 @@ var igv = (function (igv) {
             .then(function (data) {
 
                 if (data) {
-
                     if (typeof self.config.parser === "function") {
                         return self.config.parser(data);
                     }
@@ -33002,19 +30822,30 @@ var igv = (function (igv) {
                             return JSON.parse(data);
                         } catch (e) {
                             // Apparently not json, just return data
-
                             return data;
                         }
                     }
                     else {
                         return data;
                     }
-
-
                 }
                 else {
-                    return null;
+                    return [];
                 }
+            })
+            .then(function (features) {
+
+                if(self.config.mappings) {
+
+                    let mappingKeys = Object.keys(self.config.mappings);
+                    features.forEach(function (f) {
+                        mappingKeys.forEach(function (key) {
+                            f[key] = f[self.config.mappings[key]];
+                        });
+                    });
+                }
+
+                return features;
 
             })
     }
@@ -33085,6 +30916,28 @@ var igv = (function (igv) {
         }
     }
 
+    // For use in applications where whitespace carries meaning
+    // Returns "" for an empty row (not undefined like nextLine), since this is needed in AED
+    StringDataWrapper.prototype.nextLineNoTrim = function () {
+        var start = this.ptr,
+            idx = this.data.indexOf('\n', start),
+            data = this.data;
+
+        if (idx > 0) {
+            this.ptr = idx + 1;   // Advance pointer for next line
+            if(idx > start && data.charAt(idx-1) === '\r') {
+                // Trim CR manually in CR/LF sequence
+                return data.substring(start, idx - 1);
+            }
+            return data.substring(start, idx);
+        }
+        else {
+            var length = data.length;
+            this.ptr = length;
+            // Return undefined only at the very end of the data
+            return (start >= length) ? undefined : data.substring(start);
+        }
+    }
 
     var ByteArrayDataWrapper = function (array) {
         this.data = array;
@@ -33110,10 +30963,14 @@ var igv = (function (igv) {
         return result;
     }
 
+    // The ByteArrayDataWrapper does not do any trimming by default, can reuse the function
+    ByteArrayDataWrapper.prototype.nextLineNoTrim = ByteArrayDataWrapper.prototype.nextLine;
+
 
     return igv;
 })
 (igv || {});
+
 /*
  * The MIT License (MIT)
  *
@@ -33705,6 +31562,9 @@ var igv = (function (igv) {
 
     var gffNameFields = ["Name", "gene_name", "gene", "gene_id", "alias", "locus"];
 
+    var aedRegexpNoNamespace = new RegExp("([^:]*)\\(([^)]*)\\)"); // name(type) for AED parsing (namespace undefined)
+    var aedRegexpNamespace = new RegExp("([^:]*):([^(]*)\\(([^)]*)\\)"); // namespace:name(type) for AED parsing
+
     /**
      * Return a parser for the given file format.
      */
@@ -33744,10 +31604,6 @@ var igv = (function (igv) {
                     this.decode = decodeGFF;
                     this.delimiter = "\t";
                     break;
-                case "aneu":
-                    this.decode = decodeAneu;
-                    this.delimiter = "\t";
-                    break;
                 case "fusionjuncspan":
                     // bhaas, needed for FusionInspector view
                     this.decode = decodeFusionJuncSpan;
@@ -33775,13 +31631,29 @@ var igv = (function (igv) {
                     this.delimiter = /\s+/;
                     this.shift = 1;
                     break;
+                case "aed":
+                    this.decode = decodeAed;
+                    this.delimiter = "\t";
+                    break;
                 case "bed":
                     this.decode = decodeBed;
                     this.delimiter = config.delimiter || /\s+/;
                     break;
                 case "bedpe":
-                    this.decode = decodeBedPE;
+                    this.skipRows = 1;
+                    this.decode = decodeBedpe;
                     this.delimiter = /\s+/;
+                    break;
+                case "bedpe-domain":
+                    this.decode = decodeBedpeDomain;
+                    this.headerLine = true;
+                    this.delimiter = /\s+/;
+                    break;
+                case "bedpe-loop":
+                    this.decode = decodeBedpe;
+                    this.delimiter = /\s+/;
+                    this.skipRows = 1;
+                    this.header = {colorColumn: 7};
                     break;
                 default:
 
@@ -33813,16 +31685,16 @@ var igv = (function (igv) {
         while (line = dataWrapper.nextLine()) {
             if (line.startsWith("track") || line.startsWith("#") || line.startsWith("browser")) {
                 if (line.startsWith("track")) {
-                    let h  = parseTrackLine(line);
-                    if(header) {
+                    let h = parseTrackLine(line);
+                    if (header) {
                         Object.assign(header, h);
                     } else {
                         header = h;
                     }
 
                 } else if (line.startsWith("#columns")) {
-                    let h  = parseColumnsDirective(line);
-                    if(header) {
+                    let h = parseColumnsDirective(line);
+                    if (header) {
                         Object.assign(header, h);
                     } else {
                         header = h;
@@ -33859,13 +31731,83 @@ var igv = (function (igv) {
             j,
             decode = this.decode,
             format = this.format,
-            delimiter = this.delimiter || "\t";
+            delimiter = this.delimiter || "\t",
+            nextLine;
+
+        // Double quoted strings can contain newlines in AED
+        // "" is an escape for a ".
+        // Parse all this, clean it up, split into tokens in a custom way
+        function readTokensAed () {
+            var tokens = [],
+                token = "",
+                quotedString = false,
+                n,
+                c;
+
+            while (line || line === '') {
+                for (n = 0; n < line.length; n++) {
+                    c = line.charAt(n);
+                    if (c === delimiter) {
+                        if (!quotedString) {
+                            tokens.push(token);
+                            token = "";
+                        }
+                        else {
+                            token += c;
+                        }
+                    }
+                    else if (c === "\"") {
+                        // Look ahead to the next character
+                        if (n + 1 < line.length && line.charAt(n + 1) === "\"") {
+                            if (quotedString) {
+                                // Turn "" into a single " in the output string
+                                token += "\"";
+                            }
+                            else {
+                                // "" on its own means empty string, ignore
+                            }
+                            // Skip the next double quote
+                            n++;
+                        }
+                        else {
+                            // We know the next character is NOT a double quote, flip our state
+                            quotedString = !quotedString;
+                        }
+                    }
+                    else {
+                        token += c;
+                    }
+                }
+                // We are at the end of the line
+                if (quotedString) {
+                    token += '\n'; // Add newline to the token
+                    line = nextLine(); // Keep going
+                }
+                else {
+                    // We can end the loop
+                    break;
+                }
+            }
+            // Push the last token
+            tokens.push(token);
+            return tokens;
+        }
 
         dataWrapper = igv.getDataWrapper(data);
+        if (format === 'aed') {
+            nextLine = dataWrapper.nextLineNoTrim.bind(dataWrapper);
+        }
+        else {
+            nextLine = dataWrapper.nextLine.bind(dataWrapper);
+        }
+
         i = 0;
 
-        while (line = dataWrapper.nextLine()) {
-            if (i < this.skipRows) continue;
+        while (line = nextLine()) {
+
+            i++;
+
+            if (i <= this.skipRows) continue;
 
             if (line.startsWith("track") || line.startsWith("#") || line.startsWith("browser")) {
                 continue;
@@ -33879,9 +31821,24 @@ var igv = (function (igv) {
                 continue;
             }
 
-            tokens = line.split(delimiter);
+            if (format !== "aed" || line.indexOf("\"") === -1) {
+                tokens = line.split(delimiter);
+            }
+            else {
+                tokens = readTokensAed();
+            }
+
             if (tokens.length < 1) {
                 continue;
+            }
+
+            if (format === "aed") {
+                if (!this.aed) {
+                    // Store information about the aed header in the parser itself
+                    // This is done only once - on the first row
+                    this.aed = parseAedHeaderRow(tokens);
+                    continue;
+                }
             }
 
             feature = decode.call(this, tokens, wig);
@@ -33899,7 +31856,6 @@ var igv = (function (igv) {
                 }
                 cnt++;
             }
-            i++;
         }
 
         return allFeatures;
@@ -33924,7 +31880,76 @@ var igv = (function (igv) {
             cc = tokens[1].split("=")[1],
             span = tokens.length > 2 ? parseInt(tokens[2].split("=")[1], 10) : 1;
         return {format: "variableStep", chrom: cc, span: span}
+    }
 
+    function parseAedToken(value) {
+        // Example: refseq:accessionNumber(aed:String)
+        // refseq - namespace, will be declared later
+        // accessionNumber - name of the field
+        // aed:String - type of the field
+        // The namespace part may be missing
+        var match = aedRegexpNamespace.exec(value);
+        if (match) {
+            return {
+                namespace: match[1],
+                name: match[2],
+                type: match[3]
+            }
+        }
+
+        match = aedRegexpNoNamespace.exec(value);
+        if (match) {
+            return {
+                namespace: '?',
+                name: match[1],
+                type: match[2]
+            }
+        }
+        else {
+            throw new Error("Error parsing the header row of AED file - column not in ns:name(ns:type) format");
+        }
+    }
+
+    function parseAedHeaderRow(tokens) {
+        // First row of AED file defines column names
+        // Each header item is an aed token - see parseAedToken
+        var aed,
+            k,
+            token,
+            aedToken;
+
+        // Initialize aed section to be filled in
+        aed = {
+            columns: [ // Information about the namespace, name and type of each column
+                // Example entry:
+                // { namespace: 'bio', name: 'start', type: 'aed:Integer' }
+            ],
+            metadata: { // Metadata about the entire AED file
+                // Example:
+                // {
+                //    aed: {
+                //       application: { value: "CHaS Browser 3.3.0.139 (r10838)", type: "aed:String" },
+                //       created: { value: "2018-01-02T10:20:30.123+01:00", type: "aed:DateTime" },
+                //       modified: { value: "2018-03-04T11:22:33.456+01:00", type: "aed:DateTime" },
+                //    }
+                //    affx: {
+                //       ucscGenomeVersion: { value: "hg19", type: "aed:String" }
+                //    },
+                //    namespace: {
+                //       omim: { value: "http://affymetrix.com/ontology/www.ncbi.nlm.nih.gov/omim/", type: "aed:URI" },
+                //       affx: { value: "http://affymetrix.com/ontology/", type: "aed:URI" },
+                //       refseq: { value: "http://affymetrix.com/ontology/www.ncbi.nlm.nih.gov/RefSeq/", type: "aed:URI" }
+                //    }
+                // }
+            }
+        };
+        for (k = 0; k < tokens.length; k++) {
+            token = tokens[k];
+            aedToken = parseAedToken(token);
+            aed.columns.push(aedToken);
+        }
+
+        return aed;
     }
 
     function parseTrackLine(line) {
@@ -33980,7 +32005,7 @@ var igv = (function (igv) {
 
                 if (t[0] === "color") {
                     properties.colorColumn = Number.parseInt(t[1]) - 1;
-                } else if (t[0] ==="thickness") {
+                } else if (t[0] === "thickness") {
                     properties.thicknessColumn = Number.parseInt(t[1]) - 1;
                 }
             })
@@ -34062,12 +32087,17 @@ var igv = (function (igv) {
             feature.exons = exons;
         }
 
-        feature.popupData = function () {
-            var data = [];
-            if (feature.name) data.push({name: "Name", value: feature.name});
-            if ("+" === feature.strand || "-" === feature.strand) data.push({name: "Strand", value: feature.strand});
-            return data;
-        };
+        // Optional extra columns
+        if (this.header) {
+            let thicknessColumn = this.header.thicknessColumn;
+            let colorColumn = this.header.colorColumn;
+            if (colorColumn && colorColumn < tokens.length) {
+                feature.color = igv.Color.createColorString(tokens[colorColumn])
+            }
+            if (thicknessColumn && thicknessColumn < tokens.length) {
+                feature.thickness = tokens[thicknessColumn];
+            }
+        }
 
         return feature;
 
@@ -34107,10 +32137,6 @@ var igv = (function (igv) {
 
         feature.exons = exons;
 
-        feature.popupData = function () {
-            return [{name: "Name", value: feature.name}];
-        };
-
         return feature;
 
     }
@@ -34149,10 +32175,6 @@ var igv = (function (igv) {
 
         feature.exons = exons;
 
-        feature.popupData = function () {
-            return [{name: "Name", value: feature.name}];
-        };
-
         return feature;
 
     }
@@ -34189,10 +32211,6 @@ var igv = (function (igv) {
         }
 
         feature.exons = exons;
-
-        feature.popupData = function () {
-            return [{name: "Name", value: feature.name}];
-        };
 
         return feature;
 
@@ -34237,6 +32255,14 @@ var igv = (function (igv) {
 
         value = parseFloat(tokens[3]);
 
+        // Optional extra columns
+        if (this.header) {
+            let colorColumn = this.header.colorColumn;
+            if (colorColumn && colorColumn < tokens.length) {
+                feature.color = igv.Color.createColorString(tokens[colorColumn])
+            }
+        }
+
         return {chr: chr, start: start, end: end, value: value};
     }
 
@@ -34267,34 +32293,6 @@ var igv = (function (igv) {
         else {
             return decodeBedGraph(tokens);
         }
-    }
-
-    function decodeAneu(tokens, ignore) {
-
-        var chr, start, end, feature;
-
-
-        if (tokens.length < 4) return null;
-
-        // console.log("Decoding aneu.tokens="+JSON.stringify(tokens));
-        chr = tokens[1];
-        start = parseInt(tokens[2]);
-        end = tokens.length > 3 ? parseInt(tokens[3]) : start + 1;
-
-        feature = {chr: chr, start: start, end: end};
-
-        if (tokens.length > 4) {
-            feature.score = parseFloat(tokens[4]);
-            feature.value = feature.score;
-        }
-
-
-        feature.popupData = function () {
-            return [{name: "Name", value: feature.name}];
-        };
-
-        return feature;
-
     }
 
     function decodeFusionJuncSpan(tokens, ignore) {
@@ -34372,10 +32370,6 @@ var igv = (function (igv) {
         feature.start = min_coord;
         feature.end = max_coord;
 
-
-        feature.popupData = function () {
-            return [{name: "Name", value: feature.name}];
-        };
 
         return feature;
 
@@ -34504,7 +32498,156 @@ var igv = (function (igv) {
         };
     }
 
-    function decodeBedPE(tokens, ignore) {
+    /**
+     * AED file feature.
+     *
+     * @param aed link to the AED file object containing file-level metadata and column descriptors
+     * @param allColumns All columns as parsed from the AED
+     *
+     * Other values are parsed one by one
+     */
+    function AedFeature(aed, allColumns) {
+        var token, aedColumn, aedColumns = aed.columns;
+
+        // Link to AED file (for metadata)
+        this.aed = aed;
+
+        // Unparsed columns from AED file
+        this.allColumns = allColumns;
+
+        // Prepare space for the parsed values
+        this.chr = null;
+        this.start = null;
+        this.end = null;
+        this.score = 1000;
+        this.strand = '.';
+        this.cdStart = null;
+        this.cdEnd = null;
+        this.name = null;
+        this.color = null;
+
+        for (i = 0; i < allColumns.length; i++) {
+            token = allColumns[i];
+            if (!token) {
+                // Skip empty fields
+                continue;
+            }
+            aedColumn = aedColumns[i];
+            if (aedColumn.type === 'aed:Integer') {
+                token = parseInt(token);
+            }
+            if (aedColumn.namespace === 'bio') {
+                if (aedColumn.name === 'sequence') {
+                    this.chr = token;
+                }
+                else if (aedColumn.name === 'start') {
+                    this.start = token;
+                }
+                else if (aedColumn.name === 'end') {
+                    this.end = token;
+                }
+                else if (aedColumn.name === 'cdsMin') {
+                    this.cdStart = token;
+                }
+                else if (aedColumn.name === 'cdsMax') {
+                    this.cdEnd = token;
+                }
+                else if (aedColumn.name === 'strand') {
+                    this.strand = token;
+                }
+            }
+            else if (aedColumn.namespace === 'aed') {
+                if (aedColumn.name === 'name') {
+                    this.name = token;
+                }
+            }
+            else if (aedColumn.namespace === 'style') {
+                if (aedColumn.name === 'color') {
+                    this.color = igv.Color.createColorString(token);
+                }
+            }
+        }
+    }
+
+    AedFeature.prototype.popupData = function () {
+        var data = [],
+            aed = this.aed;
+        // Just dump everything we have for now
+        for (var i = 0; i < this.allColumns.length; i++) {
+            var featureValue = this.allColumns[i];
+            var name = aed.columns[i].name;
+            // Skip columns that are not interesting - you know the sequence, and you can see color
+            if (name !== 'sequence' && name !== 'color') {
+                if (featureValue) {
+                    data.push({ name: name, value: featureValue });
+                }
+            }
+        }
+        return data;
+    };
+
+    /**
+     * Decode the AED file format
+     * @param tokens
+     * @param ignore
+     * @returns decoded feature, or null if this is not a valid record
+     */
+    function decodeAed(tokens, ignore) {
+        var name, value, token,
+            nonEmptyTokens = 0,
+            aedColumns = this.aed.columns,
+            aedColumn,
+            aedKey,
+            i;
+
+        // Each aed row must match the exact number of columns or we skip it
+        if (tokens.length !== aedColumns.length) {
+            console.log('Corrupted AED file row: ' + tokens.join(','));
+            return undefined;
+        }
+
+        for (i = 0; i < tokens.length; i++) {
+            aedColumn = aedColumns[i];
+            token = tokens[i];
+            if (token !== '') {
+                nonEmptyTokens++;
+            }
+            if (aedColumn.name === 'name' && aedColumn.namespace === 'aed') {
+                name = token;
+            }
+            else if (aedColumn.name === 'value' && aedColumn.namespace === 'aed') {
+                value = token;
+            }
+        }
+
+        if (nonEmptyTokens === 2 && name && value) {
+            // Special row that defines metadata for the entire file
+            aedKey = parseAedToken(name);
+            // Store in the metadata section
+            if (!this.aed.metadata[aedKey.namespace]) {
+                this.aed.metadata[aedKey.namespace] = {};
+            }
+            if (!this.aed.metadata[aedKey.namespace][aedKey.name]) {
+                this.aed.metadata[aedKey.namespace][aedKey.name] = {
+                    type: aedKey.type,
+                    value: value
+                };
+            }
+            // Ignore this value
+            return undefined;
+        }
+
+        var feature = new AedFeature(this.aed, tokens);
+
+        if (!feature.chr || !feature.start || !feature.end) {
+            console.log('Cannot parse feature: ' + tokens.join(','));
+            return undefined;
+        }
+
+        return feature;
+    }
+
+    function decodeBedpe(tokens, ignore) {
 
         if (tokens.length < 6) {
             console.log("Skipping line: " + nextLine);
@@ -34539,21 +32682,40 @@ var igv = (function (igv) {
         let m2 = (feature.start2 + feature.end2) / 2;
         feature.m1 = (m1 < m2) ? m1 : m2;
         feature.m2 = (m1 < m2) ? m2 : m1;
-        
+
         // Optional extra columns
-        if(this.header) {
+        if (this.header) {
             let thicknessColumn = this.header.thicknessColumn;
             let colorColumn = this.header.colorColumn;
-            if(colorColumn && colorColumn < tokens.length) {
+            if (colorColumn && colorColumn < tokens.length) {
                 feature.color = igv.Color.createColorString(tokens[colorColumn])
             }
-            if(thicknessColumn && thicknessColumn < tokens.length) {
+            if (thicknessColumn && thicknessColumn < tokens.length) {
                 feature.thickness = tokens[thicknessColumn];
             }
         }
 
         return feature;
     }
+
+    /**
+     * Special decoder for Hic Domain files.   In these files feature1 == feature2, they are really bed records.
+     * @param tokens
+     * @param ignore
+     * @returns {*}
+     */
+    function decodeBedpeDomain(tokens, ignore) {
+
+        return {
+            chr: tokens[0],
+            start: Number.parseInt(tokens[1]),
+            end: Number.parseInt(tokens[2]),
+            color: igv.Color.createColorString(tokens[6]),
+            score: Number.parseFloat(tokens[7])
+        };
+    }
+
+
 
     /**
      * Decode the "standard" UCSC bed format
@@ -34636,18 +32798,24 @@ var igv = (function (igv) {
 
         this.sourceType = (config.sourceType === undefined ? "file" : config.sourceType);
 
-        if (config.sourceType === "ga4gh") {
+        if(config.features && Array.isArray(config.features)) {
+
+            let features = config.features;
+            if(config.mappings) {
+                mapProperties(features, config.mappings)
+            }
+            this.queryable = false;
+            this.featureCache = new igv.FeatureCache(features);
+        }
+        else if (config.sourceType === "ga4gh") {
             this.reader = new igv.Ga4ghVariantReader(config);
+            this.queryable = true;
         } else if (config.sourceType === "immvar") {
             this.reader = new igv.ImmVarReader(config);
-        } else if (config.type === "eqtl") {
-            if (config.sourceType === "gtex-ws") {
+            this.queryable = true;
+        } else if (config.type === "eqtl" && config.sourceType === "gtex-ws") {
                 this.reader = new igv.GtexReader(config);
                 this.queryable = true;
-            }
-            else {
-                this.reader = new igv.GtexFileReader(config);
-            }
         } else if (config.sourceType === "bigquery") {
             this.reader = new igv.BigQueryFeatureReader(config);
             this.queryable = true;
@@ -34656,17 +32824,24 @@ var igv = (function (igv) {
             this.queryable = true;
         } else if (config.sourceType === 'custom' || config.source !== undefined) {    // Second test for backward compatibility
             this.reader = new igv.CustomServiceReader(config.source);
-            this.queryable = true;
+            this.queryable = config.source.queryable !== undefined ? config.source.queryable : true;
         }
         else {
-            // Default for all sorts of ascii tab-delimited file formts
             this.reader = new igv.FeatureFileReader(config);
+            if(config.queryable != undefined) {
+                this.queryable = config.queryable
+            } else if (queryableFormats.has(config.format)) {
+                this.queryable = true;
+            }
+            else {
+                // Leav undefined -- will defer until we know if reader has an index
+            }
         }
+
         this.visibilityWindow = config.visibilityWindow;
 
-        this.queryable = this.queryable || queryableFormats.has(config.format);
-
     };
+
 
     igv.FeatureSource.prototype.getFileHeader = function () {
 
@@ -34745,18 +32920,21 @@ var igv = (function (igv) {
      * @param bpPerPixel
      */
 
-    igv.FeatureSource.prototype.getFeatures = function (chr, bpStart, bpEnd, bpPerPixel) {
+    igv.FeatureSource.prototype.getFeatures = function (chr, bpStart, bpEnd, bpPerPixel, visibilityWindow) {
 
-        var self = this, maxRows, str, queryChr, isQueryable;
+        var self = this, maxRows, str, queryChr;
 
         queryChr = (igv.browser && igv.browser.genome) ? igv.browser.genome.getChromosomeName(chr) : chr;
         maxRows = self.config.maxRows || 500;
         str = chr.toLowerCase();
-        isQueryable = self.queryable || self.reader.indexed;
+
 
 
         return getFeatureCache()
+
             .then(function (featureCache) {
+
+                let isQueryable = self.queryable;
 
                 if ("all" === str) {
                     if(isQueryable) {
@@ -34774,30 +32952,35 @@ var igv = (function (igv) {
 
 
         function getFeatureCache() {
+
             var genomicInterval;
 
-            genomicInterval = new igv.GenomicInterval(queryChr, bpStart, bpEnd);
+            let intervalStart = bpStart;
+            let intervalEnd = bpEnd;
+
+            genomicInterval = new igv.GenomicInterval(queryChr, intervalStart, intervalEnd);
 
             if(self.featureCache && (self.featureCache.containsRange(genomicInterval) || "all" === str)) {
+
                 return Promise.resolve(self.featureCache);
             }
             else {
 
                 // If a visibility window is defined, expand query interval
 
-                if(self.visibilityWindow != undefined) {
-                    if(self.visibilityWindow <= 0) {
+                if(-1 !== visibilityWindow) {
+                    if(visibilityWindow <= 0) {
                         // Whole chromosome
-                        bpStart = 0;
-                        bpEnd = Number.MAX_VALUE;
+                        intervalStart = 0;
+                        intervalEnd = Number.MAX_VALUE;
                     }
                     else {
-                        if(self.visibilityWindow > (bpEnd - bpStart)) {
-                            bpStart = Math.max(0, (bpStart + bpEnd - self.visibilityWindow) / 2);
-                            bpEnd = bpStart + self.visibilityWindow;
+                        if(visibilityWindow > (bpEnd - bpStart)) {
+                            intervalStart = Math.max(0, (bpStart + bpEnd - visibilityWindow) / 2);
+                            intervalEnd = bpStart + visibilityWindow;
                         }
                     }
-                    genomicInterval = new igv.GenomicInterval(queryChr, bpStart, bpEnd);
+                    genomicInterval = new igv.GenomicInterval(queryChr, intervalStart, intervalEnd);
                 }
 
 
@@ -34805,6 +32988,8 @@ var igv = (function (igv) {
 
                     .then(function (featureList) {
 
+                        if(self.queryable === undefined) self.queryable = self.reader.indexed;
+                        
                         if (featureList) {
 
                             if ("gtf" === self.config.format || "gff3" === self.config.format || "gff" === self.config.format) {
@@ -34815,7 +33000,7 @@ var igv = (function (igv) {
                             packFeatures(featureList, maxRows);
 
                             // Note - replacing previous cache with new one
-                            self.featureCache = isQueryable ?
+                            self.featureCache = self.queryable ?
                                 new igv.FeatureCache(featureList, genomicInterval) :
                                 new igv.FeatureCache(featureList);
 
@@ -34904,7 +33089,6 @@ var igv = (function (igv) {
         }
     }
 
-
     // TODO -- filter by pixel size
     function getWGFeatures(features) {
 
@@ -34934,8 +33118,17 @@ var igv = (function (igv) {
             }
         });
 
-
         return wgFeatures;
+    }
+
+
+    function mapProperties(features, mappings) {
+        let mappingKeys = Object.keys(mappings);
+        features.forEach(function (f) {
+            mappingKeys.forEach(function (key) {
+                f[key] = f[mappings[key]];
+            });
+        });
     }
 
     return igv;
@@ -34971,51 +33164,54 @@ var igv = (function (igv) {
 
     igv.FeatureTrack = function (config) {
 
-        if (config.height === undefined) {
-            config.height = 50;
-        }
+        // Set defaults
+        igv.configTrack(this, config);
+
         // Set maxRows -- protects against pathological feature packing cases (# of rows of overlapping feaures)
         if (config.maxRows === undefined) {
             config.maxRows = 500;
         }
-
-        // tracklurl gets set to the url here (the data uri)
-        igv.configTrack(this, config);
-
-        this.displayMode = config.displayMode || "COLLAPSED";    // COLLAPSED | EXPANDED | SQUISHED
-        this.labelDisplayMode = config.labelDisplayMode;
-
-        this.variantHeight = config.variantHeight || this.height;
-        this.squishedRowHeight = config.squishedRowHeight || 15;
-        this.expandedRowHeight = config.expandedRowHeight || 30;
-
-        this.featureHeight = config.featureHeight || 14;
-
-
         this.maxRows = config.maxRows;
 
-        if (config.filename &&
-            (
-                igv.filenameOrURLHasSuffix(config.filename, '.bigbed') || igv.filenameOrURLHasSuffix(config.filename, '.bb') ||
-                igv.filenameOrURLHasSuffix(config.filename, '.bigwig') || igv.filenameOrURLHasSuffix(config.filename, '.bw')
-            )
-        ) {
+        this.displayMode = config.displayMode || "EXPANDED";    // COLLAPSED | EXPANDED | SQUISHED
+        this.labelDisplayMode = config.labelDisplayMode;
+
+        let format = config.format.toLowerCase();
+        if (format === 'bigwig' || format === 'bigbed') {
             this.featureSource = new igv.BWSource(config);
+
         } else {
             this.featureSource = new igv.FeatureSource(config);
         }
 
+        // Set default heights
+        this.autoHeight = config.autoHeight;
+        this.margin = config.margin === undefined ? 10 : config.margin;
+
+        this.featureHeight = config.featureHeight || 14;
+
+        if ("FusionJuncSpan" === config.type) {
+            this.squishedRowHeight = config.squishedRowHeight || 50;
+            this.expandedRowHeight = config.expandedRowHeight || 50;
+            this.height = config.height || this.margin + 2 * this.expandedRowHeight;
+        }
+        else if ('snp' === config.type) {
+            this.expandedRowHeight = config.expandedRowHeight || 10;
+            this.squishedRowHeight = config.squishedRowHeight || 5;
+            this.height = config.height || 30;
+        }
+        else {
+            this.squishedRowHeight = config.squishedRowHeight || 15;
+            this.expandedRowHeight = config.expandedRowHeight || 30;
+            this.height = config.height || this.margin + 2 * this.expandedRowHeight;
+        }
+
+
         // Set the render function.  This can optionally be passed in the config
         if (config.render) {
             this.render = config.render;
-        } else if ("variant" === config.type) {
-            this.render = renderVariant;
-            this.homvarColor = "rgb(17,248,254)";
-            this.hetvarColor = "rgb(34,12,253)";
         } else if ("FusionJuncSpan" === config.type) {
             this.render = renderFusionJuncSpan;
-            this.height = config.height || 50;
-            this.autoHeight = false;
         }
         else if ('snp' === config.type) {
             this.render = renderSnp;
@@ -35026,12 +33222,30 @@ var igv = (function (igv) {
         else {
             this.render = renderFeature;
             this.arrowSpacing = 30;
-
             // adjust label positions to make sure they're always visible
             monitorTrackDrag(this);
         }
 
     };
+
+    igv.FeatureTrack.prototype.postInit = function () {
+
+        let self = this,
+            format = this.config.format.toLowerCase();
+
+        if (format === 'bigbed' && false === igv.hasVisibilityWindow(this)) {
+
+            return this.featureSource.defaultVisibilityWindow()
+                .then(function (visibilityWindow) {
+                    self.visibilityWindow = visibilityWindow;
+                    return self;
+                })
+        }
+        else {
+            return Promise.resolve(self);
+        }
+
+    }
 
     igv.FeatureTrack.prototype.getFileHeader = function () {
 
@@ -35079,7 +33293,7 @@ var igv = (function (igv) {
         return this.getFileHeader()
 
             .then(function (header) {
-                return self.featureSource.getFeatures(chr, bpStart, bpEnd, bpPerPixel);
+                return self.featureSource.getFeatures(chr, bpStart, bpEnd, bpPerPixel, self.visibilityWindow);
             });
     };
 
@@ -35092,13 +33306,14 @@ var igv = (function (igv) {
      * @returns {*}
      */
     igv.FeatureTrack.prototype.computePixelHeight = function (features) {
+
         var height;
 
         if (this.displayMode === "COLLAPSED") {
-            return this.expandedRowHeight;
+            return this.margin + this.expandedRowHeight;
         }
         else {
-            var maxRow = 0;
+            let maxRow = 0;
             if (features && (typeof features.forEach === "function")) {
                 features.forEach(function (feature) {
 
@@ -35109,7 +33324,7 @@ var igv = (function (igv) {
                 });
             }
 
-            height = (maxRow + 1) * ("SQUISHED" === this.displayMode ? this.squishedRowHeight : this.expandedRowHeight);
+            height = this.margin + (maxRow + 1) * ("SQUISHED" === this.displayMode ? this.squishedRowHeight : this.expandedRowHeight);
             return height;
 
         }
@@ -35166,63 +33381,55 @@ var igv = (function (igv) {
     /**
      * Return "popup data" for feature @ genomic location.  Data is an array of key-value pairs
      */
-    igv.FeatureTrack.prototype.popupData = function (config) {
+    igv.FeatureTrack.prototype.popupData = function (args) {
 
-        // We use the featureCache property rather than method to avoid async load.  If the
+        let features = args.viewport.getCachedFeatures();
+        if (!features || features.length === 0) return [];
+
+        // We use the cached features rather than method to avoid async load.  If the
         // feature is not already loaded this won't work,  but the user wouldn't be mousing over it either.
-        if (config.viewport.tile.features) {
 
-            var genomicLocation, yOffset, referenceFrame, tolerance, featureList, row, data, ss, ee, hits;
+        let genomicLocation = args.genomicLocation;
+        let yOffset = args.y - this.margin;
+        let referenceFrame = args.viewport.genomicState.referenceFrame;
 
-            data = [];
+        // We need some tolerance around genomicLocation
+        let tolerance = 3 * referenceFrame.bpPerPixel;
+        let ss = genomicLocation - tolerance;
+        let ee = genomicLocation + tolerance;
+        //featureList = this.featureSource.featureCache.queryFeatures(referenceFrame.chrName, ss, ee);
 
-            genomicLocation = config.genomicLocation;
-            yOffset = config.y;
-            referenceFrame = config.viewport.genomicState.referenceFrame;
-
-            // We need some tolerance around genomicLocation
-            tolerance = 3 * referenceFrame.bpPerPixel;
-            ss = genomicLocation - tolerance;
-            ee = genomicLocation + tolerance;
-            //featureList = this.featureSource.featureCache.queryFeatures(referenceFrame.chrName, ss, ee);
-
-            featureList = config.viewport.tile.features;
-
-            if ('COLLAPSED' !== this.displayMode) {
-                row = 'SQUISHED' === this.displayMode ? Math.floor((yOffset - 2) / this.expandedRowHeight) : Math.floor((yOffset - 5) / this.squishedRowHeight);
-            }
-
-            if (featureList && featureList.length > 0) {
-
-                hits = featureList.filter(function (feature) {
-                    return (feature.end >= ss && feature.start <= ee) &&
-                        (row === undefined || feature.row === undefined || row === feature.row);
-                })
-
-                hits.forEach(function (feature) {
-                    var featureData;
-
-                    if (feature.popupData) {
-                        featureData = feature.popupData(genomicLocation);
-                    } else {
-                        featureData = extractPopupData(feature);
-                    }
-                    if (featureData) {
-                        if (data.length > 0) {
-                            data.push("<HR>");
-                        }
-                        Array.prototype.push.apply(data, featureData);
-                    }
-
-
-                });
-
-                return data;
-            }
-
+        let row;
+        if ('COLLAPSED' !== this.displayMode) {
+            row = 'SQUISHED' === this.displayMode ? Math.floor((yOffset - 0) / this.squishedRowHeight) : Math.floor((yOffset - 0) / this.expandedRowHeight);
         }
 
-        return null;
+
+        hits = features.filter(function (feature) {
+            return (feature.end >= ss && feature.start <= ee) &&
+                (row === undefined || feature.row === undefined || row === feature.row);
+        })
+
+        let data = [];
+        hits.forEach(function (feature) {
+            let featureData;
+
+            if (feature.popupData) {
+                featureData = feature.popupData(genomicLocation);
+            } else {
+                featureData = extractPopupData(feature);
+            }
+            if (featureData) {
+                if (data.length > 0) {
+                    data.push("<HR>");
+                }
+                Array.prototype.push.apply(data, featureData);
+            }
+        });
+
+        return data;
+
+
     };
 
     /**
@@ -35231,14 +33438,16 @@ var igv = (function (igv) {
      * @returns {Array}
      */
     function extractPopupData(feature) {
+
+        const filteredProperties = new Set(['row', 'color']);
         let data = [];
         let alleles, alleleFreqs;
 
         for (var property in feature) {
 
-            if (feature.hasOwnProperty(property) &&
-                "chr" !== property && "start" !== property && "end" !== property && "row" !== property &&
+            if (feature.hasOwnProperty(property) && !filteredProperties.has(property) &&
                 igv.isStringOrNumber(feature[property])) {
+
                 data.push({name: property, value: feature[property]});
 
                 if (property === "alleles") {
@@ -35249,33 +33458,43 @@ var igv = (function (igv) {
             }
         }
 
-
         if (alleles && alleleFreqs) {
-            if (alleles.endsWith(",")) alleles = alleles.substr(0, alleles.length - 1);
-            if (alleleFreqs.endsWith(",")) alleleFreqs = alleleFreqs.substr(0, alleleFreqs.length - 1);
-            let a = alleles.split(",");
-            let af = alleleFreqs.split(",");
-            if (af.length > 1) {
-                let b = [];
-                for (let i = 0; i < af.length; i++) {
-                    b.push({a: a[i], af: Number.parseFloat(af[i])});
-                }
-                b.sort(function (x, y) {
-                    return x.af - y.af
-                });
-
-                let ref = b[b.length - 1].a
-                for(let i=b.length - 2; i>=0; i--) {
-                    let alt = b[i].a;
-                    let l = "<a target='_blank' " +
-                        "href='http://www.cravat.us/CRAVAT/variant.html?variant=chr7_140808049_+_" + ref + "_" + alt + "'>Cravat " + ref + "->" + alt + "</a>";
-                    data.push("<hr/>");
-                    data.push(l);
-                }
-            }
+            addCravatLinks(alleles, alleleFreqs, data);
         }
 
         return data;
+
+
+        function addCravatLinks(alleles, alleleFreqs, data) {
+            if (alleles && alleleFreqs) {
+                if (alleles.endsWith(",")) alleles = alleles.substr(0, alleles.length - 1);
+                if (alleleFreqs.endsWith(",")) alleleFreqs = alleleFreqs.substr(0, alleleFreqs.length - 1);
+                let a = alleles.split(",");
+                let af = alleleFreqs.split(",");
+                if (af.length > 1) {
+                    let b = [];
+                    for (let i = 0; i < af.length; i++) {
+                        b.push({a: a[i], af: Number.parseFloat(af[i])});
+                    }
+                    b.sort(function (x, y) {
+                        return x.af - y.af
+                    });
+
+                    let ref = b[b.length - 1].a;
+                    if (ref.length === 1) {
+                        for (let i = b.length - 2; i >= 0; i--) {
+                            let alt = b[i].a;
+                            if (alt.length === 1) {
+                                let l = "<a target='_blank' " +
+                                    "href='http://www.cravat.us/CRAVAT/variant.html?variant=chr7_140808049_+_" + ref + "_" + alt + "'>Cravat " + ref + "->" + alt + "</a>";
+                                data.push("<hr/>");
+                                data.push(l);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     igv.FeatureTrack.prototype.menuItemList = function () {
@@ -35312,6 +33531,7 @@ var igv = (function (igv) {
                         igv.popover.hide();
                         self.displayMode = displayMode;
                         self.config.displayMode = displayMode;
+                        self.trackView.checkContentHeight();
                         self.trackView.repaintViews();
                     }
                 });
@@ -35353,6 +33573,32 @@ var igv = (function (igv) {
      */
     igv.FeatureTrack.prototype.dispose = function () {
         this.trackView = undefined;
+    }
+
+
+    /**
+     * Monitors track drag events, updates label position to ensure that they're always visible.
+     * @param track
+     */
+    function monitorTrackDrag(track) {
+        var onDragEnd = function () {
+            if (!track.trackView || !track.trackView.tile || track.displayMode === "SQUISHED") {
+                return;
+            }
+            track.trackView.repaintViews();
+        }
+
+        var unSubscribe = function (removedTrack) {
+            if (igv.browser.un && track === removedTrack) {
+                igv.browser.un('trackdrag', onDragEnd);
+                igv.browser.un('trackremoved', unSubscribe);
+            }
+        };
+
+        if (igv.browser.on) {
+            igv.browser.on('trackdragend', onDragEnd);
+            igv.browser.on('trackremoved', unSubscribe);
+        }
     }
 
     /**
@@ -35398,7 +33644,6 @@ var igv = (function (igv) {
             step = this.arrowSpacing,
             color = this.color;
 
-
         if (this.config.colorBy) {
             var colorByValue = feature[this.config.colorBy.field];
             if (colorByValue) {
@@ -35409,17 +33654,16 @@ var igv = (function (igv) {
             color = feature.color;
         }
 
-
         ctx.fillStyle = color;
         ctx.strokeStyle = color;
 
         if (this.displayMode === "SQUISHED" && feature.row !== undefined) {
             h = this.featureHeight / 2;
-            py = this.squishedRowHeight * feature.row + 2;
+            py = this.margin + this.squishedRowHeight * feature.row;
         } else if (this.displayMode === "EXPANDED" && feature.row !== undefined) {
-            py = this.expandedRowHeight * feature.row + 5;
+            py = this.margin + this.expandedRowHeight * feature.row;
         } else {  // collapsed
-            py = 5;
+            py = this.margin;
         }
 
         cy = py + h / 2;
@@ -35486,6 +33730,7 @@ var igv = (function (igv) {
                 }
             }
         }
+
         windowX = Math.round(options.viewportContainerX);
         windowX1 = windowX + options.viewportContainerWidth / (igv.browser.genomicStateList.length || 1);
 
@@ -35521,7 +33766,7 @@ var igv = (function (igv) {
             boxX1 = Math.min(featureX1, windowX1);
         }
 
-        if (genomicState.selection && "genes" === this.config.type && feature.name !== undefined) {
+        if (genomicState.selection && igv.GtexUtils.gtexLoaded && feature.name !== undefined) {
             // TODO -- for gtex, figure out a better way to do this
             geneColor = genomicState.selection.colorForGene(feature.name);
         }
@@ -35560,65 +33805,10 @@ var igv = (function (igv) {
         }
     }
 
+
     function getFeatureLabelY(featureY, transform) {
         return transform ? featureY + 20 : featureY + 25;
     }
-
-    /**
-     * Monitors track drag events, updates label position to ensure that they're always visible.
-     * @param track
-     */
-    function monitorTrackDrag(track) {
-        var onDragEnd = function () {
-            if (!track.trackView || !track.trackView.tile || track.displayMode === "SQUISHED") {
-                return;
-            }
-            track.trackView.repaintViews();
-        }
-
-        var unSubscribe = function (removedTrack) {
-            if (igv.browser.un && track === removedTrack) {
-                igv.browser.un('trackdrag', onDragEnd);
-                igv.browser.un('trackremoved', unSubscribe);
-            }
-        };
-
-        if (igv.browser.on) {
-            igv.browser.on('trackdragend', onDragEnd);
-            igv.browser.on('trackremoved', unSubscribe);
-        }
-    }
-
-    /**
-     *
-     * @param variant
-     * @param bpStart  genomic location of the left edge of the current canvas
-     * @param xScale  scale in base-pairs per pixel
-     * @param pixelHeight  pixel height of the current canvas
-     * @param ctx  the canvas 2d context
-     */
-    function renderVariant(variant, bpStart, xScale, pixelHeight, ctx) {
-
-        var coord = calculateFeatureCoordinates(variant, bpStart, xScale),
-            py = 20,
-            h = 10,
-            style;
-
-        switch (variant.genotype) {
-            case "HOMVAR":
-                style = this.homvarColor;
-                break;
-            case "HETVAR":
-                style = this.hetvarColor;
-                break;
-            default:
-                style = this.color;
-        }
-
-        ctx.fillStyle = style;
-        ctx.fillRect(coord.px, py, coord.pw, h);
-    }
-
 
     /**
      *
@@ -35630,25 +33820,22 @@ var igv = (function (igv) {
      */
     function renderFusionJuncSpan(feature, bpStart, xScale, pixelHeight, ctx) {
 
-        var coord = calculateFeatureCoordinates(feature, bpStart, xScale),
-            py = 5, h = 10; // defaults borrowed from renderFeature above
-
+        var py;
         var rowHeight = (this.displayMode === "EXPANDED") ? this.squishedRowHeight : this.expandedRowHeight;
 
-        // console.log("row height = " + rowHeight);
-
+        if (this.display === "COLLAPSED") {
+            py = this.margin;
+        }
         if (this.displayMode === "SQUISHED" && feature.row != undefined) {
-            py = rowHeight * feature.row;
+            py = this.margin + rowHeight * feature.row;
         }
         else if (this.displayMode === "EXPANDED" && feature.row != undefined) {
-            py = rowHeight * feature.row;
+            py = this.margin + rowHeight * feature.row;
         }
 
         var cy = py + 0.5 * rowHeight;
         var top_y = cy - 0.5 * rowHeight;
         var bottom_y = cy + 0.5 * rowHeight;
-
-        //igv.Canvas.strokeLine.call(ctx, coord.px, cy, coord.px1, cy); // center line for introns
 
         // draw the junction arc
         var junction_left_px = Math.round((feature.junction_left - bpStart) / xScale);
@@ -35680,8 +33867,6 @@ var igv = (function (igv) {
             ctx.strokeStyle = 'purple';
             ctx.stroke();
         }
-
-
     }
 
     // SNP constants
@@ -35703,10 +33888,12 @@ var igv = (function (igv) {
     function renderSnp(snp, bpStart, xScale, pixelHeight, ctx) {
 
         var coord = calculateFeatureCoordinates(snp, bpStart, xScale),
-            py = 20,
-            h = 10,
+            py = this.margin,
+            h,
             colorArrLength = this.snpColors.length,
             colorPriority;
+
+        h = this.displayMode === "squished" ? this.squishedRowHeight : this.expandedRowHeight;
 
         switch (this.colorBy) {
             case 'function':
@@ -36148,7 +34335,7 @@ var igv = (function (igv) {
 
     }
 
-    GFFTranscript = function (feature) {
+    var GFFTranscript = function (feature) {
         Object.assign(this, feature);
         this.exons = [];
         this.attributeString = feature.attributeString;
@@ -36302,7 +34489,7 @@ var igv = (function (igv) {
      *
      * @returns {*|{}}
      */
-    igv.InteractionTrack.prototype.getConfig = function () {
+    igv.InteractionTrack.prototype.getState = function () {
 
         var config = this.config || {};
         config.arcOrientation = this.arcOrientation;
@@ -36720,6 +34907,7 @@ var igv = (function (igv) {
 var igv = (function (igv) {
 
     var maxFeatureCount = Number.MAX_VALUE,    // For future use,  controls downsampling
+        sampleKeyColumn = 0,
         sampleColumn = 0,
         chrColumn = 1,
         startColumn = 2,
@@ -36731,7 +34919,7 @@ var igv = (function (igv) {
 
     igv.SegParser.prototype.parseHeader = function (data) {
 
-        var lines = data.splitLines(),
+        var lines = igv.splitLines(data),
             len = lines.length,
             line,
             i,
@@ -36756,7 +34944,7 @@ var igv = (function (igv) {
 
     igv.SegParser.prototype.parseFeatures = function (data) {
 
-        var lines = data ? data.splitLines() : [] ,
+        var lines = data ? igv.splitLines(data) : [] ,
             len = lines.length,
             tokens, allFeatures = [], line, i, dataColumn;
 
@@ -36775,6 +34963,7 @@ var igv = (function (igv) {
             if (tokens.length > dataColumn) {
 
                 allFeatures.push({
+                    sampleKey: tokens[sampleKeyColumn],
                     sample: tokens[sampleColumn],
                     chr: tokens[chrColumn],
                     start: parseInt(tokens[startColumn]),
@@ -36860,9 +35049,7 @@ var igv = (function (igv) {
                 }
             );
 
-        this.sampleCount = 0;
-        this.samples = {};
-        this.sampleNames = [];
+        this.sampleKeys = [];
 
         //   this.featureSource = config.sourceType === "bigquery" ?
         //       new igv.BigQueryFeatureSource(this.config) :
@@ -36901,50 +35088,32 @@ var igv = (function (igv) {
 
 
         // If no samples are defined, optionally query feature source.  This step was added to support the TCGA BigQuery
-        if (self.sampleCount === 0 && (typeof self.featureSource.reader.allSamples == "function")) {
-
-            return self.featureSource.reader.allSamples()
-
-                .then(function (samples) {
-
-                    samples.forEach(function (sample) {
-                        self.samples[sample] = self.sampleCount;
-                        self.sampleNames.push(sample);
-                        self.sampleCount++;
-                    })
-
-                    return self.featureSource.getFeatures(chr, bpStart, bpEnd);
-                });
-        }
-        else {
+        // if (self.sampleCount === 0 && (typeof self.featureSource.reader.allSamples == "function")) {
+        //
+        //     return self.featureSource.reader.allSamples()
+        //
+        //         .then(function (samples) {
+        //
+        //             samples.forEach(function (sampleKey) {
+        //                 self.samples[sampleKey] = self.sampleCount;
+        //                 self.sampleKeys.push(sampleKey);
+        //                 self.sampleCount++;
+        //             })
+        //
+        //             return self.featureSource.getFeatures(chr, bpStart, bpEnd);
+        //         });
+        // }
+        // else {
             return self.featureSource.getFeatures(chr, bpStart, bpEnd);
-        }
+       // }
 
     };
 
+
     igv.SegTrack.prototype.draw = function (options) {
 
-        var self = this,
-            featureList,
-            ctx,
-            bpPerPixel,
-            bpStart,
-            pixelWidth,
-            pixelHeight,
-            bpEnd,
-            segment,
-            len,
-            sample,
-            i,
-            y,
-            color,
-            value,
-            px,
-            px1,
-            pw,
-            xScale,
-            sampleHeight,
-            border;
+        var self = this,  featureList, ctx, bpPerPixel, bpStart, pixelWidth, pixelHeight, bpEnd, segment, len, sampleKey,
+            i, y, color, value, px, px1, pw, xScale, sampleHeight, border;
 
         sampleHeight = ("SQUISHED" === this.displayMode) ? this.sampleSquishHeight : this.sampleExpandHeight;
         border = ("SQUISHED" === this.displayMode) ? 0 : 1;
@@ -36955,9 +35124,17 @@ var igv = (function (igv) {
         igv.graphics.fillRect(ctx, 0, 0, pixelWidth, pixelHeight, {'fillStyle': "rgb(255, 255, 255)"});
 
         featureList = options.features;
+
+        // Create a map for fast id -> row lookup
+        let samples = {};
+        this.sampleKeys.forEach(function (id, index) {
+            samples[id] = index;
+        })
+
+
         if (featureList) {
 
-            checkForLog(featureList);
+            if (self.isLog === undefined) checkForLog(featureList);
 
             bpPerPixel = options.bpPerPixel;
             bpStart = options.bpStart;
@@ -36965,11 +35142,10 @@ var igv = (function (igv) {
             xScale = bpPerPixel;
 
             for (i = 0, len = featureList.length; i < len; i++) {
-                sample = featureList[i].sample;
-                if (!this.samples.hasOwnProperty(sample)) {
-                    this.samples[sample] = self.sampleCount;
-                    this.sampleNames.push(sample);
-                    this.sampleCount++;
+                sampleKey = featureList[i].sampleKey;
+                if (!samples.hasOwnProperty(sampleKey)) {
+                    this.sampleKeys.push(sampleKey);
+                    samples[sampleKey] = this.sampleKeys.length;
                 }
             }
 
@@ -36980,11 +35156,11 @@ var igv = (function (igv) {
                 if (segment.end < bpStart) continue;
                 if (segment.start > bpEnd) break;
 
-                y = self.samples[segment.sample] * sampleHeight + border;
+                y = samples[segment.sampleKey] * sampleHeight + border;
 
                 value = segment.value;
                 if (!self.isLog) {
-                    value = Math.log2(value / 2);
+                    value = igv.Math.log2(value / 2);
                 }
 
                 if (value < -0.1) {
@@ -37034,22 +35210,24 @@ var igv = (function (igv) {
      */
     igv.SegTrack.prototype.computePixelHeight = function (features) {
 
-        var sampleHeight, i, len, sample;
+        var sampleHeight, i, len, sampleKey;
 
         if(!features) return 0;
 
         sampleHeight = ("SQUISHED" === this.displayMode) ? this.sampleSquishHeight : this.sampleExpandHeight;
 
+        // Create a map for fast id -> row lookup
+        let samples = new Set(this.sampleKeys);
+
         for (i = 0, len = features.length; i < len; i++) {
-            sample = features[i].sample;
-            if (!this.samples.hasOwnProperty(sample)) {
-                this.samples[sample] = this.sampleCount;
-                this.sampleNames.push(sample);
-                this.sampleCount++;
+            sampleKey = features[i].sampleKey;
+            if (!samples.has(sampleKey)) {
+                samples.add(sampleKey);
+                this.sampleKeys.push(sampleKey);
             }
         }
 
-        return this.sampleCount * sampleHeight;
+        return this.sampleKeys.length * sampleHeight;
     };
 
     /**
@@ -37069,7 +35247,7 @@ var igv = (function (igv) {
                     f,
                     i,
                     s,
-                    sampleNames,
+                    sampleKeys,
                     scores = {},
                     bpLength = bpEnd - bpStart + 1;
 
@@ -37085,15 +35263,14 @@ var igv = (function (igv) {
                     max = Math.min(bpEnd, segment.end);
                     f = (max - min) / bpLength;
 
-                    s = scores[segment.sample];
+                    s = scores[segment.sampleKey];
                     if (!s) s = 0;
-                    scores[segment.sample] = s + f * segment.value;
+                    scores[segment.sampleKey] = s + f * segment.value;
 
                 }
 
                 // Now sort sample names by score
-                sampleNames = Object.keys(self.samples);
-                sampleNames.sort(function (a, b) {
+                self.sampleKeys.sort(function (a, b) {
 
                     var s1 = scores[a];
                     var s2 = scores[b];
@@ -37106,11 +35283,6 @@ var igv = (function (igv) {
 
                 });
 
-                // Finally update sample hash
-                for (i = 0; i < sampleNames.length; i++) {
-                    self.samples[sampleNames[i]] = i;
-                }
-                self.sampleNames = sampleNames;
 
                 self.trackView.repaintViews();
                 // self.trackView.$viewport.scrollTop(0);
@@ -37127,19 +35299,16 @@ var igv = (function (igv) {
             yOffset = config.y,
             referenceFrame = config.viewport.genomicState.referenceFrame,
             sampleHeight = ("SQUISHED" === this.displayMode) ? this.sampleSquishHeight : this.sampleExpandHeight,
-            sampleName,
+            sampleKey,
             row,
             items;
 
+        items = [];
         row = Math.floor(yOffset / sampleHeight);
 
-        if (row < this.sampleNames.length) {
+        if (row < this.sampleKeys.length) {
 
-            sampleName = this.sampleNames[row];
-
-            items = [
-                {name: "Sample", value: sampleName}
-            ];
+            sampleKey = this.sampleKeys[row];
 
             // We use the featureCache property rather than method to avoid async load.  If the
             // feature is not already loaded this won't work,  but the user wouldn't be mousing over it either.
@@ -37147,16 +35316,28 @@ var igv = (function (igv) {
                 var chr = referenceFrame.chrName;  // TODO -- this should be passed in
                 var featureList = this.featureSource.featureCache.queryFeatures(chr, genomicLocation, genomicLocation);
                 featureList.forEach(function (f) {
-                    if (f.sample === sampleName) {
-                        items.push({name: "Value", value: f.value});
+                    if (f.sampleKey === sampleKey) {
+                        extractPopupData(f, items);
                     }
                 });
             }
 
-            return items;
+
         }
 
-        return null;
+        return items;
+
+        function extractPopupData(feature, data) {
+
+            const filteredProperties = new Set(['row', 'color', 'sampleKey', 'uniqueSampleKey', 'uniquePatientKey']);
+
+            Object.keys(feature).forEach(function (property) {
+                if (!filteredProperties.has(property) &&
+                    igv.isStringOrNumber(feature[property])) {
+                    data.push({name: property, value: feature[property]});
+                }
+            });
+        }
     };
 
     igv.SegTrack.prototype.contextMenuItemList = function (config) {
@@ -37518,13 +35699,13 @@ var igv = (function (igv) {
         }
 
         this.autoscale = config.autoscale || config.max === undefined;
-        if(!this.autoscale) {
+        if (!this.autoscale) {
             this.dataRange = {
                 min: config.min || 0,
                 max: config.max
             }
-        } 
-        
+        }
+
         this.windowFunction = config.windowFunction || "mean";
 
         this.paintAxis = igv.paintAxis;
@@ -37626,7 +35807,7 @@ var igv = (function (igv) {
         }
 
         if (features && features.length > 0) {
-            
+
             if (self.dataRange.min === undefined) self.dataRange.min = 0;
 
             featureValueMinimum = self.dataRange.min;
@@ -37692,44 +35873,36 @@ var igv = (function (igv) {
 
         // We use the featureCache property rather than method to avoid async load.  If the
         // feature is not already loaded this won't work,  but the user wouldn't be mousing over it either.
-        if (config.viewport.tile.features) {
 
-            var genomicLocation = config.genomicLocation,
+        let features = config.viewport.getCachedFeatures();
 
-                referenceFrame = config.viewport.genomicState.referenceFrame,
-                tolerance,
-                featureList,
-                popupData,
-                selectedFeature,
-                posString;
+        if (features && features.length > 0) {
 
-            featureList = config.viewport.tile.features;
+            let genomicLocation = config.genomicLocation;
+            let referenceFrame = config.viewport.genomicState.referenceFrame;
+            let popupData = [];
 
-            if (featureList.length > 0) {
+            // We need some tolerance around genomicLocation, start with +/- 2 pixels
+            let tolerance = 2 * referenceFrame.bpPerPixel;
+            let selectedFeature = binarySearch(features, genomicLocation, tolerance);
 
-                popupData = [];
-
-                // We need some tolerance around genomicLocation, start with +/- 2 pixels
-                tolerance = 2 * referenceFrame.bpPerPixel;
-                selectedFeature = binarySearch(featureList, genomicLocation, tolerance);
-
-                if (selectedFeature) {
-                    posString = (selectedFeature.end - selectedFeature.start) === 1 ?
-                        igv.numberFormatter(selectedFeature.start + 1)
-                        : igv.numberFormatter(selectedFeature.start + 1) + "-" + igv.numberFormatter(selectedFeature.end);
-                    popupData.push({name: "Position:", value: posString});
-                    popupData.push({
-                        name: "Value:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
-                        value: igv.numberFormatter(selectedFeature.value)
-                    });
-                }
-
-                return popupData;
+            if (selectedFeature) {
+                let posString = (selectedFeature.end - selectedFeature.start) === 1 ?
+                    igv.numberFormatter(selectedFeature.start + 1)
+                    : igv.numberFormatter(selectedFeature.start + 1) + "-" + igv.numberFormatter(selectedFeature.end);
+                popupData.push({name: "Position:", value: posString});
+                popupData.push({
+                    name: "Value:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+                    value: igv.numberFormatter(selectedFeature.value)
+                });
             }
+
+            return popupData;
+
 
         }
         else {
-            return null;
+            return [];
         }
     }
 
@@ -37848,13 +36021,13 @@ var igv = (function (igv) {
         return {min: min, max: max};
     }
 
-    igv.WIGTrack.prototype.getConfig = function () {
+    igv.WIGTrack.prototype.getState = function () {
 
         let config = this.config;
 
         config.autoscale = this.autoscale;
 
-        if(!this.autoscale && this.dataRange) {
+        if (!this.autoscale && this.dataRange) {
             config.min = this.dataRange.min;
             config.max = this.dataRange.max;
         }
@@ -40386,7 +38559,7 @@ var igv = (function (igv) {
     };
 
 
-    Genome = function (config, sequence, ideograms, aliases) {
+    var Genome = function (config, sequence, ideograms, aliases) {
 
         this.config = config;
         this.id = config.id;
@@ -40395,7 +38568,7 @@ var igv = (function (igv) {
         this.chromosomes = sequence.chromosomes;  // An object (functions as a dictionary)
         this.ideograms = ideograms;
 
-        if(sequence.chromosomes.length > 1) {
+        if (Object.keys(sequence.chromosomes).length > 1) {
             constructWG(this);
         } else {
             this.wgChromosomeNames = [sequence.chromosomeNames[0]];
@@ -40448,7 +38621,7 @@ var igv = (function (igv) {
         this.chrAliasTable = chrAliasTable;
 
     }
-    
+
     Genome.prototype.toJSON = function () {
 
         return Object.assign({}, this.config, {tracks: undefined});
@@ -40570,12 +38743,21 @@ var igv = (function (igv) {
     }
 
     /**
-     * Return the genome length in kb
+     * Return the nominal genome length, this is the length of the main chromosomes (no scaffolds, etc).
      */
     Genome.prototype.getGenomeLength = function () {
-        var lastChr, offset;
-        lastChr = _.last(this.wgChromosomeNames);
-        return this.getCumulativeOffset(lastChr) + this.getChromosome(lastChr).bpLength;
+
+        let self = this;
+
+        if (!this.bpLength) {
+            let bpLength = 0;
+            self.wgChromosomeNames.forEach(function (cname) {
+                let c = self.chromosomes[cname];
+                bpLength += c.bpLength;
+            });
+            this.bpLength = bpLength;
+        }
+        return this.bpLength;
     }
 
     igv.Chromosome = function (name, order, bpLength) {
@@ -40636,7 +38818,7 @@ var igv = (function (igv) {
                 lastChr,
                 n = 0,
                 c = 1,
-                lines = data.splitLines(),
+                lines = igv.splitLines(data),
                 len = lines.length,
                 cytobands = {};
 
@@ -40698,7 +38880,7 @@ var igv = (function (igv) {
 
             .then(function (data) {
 
-                var lines = data.splitLines(),
+                var lines = igv.splitLines(data),
                     aliases = [];
 
                 lines.forEach(function (line) {
@@ -40790,7 +38972,6 @@ var igv = (function (igv) {
 
     igv.EqtlTrack = function (config) {
 
-
         var url = config.url,
             label = config.name;
 
@@ -40816,6 +38997,8 @@ var igv = (function (igv) {
 
         this.featureSource = new igv.FeatureSource(config);
 
+        igv.GtexUtils.gtexLoaded = true;
+
     };
 
     igv.EqtlTrack.prototype.paintAxis = function (ctx, pixelWidth, pixelHeight) {
@@ -40830,11 +39013,11 @@ var igv = (function (igv) {
         };
 
         igv.graphics.fillRect(ctx, 0, 0, pixelWidth, pixelHeight, {'fillStyle': "rgb(255, 255, 255)"});
-        
+
         // Determine a tick spacing such that there is at least 10 pixels between ticks
-        
+
         var n = Math.ceil((this.maxLogP - this.minLogP) * 10 / pixelHeight);
-        
+
 
         for (var p = 4; p <= track.maxLogP; p += n) {
 
@@ -40854,7 +39037,7 @@ var igv = (function (igv) {
 
             igv.graphics.strokeLine(ctx, x1, y1, x2, y2, font); // Offset dashes up by 2 pixel
 
-            if(y1 > 8) {
+            if (y1 > 8) {
                 igv.graphics.fillText(ctx, p, x1 - 1, y1 + 2, font);
             } // Offset numbers down by 2 pixels;
         }
@@ -40889,15 +39072,15 @@ var igv = (function (igv) {
         if (ctx) {
 
             var len = featureList.length;
-            
+
             ctx.save();
-            
+
             self.maxLogP = autoscale(featureList, bpStart, bpEnd);
-            
+
             // Draw in two passes, with "selected" eqtls drawn last
             drawEqtls(false);
             drawEqtls(true);
-            
+
             ctx.restore();
 
         }
@@ -40913,7 +39096,7 @@ var igv = (function (igv) {
                 })
 
             return igv.Math.percentile(values, self.percentile);
-            
+
         }
 
         function drawEqtls(drawSelected) {
@@ -40954,7 +39137,7 @@ var igv = (function (igv) {
                     var mLogP = -Math.log(eqtl[self.pValueField]) / Math.LN10;
                     if (mLogP >= self.minLogP) {
 
-                        if(mLogP > self.maxLogP) {
+                        if (mLogP > self.maxLogP) {
                             mLogP = self.maxLogP;
                             capped = true;
                         } else {
@@ -40987,49 +39170,42 @@ var igv = (function (igv) {
      * Return "popup data" for feature @ genomic location.  Data is an array of key-value pairs
      */
     igv.EqtlTrack.prototype.popupData = function (config) {
-    
-        var genomicLocation = config.genomicLocation,
+
+        let features = config.viewport.getCachedFeatures();
+        if (!features || features.length === 0) return [];
+
+        let genomicLocation = config.genomicLocation,
             xOffset = config.x,
             yOffset = config.y,
-            referenceFrame = config.viewport.genomicState.referenceFrame;
+            referenceFrame = config.viewport.genomicState.referenceFrame,
+            tolerance = 2 * this.dotSize * referenceFrame.bpPerPixel,
+            dotSize = this.dotSize,
+            tissue = this.name,
+            popupData = [];
+        
+        features.forEach(function (feature) {
+            if (feature.end >= genomicLocation - tolerance &&
+                feature.start <= genomicLocation + tolerance &&
+                feature.py - yOffset < 2 * dotSize) {
 
-        // We use the featureCache property rather than method to avoid async load.  If the
-        // feature is not already loaded this won't work,  but the user wouldn't be mousing over it either.
-        if (config.viewport.tile.features) {
+                if (popupData.length > 0) {
+                    popupData.push("<hr>");
+                }
 
-            var chr = referenceFrame.chrName,
-                tolerance = 2 * this.dotSize * referenceFrame.bpPerPixel,
-                featureList = config.viewport.tile.features,
-                dotSize = this.dotSize,
-                tissue = this.name;
+                popupData.push(
+                    {name: "snp id", value: feature.snp},
+                    {name: "gene id", value: feature.geneId},
+                    {name: "gene name", value: feature.geneName},
+                    {name: "p value", value: feature.pValue},
+                    {name: "tissue", value: tissue});
 
-            if (featureList && featureList.length > 0) {
-
-
-                var popupData = [];
-                featureList.forEach(function (feature) {
-                    if (feature.end >= genomicLocation - tolerance &&
-                        feature.start <= genomicLocation + tolerance &&
-                        feature.py - yOffset < 2 * dotSize) {
-
-                        if (popupData.length > 0) {
-                            popupData.push("<hr>");
-                        }
-
-                        popupData.push(
-                            {name: "snp id", value: feature.snp},
-                            {name: "gene id", value: feature.geneId},
-                            {name: "gene name", value: feature.geneName},
-                            {name: "p value", value: feature.pValue},
-                            {name: "tissue", value: tissue});
-
-                    }
-                });
-                return popupData;
             }
-        }
+        });
+        return popupData;
+
+
     }
-    
+
 
     return igv;
 
@@ -41126,6 +39302,20 @@ var igv = (function (igv) {
     brewer.push("rgb(188, 128, 189");
     brewer.push("rgb(204, 235, 197");
     brewer.push("rgb(255, 237, 111");
+
+    igv.GtexUtils = {
+
+        getTissueInfo: function(datasetId) {
+
+            datasetId = datasetId || "gtex_v7";
+
+            let url = "https://gtexportal.org/rest/v1/dataset/tissueInfo?format=json&datasetId=" + datasetId;
+
+            return igv.xhr.loadJson(url, {})
+        }
+
+
+    }
 
 
     return igv;
@@ -41421,6 +39611,7 @@ var igv = (function (igv) {
         this.url = config.url;
         this.tissueName = config.tissueName;
         this.indexed = true;
+        this.datasetId = config.datasetId || "gtex_v7"
     };
 
     //{
@@ -41436,17 +39627,32 @@ var igv = (function (igv) {
     //        "start": 158310846,
     //        "tissueName": "Thyroid"
     //    },
+    // "singleTissueEqtl": [
+    //     {
+    //         "beta": 0.388922,
+    //         "chromosome": "12",
+    //         "gencodeId": "ENSG00000245017.2",
+    //         "geneSymbol": "RP11-181C3.1",
+    //         "geneSymbolUpper": "RP11-181C3.1",
+    //         "pValue": 5.76253e-06,
+    //         "release": "v7",
+    //         "snpId": "rs10860345",
+    //         "start": 98972466,
+    //         "tissueName": "Adrenal_Gland",
+    //         "variantId": "12_98972466_T_C_b37"
+    //     }
     //
     // http://vgtxportaltest.broadinstitute.org:9000/v6/singleTissueEqtlByLocation?tissueName=Thyroid&chromosome=3&start=158310650&end=158311650
 
         igv.GtexReader.prototype.readFeatures = function (chr, bpStart, bpEnd) {
 
-            var self=this,
+            let self=this,
                 queryChr = chr.startsWith("chr") ? chr.substr(3) : chr,
                 queryStart = Math.floor(bpStart),
                 queryEnd = Math.ceil(bpEnd),
+                datasetId = this.datasetId,
                 queryURL = this.url + "?chromosome=" + queryChr + "&start=" + queryStart + "&end=" + queryEnd +
-                    "&tissueName=" + this.tissueName;
+                    "&tissueName=" + this.tissueName + "&datasetId=" + datasetId;
 
             return new Promise(function (fulfill, reject) {
 
@@ -41465,12 +39671,13 @@ var igv = (function (igv) {
 
                         json.singleTissueEqtl.forEach(function (eqtl) {
                             eqtl.chr = "chr" + eqtl.chromosome;
-                            eqtl.position = eqtl.start;
-                            eqtl.start = eqtl.start - 1;
+                            eqtl.position = eqtl.pos;
+                            eqtl.start = eqtl.pos - 1;
+                            eqtl.end = eqtl.start + 1;
                             eqtl.snp = eqtl.snpId;
                             eqtl.geneName = eqtl.geneSymbol;
                             eqtl.geneId = eqtl.gencodeId;
-                            eqtl.end = eqtl.start;
+
                         });
 
                         fulfill(json.singleTissueEqtl);
@@ -42404,7 +40611,7 @@ var igv = (function (igv) {
 
                 // round rect clipping path
                 ctx.beginPath();
-                ctx.roundRect(shim2, shim2 + ideogramTop, width - 2 * shim2, height - 2*shim2, (height - 2*shim2)/2, 0, 1);
+                igv.graphics.roundRect(ctx, shim2, shim2 + ideogramTop, width - 2 * shim2, height - 2*shim2, (height - 2*shim2)/2, 0, 1);
                 ctx.clip();
 
                 for (i = 0; i < cytobands.length; i++) {
@@ -42433,7 +40640,7 @@ var igv = (function (igv) {
 
                         ctx.fillStyle = "rgb(150, 0, 0)";
                         ctx.strokeStyle = "rgb(150, 0, 0)";
-                        ctx.polygon(xC, yC, 1, 0);
+                        igv.graphics.polygon(ctx, xC, yC, 1, 0);
                     } else {
 
                         ctx.fillStyle = getCytobandColor(stainColors, cytoband);
@@ -42444,7 +40651,7 @@ var igv = (function (igv) {
 
             // round rect border
             ctx.strokeStyle = igv.Color.greyScale(41);
-            ctx.roundRect(shim2, shim2 + ideogramTop, width - 2*shim2, height - 2*shim2, (height - 2*shim2)/2, 0, 1);
+            igv.graphics.roundRect(ctx, shim2, shim2 + ideogramTop, width - 2*shim2, height - 2*shim2, (height - 2*shim2)/2, 0, 1);
         }
 
         function getCytobandColor(colors, data) {
@@ -42569,13 +40776,9 @@ var igv = (function (igv) {
         if (debug) {
             var d = new Date();
             var time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-            if (typeof copy != "undefined") {
-                copy(msg);
-            }
             if (typeof console != "undefined") {
                 console.log("igv-canvas: " + time + " " + msg);
             }
-
         }
     };
 
@@ -42771,6 +40974,59 @@ var igv = (function (igv) {
 
             ctx.restore();
         },
+
+        roundRect: function (ctx, x, y, width, height, radius, fill, stroke) {
+
+            ctx.save();
+            if (typeof stroke == "undefined") {
+                stroke = true;
+            }
+            if (typeof radius === "undefined") {
+                radius = 5;
+            }
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+            if (stroke) {
+                ctx.stroke();
+            }
+            if (fill) {
+                ctx.fill();
+            }
+            ctx.restore();
+        },
+        polygon: function (ctx, x, y, fill, stroke) {
+
+            ctx.save();
+            if (typeof stroke == "undefined") {
+                stroke = true;
+            }
+
+            ctx.beginPath();
+            var len = x.length;
+            ctx.moveTo(x[0], y[0]);
+            for (var i = 1; i < len; i++) {
+                ctx.lineTo(x[i], y[i]);
+                // this.moveTo(x[i], y[i]);
+            }
+
+            ctx.closePath();
+            if (stroke) {
+                ctx.stroke();
+            }
+            if (fill) {
+                ctx.fill();
+            }
+            ctx.restore();
+        }
 
 
     }
@@ -43224,7 +41480,7 @@ var igv = (function (igv) {
     //
     // inspired by http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
 
-    RColor = function () {
+    var RColor = function () {
         this.hue = Math.random(),
             this.goldenRatio = 0.618033988749895;
         this.hexwidth = 2;
@@ -43377,24 +41633,7 @@ var igv = (function (igv) {
 
         if (config.oauthToken) igv.setOauthToken(config.oauthToken);
 
-        promise = doPromiseChain(browser,config);
-
-        if (config.promisified) {
-
-            return promise;
-
-        } else {
-
-            promise
-                .then(function (browser) {
-                    console.log("igv browser ready");
-                })
-                .catch(function (error) {
-                    console.error(error);
-                    alert("Error creating igv browser");
-                });
-            return browser;
-        }
+        return doPromiseChain(browser, config);
 
     };
 
@@ -43405,27 +41644,38 @@ var igv = (function (igv) {
             .then(function (ignore) {
 
                 if (false === config.showTrackLabels) {
+
                     browser.hideTrackLabels();
+
                 } else {
+
                     browser.showTrackLabels();
+
                     if (browser.trackLabelControl) {
                         browser.trackLabelControl.setState(browser.trackLabelsVisible);
                     }
-
                 }
 
                 if (false === config.showCursorTrackingGuide) {
+
                     browser.hideCursorGuide();
+
                 } else {
+
                     browser.showCursorGuide();
                     browser.cursorGuide.setState(browser.cursorGuideVisible);
+
                 }
 
                 if (false === config.showCenterGuide) {
+
                     browser.hideCenterGuide();
+
                 } else {
+
                     browser.showCenterGuide();
                     browser.centerGuide.setState(browser.centerGuideVisible);
+
                 }
 
                 // multi-locus mode
@@ -43606,7 +41856,12 @@ var igv = (function (igv) {
             $searchContainer.append(browser.$searchInput);
 
             browser.$searchInput.change(function (e) {
-                browser.search($(this).val());
+
+                browser.search($(this).val())
+
+                    .catch(function (error) {
+                        igv.presentAlert(error);
+                    });
             });
 
             // search icon
@@ -43696,6 +41951,10 @@ var igv = (function (igv) {
     }
 
     function setDefaults(config) {
+
+        if (undefined === config.visibilityWindow) {
+            config.visibilityWindow = -1;
+        }
 
         if (undefined === config.promisified) {
             config.promisified = false;
@@ -43839,274 +42098,6 @@ var igv = (function (igv) {
 })
 (igv || {});
 
-
-
-
-
-
-
-
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2014 Broad Institute
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-
-// Extensions to javascript core classes to support porting of igv
-
-CanvasRenderingContext2D.prototype.strokeLine = function (x1, y1, x2, y2, lineWidth) {
-
-    this.save();
-    this.beginPath();
-    if (lineWidth) {
-        this.lineWidth = lineWidth;
-    }
-    this.moveTo(x1, y1);
-    this.lineTo(x2, y2);
-    this.stroke();
-    this.restore();
-}
-
-CanvasRenderingContext2D.prototype.drawArrowhead = function (x, y, size, lineWidth) {
-
-    this.save();
-    if (!size) {
-        size = 5;
-    }
-    if (lineWidth) {
-        this.lineWidth = lineWidth;
-    }
-    this.beginPath();
-    this.moveTo(x, y - size / 2);
-    this.lineTo(x, y + size / 2);
-    this.lineTo(x + size, y);
-    this.lineTo(x, y - size / 2);
-    this.closePath();
-    this.fill();
-    this.restore();
-}
-
-
-CanvasRenderingContext2D.prototype.roundRect = function (x, y, width, height, radius, fill, stroke) {
-
-    this.save();
-    if (typeof stroke == "undefined") {
-        stroke = true;
-    }
-    if (typeof radius === "undefined") {
-        radius = 5;
-    }
-    this.beginPath();
-    this.moveTo(x + radius, y);
-    this.lineTo(x + width - radius, y);
-    this.quadraticCurveTo(x + width, y, x + width, y + radius);
-    this.lineTo(x + width, y + height - radius);
-    this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-    this.lineTo(x + radius, y + height);
-    this.quadraticCurveTo(x, y + height, x, y + height - radius);
-    this.lineTo(x, y + radius);
-    this.quadraticCurveTo(x, y, x + radius, y);
-    this.closePath();
-    if (stroke) {
-        this.stroke();
-    }
-    if (fill) {
-        this.fill();
-    }
-    this.restore();
-}
-
-CanvasRenderingContext2D.prototype.polygon = function (x, y, fill, stroke) {
-
-    this.save();
-    if (typeof stroke == "undefined") {
-        stroke = true;
-    }
-
-    this.beginPath();
-    var len = x.length;
-    this.moveTo(x[0], y[0]);
-    for (var i = 1; i < len; i++) {
-        this.lineTo(x[i], y[i]);
-        // this.moveTo(x[i], y[i]);
-    }
-
-    this.closePath();
-    if (stroke) {
-        this.stroke();
-    }
-    if (fill) {
-        this.fill();
-    }
-    this.restore();
-}
-
-CanvasRenderingContext2D.prototype.eqTriangle = function (side, cx, cy) {
-
-    this.save();
-    var h = side * (Math.sqrt(3) / 2);
-
-    this.beginPath();
-    this.moveTo(cx, cy - h / 2);
-    this.lineTo(cx - side / 2, cy + h / 2);
-    this.lineTo(cx + side / 2, cy + h / 2);
-    this.lineTo(cx, cy - h / 2);
-    this.closePath();
-
-    this.stroke();
-    this.fill();
-    this.restore();
-}
-
-
-// String polyfill
-
-if (typeof String.prototype.startsWith === "undefined") {
-    String.prototype.startsWith = function (aString) {
-        if (this.length < aString.length) {
-            return false;
-        }
-        else {
-            return (this.substr(0, aString.length) == aString);
-        }
-    }
-}
-
-if (typeof String.prototype.endsWith === "undefined") {
-    String.prototype.endsWith = function (aString) {
-        if (this.length < aString.length) {
-            return false;
-        }
-        else {
-            return (this.substr(this.length - aString.length, aString.length) == aString);
-        }
-    }
-}
-
-if (typeof String.prototype.includes === "undefined") {
-    String.prototype.includes = function (it) {
-        return this.indexOf(it) != -1;
-    };
-}
-
-
-if (typeof String.prototype.splitLines === "undefined") {
-    Object.defineProperty(String.prototype, 'splitLines', {value: function() {
-        return this.split(/\n|\r\n|\r/g);
-    }, enumerable: false, configurable: false})
-}
-
-
-if (typeof Uint8Array.prototype.toText === "undefined") {
-
-    Uint8Array.prototype.toText = function () {
-
-        // note, dont use forEach or apply -- will run out of stack
-        var i, len, str;
-        str = "";
-        for (i = 0, len = this.byteLength; i < len; i++) {
-            str += String.fromCharCode(this[i]);
-        }
-        return str;
-
-    }
-
-}
-
-var log2 = Math.log(2);
-
-if (typeof Math.log2 === "undefined") {
-    Math.log2 = function (x) {
-        return Math.log(x) / log2;
-    }
-}
-
-// Implementation of bind().  This is included primarily for use with phantom.js, which does not implement it.
-// Attributed to John Resig
-
-if (typeof Function.prototype.bind === "undefined") {
-    Function.prototype.bind = function () {
-        var fn = this,
-            args = Array.prototype.slice.call(arguments),
-            object = args.shift();
-        return function () {
-            return fn.apply(object,
-                args.concat(Array.prototype.slice.call(arguments)));
-        }
-    }
-}
-
-if (!Date.now) {
-    Date.now = function now() {
-        return new Date().getTime();
-    };
-}
-
-if (!Object.keys) {
-    Object.keys = (function() {
-        'use strict';
-        var hasOwnProperty = Object.prototype.hasOwnProperty,
-            hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString'),
-            dontEnums = [
-                'toString',
-                'toLocaleString',
-                'valueOf',
-                'hasOwnProperty',
-                'isPrototypeOf',
-                'propertyIsEnumerable',
-                'constructor'
-            ],
-            dontEnumsLength = dontEnums.length;
-
-        return function(obj) {
-            if (typeof obj !== 'object' && (typeof obj !== 'function' || obj === null)) {
-                throw new TypeError('Object.keys called on non-object');
-            }
-
-            var result = [], prop, i;
-
-            for (prop in obj) {
-                if (hasOwnProperty.call(obj, prop)) {
-                    result.push(prop);
-                }
-            }
-
-            if (hasDontEnumBug) {
-                for (i = 0; i < dontEnumsLength; i++) {
-                    if (hasOwnProperty.call(obj, dontEnums[i])) {
-                        result.push(dontEnums[i]);
-                    }
-                }
-            }
-            return result;
-        };
-    }());
-}
-
-if (!Array.isArray) {
-    Array.isArray = function(arg) {
-        return Object.prototype.toString.call(arg) === '[object Array]';
-    };
-}
 
 
 
@@ -44895,8 +42886,12 @@ var igv = (function (igv) {
 
         clamp: function (value, min, max) {
             return Math.min(Math.max(value, min), max);
+        },
+        
+        log2: function (x) {
+                return Math.log(x) / Math.LN2;
         }
-
+        
     };
 
     igv.Rect = {
@@ -45369,11 +43364,9 @@ var igv = (function (igv) {
             loose: /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/
         }
     };
-
+    
     igv.splitLines = function (string) {
-
-        var result = string.split(/\n|\r\n|\r/g);
-        return result;
+        return string.split(/\n|\r\n|\r/g);
     }
 
 
@@ -45592,7 +43585,7 @@ var igv = (function (igv) {
      * @returns boolean
      */
     igv.isStringOrNumber = function (value) {
-        return (value.substring || value.toFixed) ? true : false
+        return (value && (value.substring || value.toFixed)) ? true : false
     };
 
     igv.constrainBBox = function ($child, $parent) {
@@ -47129,7 +45122,7 @@ var igv = (function (igv) {
                                     }
                                     bufferCtx.fillStyle = "rgb(220, 150, 100)";
                                     bufferCtx.strokeStyle = "rgb(150, 0, 0)";
-                                    bufferCtx.polygon(xC, yC, 1, 0);
+                                    igv.graphics.polygon(bufferCtx, xC, yC, 1, 0);
                                 } else {
                                     dy = endy - starty;
                                     bufferCtx.fillStyle = getCytobandColor(cytobands[i]);
@@ -47148,7 +45141,7 @@ var igv = (function (igv) {
                 bufferCtx.strokeStyle = "darkgray";
 
                 r = ideogramWidth / 2;
-                bufferCtx.roundRect(ideogramLeft, top - r / 2, ideogramWidth, lastPY - top + r, ideogramWidth / 2, 0, 1);
+                igv.graphics.roundRect(bufferCtx, ideogramLeft, top - r / 2, ideogramWidth, lastPY - top + r, ideogramWidth / 2, 0, 1);
 
                 bufferCtx.font = "bold 10px Arial";
                 bufferCtx.fillStyle = "rgb(0, 0, 0)";
@@ -47500,7 +45493,6 @@ var igv = (function (igv) {
         this.config = config || {};
         this.sourceType = (config.sourceType === undefined ? "file" : config.sourceType);
         this.reader = new igv.FeatureFileReader(config);
-        this.visibilityWindow = config.visibilityWindow;
     };
 
     igv.ROISource.prototype.getRegions = function (chr, bpStart, bpEnd) {
@@ -48098,7 +46090,7 @@ var igv = (function (igv) {
 
                 .then(function (data) {
 
-                    var lines = data.splitLines();
+                    var lines = igv.splitLines(data);
 
                     lines.forEach(function (line) {
                         var line_arr = line.split(' ');
@@ -48648,378 +46640,6 @@ var igv = (function (igv) {
 
 })
 (igv || {});
-
-/*
- * Copyright - unknown
- */
-
-"use strict";
-// Source:  https://github.com/jfriend00/Javascript-Set/blob/master/set.js
-
-//-------------------------------------------
-// Implementation of a Set in javascript
-//
-// Supports any element type that can uniquely be identified
-//    with its string conversion (e.g. toString() operator).
-// This includes strings, numbers, dates, etc...
-// It does not include objects or arrays though
-//    one could implement a toString() operator
-//    on an object that would uniquely identify
-//    the object.
-//
-// Uses a javascript object to hold the Set
-//
-// s.add(key)                      // adds a key to the Set (if it doesn't already exist)
-// s.add(key1, key2, key3)         // adds multiple keys
-// s.add([key1, key2, key3])       // adds multiple keys
-// s.add(otherSet)                 // adds another Set to this Set
-// s.add(arrayLikeObject)          // adds anything that a subclass returns true on _isPseudoArray()
-// s.remove(key)                   // removes a key from the Set
-// s.remove(["a", "b"]);           // removes all keys in the passed in array
-// s.remove("a", "b", ["first", "second"]);   // removes all keys specified
-// s.has(key)                      // returns true/false if key exists in the Set
-// s.hasAll(args)                  // returns true if s has all the keys in args
-// s.equals(otherSet)              // returns true if s has exactly the same keys in it as otherSet
-// s.isEmpty()                     // returns true/false for whether Set is empty
-// s.keys()                        // returns an array of keys in the Set
-// s.clear()                       // clears all data from the Set
-// s.union(t)                      // return new Set that is union of both s and t
-// s.intersection(t)               // return new Set that has keys in both s and t
-// s.difference(t)                 // return new Set that has keys in s, but not in t
-// s.isSubset(t)                   // returns boolean whether every element in s is in t
-// s.isSuperset(t)                 // returns boolean whether every element of t is in s
-// s.each(fn)                      // iterate over all items in the Set (return this for method chaining)
-// s.eachReturn(fn)                // iterate over all items in the Set (return true/false if iteration was not stopped)
-// s.filter(fn)                    // return a new Set that contains keys that passed the filter function
-// s.map(fn)                       // returns a new Set that contains whatever the callback returned for each item
-// s.every(fn)                     // returns true if every element in the Set passes the callback, otherwise returns false
-// s.some(fn)                      // returns true if any element in the Set passes the callback, otherwise returns false
-//-------------------------------------------
-
-
-// polyfill for Array.isArray
-if (!Array.isArray) {
-    Array.isArray = function (vArg) {
-        return Object.prototype.toString.call(vArg) === "[object Array]";
-    };
-}
-
-if (typeof Set === "undefined") {
-
-    Set = function (/*initialData*/) {
-        // Usage:
-        // new Set()
-        // new Set(1,2,3,4,5)
-        // new Set(["1", "2", "3", "4", "5"])
-        // new Set(otherSet)
-        // new Set(otherSet1, otherSet2, ...)
-        this.data = {};
-        this.add.apply(this, arguments);
-    }
-
-    Set.prototype = {
-        // usage:
-        // add(key)
-        add: function () {
-            var key;
-            for (var i = 0; i < arguments.length; i++) {
-                key = arguments[i];
-                if (Array.isArray(key) || this._isPseudoArray(key)) {
-                    for (var j = 0; j < key.length; j++) {
-                        this._add(key[j]);
-                    }
-                } else if (key instanceof Set) {
-                    var self = this;
-                    key.each(function (val, key) {
-                        self._add(key, val);
-                    });
-                } else {
-                    // just a key, so add it
-                    this._add(key);
-                }
-            }
-            return this;
-        },
-
-        addAll: function (arrayOrSet) {
-
-            if (Array.isArray(arrayOrSet) || this._isPseudoArray(arrayOrSet)) {
-                for (var j = 0; j < arrayOrSet.length; j++) {
-                    this._add(arrayOrSet[j]);
-                }
-            } else if (arrayOrSet instanceof Set) {
-                var self = this;
-                arrayOrSet.each(function (val, key) {
-                    self._add(key, val);
-                });
-            }
-
-            return this;
-        },
-        // private methods (used internally only)
-        // these make non-public assumptions about the internal data format
-        // add a single item to the Set, make sure key is a string
-        _add: function (key, val) {
-            if (typeof val === "undefined") {
-                // store the val (before being converted to a string key)
-                val = key;
-            }
-            this.data[this._makeKey(key)] = val;
-            return this;
-        },
-        // private: fetch current key
-        // overridden by subclasses for custom key handling
-        _getKey: function (arg) {
-            return arg;
-        },
-        // private: fetch current key or coin a new one if there isn't already one
-        // overridden by subclasses for custom key handling
-        _makeKey: function (arg) {
-            return arg;
-        },
-        // private: to remove a single item
-        // does not have all the argument flexibility that remove does
-        _removeItem: function (key) {
-            delete this.data[this._getKey(key)];
-        },
-        // private: asks subclasses if this is something we want to treat like an array
-        // default implementation is false
-        _isPseudoArray: function (item) {
-            return false;
-        },
-        // usage:
-        // remove(key)
-        // remove(key1, key2, key3)
-        // remove([key1, key2, key3])
-        delete: function (key) {
-            // can be one or more args
-            // each arg can be a string key or an array of string keys
-            var item;
-            for (var j = 0; j < arguments.length; j++) {
-                item = arguments[j];
-                if (Array.isArray(item) || this._isPseudoArray(item)) {
-                    // must be an array of keys
-                    for (var i = 0; i < item.length; i++) {
-                        this._removeItem(item[i]);
-                    }
-                } else {
-                    this._removeItem(item);
-                }
-            }
-            return this;
-        },
-        // returns true/false on whether the key exists
-        has: function (key) {
-            key = this._makeKey(key);
-            return Object.prototype.hasOwnProperty.call(this.data, key);
-        },
-        // returns true/false for whether the current Set contains all the passed in keys
-        // takes arguments just like the constructor or .add()
-        hasAll: function (args) {
-            var testSet = this.makeNew.apply(this, arguments);
-            var self = this;
-            return testSet.every(function (data, key) {
-                return self.has(key);
-            });
-        },
-        // if first arg is not a set, make it into one
-        // otherwise just return it
-        makeSet: function (args) {
-            if (!(args instanceof Set)) {
-                // pass all arguments here
-                return this.makeNew.apply(this, arguments);
-            }
-            return args;
-        },
-        equals: function (otherSet) {
-            otherSet = this.makeSet(otherSet);
-            // this is not particularly efficient, but it's simple
-            // the only way you can be a subset and a superset it to be the same Set
-            return this.isSubset(otherSet) && this.isSuperset(otherSet);
-        },
-        // tells you if the Set is empty or not
-        isEmpty: function () {
-            for (var key in this.data) {
-                if (this.has(key)) {
-                    return false;
-                }
-            }
-            return true;
-        },
-
-        size: function () {
-            var size = 0;
-            for (var key in this.data) {
-                if (this.has(key)) {
-                    size++;
-                }
-            }
-            return size;
-        },
-
-        // returns an array of all keys in the Set
-        // returns the original key (not the string converted form)
-        keys: function () {
-            var results = [];
-            this.each(function (data) {
-                results.push(data);
-            });
-            return results;
-        },
-        // clears the Set
-        clear: function () {
-            this.data = {};
-            return this;
-        },
-        // makes a new Set of the same type and configuration as this one
-        // regardless of what derived type of object we actually are
-        // accepts same arguments as a constructor for initially populating the Set
-        makeNew: function () {
-            var newSet = new this.constructor();
-            if (arguments.length) {
-                newSet.add.apply(newSet, arguments);
-            }
-            return newSet;
-        },
-        // s.union(t)
-        // returns a new Set that is the union of two sets
-        union: function (otherSet) {
-            otherSet = this.makeSet(otherSet);
-            var newSet = this.makeNew(this);
-            newSet.add(otherSet);
-            return newSet;
-        },
-        // s.intersection(t)
-        // returns a new Set that contains the keys that are
-        // in both sets
-        intersection: function (otherSet) {
-            otherSet = this.makeSet(otherSet);
-            var newSet = this.makeNew();
-            this.each(function (data, key) {
-                if (otherSet.has(key)) {
-                    newSet._add(key, data);
-                }
-            });
-            return newSet;
-        },
-        // s.difference(t)
-        // returns a new Set that contains the keys that are
-        // s but not in t
-        difference: function (otherSet) {
-            otherSet = this.makeSet(otherSet);
-            var newSet = this.makeNew();
-            this.each(function (data, key) {
-                if (!otherSet.has(key)) {
-                    newSet._add(key, data);
-                }
-            });
-            return newSet;
-        },
-        // s.notInBoth(t)
-        // returns a new Set that contains the keys that
-        // are in either Set, but not both sets
-        notInBoth: function (otherSet) {
-            otherSet = this.makeSet(otherSet);
-            // get items in s, but not in t
-            var newSet = this.difference(otherSet);
-            // add to the result items in t, but not in s
-            return newSet.add(otherSet.difference(this));
-        },
-        // s.isSubset(t)
-        // returns boolean whether every element of s is in t
-        isSubset: function (otherSet) {
-            otherSet = this.makeSet(otherSet);
-            return this.eachReturn(function (data, key) {
-                if (!otherSet.has(key)) {
-                    return false;
-                }
-            });
-        },
-        // s.isSuperset(t)
-        // returns boolean whether every element of t is in s
-        isSuperset: function (otherSet) {
-            otherSet = this.makeSet(otherSet);
-            var self = this;
-            return otherSet.eachReturn(function (data, key) {
-                if (!self.has(key)) {
-                    return false;
-                }
-            });
-        },
-        // iterate over all elements in the Set until callback returns false
-        // myCallback(key) is the callback form
-        // If the callback returns false, then the iteration is stopped
-        // returns the Set to allow method chaining
-        each: function (fn) {
-            this.eachReturn(fn);
-            return this;
-        },
-        // iterate all elements until callback returns false
-        // myCallback(key) is the callback form
-        // returns false if iteration was stopped
-        // returns true if iteration completed
-        eachReturn: function (fn) {
-            for (var key in this.data) {
-                if (this.has(key)) {
-                    if (fn.call(this, this.data[key], key) === false) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        },
-        // iterate all elements and call callback function on each one
-        // myCallback(key) - returns true to include in returned Set
-        // returns new Set
-        filter: function (fn) {
-            var newSet = this.makeNew();
-            this.each(function (data, key) {
-                if (fn.call(this, key) === true) {
-                    newSet._add(key, data);
-                }
-            });
-            return newSet;
-        },
-        // iterate all elements and call callback on each one
-        // myCallback(key) - whatever value is returned is put in the returned Set
-        // if the  return value from the callback is undefined,
-        //   then nothing is added to the returned Set
-        // returns new Set
-        map: function (fn) {
-            var newSet = this.makeNew();
-            this.each(function (data, key) {
-                var ret = fn.call(this, key);
-                if (typeof ret !== "undefined") {
-                    newSet._add(key, data);
-                }
-            });
-            return newSet;
-        },
-        // tests whether some element in the Set passes the test
-        // myCallback(key) - returns true or false
-        // returns true if callback returns true for any element,
-        //    otherwise returns false
-        some: function (fn) {
-            var found = false;
-            this.eachReturn(function (key) {
-                if (fn.call(this, key) === true) {
-                    found = true;
-                    return false;
-                }
-            });
-            return found;
-        },
-        // tests whether every element in the Set passes the test
-        // myCallback(key) - returns true or false
-        // returns true if callback returns true for every element
-        every: function (fn) {
-            return this.eachReturn(fn);
-        }
-    };
-
-    Set.prototype.constructor = Set;
-
-}
 
 /*
  * The MIT License (MIT)
@@ -50171,10 +47791,10 @@ var igv = (function (igv) {
             "gff3",
             "gff",
             "gtf",
-            "aneu",
             "fusionjuncspan",
             "refflat",
             "seg",
+            "aed",
             "bed",
             "vcf",
             "bb",
@@ -50250,10 +47870,6 @@ var igv = (function (igv) {
                 return new igv.SegTrack(config);
                 break;
 
-            case "aneu":
-                return new igv.AneuTrack(config);
-                break;
-
             case "merged":
                 return new igv.MergedTrack(config);
 
@@ -50295,8 +47911,13 @@ var igv = (function (igv) {
                 config.type = "gwas";
             }
 
-            else if ("FusionJuncSpan" === config.type) {
+            else if ("FusionJuncSpan" === config.type && !config.format) {
                 config.format = "fusionjuncspan";
+            }
+
+            else if ("aed" === config.type) {
+                config.type = "annotation";
+                config.format = config.format || "aed";
             }
         }
 
@@ -50337,6 +47958,7 @@ var igv = (function (igv) {
                         config.type = "alignment";
                         break;
                     case "bedpe":
+                    case "bedpe-loop":
                         config.type = "interaction";
                         break;
                     default:
@@ -50448,15 +48070,17 @@ var igv = (function (igv) {
         if (config.autoHeight === undefined)  config.autoHeight = config.autoheight; // Some case confusion in the initial releasae
 
         track.autoHeight = config.autoHeight === undefined ? (config.height === undefined) : config.autoHeight;
-        track.minHeight = config.minHeight || Math.min(50, track.height);
-        track.maxHeight = config.maxHeight || Math.max(500, track.height);
+        track.minHeight = config.minHeight || Math.min(25, track.height);
+        track.maxHeight = config.maxHeight || Math.max(1000, track.height);
 
-        if (config.visibilityWindow) {
-            track.visibilityWindow = config.visibilityWindow;
-        }
+        track.visibilityWindow = config.visibilityWindow;
 
         if (track.type === undefined) {
             track.type = config.type;
+        }
+
+        if(!track.getState) {
+            track.getState = getState;
         }
 
     };
@@ -50604,7 +48228,9 @@ var igv = (function (igv) {
      */
     igv.trackMenuItemList = function (popover, trackView) {
 
-        var menuItems = [];
+        const vizWindowTypes = new Set(['alignment', 'annotation', 'variant']);
+
+        let menuItems = [];
 
         if (trackView.track.config.type !== 'sequence') {
             menuItems.push(igv.trackRenameMenuItem(trackView));
@@ -50619,7 +48245,13 @@ var igv = (function (igv) {
             menuItems = menuItems.concat(trackView.track.menuItemList());
         }
 
+        if(vizWindowTypes.has(trackView.track.config.type)) {
+            menuItems.push('<hr/>');
+            menuItems.push(igv.visibilityWindowMenuItem(trackView));
+        }
+
         if (trackView.track.removable !== false) {
+            menuItems.push('<hr/>');
             menuItems.push(igv.trackRemovalMenuItem(trackView));
         }
 
@@ -50697,6 +48329,45 @@ var igv = (function (igv) {
         };
 
         return {object: $e, click: clickHandler};
+    };
+
+    igv.visibilityWindowMenuItem = function (trackView) {
+
+        var $e,
+            menuClickHandler;
+
+        menuClickHandler = function () {
+
+            var dialogClickHandler;
+
+            dialogClickHandler = function () {
+                var value;
+
+                value = igv.inputDialog.$input.val().trim();
+
+                if('' === value || undefined === value){
+                    value = -1;
+                }
+
+                trackView.track.visibilityWindow = value;
+                trackView.updateViews();
+            };
+
+            igv.inputDialog.configure({
+                label: 'Visibility Window',
+                input: (trackView.track.visibilityWindow),
+                click: dialogClickHandler
+            });
+            igv.inputDialog.present($(trackView.trackDiv));
+
+        };
+
+        $e = $('<div>');
+        $e.text('Set visibility window');
+
+        return {object: $e, click: menuClickHandler};
+
+
     };
 
     igv.trackRemovalMenuItem = function (trackView) {
@@ -50837,6 +48508,32 @@ var igv = (function (igv) {
 
 
     };
+
+    igv.hasVisibilityWindow = function (trackOrFeatureSource) {
+        return !(-1 === trackOrFeatureSource.visibilityWindow);
+    };
+
+
+    /**
+     * Default implementation -- return the current state of the "this" object, which should be a track.  Used
+     * to create session object for bookmarking, sharing.  Updates the track "config" object to reflect the
+     * current state.  Only simple properties (string, number, boolean) are updated.
+     */
+    function getState() {
+
+        const config = this.config;
+        const self = this;
+
+        Object.keys(config).forEach(function (key) {
+            const value = self[key];
+            if(value && (igv.isStringOrNumber(value) || typeof value === "boolean")) {
+                config[key] = value;
+            }
+        })
+
+        return config;
+
+    }
 
     return igv;
 })(igv || {});
@@ -51220,7 +48917,7 @@ var igv = (function (igv) {
     }
 
     igv.TrackView.prototype.isLoading = function () {
-        for (i = 0; i < this.viewports.length; i++) {
+        for (let i = 0; i < this.viewports.length; i++) {
             if (this.viewports[i].isLoading()) return true;
         }
     };
@@ -51418,6 +49115,12 @@ var igv = (function (igv) {
 
     }
 
+    igv.TrackView.prototype.checkContentHeight = function () {
+        this.viewports.forEach(function (vp) {
+            vp.checkContentHeight();
+        })
+        adjustTrackHeight.call(this);
+    }
 
     function adjustTrackHeight() {
 
@@ -53152,18 +50855,19 @@ var igv = (function (igv) {
 
         if (this.referenceBases.length === 1 && !isRef(this.alternateBases)) {
             let ref = this.referenceBases;
-            let altArray = this.alternateBases.split(",");
-            fiels.push("<hr/>");
-            for (let i = 0; i < altArray.length; i++) {
-                let alt = this.alternateBases[i];
-                if (alt.length === 1) {
-                    let l = "<a target='_blank' " +
-                        "href='http://www.cravat.us/CRAVAT/variant.html?variant=chr7_140808049_+_" + ref + "_" + alt + "'>Cravat " + ref + "->" + alt + "</a>";
-                    fields.push(l);
+            if (ref.length === 1) {
+                let altArray = this.alternateBases.split(",");
+                fields.push("<hr/>");
+                for (let i = 0; i < altArray.length; i++) {
+                    let alt = this.alternateBases[i];
+                    if (alt.length === 1) {
+                        let l = "<a target='_blank' " +
+                            "href='http://www.cravat.us/CRAVAT/variant.html?variant=chr7_140808049_+_" + ref + "_" + alt + "'>Cravat " + ref + "->" + alt + "</a>";
+                        fields.push(l);
+                    }
                 }
             }
         }
-
 
         return fields;
 
@@ -53229,6 +50933,7 @@ var igv = (function (igv) {
 var igv = (function (igv) {
 
     var DEFAULT_VISIBILITY_WINDOW = 100000;
+    var MAX_PIXEL_HEIGHT = 30000;
     var sortDirection = "ASC";
     var strColors = ["rgb(150,150,150)", "rgb(255,0,0)", "rgb(255,255,0)", "rgb(0,0,255)", "rgb(0,255,0)", "rgb(128,0,128)"];
 
@@ -53336,9 +51041,6 @@ var igv = (function (igv) {
             this.visibilityWindow = DEFAULT_VISIBILITY_WINDOW;
         }
 
-        this.featureSource.visibilityWindow = this.visibilityWindow;
-
-
     }
 
     igv.VariantTrack.prototype.getFeatures = function (chr, bpStart, bpEnd) {
@@ -53370,6 +51072,14 @@ var igv = (function (igv) {
             groupSpace = (groupsLength - 1) * groupGap,
             nRows,
             h;
+
+        // Adjust call height if required for max canvas size.  This is a hack, real solution is to draw canvas
+        // sections as needed.
+        if (nCalls > 0) {
+            let maxCallHeight = MAX_PIXEL_HEIGHT / nCalls;
+            this.squishedCallHeight = Math.min(this.squishedCallHeight, maxCallHeight);
+            this.expandedCallHeight = Math.min(this.expandedCallHeight, maxCallHeight);
+        }
 
 
         if (this.displayMode === "COLLAPSED") {
@@ -53642,81 +51352,76 @@ var igv = (function (igv) {
      */
     igv.VariantTrack.prototype.popupData = function (config) {
 
-        var genomicLocation = config.genomicLocation,
+        let featureList = config.viewport.getCachedFeatures();
+        if (!featureList || featureList.length === 0) return [];
+
+        let self = this,
+            genomicLocation = config.genomicLocation,
             xOffset = config.x,
             yOffset = config.y,
             referenceFrame = config.viewport.genomicState.referenceFrame,
-            featureList = config.viewport.tile.features;
+            tolerance = Math.floor(2 * referenceFrame.bpPerPixel),  // We need some tolerance around genomicLocation, start with +/- 2 pixels
+            vGap = (this.displayMode === 'EXPANDED') ? this.expandedVGap : this.squishedVGap,
+            groupGap = (this.displayMode === 'EXPANDED') ? this.expandedGroupGap : this.squishedGroupGap,
+            popupData = [],
+            group;
 
-        // We use the featureCache property rather than method to avoid async load.  If the
-        // feature is not already loaded this won't work,  but the user wouldn't be mousing over it either.
-        if (featureList) {
+        featureList.forEach(function (variant) {
 
-            var chr = referenceFrame.chrName,
-                tolerance = Math.floor(2 * referenceFrame.bpPerPixel),  // We need some tolerance around genomicLocation, start with +/- 2 pixels
-                vGap = (this.displayMode === 'EXPANDED') ? this.expandedVGap : this.squishedVGap,
-                groupGap = (this.displayMode === 'EXPANDED') ? this.expandedGroupGap : this.squishedGroupGap,
-                popupData = [],
-                self = this, group;
+            var row, callHeight, callSets, callSetGroups, cs, call;
 
-            if (featureList && featureList.length > 0) {
+            if ((variant.start <= genomicLocation + tolerance) &&
+                (variant.end > genomicLocation - tolerance)) {
 
-                featureList.forEach(function (variant) {
+                if (popupData.length > 0) {
+                    popupData.push('<HR>')
+                }
 
-                    var row, callHeight, callSets, callSetGroups, cs, call;
-
-                    if ((variant.start <= genomicLocation + tolerance) &&
-                        (variant.end > genomicLocation - tolerance)) {
-
-                        if (popupData.length > 0) {
-                            popupData.push('<HR>')
+                if ("COLLAPSED" == self.displayMode) {
+                    Array.prototype.push.apply(popupData, variant.popupData(genomicLocation, self.type));
+                }
+                else {
+                    if (yOffset <= self.variantBandHeight) {
+                        // Variant
+                        row = (Math.floor)((yOffset - 10 ) / (self.variantHeight + vGap));
+                        if (variant.row === row) {
+                            Array.prototype.push.apply(popupData, variant.popupData(genomicLocation), self.type);
                         }
-
-                        if ("COLLAPSED" == self.displayMode) {
-                            Array.prototype.push.apply(popupData, variant.popupData(genomicLocation, self.type));
-                        }
-                        else {
-                            if (yOffset <= self.variantBandHeight) {
-                                // Variant
-                                row = (Math.floor)((yOffset - 10 ) / (self.variantHeight + vGap));
-                                if (variant.row === row) {
-                                    Array.prototype.push.apply(popupData, variant.popupData(genomicLocation), self.type);
+                    }
+                    else {
+                        // Call
+                        callSets = (self.filterBy) ? self.filteredCallSets : self.callSets;
+                        callSetGroups = (self.filterBy) ? self.filteredCallSetGroups : self.callSetGroups;
+                        if (callSets && variant.calls) {
+                            callHeight = ("SQUISHED" === self.displayMode ? self.squishedCallHeight : self.expandedCallHeight);
+                            // console.log("call height: ", callHeight);
+                            // console.log("nRows: ", self.nRows);
+                            var totalCalls = 0;
+                            for (group = 0; group < callSetGroups.length; group++) {
+                                var groupName = callSetGroups[group];
+                                var groupCalls = callSets[groupName].length;
+                                if (yOffset <= self.variantBandHeight + vGap + (totalCalls + groupCalls) *
+                                    (callHeight + vGap) + (group * groupGap)) {
+                                    row = Math.floor((yOffset - (self.variantBandHeight + vGap + totalCalls * (callHeight + vGap)
+                                        + (group * groupGap))) / (callHeight + vGap));
+                                    break;
                                 }
+                                totalCalls += groupCalls;
                             }
-                            else {
-                                // Call
-                                callSets = (self.filterBy) ? self.filteredCallSets : self.callSets;
-                                callSetGroups = (self.filterBy) ? self.filteredCallSetGroups : self.callSetGroups;
-                                if (callSets && variant.calls) {
-                                    callHeight = ("SQUISHED" === self.displayMode ? self.squishedCallHeight : self.expandedCallHeight);
-                                    // console.log("call height: ", callHeight);
-                                    // console.log("nRows: ", self.nRows);
-                                    var totalCalls = 0;
-                                    for (group = 0; group < callSetGroups.length; group++) {
-                                        var groupName = callSetGroups[group];
-                                        var groupCalls = callSets[groupName].length;
-                                        if (yOffset <= self.variantBandHeight + vGap + (totalCalls + groupCalls) *
-                                            (callHeight + vGap) + (group * groupGap)) {
-                                            row = Math.floor((yOffset - (self.variantBandHeight + vGap + totalCalls * (callHeight + vGap)
-                                                + (group * groupGap))) / (callHeight + vGap));
-                                            break;
-                                        }
-                                        totalCalls += groupCalls;
-                                    }
-                                    // row = Math.floor((yOffset - self.variantBandHeight - vGap - i*groupGap) / (callHeight + vGap));
-                                    if (row >= 0) {
-                                        cs = callSets[groupName][row];
-                                        call = variant.calls[cs.id];
-                                        Array.prototype.push.apply(popupData, extractPopupData(call, variant));
-                                    }
-                                }
+                            // row = Math.floor((yOffset - self.variantBandHeight - vGap - i*groupGap) / (callHeight + vGap));
+                            if (row >= 0) {
+                                cs = callSets[groupName][row];
+                                call = variant.calls[cs.id];
+                                Array.prototype.push.apply(popupData, extractPopupData(call, variant));
                             }
                         }
                     }
-                });
+                }
             }
-            return popupData;
-        }
+        });
+
+        return popupData;
+
     };
 
     /**
@@ -53760,7 +51465,7 @@ var igv = (function (igv) {
                     let alt = variant.alternateBases[i - 1];
                     gt += alt;
 
-                    if(alt.length === 1 && alt !== ref) {
+                    if (ref.length === 1 && alt.length === 1 && alt !== ref) {
                         let l = "<a target='_blank' " +
                             "href='http://www.cravat.us/CRAVAT/variant.html?variant=chr7_140808049_+_" + ref + "_" + alt + "'>CRAVAT " + ref + "->" + alt + "</a>";
                         cravatLinks.push(l);
@@ -53768,8 +51473,6 @@ var igv = (function (igv) {
                 }
             });
         }
-
-
 
 
         if (call.callSetName !== undefined) {
@@ -53806,7 +51509,7 @@ var igv = (function (igv) {
             popupData.push({name: key, value: call.info[key]});
         });
 
-        if(cravatLinks.length > 0) {
+        if (cravatLinks.length > 0) {
             popupData.push("<HR/>");
             popupData = popupData.concat(cravatLinks);
         }
@@ -54739,6 +52442,10 @@ var igv = (function (igv) {
             this[key] = undefined;
         })
     }
+    
+    igv.Viewport.prototype.getCachedFeatures = function () {
+        return this.tile ? this.tile.features : [];
+    }
 
     var Tile = function (chr, tileStart, tileEnd, bpPerPixel, features) {
         this.chr = chr;
@@ -55015,30 +52722,33 @@ var igv = (function (igv) {
 
                     self.cachedFeatures = features;      // TODO -- associate with "tile"
 
-                    checkContentHeight();
+                    self.checkContentHeight();
 
                     return features;
 
-                    // TODO -- move to viewport
-                    function checkContentHeight() {
-                        var requiredContentHeight, currentContentHeight;
-                        if (typeof track.computePixelHeight === 'function') {
-                            requiredContentHeight = track.computePixelHeight(features);
-                            currentContentHeight = $(self.contentDiv).height();
-                            if (requiredContentHeight !== currentContentHeight) {
-                                self.setContentHeight(requiredContentHeight);
-                            }
-                        }
-                    }
                 })
         }
         else {
             return Promise.resolve(undefined);
         }
-
-
     }
 
+    igv.Viewport.prototype.checkContentHeight = function () {
+
+        let track = this.trackView.track;
+
+        if (typeof track.computePixelHeight === 'function') {
+            let features = this.cachedFeatures;
+
+            if (features) {
+                let requiredContentHeight = track.computePixelHeight(features);
+                let currentContentHeight = $(this.contentDiv).height();
+                if (requiredContentHeight !== currentContentHeight) {
+                    this.setContentHeight(requiredContentHeight);
+                }
+            }
+        }
+    }
 
     return igv;
 
