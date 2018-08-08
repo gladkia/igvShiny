@@ -61,8 +61,8 @@ HTMLWidgets.widget({
         // TODO: code to re-render the widget with a new size
         }
 
-    };
-  }
+    }; // return
+  }  // factory
 });  // widget
 //------------------------------------------------------------------------------------------------------------------------
 function genomeSpecificOptions(genomeName, initialLocus)
