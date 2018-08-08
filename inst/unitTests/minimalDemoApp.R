@@ -31,7 +31,7 @@ server = function(input, output, session) {
 
    genomes <- c("hg38", "hg19", "mm10", "tair10", "rhos")
    loci <- c("chr5:88,466,402-89,135,305", "MEF2C", "Mef2c", "1:7,432,931-7,440,395", "NC_007494.2:370,757-378,078")
-   i <- 5
+   i <- 4
 
    output$igvShiny.0 <- renderIgvShiny(
      igvShiny(list(
