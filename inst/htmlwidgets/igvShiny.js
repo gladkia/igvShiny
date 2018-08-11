@@ -22,6 +22,7 @@ HTMLWidgets.widget({
          igv.createBrowser(igvDiv, fullOptions)
              .then(function (browser) {
                 igvWidget = browser;
+                window.igvBrowser = igvWidget;
                 igvWidget.on('trackclick', function (track, popoverData){
                 var x = popoverData;
                 if(x.length == 1){
@@ -208,7 +209,39 @@ function genomeSpecificOptions(genomeName, initialLocus)
 
 } // genomeSpecificOptions
 //------------------------------------------------------------------------------------------------------------------------
+Shiny.addCustomMessageHandler("showGenomicRegion",
+  function(message) {
+     igvBrowser.search(message.roi);
+  }
+);
+//------------------------------------------------------------------------------------------------------------------------
+Shiny.addCustomMessageHandler("loadBedTrack",
+
+   function(message){
+      console.log("=== loadBedTrack");
+       console.log(message);
+       console.log(JSON.stringify(message));
+
+       var segFeatures = [{"chr": "1",  "start": 7432951,  "end": 7438000, "value": -0.2239, "sampleId": "TCGA-OR-A5J2-01"},
+                          {"chr": "1",  "start": 7438000,  "end": 7440000, "value": -0.8391, "sampleId": "TCGA-OR-A5J2-01"}];
+       var bedFeatures = [{"chr": "1",  "start": 7432951,  "end": 7438000, "name": "feature 1"},
+                          {"chr": "1",  "start": 7438000,  "end": 7440000, "name": "feature 2"}];
+
+       var config = {format: "bed",
+                     name: "feature test",
+                     type: "seg",
+                     features: message.tbl, //segFeatures,
+                     //type: "annotation",
+                     //features: bedFeatures,
+                     indexed: false,
+                     displayMode: "EXPANDED",
+                     //sourceType: "file",
+                     color: "red",
+		     height: 50
+                     };
+      window.igvBrowser.loadTrack(config);
+      }
 
 
-
-
+);
+//------------------------------------------------------------------------------------------------------------------------

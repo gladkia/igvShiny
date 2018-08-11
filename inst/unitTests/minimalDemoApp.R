@@ -8,6 +8,7 @@ ui = shinyUI(fluidPage(
      sidebarPanel(
         textInput("roi", label=""),
         actionButton("searchButton", "Search"),
+        actionButton("addTrackButton", "Add Track"),
         hr(),
         width=2
         ),
@@ -25,6 +26,17 @@ server = function(input, output, session) {
       printf("---- input$roi")
       searchString = isolate(input$roi)
       session$sendCustomMessage(type="showGenomicRegion", message=list(roi=searchString))
+      })
+
+   observeEvent(input$addTrackButton, {
+      printf("---- addTrack")
+      tbl.bed <- data.frame(chr=c("1","1", "1"),
+                            start=c(7432951, 7437000, 7438000),
+                            end=  c(7436000, 7437500, 7440000),
+                            value=c(-0.2239, 3.0, 0.5),
+                            sampleID=c("sample1", "sample2", "sample3"),
+                            stringsAsFactors=FALSE)
+      loadBedTrack(tbl.bed);
       })
 
    output$value <- renderPrint({ input$action })
@@ -49,4 +61,4 @@ server = function(input, output, session) {
 
 } # server
 #----------------------------------------------------------------------------------------------------
-# shinyApp(ui = ui, server = server)
+app <- shinyApp(ui = ui, server = server)

@@ -1,7 +1,7 @@
+library(jsonlite)
 #----------------------------------------------------------------------------------------------------
 igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL)
 {
-
   supportedOptions <- c("genomeName", "initialLocus")
   stopifnot(all(supportedOptions %in% names(options)))
   supportedGenomes <- c("hg38", "hg19", "mm10", "tair10", "rhos")
@@ -39,4 +39,12 @@ renderIgvShiny <- function(expr, env = parent.frame(), quoted = FALSE)
 
 }
 #----------------------------------------------------------------------------------------------------
+loadBedTrack <- function(tbl)
+{
+   message <- list(tbl=jsonlite::toJSON(tbl))
+   session <- shiny::getDefaultReactiveDomain()
+   session$sendCustomMessage("loadBedTrack", message)
+
+} # loadBedTrack
+#------------------------------------------------------------------------------------------------------------------------
 
