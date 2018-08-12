@@ -37,6 +37,8 @@ server = function(input, output, session) {
                             sampleID=c("sample1", "sample2", "sample3"),
                             stringsAsFactors=FALSE)
       loadBedTrack(tbl.bed);
+      loadBedGraphTrack(tbl.bed);
+      loadSegTrack(tbl.bed)
       })
 
    output$value <- renderPrint({ input$action })

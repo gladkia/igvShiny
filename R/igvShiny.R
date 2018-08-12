@@ -47,4 +47,20 @@ loadBedTrack <- function(tbl)
 
 } # loadBedTrack
 #------------------------------------------------------------------------------------------------------------------------
+loadBedGraphTrack <- function(tbl)
+{
+   message <- list(tbl=jsonlite::toJSON(tbl))
+   session <- shiny::getDefaultReactiveDomain()
+   session$sendCustomMessage("loadBedGraphTrack", message)
+
+} # loadBedGraphTrack
+#------------------------------------------------------------------------------------------------------------------------
+loadSegTrack <- function(tbl)
+{
+   message <- list(tbl=jsonlite::toJSON(tbl))
+   session <- shiny::getDefaultReactiveDomain()
+   session$sendCustomMessage("loadSegTrack", message)
+
+} # loadSegTrack
+#------------------------------------------------------------------------------------------------------------------------
 
