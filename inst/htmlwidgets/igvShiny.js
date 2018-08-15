@@ -53,7 +53,8 @@ HTMLWidgets.widget({
              // igvWidget = igv.createBrowser(igvDiv, fullOptions);
            Shiny.addCustomMessageHandler("showGenomicRegion", function(message) {
                //window.igvBrowser.search(message.roi);
-              igvWidget.search(message.roi)
+              console.log(message)
+              igvWidget.search(message.region)
               });
 
 
@@ -209,22 +210,60 @@ function genomeSpecificOptions(genomeName, initialLocus)
 
 } // genomeSpecificOptions
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("showGenomicRegion",
-  function(message) {
-     igvBrowser.search(message.roi);
-  }
+Shiny.addCustomMessageHandler("removeTracksByName",
+
+   function(message){
+       var trackNames = message.trackNames;
+       console.log("=== removeTracksByName")
+       console.log(trackNames)
+       if(typeof(trackNames) == "string")
+           trackNames = [trackNames];
+       var count = window.igvBrowser.trackViews.length;
+
+       for(var i=(count-1); i >= 0; i--){
+          var trackView = window.igvBrowser.trackViews[i];
+          var trackViewName = trackView.track.name;
+          var matched = trackNames.indexOf(trackViewName) >= 0;
+          //console.log(" is " + trackViewName + " in " + JSON.stringify(trackNames) + "? " + matched);
+          if (matched){
+             window.igvBrowser.removeTrack(trackView.track);
+             } // if matched
+          } // for i
+
+})  // removeTrackByName
+//------------------------------------------------------------------------------------------------------------------------
+Shiny.addCustomMessageHandler("loadBedTrackFromFile",
+
+   function(message){
+      console.log("=== loadBedTrackFile");
+      console.log(message);
+
+       var uri = window.location.href + "tracks/" + message.filename;
+       var config = {format: "bed",
+                     name: "feature test",
+                     url: uri,
+                     type: "annotation",
+                     indexed: false,
+                     displayMode: "EXPANDED",
+                     sourceType: "file",
+                     color: "lightGreen",
+		     height: 50
+                     };
+      window.igvBrowser.loadTrack(config);
+      }
+
+
 );
 //------------------------------------------------------------------------------------------------------------------------
 Shiny.addCustomMessageHandler("loadBedTrack",
 
    function(message){
-      console.log("=== loadBedTrack");
-       console.log(message);
-       bedFeatures = message.tbl
-       console.log(JSON.stringify(message));
+       console.log("=== loadBedTrack");
+       var trackName = message.trackName;
+       bedFeatures = message.tbl;
 
        var config = {format: "bed",
-                     name: "feature test",
+                     name: trackName,
                      //type: "seg",
                      //features: message.tbl, //segFeatures,
                      type: "annotation",
@@ -245,20 +284,19 @@ Shiny.addCustomMessageHandler("loadBedGraphTrack",
 
    function(message){
       console.log("=== loadBedGraphTrack");
-       console.log(message);
-       var tbl = message.tbl
-       console.log(JSON.stringify(message));
+      var trackName = message.trackName;
+      var tbl = message.tbl;
 
-       var config = {format: "bedgraph",
-                     name: "feature test",
-                     type: "wig",
-                     features: tbl,
-                     indexed: false,
-                     displayMode: "EXPANDED",
-                     //sourceType: "file",
-                     color: "red",
-		     height: 50
-                     };
+      var config = {format: "bedgraph",
+                    name: trackName,
+                    type: "wig",
+                    features: tbl,
+                    indexed: false,
+                    displayMode: "EXPANDED",
+                    //sourceType: "file",
+                    color: "red",
+                    height: 50
+                    };
       window.igvBrowser.loadTrack(config);
       }
 
@@ -269,20 +307,19 @@ Shiny.addCustomMessageHandler("loadSegTrack",
 
    function(message){
       console.log("=== loadSegTrack");
-       console.log(message);
-       console.log(JSON.stringify(message));
-       var bedFeatures = message.tbl;
+      var trackName = message.trackName;
+      var bedFeatures = message.tbl;
 
-       var config = {format: "bed",
-                     name: "feature test",
-                     type: "seg",
-                     features: bedFeatures,
-                     indexed: false,
-                     displayMode: "EXPANDED",
-                     //sourceType: "file",
-                     color: "red",
-		     height: 50
-                     };
+      var config = {format: "bed",
+                    name: trackName,
+                    type: "seg",
+                    features: bedFeatures,
+                    indexed: false,
+                    displayMode: "EXPANDED",
+                    //sourceType: "file",
+                    color: "red",
+                    height: 50
+                    };
       window.igvBrowser.loadTrack(config);
       }
 
