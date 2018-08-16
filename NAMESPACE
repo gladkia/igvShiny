@@ -4,5 +4,6 @@ export(
    renderIgvShiny,
    loadBedTrack,
    loadBedGraphTrack,
-   loadSegTrack
+   loadSegTrack,
+   removeTracksByName
    )

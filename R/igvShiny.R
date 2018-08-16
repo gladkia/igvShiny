@@ -40,26 +40,24 @@ renderIgvShiny <- function(expr, env = parent.frame(), quoted = FALSE)
 
 }
 #----------------------------------------------------------------------------------------------------
-removeTracksByName <- function(trackNames)
+removeTracksByName <- function(session, trackNames)
 {
    message <- list(trackNames=trackNames)
-   session <- shiny::getDefaultReactiveDomain()
    session$sendCustomMessage("removeTracksByName", message)
 
 } # loadBedGraphTrack
 #------------------------------------------------------------------------------------------------------------------------
-loadBedTrack <- function(trackName, tbl, deleteTracksOfSameName=TRUE)
+loadBedTrack <- function(session, trackName, tbl, color="gray", trackHeight=50, deleteTracksOfSameName=TRUE)
 {
-   message <- list(tbl=jsonlite::toJSON(tbl))
-   session <- shiny::getDefaultReactiveDomain()
+   message <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl), color=color, trackHeight=trackHeight)
    session$sendCustomMessage("loadBedTrack", message)
 
 } # loadBedTrack
 #------------------------------------------------------------------------------------------------------------------------
-loadBedTrackFromFile <- function(trackName, tbl, deleteTracksOfSameName=TRUE)
+loadBedTrackFromFile <- function(session, trackName, tbl, deleteTracksOfSameName=TRUE)
 {
    if(deleteTracksOfSameName){
-      removeTracksByName(trackName);
+      removeTracksByName(session, trackName);
       }
 
    tbl <- data.frame(chrom=c("1", "1", "1"),
@@ -70,31 +68,31 @@ loadBedTrackFromFile <- function(trackName, tbl, deleteTracksOfSameName=TRUE)
    write.table(tbl, row.names=FALSE, col.names=FALSE, quote=FALSE, sep="\t", file=temp.filename)
 
    message <- list(trackName, filename="test.bed")
-   session <- shiny::getDefaultReactiveDomain()
+   #session <- shiny::getDefaultReactiveDomain()
    session$sendCustomMessage("loadBedTrackFromFile", message)
 
 } # loadBedTrack
 #------------------------------------------------------------------------------------------------------------------------
-loadBedGraphTrack <- function(trackName, tbl, deleteTracksOfSameName=TRUE)
+loadBedGraphTrack <- function(session, trackName, tbl, color="gray", trackHeight=50, deleteTracksOfSameName=TRUE)
 {
    if(deleteTracksOfSameName){
-      removeTracksByName(trackName);
+      removeTracksByName(session, trackName);
       }
 
-   message <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl))
-   session <- shiny::getDefaultReactiveDomain()
+   message <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl), color=color, trackHeight=trackHeight)
+   #session <- shiny::getDefaultReactiveDomain()
    session$sendCustomMessage("loadBedGraphTrack", message)
 
 } # loadBedGraphTrack
 #------------------------------------------------------------------------------------------------------------------------
-loadSegTrack <- function(trackName, tbl, deleteTracksOfSameName=TRUE)
+loadSegTrack <- function(session, trackName, tbl, deleteTracksOfSameName=TRUE)
 {
    if(deleteTracksOfSameName){
-      removeTracksByName(trackName);
+      removeTracksByName(session, trackName);
       }
 
    message <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl))
-   session <- shiny::getDefaultReactiveDomain()
+   #session <- shiny::getDefaultReactiveDomain()
    session$sendCustomMessage("loadSegTrack", message)
 
 } # loadSegTrack

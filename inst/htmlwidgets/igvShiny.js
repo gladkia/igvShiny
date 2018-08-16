@@ -258,22 +258,21 @@ Shiny.addCustomMessageHandler("loadBedTrackFromFile",
 Shiny.addCustomMessageHandler("loadBedTrack",
 
    function(message){
-       console.log("=== loadBedTrack");
-       var trackName = message.trackName;
-       bedFeatures = message.tbl;
+      console.log("=== loadBedTrack");
+      var trackName = message.trackName;
+      var tbl = message.tbl;
+      var color = message.color;
+      var trackHeight = message.trackHeight;
 
-       var config = {format: "bed",
-                     name: trackName,
-                     //type: "seg",
-                     //features: message.tbl, //segFeatures,
-                     type: "annotation",
-                     features: bedFeatures,
-                     indexed: false,
-                     displayMode: "EXPANDED",
-                     //sourceType: "file",
-                     color: "red",
-		     height: 50
-                     };
+      var config = {format: "bed",
+                    name: trackName,
+                    type: "annotation",
+                    features: tbl,
+                    indexed: false,
+                    displayMode: "EXPANDED",
+                    color: color,
+                    height: trackHeight
+                    };
       window.igvBrowser.loadTrack(config);
       }
 
@@ -286,6 +285,8 @@ Shiny.addCustomMessageHandler("loadBedGraphTrack",
       console.log("=== loadBedGraphTrack");
       var trackName = message.trackName;
       var tbl = message.tbl;
+      var color = message.color;
+      var trackHeight = message.trackHeight;
 
       var config = {format: "bedgraph",
                     name: trackName,
@@ -294,8 +295,8 @@ Shiny.addCustomMessageHandler("loadBedGraphTrack",
                     indexed: false,
                     displayMode: "EXPANDED",
                     //sourceType: "file",
-                    color: "red",
-                    height: 50
+                    color: color,
+                    height: trackHeight
                     };
       window.igvBrowser.loadTrack(config);
       }
