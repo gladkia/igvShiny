@@ -224,7 +224,7 @@ Shiny.addCustomMessageHandler("removeTracksByName",
           var trackView = window.igvBrowser.trackViews[i];
           var trackViewName = trackView.track.name;
           var matched = trackNames.indexOf(trackViewName) >= 0;
-          //console.log(" is " + trackViewName + " in " + JSON.stringify(trackNames) + "? " + matched);
+          console.log(" is " + trackViewName + " in " + JSON.stringify(trackNames) + "? " + matched);
           if (matched){
              window.igvBrowser.removeTrack(trackView.track);
              } // if matched

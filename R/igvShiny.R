@@ -1,6 +1,9 @@
 library(jsonlite)
 library(shiny)
 #----------------------------------------------------------------------------------------------------
+state <- new.env(parent=emptyenv())
+state[["userAddedTracks"]] <- list()
+#----------------------------------------------------------------------------------------------------
 igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL)
 {
   supportedOptions <- c("genomeName", "initialLocus")
@@ -45,10 +48,19 @@ removeTracksByName <- function(session, trackNames)
    message <- list(trackNames=trackNames)
    session$sendCustomMessage("removeTracksByName", message)
 
-} # loadBedGraphTrack
+} # removeTracksByName
+#------------------------------------------------------------------------------------------------------------------------
+removeUserAddedTracks <- function(session)
+{
+   removeTracksByName(session, state[["userAddedTracks"]])
+   state[["userAddedTracks"]] <- list()
+
+} # removeUserAddedTracks
 #------------------------------------------------------------------------------------------------------------------------
 loadBedTrack <- function(session, trackName, tbl, color="gray", trackHeight=50, deleteTracksOfSameName=TRUE)
 {
+   state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
+
    message <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl), color=color, trackHeight=trackHeight)
    session$sendCustomMessage("loadBedTrack", message)
 
@@ -67,8 +79,9 @@ loadBedTrackFromFile <- function(session, trackName, tbl, deleteTracksOfSameName
    temp.filename <- "~/github/igvShiny/inst/unitTests/tracks/test.bed"
    write.table(tbl, row.names=FALSE, col.names=FALSE, quote=FALSE, sep="\t", file=temp.filename)
 
+   state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
+
    message <- list(trackName, filename="test.bed")
-   #session <- shiny::getDefaultReactiveDomain()
    session$sendCustomMessage("loadBedTrackFromFile", message)
 
 } # loadBedTrack
@@ -79,8 +92,9 @@ loadBedGraphTrack <- function(session, trackName, tbl, color="gray", trackHeight
       removeTracksByName(session, trackName);
       }
 
+   state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
+
    message <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl), color=color, trackHeight=trackHeight)
-   #session <- shiny::getDefaultReactiveDomain()
    session$sendCustomMessage("loadBedGraphTrack", message)
 
 } # loadBedGraphTrack
@@ -91,8 +105,9 @@ loadSegTrack <- function(session, trackName, tbl, deleteTracksOfSameName=TRUE)
       removeTracksByName(session, trackName);
       }
 
+   state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
+
    message <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl))
-   #session <- shiny::getDefaultReactiveDomain()
    session$sendCustomMessage("loadSegTrack", message)
 
 } # loadSegTrack
