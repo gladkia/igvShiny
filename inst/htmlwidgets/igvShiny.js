@@ -31,7 +31,7 @@ HTMLWidgets.widget({
                       console.log("in click handler, id:" + id);
                       if(id.indexOf("rs") == 0){
                          //var url = "//www.ncbi.nlm.nih.gov/snp/" + rsid;
-                         var url = "//www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=" + id
+                         var url = "https://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=" + id
                          return " &nbsp; dbSNP: <a href='" + url + "' target=_blank>" + id + "</a>";
                          } // if "^rs"
                       if(id.indexOf("tfbs-snp") == 0){
@@ -78,8 +78,8 @@ function genomeSpecificOptions(genomeName, initialLocus)
      reference: {id: "hg19"},
      tracks: [
         {name: 'Gencode v18',
-              url: "//s3.amazonaws.com/igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.collapsed.bed",
-         indexURL: "//s3.amazonaws.com/igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.collapsed.bed.idx",
+              url: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.collapsed.bed",
+         indexURL: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.collapsed.bed.idx",
          visibilityWindow: 2000000,
          displayMode: 'EXPANDED'
          }
@@ -95,13 +95,13 @@ function genomeSpecificOptions(genomeName, initialLocus)
 
 	reference: {
 	    id: "hg38",
-	    fastaURL: "//s3.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg38/hg38.fa",
-            cytobandURL: "//s3.amazonaws.com/igv.broadinstitute.org/annotations/hg38/cytoBandIdeo.txt"
+	    fastaURL: "https://s3.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg38/hg38.fa",
+            cytobandURL: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg38/cytoBandIdeo.txt"
             },
      tracks: [
         {name: 'Gencode v24',
-         url: "//s3.amazonaws.com/igv.broadinstitute.org/annotations/hg38/genes/gencode.v24.annotation.sorted.gtf.gz",
-         indexURL: "//s3.amazonaws.com/igv.broadinstitute.org/annotations/hg38/genes/gencode.v24.annotation.sorted.gtf.gz.tbi",
+         url: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg38/genes/gencode.v24.annotation.sorted.gtf.gz",
+         indexURL: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg38/genes/gencode.v24.annotation.sorted.gtf.gz.tbi",
          format: 'gtf',
          visibilityWindow: 2000000,
          displayMode: 'EXPANDED',
@@ -119,13 +119,13 @@ function genomeSpecificOptions(genomeName, initialLocus)
          minimumBases: 5,
          showRuler: true,
          reference: {id: "mm10",
-                     fastaURL: "//igv-data.systemsbiology.net/static/mm10/GRCm38.primary_assembly.genome.fa",
-                     cytobandURL: "//igv-data.systemsbiology.net/static/mm10/cytoBand.txt"
+                     fastaURL: "https://igv-data.systemsbiology.net/static/mm10/GRCm38.primary_assembly.genome.fa",
+                     cytobandURL: "https://igv-data.systemsbiology.net/static/mm10/cytoBand.txt"
                      },
          tracks: [
             {name: 'Gencode vM14',
-             url: "//igv-data.systemsbiology.net/static/mm10/gencode.vM14.basic.annotation.sorted.gtf.gz",
-             indexURL: "//igv-data.systemsbiology.net/static/mm10/gencode.vM14.basic.annotation.sorted.gtf.gz.tbi",
+             url: "https://igv-data.systemsbiology.net/static/mm10/gencode.vM14.basic.annotation.sorted.gtf.gz",
+             indexURL: "https://igv-data.systemsbiology.net/static/mm10/gencode.vM14.basic.annotation.sorted.gtf.gz.tbi",
              indexed: true,
              type: 'annotation',
              format: 'gtf',
@@ -145,15 +145,15 @@ function genomeSpecificOptions(genomeName, initialLocus)
          minimumBases: 5,
          showRuler: true,
          reference: {id: "TAIR10",
-                fastaURL: "//igv-data.systemsbiology.net/static/tair10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa",
-                indexURL: "//igv-data.systemsbiology.net/static/tair10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.fai",
-                aliasURL: "//igv-data.systemsbiology.net/static/tair10/chromosomeAliases.txt"
+                fastaURL: "https://igv-data.systemsbiology.net/static/tair10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa",
+                indexURL: "https://igv-data.systemsbiology.net/static/tair10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.fai",
+                aliasURL: "https://igv-data.systemsbiology.net/static/tair10/chromosomeAliases.txt"
                 },
          tracks: [
            {name: 'Genes TAIR10',
             type: 'annotation',
             visibilityWindow: 500000,
-            url: "//igv-data.systemsbiology.net/static/tair10/TAIR10_genes.sorted.chrLowered.gff3.gz",
+            url: "https://igv-data.systemsbiology.net/static/tair10/TAIR10_genes.sorted.chrLowered.gff3.gz",
             color: "darkred",
             indexed: true,
             height: 200,
@@ -170,14 +170,14 @@ function genomeSpecificOptions(genomeName, initialLocus)
          minimumBases: 5,
          showRuler: true,
          reference: {id: "Rhodobacter sphaeroides",
-                     fastaURL: "//igv-data.systemsbiology.net/static/rhos/GCF_000012905.2_ASM1290v2_genomic.fna",
-                     indexURL: "//igv-data.systemsbiology.net/static/rhos/GCF_000012905.2_ASM1290v2_genomic.fna.fai"
+                     fastaURL: "https://igv-data.systemsbiology.net/static/rhos/GCF_000012905.2_ASM1290v2_genomic.fna",
+                     indexURL: "https://igv-data.systemsbiology.net/static/rhos/GCF_000012905.2_ASM1290v2_genomic.fna.fai"
                 },
          tracks: [
            {name: 'Genes',
             type: 'annotation',
             visibilityWindow: 500000,
-            url: "//igv-data.systemsbiology.net/static/rhos/GCF_000012905.2_ASM1290v2_genomic.gff.gz",
+            url: "https://igv-data.systemsbiology.net/static/rhos/GCF_000012905.2_ASM1290v2_genomic.gff.gz",
             color: "darkred",
             indexed: true,
             height: 200,
