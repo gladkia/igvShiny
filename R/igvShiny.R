@@ -94,7 +94,6 @@ loadBedGraphTrack <- function(session, trackName, tbl, color="gray", trackHeight
 
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
 
-   browser()
    classes.4 <- paste(unlist(lapply(tbl[, 1:4], class)), collapse=", ")
    stopifnot(classes.4 == c("character, integer, integer, numeric"))
    colnames.4 <- paste(colnames(tbl)[1:4], collapse=", ")
