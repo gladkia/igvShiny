@@ -86,7 +86,7 @@ loadBedTrackFromFile <- function(session, trackName, tbl, deleteTracksOfSameName
 
 } # loadBedTrack
 #------------------------------------------------------------------------------------------------------------------------
-loadBedGraphTrack <- function(session, trackName, tbl, color="gray", trackHeight=50, deleteTracksOfSameName=TRUE)
+loadBedGraphTrack <- function(session, trackName, tbl, color="gray", trackHeight=50, deleteTracksOfSameName=TRUE, quiet=TRUE)
 {
    if(deleteTracksOfSameName){
       removeTracksByName(session, trackName);
@@ -94,6 +94,19 @@ loadBedGraphTrack <- function(session, trackName, tbl, color="gray", trackHeight
 
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
 
+   browser()
+   classes.4 <- paste(unlist(lapply(tbl[, 1:4], class)), collapse=", ")
+   stopifnot(classes.4 == c("character, integer, integer, numeric"))
+   colnames.4 <- paste(colnames(tbl)[1:4], collapse=", ")
+   stopifnot(colnames.4 == "chr, start, end, value")
+
+   if(!quiet){
+      printf("--- igvShiny::loadBedGraphTrack");
+      printf("    %d rows, %d columns", nrow(tbl), ncol(tbl))
+      printf("    colnames: %s", paste(colnames(tbl), collapse=", "))
+      printf("    col classes: %s", paste(unlist(lapply(tbl, class)), collapse=", "))
+      print(fivenum(tbl[, 4]))
+      }
    message <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl), color=color, trackHeight=trackHeight)
    session$sendCustomMessage("loadBedGraphTrack", message)
 
