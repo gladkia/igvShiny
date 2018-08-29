@@ -61,6 +61,12 @@ loadBedTrack <- function(session, trackName, tbl, color="gray", trackHeight=50, 
 {
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
 
+   stopifnot(colnames(tbl)[1:4] == c("chr", "start", "end", "value"))
+   stopifnot(is(tbl$chr, "character"))
+   stopifnot(is(tbl$start, "numeric"))
+   stopifnot(is(tbl$end, "numeric"))
+   stopifnot(is(tbl$value, "numeric"))
+
    message <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl), color=color, trackHeight=trackHeight)
    session$sendCustomMessage("loadBedTrack", message)
 
