@@ -287,6 +287,9 @@ Shiny.addCustomMessageHandler("loadBedGraphTrack",
       var tbl = message.tbl;
       var color = message.color;
       var trackHeight = message.trackHeight;
+      var autoscale = message.autoscale;
+      var min = message.min;
+      var max = message.max;
 
       var config = {format: "bedgraph",
                     name: trackName,
@@ -296,11 +299,13 @@ Shiny.addCustomMessageHandler("loadBedGraphTrack",
                     displayMode: "EXPANDED",
                     //sourceType: "file",
                     color: color,
-                    height: trackHeight
+                    height: trackHeight,
+                    autoscale: autoscale,
+                    min: min,
+                    max: max
                     };
       window.igvBrowser.loadTrack(config);
       }
-
 
 );
 //------------------------------------------------------------------------------------------------------------------------

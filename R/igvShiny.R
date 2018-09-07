@@ -57,8 +57,19 @@ removeUserAddedTracks <- function(session)
 
 } # removeUserAddedTracks
 #------------------------------------------------------------------------------------------------------------------------
-loadBedTrack <- function(session, trackName, tbl, color="gray", trackHeight=50, deleteTracksOfSameName=TRUE)
+loadBedTrack <- function(session, trackName, tbl, color="gray", trackHeight=50, deleteTracksOfSameName=TRUE, quiet=TRUE)
 {
+   if(!quiet){
+      printf("--- igvShiny::loadBedTrack");
+      print(dim(tbl))
+      print(head(tbl))
+      print(unlist(lapply(tbl, class)))
+      }
+
+   if(deleteTracksOfSameName){
+      removeTracksByName(session, trackName);
+      }
+
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
 
    stopifnot(colnames(tbl)[1:3] == c("chr", "start", "end"))
@@ -91,8 +102,19 @@ loadBedTrackFromFile <- function(session, trackName, tbl, deleteTracksOfSameName
 
 } # loadBedTrack
 #------------------------------------------------------------------------------------------------------------------------
-loadBedGraphTrack <- function(session, trackName, tbl, color="gray", trackHeight=50, deleteTracksOfSameName=TRUE, quiet=TRUE)
+loadBedGraphTrack <- function(session, trackName, tbl, color="gray", trackHeight=30,
+                              autoscale, min=NA_real, max=NA_real,
+                              deleteTracksOfSameName=TRUE, quiet=TRUE)
 {
+
+   if(!quiet){
+      printf("--- igvShiny::loadBedGraphTrack");
+      printf("    %d rows, %d columns", nrow(tbl), ncol(tbl))
+      printf("    colnames: %s", paste(colnames(tbl), collapse=", "))
+      printf("    col classes: %s", paste(unlist(lapply(tbl, class)), collapse=", "))
+      print(fivenum(tbl[, 4]))
+      }
+
    if(deleteTracksOfSameName){
       removeTracksByName(session, trackName);
       }
@@ -105,14 +127,8 @@ loadBedGraphTrack <- function(session, trackName, tbl, color="gray", trackHeight
    stopifnot(is(tbl$end, "numeric"))
    stopifnot(is(tbl$value, "numeric"))
 
-   if(!quiet){
-      printf("--- igvShiny::loadBedGraphTrack");
-      printf("    %d rows, %d columns", nrow(tbl), ncol(tbl))
-      printf("    colnames: %s", paste(colnames(tbl), collapse=", "))
-      printf("    col classes: %s", paste(unlist(lapply(tbl, class)), collapse=", "))
-      print(fivenum(tbl[, 4]))
-      }
-   message <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl), color=color, trackHeight=trackHeight)
+   message <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl), color=color, trackHeight=trackHeight,
+                   autoscale=autoscale, min=min, max=max)
    session$sendCustomMessage("loadBedGraphTrack", message)
 
 } # loadBedGraphTrack
