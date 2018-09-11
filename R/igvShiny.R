@@ -72,7 +72,15 @@ loadBedTrack <- function(session, trackName, tbl, color="gray", trackHeight=50, 
 
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
 
-   stopifnot(colnames(tbl)[1:3] == c("chr", "start", "end"))
+   if(colnames(tbl)[1] == "chrom")
+      colnames(tbl)[1] <- "chr"
+
+   if(all(colnames(tbl)[1:3] != c("chr", "start", "end"))){
+      printf("found these colnames: %s", paste(colnames(tbl)[1:3], collapse=", "))
+      printf("            required: %s", paste(c("chr", "start", "end"), collapse=", "))
+      stop("improper columns in bed track data.frame")
+      }
+
    stopifnot(is(tbl$chr, "character"))
    stopifnot(is(tbl$start, "numeric"))
    stopifnot(is(tbl$end, "numeric"))
