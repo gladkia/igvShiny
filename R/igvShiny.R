@@ -111,7 +111,7 @@ loadBedTrackFromFile <- function(session, trackName, tbl, deleteTracksOfSameName
 } # loadBedTrack
 #------------------------------------------------------------------------------------------------------------------------
 loadBedGraphTrack <- function(session, trackName, tbl, color="gray", trackHeight=30,
-                              autoscale, min=NA_real, max=NA_real,
+                              autoscale, min=NA_real_, max=NA_real_,
                               deleteTracksOfSameName=TRUE, quiet=TRUE)
 {
 
