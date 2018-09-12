@@ -115,6 +115,8 @@ loadBedGraphTrack <- function(session, trackName, tbl, color="gray", trackHeight
                               deleteTracksOfSameName=TRUE, quiet=TRUE)
 {
 
+   stopifnot(ncol(tbl) >= 4)
+
    if(!quiet){
       printf("--- igvShiny::loadBedGraphTrack");
       printf("    %d rows, %d columns", nrow(tbl), ncol(tbl))
@@ -131,6 +133,8 @@ loadBedGraphTrack <- function(session, trackName, tbl, color="gray", trackHeight
 
    if(colnames(tbl)[1] == "chrom")
       colnames(tbl)[1] <- "chr"
+
+   colnames(tbl)[4] <- "value"
 
    if(all(colnames(tbl)[1:3] != c("chr", "start", "end"))){
       printf("found these colnames: %s", paste(colnames(tbl)[1:3], collapse=", "))
