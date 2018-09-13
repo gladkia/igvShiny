@@ -24,30 +24,30 @@ HTMLWidgets.widget({
                 igvWidget = browser;
                 window.igvBrowser = igvWidget;
                 igvWidget.on('trackclick', function (track, popoverData){
-                var x = popoverData;
-                if(x.length == 1){
-                   if(Object.getOwnPropertyNames(x[0]).includes("value")){
-                      var id = x[0].value;
-                      console.log("in click handler, id:" + id);
-                      if(id.indexOf("rs") == 0){
-                         //var url = "//www.ncbi.nlm.nih.gov/snp/" + rsid;
-                         var url = "https://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=" + id
-                         return " &nbsp; dbSNP: <a href='" + url + "' target=_blank>" + id + "</a>";
-                         } // if "^rs"
-                      if(id.indexOf("tfbs-snp") == 0){
-                         console.log("--- about to contact Shiny")
-                         var message = {id: id, date: Date()};
-                         var messageName = "trackClick"
-                         Shiny.onInputChange(messageName, message);
-                         console.log("--- after contacting Shiny")
-                         //return "<h4> " + id + "</h4>";
-                         } // tfbs-snp
-                     } // if a value field
-                  } // if just one element
-                 console.log("click! 810");
-                console.log(x);
-               return undefined;
-              }); // on
+                   var x = popoverData;
+                    if(x.length == 4){
+                      if (x[3].name == "id"){
+                      //if(Object.getOwnPropertyNames(x[0]).includes("value")){
+                      //   var id = x[0].value;
+                      //   console.log("in click handler, id:" + id);
+                      //   if(id.indexOf("rs") == 0){
+                      //      //var url = "//www.ncbi.nlm.nih.gov/snp/" + rsid;
+                      //      var url = "https://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=" + id
+                      //      return " &nbsp; dbSNP: <a href='" + url + "' target=_blank>" + id + "</a>";
+                      //      } // if "^rs"
+                      //   if(id.indexOf("tfbs-snp") == 0){
+                      console.log("--- about to contact Shiny")
+                      var id = x[3].value;
+                      var message = {id: id, date: Date()};
+                      var messageName = "trackClick"
+                      Shiny.onInputChange(messageName, message);
+                      console.log("--- after contacting Shiny")
+                      } // if id in the fourth field
+                    } // length == 4
+                  console.log("click! 810");
+                  console.log(x);
+                  return undefined;
+                  }); // on
 
              }); // then: promise fulflled
              // igvWidget = igv.createBrowser(igvDiv, fullOptions);
