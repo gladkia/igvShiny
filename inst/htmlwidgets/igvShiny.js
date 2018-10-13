@@ -17,7 +17,8 @@ HTMLWidgets.widget({
           console.log(options)
           var igvDiv;
           igvDiv = el; // $("#igvDiv")[0];
-          var fullOptions = genomeSpecificOptions(options.genomeName, options.initialLocus)
+          var fullOptions = genomeSpecificOptions(options.genomeName, options.initialLocus,
+                                                  options.displayMode, options.trackHeight)
 
          igv.createBrowser(igvDiv, fullOptions)
              .then(function (browser) {
@@ -27,15 +28,6 @@ HTMLWidgets.widget({
                    var x = popoverData;
                     if(x.length == 4){
                       if (x[3].name == "id"){
-                      //if(Object.getOwnPropertyNames(x[0]).includes("value")){
-                      //   var id = x[0].value;
-                      //   console.log("in click handler, id:" + id);
-                      //   if(id.indexOf("rs") == 0){
-                      //      //var url = "//www.ncbi.nlm.nih.gov/snp/" + rsid;
-                      //      var url = "https://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=" + id
-                      //      return " &nbsp; dbSNP: <a href='" + url + "' target=_blank>" + id + "</a>";
-                      //      } // if "^rs"
-                      //   if(id.indexOf("tfbs-snp") == 0){
                       console.log("--- about to contact Shiny")
                       var id = x[3].value;
                       var message = {id: id, date: Date()};
@@ -51,11 +43,6 @@ HTMLWidgets.widget({
 
              }); // then: promise fulflled
              // igvWidget = igv.createBrowser(igvDiv, fullOptions);
-           Shiny.addCustomMessageHandler("showGenomicRegion", function(message) {
-               //window.igvBrowser.search(message.roi);
-              console.log(message)
-              igvWidget.search(message.region)
-              });
 
 
           },
@@ -67,7 +54,7 @@ HTMLWidgets.widget({
   }  // factory
 });  // widget
 //------------------------------------------------------------------------------------------------------------------------
-function genomeSpecificOptions(genomeName, initialLocus)
+function genomeSpecificOptions(genomeName, initialLocus, displayMode, trackHeight)
 {
     var hg19_options = {
      locus: initialLocus,
@@ -81,7 +68,7 @@ function genomeSpecificOptions(genomeName, initialLocus)
               url: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.collapsed.bed",
          indexURL: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.collapsed.bed.idx",
          visibilityWindow: 2000000,
-         displayMode: 'EXPANDED'
+         displayMode: displayMode
          }
         ]
      }; // hg19_options
@@ -104,8 +91,8 @@ function genomeSpecificOptions(genomeName, initialLocus)
          indexURL: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg38/genes/gencode.v24.annotation.sorted.gtf.gz.tbi",
          format: 'gtf',
          visibilityWindow: 2000000,
-         displayMode: 'EXPANDED',
-         height: 300
+         displayMode:  displayMode,
+         height: trackHeight
          },
         ]
      }; // hg38_options
@@ -130,8 +117,8 @@ function genomeSpecificOptions(genomeName, initialLocus)
              type: 'annotation',
              format: 'gtf',
              visibilityWindow: 2000000,
-             displayMode: 'EXPANDED',
-             height: 300,
+             displayMode: displayMode,
+             height: trackHeight,
              searchable: true
              },
             ]
@@ -156,8 +143,8 @@ function genomeSpecificOptions(genomeName, initialLocus)
             url: "https://igv-data.systemsbiology.net/static/tair10/TAIR10_genes.sorted.chrLowered.gff3.gz",
             color: "darkred",
             indexed: true,
-            height: 200,
-            displayMode: "EXPANDED"
+            height: trackHeight,
+            displayMode: displayMode
             },
             ]
           }; // tair10_options
@@ -180,8 +167,8 @@ function genomeSpecificOptions(genomeName, initialLocus)
             url: "https://igv-data.systemsbiology.net/static/rhos/GCF_000012905.2_ASM1290v2_genomic.gff.gz",
             color: "darkred",
             indexed: true,
-            height: 200,
-            displayMode: "EXPANDED"
+            height: trackHeight,
+            displayMode: displayMode
             },
             ]
           }; // rhos_options
@@ -209,6 +196,16 @@ function genomeSpecificOptions(genomeName, initialLocus)
     return(igvOptions)
 
 } // genomeSpecificOptions
+//------------------------------------------------------------------------------------------------------------------------
+Shiny.addCustomMessageHandler("showGenomicRegion",
+
+    function(message) {
+        //window.igvBrowser.search(message.roi);
+        console.log("  about to call search on behalf of showGenomicRegion: ");
+        console.log(message)
+        window.igvBrowser.search(message.region)
+        });
+
 //------------------------------------------------------------------------------------------------------------------------
 Shiny.addCustomMessageHandler("removeTracksByName",
 

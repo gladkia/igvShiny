@@ -55,7 +55,8 @@ server = function(input, output, session) {
    output$igvShiny.0 <- renderIgvShiny(
      igvShiny(list(
         genomeName=genomes[i],
-        initialLocus=loci[i]
+        initialLocus=loci[i],
+        displayMode="SQUISHED"
         ))
       )
 

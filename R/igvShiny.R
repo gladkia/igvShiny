@@ -12,11 +12,7 @@ igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL)
   stopifnot(options$genomeName %in% supportedGenomes)
 
   printf("--- ~/github/igvShiny/R/igvShiny ctor");
-  #x <- list(
-  #  message = message
-  #  )
 
-  # create widget
   htmlwidgets::createWidget(
     name = 'igvShiny',
     options,
@@ -43,6 +39,13 @@ renderIgvShiny <- function(expr, env = parent.frame(), quoted = FALSE)
 
 }
 #----------------------------------------------------------------------------------------------------
+showGenomicRegion <- function(session, region)
+{
+   message <- list(region=region)
+   session$sendCustomMessage("showGenomicRegion", message)
+
+} # showGenomicRegion
+#------------------------------------------------------------------------------------------------------------------------
 removeTracksByName <- function(session, trackNames)
 {
    message <- list(trackNames=trackNames)
