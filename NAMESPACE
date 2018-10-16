@@ -3,6 +3,7 @@ export(
    igvShinyOutput,
    renderIgvShiny,
    showGenomicRegion,
+   getGenomicRegion,
    loadBedTrack,
    loadBedGraphTrack,
    loadSegTrack,

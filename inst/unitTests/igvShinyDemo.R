@@ -12,6 +12,8 @@ ui = shinyUI(fluidPage(
         textInput("roi", label=""),
         actionButton("searchButton", "Search"),
         actionButton("addTrackButton", "Add Track"),
+        actionButton("getChromLoc", "Get Region"),
+        htmlOutput("chromLocDisplay"),
         hr(),
         width=2
         ),
@@ -40,11 +42,23 @@ server = function(input, output, session) {
                             value=c(-0.2239, 3.0, 0.5),
                             sampleID=c("sample1", "sample2", "sample3"),
                             stringsAsFactors=FALSE)
-      loadBedTrackFromFile("test.bed")
-      loadBedTrack(tbl.bed);
-      loadBedGraphTrack(tbl.bed);
-      loadSegTrack(tbl.bed)
+      loadBedTrack(session, "bed", tbl.bed, color="green");
+      loadBedGraphTrack(session, "wig", tbl.bed, color="blue", autoscale=TRUE)
+      loadSegTrack(session, "seg", tbl.bed)
       })
+
+   observeEvent(input$getChromLoc, {
+      session$sendCustomMessage(type="getGenomicRegion", message=list())
+      output$chromLocDisplay <- renderText({" "})
+      getGenomicRegion(session)
+      })
+
+   observeEvent(input$currentGenomicRegion, {
+      chromLocRegion <- input$currentGenomicRegion
+      output$chromLocDisplay <- renderText({
+         chromLocRegion
+         })
+       })
 
    output$value <- renderPrint({ input$action })
 

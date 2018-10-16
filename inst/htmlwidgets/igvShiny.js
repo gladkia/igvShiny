@@ -24,6 +24,11 @@ HTMLWidgets.widget({
              .then(function (browser) {
                 igvWidget = browser;
                 window.igvBrowser = igvWidget;
+                window.chromLocString = options.initialLocus;
+                igvWidget.on('locuschange', function (referenceFrame, chromLocString){
+                    window.chromLocString = chromLocString;
+                    // console.log("locuschange: " + chromLocString)
+                    });
                 igvWidget.on('trackclick', function (track, popoverData){
                    var x = popoverData;
                     if(x.length == 4){
@@ -57,10 +62,10 @@ HTMLWidgets.widget({
 function genomeSpecificOptions(genomeName, initialLocus, displayMode, trackHeight)
 {
     var hg19_options = {
-     locus: initialLocus,
-     flanking: 1000,
-     showRuler: true,
-     minimumBases: 5,
+    locus: initialLocus,
+    flanking: 1000,
+    showRuler: true,
+    minimumBases: 5,
 
      reference: {id: "hg19"},
      tracks: [
@@ -205,6 +210,16 @@ Shiny.addCustomMessageHandler("showGenomicRegion",
         console.log(message)
         window.igvBrowser.search(message.region)
         });
+
+//------------------------------------------------------------------------------------------------------------------------
+Shiny.addCustomMessageHandler("getGenomicRegion",
+
+    function(message) {
+       console.log("--  about to return current genomic region");
+       currentValue = window.chromLocString;
+       console.log("current chromLocString: " + currentValue)
+       Shiny.setInputValue("currentGenomicRegion", currentValue, {priority: "event"});
+       })
 
 //------------------------------------------------------------------------------------------------------------------------
 Shiny.addCustomMessageHandler("removeTracksByName",

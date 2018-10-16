@@ -4,7 +4,7 @@ library(shiny)
 state <- new.env(parent=emptyenv())
 state[["userAddedTracks"]] <- list()
 #----------------------------------------------------------------------------------------------------
-igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL)
+igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL, displayMode="squished")
 {
   supportedOptions <- c("genomeName", "initialLocus")
   stopifnot(all(supportedOptions %in% names(options)))
@@ -45,6 +45,12 @@ showGenomicRegion <- function(session, region)
    session$sendCustomMessage("showGenomicRegion", message)
 
 } # showGenomicRegion
+#------------------------------------------------------------------------------------------------------------------------
+getGenomicRegion <- function(session, region)
+{
+   session$sendCustomMessage("getGenomicRegion", message)
+
+} # gertGenomicRegion
 #------------------------------------------------------------------------------------------------------------------------
 removeTracksByName <- function(session, trackNames)
 {
@@ -90,26 +96,6 @@ loadBedTrack <- function(session, trackName, tbl, color="gray", trackHeight=50, 
 
    message <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl), color=color, trackHeight=trackHeight)
    session$sendCustomMessage("loadBedTrack", message)
-
-} # loadBedTrack
-#------------------------------------------------------------------------------------------------------------------------
-loadBedTrackFromFile <- function(session, trackName, tbl, deleteTracksOfSameName=TRUE)
-{
-   if(deleteTracksOfSameName){
-      removeTracksByName(session, trackName);
-      }
-
-   tbl <- data.frame(chrom=c("1", "1", "1"),
-                     start=c(7432951, 7437000, 7438000),
-                     end=  c(7436000, 7437500, 7437600),
-                     stringsAsFactors=FALSE)
-   temp.filename <- "~/github/igvShiny/inst/unitTests/tracks/test.bed"
-   write.table(tbl, row.names=FALSE, col.names=FALSE, quote=FALSE, sep="\t", file=temp.filename)
-
-   state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
-
-   message <- list(trackName, filename="test.bed")
-   session$sendCustomMessage("loadBedTrackFromFile", message)
 
 } # loadBedTrack
 #------------------------------------------------------------------------------------------------------------------------
