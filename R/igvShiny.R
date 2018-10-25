@@ -1,5 +1,6 @@
 library(jsonlite)
 library(shiny)
+library(VariantAnnotation)
 #----------------------------------------------------------------------------------------------------
 state <- new.env(parent=emptyenv())
 state[["userAddedTracks"]] <- list()
@@ -38,6 +39,12 @@ renderIgvShiny <- function(expr, env = parent.frame(), quoted = FALSE)
   htmlwidgets::shinyRenderWidget(expr, igvShinyOutput, env, quoted = TRUE)
 
 }
+#----------------------------------------------------------------------------------------------------
+redrawIgvWidget <- function(session)
+{
+   session$sendCustomMessage("redrawIgvWidget", message=list())
+
+} # redrawIgvWidget
 #----------------------------------------------------------------------------------------------------
 showGenomicRegion <- function(session, region)
 {
@@ -154,5 +161,20 @@ loadSegTrack <- function(session, trackName, tbl, deleteTracksOfSameName=TRUE)
    session$sendCustomMessage("loadSegTrack", message)
 
 } # loadSegTrack
+#------------------------------------------------------------------------------------------------------------------------
+loadVcfTrack <- function(session, trackName, vcfData, deleteTracksOfSameName=TRUE)
+{
+   if(deleteTracksOfSameName){
+      removeTracksByName(session, trackName);
+      }
+
+   state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
+   path <- file.path("tracks", "tmp.vcf")
+   writeVcf(vcfData, path)
+
+   message <- list(trackName=trackName, vcfDataFilepath=path)
+   session$sendCustomMessage("loadVcfTrack", message)
+
+} # loadVcfTrack
 #------------------------------------------------------------------------------------------------------------------------
 

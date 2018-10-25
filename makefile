@@ -1,0 +1,2 @@
+default:
+	R CMD INSTALL .

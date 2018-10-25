@@ -203,6 +203,15 @@ function genomeSpecificOptions(genomeName, initialLocus, displayMode, trackHeigh
 
 } // genomeSpecificOptions
 //------------------------------------------------------------------------------------------------------------------------
+Shiny.addCustomMessageHandler("redrawIgvWidget",
+
+    function(message) {
+        console.log("--- redrawIgvShiny")
+        window.igvBrowser.resize();
+        window.igvBrowser.visibilityChange();
+        });
+
+//------------------------------------------------------------------------------------------------------------------------
 Shiny.addCustomMessageHandler("showGenomicRegion",
 
     function(message) {
@@ -341,6 +350,38 @@ Shiny.addCustomMessageHandler("loadSegTrack",
                     };
       window.igvBrowser.loadTrack(config);
       }
+
+
+);
+//------------------------------------------------------------------------------------------------------------------------
+Shiny.addCustomMessageHandler("loadVcfTrack",
+
+   function(message){
+
+      console.log("=== loadVcfTrack");
+      var trackName = message.trackName;
+      var vcfFile = message.vcfDataFilepath;
+      var dataURL = window.location.href + message.vcfDataFilepath;
+      console.log("dataURL: " + dataURL);
+
+      var config = {format: "vcf",
+                     name: trackName,
+                     url: dataURL,
+                     indexed: false,
+                     displayMode: "EXPANDED",
+                     sourceType: "file",
+		    height: 100,
+                     visibilityWindow: 1000000,
+                     //homvarColor: homvarColor,
+                     //hetvarColor: hetvarColor,
+                     //homrefColor: homrefColor,
+                     //color: locationColor,
+                     type: "variant"
+                    };
+
+
+       window.igvBrowser.loadTrack(config);
+       }
 
 
 );
