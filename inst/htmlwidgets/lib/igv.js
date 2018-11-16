@@ -29,7 +29,7 @@
 
 (function () {
 
-    var css =  '.igv-color-swatch {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  width: 24px;\n  height: 24px;\n  border-style: solid;\n  border-width: 1px;\n  border-color: transparent; }\n  .igv-color-swatch i.fa {\n    display: block; }\n  .igv-color-swatch i.fa:hover,\n  .igv-color-swatch i.fa:focus,\n  .igv-color-swatch i.fa:active {\n    cursor: pointer;\n    color: #0f0f0f; }\n\n.igv-color-swatch:hover,\n.igv-color-swatch:focus,\n.igv-color-swatch:active {\n  border-color: #dddddd; }\n\n.igv-colorpicker-menu-close-button {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: flex-end;\n  align-items: center;\n  width: 100%;\n  height: 32px;\n  margin-top: 4px;\n  margin-bottom: 4px;\n  padding-right: 8px; }\n  .igv-colorpicker-menu-close-button i.fa {\n    display: block;\n    margin-left: 4px;\n    margin-right: 4px;\n    color: #5f5f5f; }\n  .igv-colorpicker-menu-close-button i.fa:hover,\n  .igv-colorpicker-menu-close-button i.fa:focus,\n  .igv-colorpicker-menu-close-button i.fa:active {\n    cursor: pointer;\n    color: #0f0f0f; }\n\n.igv-position-absolute {\n  position: absolute;\n  top: 0;\n  left: 0; }\n\n.igv-generic-container {\n  width: 256px;\n  z-index: 5000;\n  background-color: white;\n  border-style: solid;\n  border-width: thin;\n  border-color: #dddddd;\n  cursor: pointer;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: flex-start;\n  align-items: center; }\n  .igv-generic-container div:first-child {\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-end;\n    align-items: center;\n    height: 24px;\n    width: 100%;\n    background-color: #dddddd; }\n    .igv-generic-container div:first-child i.fa {\n      margin-right: 4px;\n      display: block;\n      color: #5f5f5f; }\n    .igv-generic-container div:first-child i.fa:hover,\n    .igv-generic-container div:first-child i.fa:focus,\n    .igv-generic-container div:first-child i.fa:active {\n      cursor: pointer;\n      color: #0f0f0f; }\n\n.igvControlDiv {\n  position: relative; }\n\n.igv-content-header {\n  position: relative;\n  height: 16px;\n  clear: both;\n  margin-top: 10px;\n  white-space: nowrap; }\n  .igv-content-header .igv-ideogram-left-shim {\n    position: relative;\n    height: 100%;\n    width: 50px;\n    display: inline-block;\n    background-color: white; }\n  .igv-content-header .igv-ideogram-content-div {\n    position: relative;\n    height: 100%;\n    display: inline-block;\n    background-color: white; }\n    .igv-content-header .igv-ideogram-content-div canvas {\n      width: 100%;\n      height: 100%; }\n  .igv-content-header .igv-ideogram-content-div-border-right {\n    border-right-color: #292929;\n    border-right-style: solid;\n    border-right-width: 1px; }\n\n.igv-multi-locus-panel-border {\n  position: absolute;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 1px;\n  background-color: green;\n  border-right-color: #ff0000;\n  border-right-style: solid;\n  border-right-width: 1px; }\n\n.igv-navbar {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: space-between;\n  align-items: center;\n  margin-top: 2px;\n  margin-bottom: 4px;\n  position: relative;\n  top: 0;\n  left: 0;\n  height: 32px;\n  width: 100%;\n  border-style: solid;\n  border-radius: 3px;\n  border-width: thin;\n  border-color: #bfbfbf;\n  background-color: #f3f3f3; }\n  .igv-navbar i {\n    cursor: pointer;\n    color: #666666; }\n  .igv-navbar i:hover,\n  .igv-navbar i:focus,\n  .igv-navbar i:active {\n    color: #434343; }\n  .igv-navbar .igv-nav-bar-left-container {\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-between;\n    align-items: center;\n    height: 32px; }\n    .igv-navbar .igv-nav-bar-left-container .igv-logo {\n      width: 34px;\n      height: 32px;\n      margin-left: 8px;\n      margin-right: 32px; }\n    .igv-navbar .igv-nav-bar-left-container .igv-current_genome {\n      height: 32px;\n      margin-right: 16px;\n      user-select: none;\n      color: #444;\n      font-family: \"Open Sans\", sans-serif;\n      font-size: 12px;\n      font-weight: 400;\n      line-height: 32px;\n      text-align: center; }\n    .igv-navbar .igv-nav-bar-left-container .igv-genomic-location {\n      display: flex;\n      flex-flow: row;\n      flex-wrap: nowrap;\n      justify-content: space-between;\n      align-items: center;\n      height: 32px; }\n      .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-chromosome-select-widget-container {\n        width: 96px;\n        margin-right: 4px;\n        height: 70%; }\n        .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-chromosome-select-widget-container select {\n          display: block;\n          outline: none;\n          font-family: \"Open Sans\", sans-serif;\n          font-size: 12px;\n          font-weight: 400;\n          color: #444;\n          width: 100%;\n          height: 100%; }\n      .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group {\n        display: flex;\n        flex-flow: row;\n        flex-wrap: nowrap;\n        justify-content: space-between;\n        align-items: center;\n        height: 75%; }\n        .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group .igv-search-container {\n          width: 260px;\n          display: flex;\n          flex-flow: row;\n          flex-wrap: nowrap;\n          justify-content: flex-start;\n          align-items: center; }\n          .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group .igv-search-container input {\n            display: block;\n            width: 85%;\n            padding-left: 8px;\n            margin-right: 8px;\n            line-height: 20px;\n            text-align: left;\n            font-family: \"Open Sans\", sans-serif;\n            font-size: 12px;\n            font-weight: 400;\n            color: #444;\n            outline: none;\n            border-style: solid;\n            border-radius: 3px;\n            border-width: thin;\n            border-color: #bfbfbf;\n            background-color: white; }\n          .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group .igv-search-container div {\n            height: 100%; }\n            .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group .igv-search-container div i {\n              font-size: 18px; }\n        .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group .igv-windowsizepanel-content-div {\n          margin-left: 4px;\n          user-select: none;\n          font-family: \"Open Sans\", sans-serif;\n          font-size: 12px;\n          font-weight: 400;\n          color: #444; }\n  .igv-navbar .igv-nav-bar-right-container {\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-between;\n    align-items: center; }\n    .igv-navbar .igv-nav-bar-right-container .igv-nav-bar-toggle-button-container {\n      display: flex;\n      flex-flow: row;\n      flex-wrap: nowrap;\n      justify-content: space-between;\n      align-items: center;\n      margin-right: 8px; }\n      .igv-navbar .igv-nav-bar-right-container .igv-nav-bar-toggle-button-container div {\n        margin-left: 0;\n        margin-right: 4px; }\n      .igv-navbar .igv-nav-bar-right-container .igv-nav-bar-toggle-button-container div:last-child {\n        margin-left: 0;\n        margin-right: 0; }\n    .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget {\n      user-select: none;\n      font-size: 20px;\n      margin-left: 16px;\n      margin-right: 8px;\n      display: flex;\n      flex-flow: row;\n      flex-wrap: nowrap;\n      justify-content: space-between;\n      align-items: center; }\n      .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget div {\n        cursor: pointer;\n        color: #666666; }\n\n.igv-nav-bar-button {\n  height: 18px;\n  min-width: 96px;\n  text-transform: capitalize;\n  user-select: none;\n  line-height: 18px;\n  text-align: center;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 11px;\n  font-weight: 200;\n  color: #737373;\n  background-color: #f3f3f3;\n  border-color: #737373;\n  border-style: solid;\n  border-width: thin;\n  border-radius: 10px; }\n\n.igv-nav-bar-button-clicked {\n  color: white;\n  background-color: #737373; }\n\n.igv-nav-bar-button:hover {\n  cursor: pointer; }\n\n.igv-logo-nonav {\n  margin-left: 4px;\n  margin-top: 12px;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 34px;\n  height: 16px; }\n\n.igv-search-results {\n  position: absolute;\n  top: 32px;\n  left: 2px;\n  height: 320px;\n  width: 213px;\n  background-color: white;\n  border-color: #7F7F7F;\n  border-style: solid;\n  border-width: thin;\n  overflow-x: hidden;\n  overflow-y: auto;\n  z-index: 9999; }\n  .igv-search-results tr {\n    font-family: \"Open Sans\", sans-serif;\n    font-size: small;\n    font-weight: 400;\n    color: #444; }\n  .igv-search-results tr:hover,\n  .igv-search-results tr:focus,\n  .igv-search-results tr:active {\n    cursor: pointer;\n    font-weight: 700;\n    color: #141414; }\n\n.igv-root-div {\n  position: relative;\n  left: 0;\n  right: 0;\n  height: auto;\n  margin-left: 10px;\n  margin-right: 10px;\n  padding-top: 4px; }\n\n.igv-content-div {\n  position: relative;\n  width: 100%;\n  height: 100%; }\n\n.igv-track-container-div {\n  user-select: none;\n  position: relative;\n  clear: both; }\n\n.igv-track-div {\n  position: relative;\n  width: 100%;\n  margin-top: 2px;\n  margin-bottom: 2px; }\n\n.igv-viewport-container {\n  position: absolute;\n  left: 50px;\n  right: 50px;\n  height: 100%;\n  white-space: nowrap;\n  overflow-x: hidden;\n  overflow-y: hidden; }\n\n.igv-viewport-div {\n  position: relative;\n  display: inline-block;\n  height: 100%;\n  overflow-x: hidden;\n  overflow-y: hidden; }\n\n.igv-viewport-content-div {\n  position: absolute;\n  width: 100%; }\n\n.igv-viewport-message {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  color: rgba(0, 0, 0, 0.15);\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 25px;\n  font-weight: bold;\n  user-select: none; }\n\n.igv-whole-genome-container {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: space-between;\n  width: 100%;\n  height: 100%;\n  background-color: white; }\n  .igv-whole-genome-container div {\n    font-family: \"Open Sans\", sans-serif;\n    font-size: 10px;\n    font-weight: 400;\n    color: #444;\n    height: 100%;\n    text-align: center;\n    border-right-color: #bfbfbf;\n    border-right-style: solid;\n    border-right-width: thin; }\n    .igv-whole-genome-container div span {\n      display: block;\n      padding-top: 6px;\n      text-overflow: ellipsis; }\n  .igv-whole-genome-container div:last-child {\n    border-right-color: transparent; }\n  .igv-whole-genome-container div:hover,\n  .igv-whole-genome-container div:focus,\n  .igv-whole-genome-container div:active {\n    cursor: pointer;\n    background-color: #efefef; }\n\n.igv-viewport-div-border-right {\n  border-right-color: #292929;\n  border-right-style: solid;\n  border-right-width: 1px; }\n\n.igv-viewport-fa-close {\n  position: absolute;\n  top: 4px;\n  right: 4px;\n  font-size: 16px;\n  color: #666666;\n  z-index: 1000; }\n\n.igv-viewport-fa-close:hover {\n  cursor: pointer;\n  color: #434343; }\n\n.igv-viewport-content-ruler-div {\n  position: absolute;\n  left: 50%;\n  top: 25%;\n  transform: translate(-50%, -25%);\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 12px;\n  font-weight: 200;\n  text-align: center;\n  min-width: 16px;\n  z-index: 64;\n  color: #0066ff;\n  background-color: white;\n  padding: 1px; }\n\n.igv-viewport-content-ruler-div:hover,\n.igv-viewport-content-ruler-div:focus,\n.igv-viewport-content-ruler-div:active {\n  cursor: pointer;\n  color: white;\n  background-color: #0066ff; }\n\n.igv-viewport-ruler {\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 10px;\n  font-weight: 200;\n  text-align: center; }\n  .igv-viewport-ruler > div {\n    height: 100%; }\n\n.igv-viewport-sequence {\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 8px;\n  font-weight: 200;\n  text-align: center; }\n\n.igv-viewport-spinner {\n  pointer-events: none;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  z-index: 1024;\n  color: #737373; }\n\n.igv-ruler-sweeper-div {\n  display: none;\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 0;\n  height: 100%;\n  z-index: 99999;\n  background-color: rgba(68, 134, 247, 0.25); }\n\n.igv-right-hand-gutter {\n  position: absolute;\n  right: 0;\n  width: 36px;\n  height: 100%;\n  background: white;\n  text-align: center; }\n  .igv-right-hand-gutter i {\n    position: absolute;\n    top: 0;\n    right: 0;\n    padding-right: 6px;\n    font-size: 20px;\n    cursor: pointer;\n    color: grey; }\n  .igv-right-hand-gutter i:hover,\n  .igv-right-hand-gutter i:focus,\n  .igv-right-hand-gutter i:active {\n    color: #333333; }\n\n.igv-left-hand-gutter {\n  position: absolute;\n  left: 0;\n  width: 50px;\n  height: 100%; }\n  .igv-left-hand-gutter canvas {\n    position: absolute; }\n\n.igv-track-menu-container {\n  background-color: white;\n  border-bottom-left-radius: 4px;\n  border-bottom-right-radius: 4px; }\n  .igv-track-menu-container div {\n    padding-left: 4px;\n    padding-right: 4px;\n    padding-top: 2px;\n    padding-bottom: 2px;\n    background-color: white; }\n    .igv-track-menu-container div i {\n      padding-right: 2px; }\n  .igv-track-menu-container div:hover,\n  .igv-track-menu-container div:focus,\n  .igv-track-menu-container div:active {\n    cursor: pointer;\n    background-color: #efefef; }\n  .igv-track-menu-container a {\n    color: inherit;\n    text-decoration: none; }\n\n.igv-track-menu-border-top {\n  border-top-color: #a2a2a2;\n  border-top-style: solid;\n  border-top-width: thin; }\n\n.igv-track-menu-category {\n  padding-left: 4px;\n  font-weight: 400; }\n\n.igv-track-drag-scrim {\n  position: absolute;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  z-index: 256;\n  background-color: rgba(68, 134, 247, 0.25); }\n\n.igv-track-manipulation-handle {\n  cursor: pointer;\n  position: absolute;\n  right: 36px;\n  width: 12px;\n  margin-left: 2px;\n  height: 100%;\n  box-sizing: border-box;\n  font-size: medium;\n  border-color: #c4c4c4;\n  border-style: solid;\n  border-width: thin;\n  border-top-right-radius: 6px;\n  border-bottom-right-radius: 6px;\n  z-index: 512;\n  background-color: #c4c4c4; }\n\n.igv-track-manipulation-handle:hover,\n.igv-track-manipulation-handle:focus,\n.igv-track-manipulation-handle:active {\n  border-color: #7e7e7e;\n  background-color: #7e7e7e; }\n\n.igv-track-label {\n  position: absolute;\n  left: 8px;\n  top: 4px;\n  width: auto;\n  height: auto;\n  max-width: 200px;\n  padding-left: 4px;\n  padding-right: 4px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: small;\n  font-weight: 400;\n  text-align: center;\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  border-color: #444;\n  border-radius: 2px;\n  border-style: solid;\n  border-width: thin;\n  background-color: white;\n  z-index: 128;\n  cursor: pointer; }\n\n.igv-track-label:hover,\n.igv-track-label:focus,\n.igv-track-label:active {\n  background-color: rgba(0, 0, 0, 0.05); }\n\n.igv-scrollbar-outer-div {\n  position: absolute;\n  top: 0;\n  right: 0;\n  width: 14px;\n  height: 100%;\n  background-color: white; }\n  .igv-scrollbar-outer-div div {\n    position: absolute;\n    top: 0;\n    left: 3px;\n    width: 8px;\n    border-style: solid;\n    border-width: thin;\n    border-color: #c4c4c4;\n    border-top-left-radius: 4px;\n    border-top-right-radius: 4px;\n    border-bottom-left-radius: 4px;\n    border-bottom-right-radius: 4px;\n    background-color: white; }\n  .igv-scrollbar-outer-div div:hover,\n  .igv-scrollbar-outer-div div:focus,\n  .igv-scrollbar-outer-div div:active {\n    cursor: pointer;\n    background-color: #c4c4c4; }\n\n.zoom-in-notice-container {\n  position: absolute;\n  top: 10px;\n  left: 50%; }\n  .zoom-in-notice-container div {\n    position: relative;\n    left: -50%;\n    font-family: \"Open Sans\", sans-serif;\n    font-size: medium;\n    font-weight: 400;\n    color: #3f3f3f;\n    background-color: rgba(255, 255, 255, 0.51);\n    z-index: 64; }\n\n.igv-center-guide {\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 50%;\n  width: 8px;\n  z-index: 8;\n  display: none;\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  border-left-style: dashed;\n  border-left-width: thin;\n  border-right-style: dashed;\n  border-right-width: thin; }\n\n.igv-center-guide-wide {\n  background-color: transparent;\n  border-left-color: rgba(127, 127, 127, 0.51);\n  border-right-color: rgba(127, 127, 127, 0.51); }\n\n.igv-center-guide-thin {\n  left: 50%;\n  width: 1px;\n  background-color: transparent;\n  border-left-color: rgba(127, 127, 127, 0.51);\n  border-right-color: transparent;\n  /*background-color: rgba(127, 127, 127, 0.51);*/\n  /*border-left-color: rgba(0,0,0,0);*/\n  /*border-right-color: rgba(0,0,0,0);*/ }\n\n.igv-cursor-tracking-guide {\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 50%;\n  width: 1px;\n  z-index: 1;\n  border-left-style: dotted;\n  border-left-width: thin;\n  border-left-color: rgba(127, 127, 127, 0.76);\n  display: none;\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none; }\n\n.igv-clickable {\n  cursor: pointer;\n  background-color: white; }\n\n#color-by-tag {\n  color: #444; }\n\n#color-by-tag:hover,\n#color-by-tag:focus,\n#color-by-tag:active {\n  cursor: pointer;\n  padding-left: 2px;\n  padding-right: 2px;\n  color: white;\n  border-color: #444;\n  border-radius: 2px;\n  border-style: solid;\n  border-width: thin;\n  background-color: #7f7f7f; }\n\n.igv-user-feedback {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  width: 36em;\n  height: 27em;\n  margin-top: -9em;\n  /*set to a negative number 1/2 of your height*/\n  margin-left: -15em;\n  /*set to a negative number 1/2 of your width*/\n  background-color: white;\n  border-color: #a2a2a2;\n  border-style: solid;\n  border-width: thin;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: medium;\n  font-weight: 400;\n  color: #444; }\n  .igv-user-feedback div:first-child {\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    width: 100%;\n    height: 32px;\n    border-bottom-color: #a2a2a2;\n    border-bottom-style: solid;\n    border-bottom-width: thin;\n    background-color: white; }\n    .igv-user-feedback div:first-child i {\n      font-size: 20px; }\n    .igv-user-feedback div:first-child i:first-child {\n      position: absolute;\n      top: 0;\n      left: 0;\n      padding: 8px;\n      color: red; }\n    .igv-user-feedback div:first-child i:last-child {\n      position: absolute;\n      top: 0;\n      right: 0;\n      padding: 8px;\n      cursor: pointer;\n      color: grey; }\n    .igv-user-feedback div:first-child i:last-child:hover,\n    .igv-user-feedback div:first-child i:last-child:focus,\n    .igv-user-feedback div:first-child i:last-child:active {\n      color: #333333; }\n  .igv-user-feedback div:last-child {\n    padding-left: 48px;\n    padding-top: 8px;\n    padding-right: 48px;\n    padding-bottom: 8px;\n    position: absolute;\n    top: 33px;\n    left: 0;\n    right: 0;\n    bottom: 0;\n    background-color: white; }\n\n.igv-ellipsis {\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis; }\n\n.igv-generic-dialog-container {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 300px;\n  height: 200px;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: medium;\n  font-weight: 200;\n  border-color: #7F7F7F;\n  border-radius: 4px;\n  border-style: solid;\n  border-width: thin;\n  z-index: 2048;\n  background-color: white;\n  display: flex;\n  flex-flow: column;\n  flex-wrap: nowrap;\n  justify-content: flex-start;\n  align-items: center; }\n  .igv-generic-dialog-container .igv-generic-dialog-header {\n    width: 100%;\n    height: 24px;\n    cursor: move;\n    border-color: #c4c4c4;\n    border-top-left-radius: 4px;\n    border-top-right-radius: 4px;\n    border-style: solid;\n    border-width: thin;\n    background-color: #c4c4c4;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-end;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-header div {\n      height: 24px;\n      width: 16px;\n      margin-right: 6px;\n      text-align: center;\n      line-height: 24px;\n      color: #444;\n      font-size: medium; }\n    .igv-generic-dialog-container .igv-generic-dialog-header div:hover {\n      cursor: pointer; }\n  .igv-generic-dialog-container .igv-generic-dialog-one-liner {\n    margin-top: 8px;\n    width: 95%;\n    color: #373737;\n    line-height: 24px;\n    text-align: left;\n    padding-left: 8px;\n    background-color: white; }\n  .igv-generic-dialog-container .igv-generic-dialog-label-input {\n    margin-top: 8px;\n    width: 95%;\n    height: 24px;\n    color: #373737;\n    line-height: 24px;\n    padding-left: 8px;\n    background-color: white;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-start;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-label-input div {\n      width: 30%;\n      height: 100%;\n      font-size: 16px;\n      text-align: right;\n      padding-right: 8px;\n      background-color: white; }\n    .igv-generic-dialog-container .igv-generic-dialog-label-input input {\n      display: block;\n      height: 100%;\n      width: 100%;\n      padding-left: 4px;\n      font-family: \"Open Sans\", sans-serif;\n      font-weight: 400;\n      color: #373737;\n      text-align: left;\n      outline: none;\n      border-style: solid;\n      border-width: thin;\n      border-color: #7F7F7F;\n      background-color: white; }\n    .igv-generic-dialog-container .igv-generic-dialog-label-input input {\n      width: 50%;\n      font-size: 16px; }\n  .igv-generic-dialog-container .igv-generic-dialog-input {\n    margin-top: 8px;\n    width: calc(100% - 16px);\n    height: 24px;\n    color: #373737;\n    line-height: 24px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-around;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-input input {\n      display: block;\n      height: 100%;\n      width: 100%;\n      padding-left: 4px;\n      font-family: \"Open Sans\", sans-serif;\n      font-weight: 400;\n      color: #373737;\n      text-align: left;\n      outline: none;\n      border-style: solid;\n      border-width: thin;\n      border-color: #7F7F7F;\n      background-color: white; }\n    .igv-generic-dialog-container .igv-generic-dialog-input input {\n      font-size: 16px; }\n  .igv-generic-dialog-container .igv-generic-dialog-ok-cancel {\n    width: 100%;\n    height: 28px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-around;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div {\n      margin-top: 32px;\n      color: white;\n      font-family: \"Open Sans\", sans-serif;\n      font-size: 14px;\n      font-weight: 200;\n      width: 75px;\n      height: 28px;\n      line-height: 28px;\n      text-align: center;\n      border-color: transparent;\n      border-style: solid;\n      border-width: thin;\n      border-radius: 2px; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:first-child {\n      margin-left: 32px;\n      margin-right: 0;\n      background-color: #5ea4e0; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:last-child {\n      margin-left: 0;\n      margin-right: 32px;\n      background-color: #c4c4c4; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:first-child:hover {\n      cursor: pointer;\n      background-color: #3b5c7f; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:last-child:hover {\n      cursor: pointer;\n      background-color: #7f7f7f; }\n  .igv-generic-dialog-container .igv-generic-dialog-ok {\n    width: 100%;\n    height: 36px;\n    margin-top: 32px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-around;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok div {\n      width: 98px;\n      height: 36px;\n      line-height: 36px;\n      text-align: center;\n      color: white;\n      font-family: \"Open Sans\", sans-serif;\n      font-size: medium;\n      font-weight: 200;\n      border-color: white;\n      border-style: solid;\n      border-width: thin;\n      border-radius: 4px;\n      background-color: #2B81AF; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok div:hover {\n      cursor: pointer;\n      background-color: #25597f; }\n\n.igv-popover {\n  position: absolute;\n  top: 0;\n  left: 0;\n  min-width: 128px;\n  z-index: 4096;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: small;\n  font-weight: 400;\n  color: #444;\n  background: white;\n  border-radius: 4px;\n  border-color: #7F7F7F;\n  border-style: solid;\n  border-width: thin;\n  display: none; }\n\n.igv-popover-header {\n  position: relative;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 20px;\n  border-top-left-radius: 4px;\n  border-top-right-radius: 4px;\n  border-bottom-color: #7F7F7F;\n  border-bottom-style: solid;\n  border-bottom-width: thin;\n  background-color: #eee; }\n  .igv-popover-header div {\n    position: absolute;\n    top: 3px;\n    right: 3px;\n    height: 100%;\n    width: 16px;\n    text-align: center;\n    line-height: 100%;\n    cursor: pointer;\n    color: #444;\n    font-size: small; }\n  .igv-popover-header div:hover {\n    color: white; }\n\n.igv-popover-track-popup-content {\n  position: relative;\n  top: 0;\n  left: 0;\n  max-height: 384px;\n  overflow-x: hidden;\n  overflow-y: auto; }\n\n.igv-popover-name-value {\n  cursor: default;\n  text-wrap: none;\n  white-space: nowrap;\n  max-width: 384px; }\n\n.igv-popover-name {\n  font-weight: bold;\n  padding-right: 4px;\n  float: left; }\n\n.igv-popover-value {\n  padding-left: 4px;\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  max-width: 256px;\n  display: inline-block; }\n\n.igv-spinner-container {\n  color: #3f3f3f;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  padding-top: 8px;\n  font-size: 24px;\n  z-index: 512; }\n\n.igv-fa-check-hidden {\n  color: rgba(255, 255, 255, 0); }\n\n.validateTips {\n  border: 1px solid transparent;\n  padding: 0.3em; }\n  .validateTips fieldset {\n    border: 0; }\n\n.igv-spacer-10 {\n  height: 10px;\n  width: 100%;\n  font-size: 0;\n  margin: 0;\n  padding: 0;\n  border: 0;\n  display: block; }\n\n/*# sourceMappingURL=igv.css.map */\n\n/*!\n * Font Awesome Free 5.0.8 by @fontawesome - https://fontawesome.com\n * License - https://fontawesome.com/license (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)\n */\nsvg:not(:root).svg-inline--fa5 {\n  overflow: visible;\n  }\n\n.svg-inline--fa5 {\n  display: inline-block;\n  font-size: inherit;\n  height: 1em;\n  overflow: visible;\n  vertical-align: -.125em; }\n  .svg-inline--fa5.fa5-lg {\n    vertical-align: -.225em; }\n  .svg-inline--fa5.fa5-w-1 {\n    width: 0.0625em; }\n  .svg-inline--fa5.fa5-w-2 {\n    width: 0.125em; }\n  .svg-inline--fa5.fa5-w-3 {\n    width: 0.1875em; }\n  .svg-inline--fa5.fa5-w-4 {\n    width: 0.25em; }\n  .svg-inline--fa5.fa5-w-5 {\n    width: 0.3125em; }\n  .svg-inline--fa5.fa5-w-6 {\n    width: 0.375em; }\n  .svg-inline--fa5.fa5-w-7 {\n    width: 0.4375em; }\n  .svg-inline--fa5.fa5-w-8 {\n    width: 0.5em; }\n  .svg-inline--fa5.fa5-w-9 {\n    width: 0.5625em; }\n  .svg-inline--fa5.fa5-w-10 {\n    width: 0.625em; }\n  .svg-inline--fa5.fa5-w-11 {\n    width: 0.6875em; }\n  .svg-inline--fa5.fa5-w-12 {\n    width: 0.75em; }\n  .svg-inline--fa5.fa5-w-13 {\n    width: 0.8125em; }\n  .svg-inline--fa5.fa5-w-14 {\n    width: 0.875em; }\n  .svg-inline--fa5.fa5-w-15 {\n    width: 0.9375em; }\n  .svg-inline--fa5.fa5-w-16 {\n    /* width: 1em; */\n    }\n  .svg-inline--fa5.fa5-w-17 {\n    width: 1.0625em; }\n  .svg-inline--fa5.fa5-w-18 {\n    width: 1.125em; }\n  .svg-inline--fa5.fa5-w-19 {\n    width: 1.1875em; }\n  .svg-inline--fa5.fa5-w-20 {\n    width: 1.25em; }\n  .svg-inline--fa5.fa5-pull-left {\n    margin-right: .3em;\n    width: auto; }\n  .svg-inline--fa5.fa5-pull-right {\n    margin-left: .3em;\n    width: auto; }\n  .svg-inline--fa5.fa5-border {\n    height: 1.5em; }\n  .svg-inline--fa5.fa5-li {\n    width: 2em; }\n  .svg-inline--fa5.fa5-fw {\n    width: 1.25em; }\n\n.fa5-layers svg.svg-inline--fa5 {\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  position: absolute;\n  right: 0;\n  top: 0; }\n\n.fa5-layers {\n  display: inline-block;\n  height: 1em;\n  position: relative;\n  text-align: center;\n  vertical-align: -.125em;\n  width: 1em; }\n  .fa5-layers svg.svg-inline--fa5 {\n    -webkit-transform-origin: center center;\n            transform-origin: center center; }\n\n.fa5-layers-text, .fa5-layers-counter {\n  display: inline-block;\n  position: absolute;\n  text-align: center; }\n\n.fa5-layers-text {\n  left: 50%;\n  top: 50%;\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n  -webkit-transform-origin: center center;\n          transform-origin: center center; }\n\n.fa5-layers-counter {\n  background-color: #ff253a;\n  border-radius: 1em;\n  color: #fff;\n  height: 1.5em;\n  line-height: 1;\n  max-width: 5em;\n  min-width: 1.5em;\n  overflow: hidden;\n  padding: .25em;\n  right: 0;\n  text-overflow: ellipsis;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top right;\n          transform-origin: top right; }\n\n.fa5-layers-bottom-right {\n  bottom: 0;\n  right: 0;\n  top: auto;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: bottom right;\n          transform-origin: bottom right; }\n\n.fa5-layers-bottom-left {\n  bottom: 0;\n  left: 0;\n  right: auto;\n  top: auto;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: bottom left;\n          transform-origin: bottom left; }\n\n.fa5-layers-top-right {\n  right: 0;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top right;\n          transform-origin: top right; }\n\n.fa5-layers-top-left {\n  left: 0;\n  right: auto;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top left;\n          transform-origin: top left; }\n\n.fa5-lg {\n  font-size: 1.33333em;\n  line-height: 0.75em;\n  vertical-align: -.0667em; }\n\n.fa5-xs {\n  font-size: .75em; }\n\n.fa5-sm {\n  font-size: .875em; }\n\n.fa5-1x {\n  font-size: 1em; }\n\n.fa5-2x {\n  font-size: 2em; }\n\n.fa5-3x {\n  font-size: 3em; }\n\n.fa5-4x {\n  font-size: 4em; }\n\n.fa5-5x {\n  font-size: 5em; }\n\n.fa5-6x {\n  font-size: 6em; }\n\n.fa5-7x {\n  font-size: 7em; }\n\n.fa5-8x {\n  font-size: 8em; }\n\n.fa5-9x {\n  font-size: 9em; }\n\n.fa5-10x {\n  font-size: 10em; }\n\n.fa5-fw {\n  text-align: center;\n  width: 1.25em; }\n\n.fa5-ul {\n  list-style-type: none;\n  margin-left: 2.5em;\n  padding-left: 0; }\n  .fa5-ul > li {\n    position: relative; }\n\n.fa5-li {\n  left: -2em;\n  position: absolute;\n  text-align: center;\n  width: 2em;\n  line-height: inherit; }\n\n.fa5-border {\n  border: solid 0.08em #eee;\n  border-radius: .1em;\n  padding: .2em .25em .15em; }\n\n.fa5-pull-left {\n  float: left; }\n\n.fa5-pull-right {\n  float: right; }\n\n.fa5.fa5-pull-left,\n.fas.fa5-pull-left,\n.far.fa5-pull-left,\n.fal.fa5-pull-left,\n.fab.fa5-pull-left {\n  margin-right: .3em; }\n\n.fa5.fa5-pull-right,\n.fas.fa5-pull-right,\n.far.fa5-pull-right,\n.fal.fa5-pull-right,\n.fab.fa5-pull-right {\n  margin-left: .3em; }\n\n.fa5-spin {\n  -webkit-animation: fa5-spin 2s infinite linear;\n          animation: fa5-spin 2s infinite linear; }\n\n.fa5-pulse {\n  -webkit-animation: fa5-spin 1s infinite steps(8);\n          animation: fa5-spin 1s infinite steps(8); }\n\n@-webkit-keyframes fa5-spin {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg); }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg); } }\n\n@keyframes fa5-spin {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg); }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg); } }\n\n.fa5-rotate-90 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=1)\";\n  -webkit-transform: rotate(90deg);\n          transform: rotate(90deg); }\n\n.fa5-rotate-180 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2)\";\n  -webkit-transform: rotate(180deg);\n          transform: rotate(180deg); }\n\n.fa5-rotate-270 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=3)\";\n  -webkit-transform: rotate(270deg);\n          transform: rotate(270deg); }\n\n.fa5-flip-horizontal {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)\";\n  -webkit-transform: scale(-1, 1);\n          transform: scale(-1, 1); }\n\n.fa5-flip-vertical {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)\";\n  -webkit-transform: scale(1, -1);\n          transform: scale(1, -1); }\n\n.fa5-flip-horizontal.fa5-flip-vertical {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)\";\n  -webkit-transform: scale(-1, -1);\n          transform: scale(-1, -1); }\n\n:root .fa5-rotate-90,\n:root .fa5-rotate-180,\n:root .fa5-rotate-270,\n:root .fa5-flip-horizontal,\n:root .fa5-flip-vertical {\n  -webkit-filter: none;\n          filter: none; }\n\n.fa5-stack {\n  display: inline-block;\n  height: 2em;\n  position: relative;\n  width: 2em; }\n\n.fa5-stack-1x,\n.fa5-stack-2x {\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  position: absolute;\n  right: 0;\n  top: 0; }\n\n.svg-inline--fa5.fa5-stack-1x {\n  height: 1em;\n  width: 1em; }\n\n.svg-inline--fa5.fa5-stack-2x {\n  height: 2em;\n  width: 2em; }\n\n.fa5-inverse {\n  color: #fff; }\n\n.sr-only {\n  border: 0;\n  clip: rect(0, 0, 0, 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px; }\n\n.sr-only-focusable:active, .sr-only-focusable:focus {\n  clip: auto;\n  height: auto;\n  margin: 0;\n  overflow: visible;\n  position: static;\n  width: auto; }\n';
+    var css =  '.igv-color-swatch {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  width: 32px;\n  height: 32px;\n  border-style: solid;\n  border-width: 2px;\n  border-color: white;\n  border-radius: 4px;\n  margin: 1px; }\n\n.igv-colorpicker-menu-close-button {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: flex-end;\n  align-items: center;\n  width: 100%;\n  height: 32px;\n  margin-top: 4px;\n  margin-bottom: 4px;\n  padding-right: 8px; }\n  .igv-colorpicker-menu-close-button i.fa {\n    display: block;\n    margin-left: 4px;\n    margin-right: 4px;\n    color: #5f5f5f; }\n  .igv-colorpicker-menu-close-button i.fa:hover,\n  .igv-colorpicker-menu-close-button i.fa:focus,\n  .igv-colorpicker-menu-close-button i.fa:active {\n    cursor: pointer;\n    color: #0f0f0f; }\n\n.igv-generic-container {\n  position: absolute;\n  top: 0;\n  left: 0;\n  border-style: solid;\n  border-width: thin;\n  border-color: #dddddd;\n  z-index: 2048;\n  background-color: white;\n  cursor: pointer;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: flex-start;\n  align-items: center; }\n  .igv-generic-container div:first-child {\n    padding-right: 8px;\n    cursor: move;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-end;\n    align-items: center;\n    height: 24px;\n    width: 100%;\n    background-color: #dddddd; }\n    .igv-generic-container div:first-child i.fa {\n      cursor: pointer;\n      margin-right: 4px;\n      display: block;\n      color: #5f5f5f; }\n    .igv-generic-container div:first-child i.fa:hover,\n    .igv-generic-container div:first-child i.fa:focus,\n    .igv-generic-container div:first-child i.fa:active {\n      cursor: pointer;\n      color: #0f0f0f; }\n\n.igvControlDiv {\n  position: relative; }\n\n.igv-content-header {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: flex-start;\n  align-items: center;\n  margin-top: 10px;\n  height: 16px;\n  width: 100%; }\n  .igv-content-header .igv-ideogram-shim {\n    height: 100%;\n    width: 50px;\n    background-color: white; }\n  .igv-content-header .igv-ideogram-content {\n    height: 100%;\n    background-color: white; }\n  .igv-content-header .igv-ideogram-content-border-right {\n    border-right-color: #292929;\n    border-right-style: solid;\n    border-right-width: 1px; }\n\n.igv-multi-locus-panel-border {\n  position: absolute;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 1px;\n  background-color: green;\n  border-right-color: #ff0000;\n  border-right-style: solid;\n  border-right-width: 1px; }\n\n.igv-navbar {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: space-between;\n  align-items: center;\n  color: #444;\n  font-size: 12px;\n  font-family: \"Open Sans\", sans-serif;\n  font-weight: 400;\n  line-height: 32px;\n  margin-top: 2px;\n  margin-bottom: 4px;\n  position: relative;\n  top: 0;\n  left: 0;\n  height: 32px;\n  width: 100%;\n  border-style: solid;\n  border-radius: 3px;\n  border-width: thin;\n  border-color: #bfbfbf;\n  background-color: #f3f3f3; }\n  .igv-navbar .igv-nav-bar-left-container {\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-between;\n    align-items: center;\n    height: 32px; }\n    .igv-navbar .igv-nav-bar-left-container .igv-logo {\n      width: 34px;\n      height: 32px;\n      margin-left: 8px;\n      margin-right: 32px; }\n    .igv-navbar .igv-nav-bar-left-container .igv-current_genome {\n      height: 32px;\n      margin-right: 16px;\n      user-select: none;\n      text-align: center; }\n    .igv-navbar .igv-nav-bar-left-container .igv-genomic-location {\n      display: flex;\n      flex-flow: row;\n      flex-wrap: nowrap;\n      justify-content: space-between;\n      align-items: center;\n      height: 100%; }\n      .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-chromosome-select-widget-container {\n        height: 100%;\n        width: 100px;\n        margin-right: 4px;\n        display: flex;\n        flex-flow: column;\n        flex-wrap: nowrap;\n        justify-content: space-around;\n        align-items: center; }\n        .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-chromosome-select-widget-container select {\n          display: block;\n          cursor: pointer;\n          width: 100%;\n          height: 75%;\n          outline: none;\n          font-size: 12px;\n          font-family: \"Open Sans\", sans-serif;\n          font-weight: 400; }\n      .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group {\n        display: flex;\n        flex-flow: row;\n        flex-wrap: nowrap;\n        justify-content: space-between;\n        align-items: center;\n        margin-left: 8px;\n        height: 100%; }\n        .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group .igv-search-container {\n          width: 260px;\n          height: 100%;\n          display: flex;\n          flex-flow: row;\n          flex-wrap: nowrap;\n          justify-content: flex-start;\n          align-items: center; }\n          .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group .igv-search-container input {\n            cursor: text;\n            width: 85%;\n            height: 75%;\n            padding-left: 8px;\n            margin-right: 8px;\n            text-align: left;\n            outline: none;\n            font-size: 12px;\n            font-family: \"Open Sans\", sans-serif;\n            font-weight: 400;\n            border-style: solid;\n            border-radius: 3px;\n            border-width: thin;\n            border-color: #bfbfbf;\n            background-color: white; }\n          .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group .igv-search-container div {\n            height: 100%; }\n        .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group .igv-windowsizepanel-content-div {\n          margin-left: 4px;\n          user-select: none; }\n  .igv-navbar .igv-nav-bar-right-container {\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-between;\n    align-items: center;\n    height: 100%; }\n    .igv-navbar .igv-nav-bar-right-container .igv-nav-bar-toggle-button-container {\n      display: flex;\n      flex-flow: row;\n      flex-wrap: nowrap;\n      justify-content: space-between;\n      align-items: center;\n      height: 100%;\n      margin-right: 8px; }\n      .igv-navbar .igv-nav-bar-right-container .igv-nav-bar-toggle-button-container div {\n        margin-left: 0;\n        margin-right: 4px; }\n      .igv-navbar .igv-nav-bar-right-container .igv-nav-bar-toggle-button-container div:last-child {\n        margin-left: 0;\n        margin-right: 0; }\n    .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget {\n      height: 100%;\n      color: #737373;\n      font-size: 18px;\n      user-select: none;\n      margin-left: 16px;\n      margin-right: 8px;\n      margin-top: 12px;\n      display: flex;\n      flex-flow: row;\n      flex-wrap: nowrap;\n      justify-content: space-between;\n      align-items: center; }\n      .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget div {\n        height: 100%;\n        cursor: pointer; }\n      .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget div:first-child {\n        margin-right: 4px; }\n      .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget div:last-child {\n        margin-left: 4px; }\n      .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget input {\n        display: block; }\n      .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget svg {\n        display: block; }\n\n.igv-nav-bar-button {\n  height: 18px;\n  min-width: 96px;\n  text-transform: capitalize;\n  user-select: none;\n  line-height: 18px;\n  text-align: center;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 11px;\n  font-weight: 200;\n  color: #737373;\n  background-color: #f3f3f3;\n  border-color: #737373;\n  border-style: solid;\n  border-width: thin;\n  border-radius: 10px; }\n\n.igv-nav-bar-button-clicked {\n  color: white;\n  background-color: #737373; }\n\n.igv-nav-bar-button:hover {\n  cursor: pointer; }\n\n.igv-logo-nonav {\n  margin-left: 4px;\n  margin-top: 12px;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 34px;\n  height: 16px; }\n\n.igv-search-results {\n  position: absolute;\n  top: 32px;\n  left: 2px;\n  height: 320px;\n  width: 213px;\n  background-color: white;\n  border-color: #7F7F7F;\n  border-style: solid;\n  border-width: thin;\n  overflow-x: hidden;\n  overflow-y: auto;\n  z-index: 9999; }\n  .igv-search-results tr {\n    font-family: \"Open Sans\", sans-serif;\n    font-size: small;\n    font-weight: 400;\n    color: #444; }\n  .igv-search-results tr:hover,\n  .igv-search-results tr:focus,\n  .igv-search-results tr:active {\n    cursor: pointer;\n    font-weight: 700;\n    color: #141414; }\n\n.igv-root-div {\n  position: relative;\n  left: 0;\n  right: 0;\n  height: auto;\n  margin-left: 10px;\n  margin-right: 10px;\n  padding-top: 4px; }\n\n.igv-content-div {\n  position: relative;\n  width: 100%;\n  height: 100%; }\n\n.igv-track-container-div {\n  user-select: none;\n  position: relative;\n  clear: both; }\n\n.igv-track-div {\n  position: relative;\n  width: 100%;\n  margin-top: 2px;\n  margin-bottom: 2px; }\n\n.igv-viewport-container {\n  position: absolute;\n  left: 50px;\n  right: 50px;\n  height: 100%;\n  white-space: nowrap;\n  overflow-x: hidden;\n  overflow-y: hidden; }\n\n.igv-viewport-div {\n  position: relative;\n  display: inline-block;\n  height: 100%;\n  overflow-x: hidden;\n  overflow-y: hidden; }\n\n.igv-viewport-content-div {\n  position: absolute;\n  width: 100%; }\n\n.igv-viewport-message {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  color: rgba(0, 0, 0, 0.15);\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 25px;\n  font-weight: bold;\n  user-select: none; }\n\n.igv-whole-genome-container {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: space-between;\n  width: 100%;\n  height: 100%;\n  background-color: white; }\n  .igv-whole-genome-container div {\n    font-family: \"Open Sans\", sans-serif;\n    font-size: 10px;\n    font-weight: 400;\n    color: #444;\n    height: 100%;\n    text-align: center;\n    border-right-color: #bfbfbf;\n    border-right-style: solid;\n    border-right-width: thin; }\n    .igv-whole-genome-container div span {\n      display: block;\n      padding-top: 6px;\n      text-overflow: ellipsis; }\n  .igv-whole-genome-container div:last-child {\n    border-right-color: transparent; }\n  .igv-whole-genome-container div:hover,\n  .igv-whole-genome-container div:focus,\n  .igv-whole-genome-container div:active {\n    cursor: pointer;\n    background-color: #efefef; }\n\n.igv-viewport-div-border-right {\n  border-right-color: #292929;\n  border-right-style: solid;\n  border-right-width: 1px; }\n\n.igv-viewport-fa-close {\n  position: absolute;\n  top: 4px;\n  right: 4px;\n  font-size: 16px;\n  color: #666666;\n  z-index: 1000; }\n\n.igv-viewport-fa-close:hover {\n  cursor: pointer;\n  color: #434343; }\n\n.igv-viewport-content-ruler-div {\n  position: absolute;\n  left: 50%;\n  top: 25%;\n  transform: translate(-50%, -25%);\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 12px;\n  font-weight: 200;\n  text-align: center;\n  min-width: 16px;\n  z-index: 64;\n  color: #0066ff;\n  background-color: white;\n  padding: 1px; }\n\n.igv-viewport-content-ruler-div:hover,\n.igv-viewport-content-ruler-div:focus,\n.igv-viewport-content-ruler-div:active {\n  cursor: pointer;\n  color: white;\n  background-color: #0066ff; }\n\n.igv-viewport-ruler {\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 10px;\n  font-weight: 200;\n  text-align: center; }\n  .igv-viewport-ruler > div {\n    height: 100%; }\n\n.igv-viewport-sequence {\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 8px;\n  font-weight: 200;\n  text-align: center; }\n\n.igv-viewport-spinner {\n  pointer-events: none;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  z-index: 1024;\n  color: #737373; }\n\n.igv-ruler-sweeper-div {\n  display: none;\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 0;\n  height: 100%;\n  z-index: 99999;\n  background-color: rgba(68, 134, 247, 0.25); }\n\n.igv-right-hand-gutter {\n  position: absolute;\n  right: 0;\n  width: 36px;\n  height: 100%;\n  background: white;\n  text-align: center; }\n  .igv-right-hand-gutter i {\n    position: absolute;\n    top: 0;\n    right: 0;\n    padding-right: 6px;\n    font-size: 20px;\n    cursor: pointer;\n    color: grey; }\n  .igv-right-hand-gutter i:hover,\n  .igv-right-hand-gutter i:focus,\n  .igv-right-hand-gutter i:active {\n    color: #333333; }\n\n.igv-left-hand-gutter {\n  position: absolute;\n  left: 0;\n  width: 50px;\n  height: 100%; }\n  .igv-left-hand-gutter canvas {\n    position: absolute; }\n\n.igv-track-menu-container {\n  background-color: white;\n  border-bottom-left-radius: 4px;\n  border-bottom-right-radius: 4px; }\n  .igv-track-menu-container div {\n    padding-left: 4px;\n    padding-right: 4px;\n    padding-top: 2px;\n    padding-bottom: 2px;\n    background-color: white; }\n    .igv-track-menu-container div i {\n      padding-right: 2px; }\n  .igv-track-menu-container div:hover,\n  .igv-track-menu-container div:focus,\n  .igv-track-menu-container div:active {\n    cursor: pointer;\n    background-color: #efefef; }\n  .igv-track-menu-container a {\n    color: inherit;\n    text-decoration: none; }\n\n.igv-track-menu-border-top {\n  border-top-color: #a2a2a2;\n  border-top-style: solid;\n  border-top-width: thin; }\n\n.igv-track-menu-category {\n  padding-left: 4px;\n  font-weight: 400; }\n\n.igv-track-drag-scrim {\n  position: absolute;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  z-index: 256;\n  background-color: rgba(68, 134, 247, 0.25); }\n\n.igv-track-manipulation-handle {\n  cursor: pointer;\n  position: absolute;\n  right: 36px;\n  width: 12px;\n  margin-left: 2px;\n  height: 100%;\n  box-sizing: border-box;\n  font-size: medium;\n  border-color: #c4c4c4;\n  border-style: solid;\n  border-width: thin;\n  border-top-right-radius: 6px;\n  border-bottom-right-radius: 6px;\n  z-index: 512;\n  background-color: #c4c4c4; }\n\n.igv-track-manipulation-handle:hover,\n.igv-track-manipulation-handle:focus,\n.igv-track-manipulation-handle:active {\n  border-color: #7e7e7e;\n  background-color: #7e7e7e; }\n\n.igv-track-label {\n  position: absolute;\n  left: 8px;\n  top: 4px;\n  width: auto;\n  height: auto;\n  max-width: 200px;\n  padding-left: 4px;\n  padding-right: 4px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: small;\n  font-weight: 400;\n  text-align: center;\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  border-color: #444;\n  border-radius: 2px;\n  border-style: solid;\n  border-width: thin;\n  background-color: white;\n  z-index: 128;\n  cursor: pointer; }\n\n.igv-track-label:hover,\n.igv-track-label:focus,\n.igv-track-label:active {\n  background-color: rgba(0, 0, 0, 0.05); }\n\n.igv-scrollbar-outer-div {\n  position: absolute;\n  top: 0;\n  right: 0;\n  width: 14px;\n  height: 100%;\n  background-color: white; }\n  .igv-scrollbar-outer-div div {\n    position: absolute;\n    top: 0;\n    left: 3px;\n    width: 8px;\n    border-style: solid;\n    border-width: thin;\n    border-color: #c4c4c4;\n    border-top-left-radius: 4px;\n    border-top-right-radius: 4px;\n    border-bottom-left-radius: 4px;\n    border-bottom-right-radius: 4px;\n    background-color: white; }\n  .igv-scrollbar-outer-div div:hover,\n  .igv-scrollbar-outer-div div:focus,\n  .igv-scrollbar-outer-div div:active {\n    cursor: pointer;\n    background-color: #c4c4c4; }\n\n.zoom-in-notice-container {\n  position: absolute;\n  top: 10px;\n  left: 50%; }\n  .zoom-in-notice-container div {\n    position: relative;\n    left: -50%;\n    font-family: \"Open Sans\", sans-serif;\n    font-size: medium;\n    font-weight: 400;\n    color: #3f3f3f;\n    background-color: rgba(255, 255, 255, 0.51);\n    z-index: 64; }\n\n.igv-center-guide {\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 50%;\n  width: 8px;\n  z-index: 8;\n  display: none;\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  border-left-style: dashed;\n  border-left-width: thin;\n  border-right-style: dashed;\n  border-right-width: thin; }\n\n.igv-center-guide-wide {\n  background-color: transparent;\n  border-left-color: rgba(127, 127, 127, 0.51);\n  border-right-color: rgba(127, 127, 127, 0.51); }\n\n.igv-center-guide-thin {\n  left: 50%;\n  width: 1px;\n  background-color: transparent;\n  border-left-color: rgba(127, 127, 127, 0.51);\n  border-right-color: transparent;\n  /*background-color: rgba(127, 127, 127, 0.51);*/\n  /*border-left-color: rgba(0,0,0,0);*/\n  /*border-right-color: rgba(0,0,0,0);*/ }\n\n.igv-cursor-tracking-guide {\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 50%;\n  width: 1px;\n  z-index: 1;\n  border-left-style: dotted;\n  border-left-width: thin;\n  border-left-color: rgba(127, 127, 127, 0.76);\n  display: none;\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none; }\n\n.igv-clickable {\n  cursor: pointer;\n  background-color: white; }\n\n#color-by-tag {\n  color: #444; }\n\n#color-by-tag:hover,\n#color-by-tag:focus,\n#color-by-tag:active {\n  cursor: pointer;\n  padding-left: 2px;\n  padding-right: 2px;\n  color: white;\n  border-color: #444;\n  border-radius: 2px;\n  border-style: solid;\n  border-width: thin;\n  background-color: #7f7f7f; }\n\n.igv-user-feedback {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  width: 36em;\n  height: 27em;\n  margin-top: -9em;\n  /*set to a negative number 1/2 of your height*/\n  margin-left: -15em;\n  /*set to a negative number 1/2 of your width*/\n  background-color: white;\n  border-color: #a2a2a2;\n  border-style: solid;\n  border-width: thin;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: medium;\n  font-weight: 400;\n  color: #444; }\n  .igv-user-feedback div:first-child {\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    width: 100%;\n    height: 32px;\n    border-bottom-color: #a2a2a2;\n    border-bottom-style: solid;\n    border-bottom-width: thin;\n    background-color: white; }\n    .igv-user-feedback div:first-child i {\n      font-size: 20px; }\n    .igv-user-feedback div:first-child i:first-child {\n      position: absolute;\n      top: 0;\n      left: 0;\n      padding: 8px;\n      color: red; }\n    .igv-user-feedback div:first-child i:last-child {\n      position: absolute;\n      top: 0;\n      right: 0;\n      padding: 8px;\n      cursor: pointer;\n      color: grey; }\n    .igv-user-feedback div:first-child i:last-child:hover,\n    .igv-user-feedback div:first-child i:last-child:focus,\n    .igv-user-feedback div:first-child i:last-child:active {\n      color: #333333; }\n  .igv-user-feedback div:last-child {\n    padding-left: 48px;\n    padding-top: 8px;\n    padding-right: 48px;\n    padding-bottom: 8px;\n    position: absolute;\n    top: 33px;\n    left: 0;\n    right: 0;\n    bottom: 0;\n    background-color: white; }\n\n.igv-ellipsis {\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis; }\n\n.igv-generic-dialog-container {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 300px;\n  height: 200px;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: medium;\n  font-weight: 200;\n  border-color: #7F7F7F;\n  border-radius: 4px;\n  border-style: solid;\n  border-width: thin;\n  z-index: 2048;\n  background-color: white;\n  display: flex;\n  flex-flow: column;\n  flex-wrap: nowrap;\n  justify-content: flex-start;\n  align-items: center; }\n  .igv-generic-dialog-container .igv-generic-dialog-header {\n    width: 100%;\n    height: 24px;\n    cursor: move;\n    border-color: #c4c4c4;\n    border-top-left-radius: 4px;\n    border-top-right-radius: 4px;\n    border-style: solid;\n    border-width: thin;\n    background-color: #c4c4c4;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-end;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-header div {\n      height: 24px;\n      width: 16px;\n      margin-right: 6px;\n      text-align: center;\n      line-height: 24px;\n      color: #444;\n      font-size: medium; }\n    .igv-generic-dialog-container .igv-generic-dialog-header div:hover {\n      cursor: pointer; }\n  .igv-generic-dialog-container .igv-generic-dialog-one-liner {\n    margin-top: 8px;\n    width: 95%;\n    color: #373737;\n    line-height: 24px;\n    text-align: left;\n    padding-left: 8px;\n    background-color: white; }\n  .igv-generic-dialog-container .igv-generic-dialog-label-input {\n    margin-top: 8px;\n    width: 95%;\n    height: 24px;\n    color: #373737;\n    line-height: 24px;\n    padding-left: 8px;\n    background-color: white;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-start;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-label-input div {\n      width: 30%;\n      height: 100%;\n      font-size: 16px;\n      text-align: right;\n      padding-right: 8px;\n      background-color: white; }\n    .igv-generic-dialog-container .igv-generic-dialog-label-input input {\n      display: block;\n      height: 100%;\n      width: 100%;\n      padding-left: 4px;\n      font-family: \"Open Sans\", sans-serif;\n      font-weight: 400;\n      color: #373737;\n      text-align: left;\n      outline: none;\n      border-style: solid;\n      border-width: thin;\n      border-color: #7F7F7F;\n      background-color: white; }\n    .igv-generic-dialog-container .igv-generic-dialog-label-input input {\n      width: 50%;\n      font-size: 16px; }\n  .igv-generic-dialog-container .igv-generic-dialog-input {\n    margin-top: 8px;\n    width: calc(100% - 16px);\n    height: 24px;\n    color: #373737;\n    line-height: 24px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-around;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-input input {\n      display: block;\n      height: 100%;\n      width: 100%;\n      padding-left: 4px;\n      font-family: \"Open Sans\", sans-serif;\n      font-weight: 400;\n      color: #373737;\n      text-align: left;\n      outline: none;\n      border-style: solid;\n      border-width: thin;\n      border-color: #7F7F7F;\n      background-color: white; }\n    .igv-generic-dialog-container .igv-generic-dialog-input input {\n      font-size: 16px; }\n  .igv-generic-dialog-container .igv-generic-dialog-ok-cancel {\n    width: 100%;\n    height: 28px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-around;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div {\n      margin-top: 32px;\n      color: white;\n      font-family: \"Open Sans\", sans-serif;\n      font-size: 14px;\n      font-weight: 200;\n      width: 75px;\n      height: 28px;\n      line-height: 28px;\n      text-align: center;\n      border-color: transparent;\n      border-style: solid;\n      border-width: thin;\n      border-radius: 2px; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:first-child {\n      margin-left: 32px;\n      margin-right: 0;\n      background-color: #5ea4e0; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:last-child {\n      margin-left: 0;\n      margin-right: 32px;\n      background-color: #c4c4c4; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:first-child:hover {\n      cursor: pointer;\n      background-color: #3b5c7f; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:last-child:hover {\n      cursor: pointer;\n      background-color: #7f7f7f; }\n  .igv-generic-dialog-container .igv-generic-dialog-ok {\n    width: 100%;\n    height: 36px;\n    margin-top: 32px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-around;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok div {\n      width: 98px;\n      height: 36px;\n      line-height: 36px;\n      text-align: center;\n      color: white;\n      font-family: \"Open Sans\", sans-serif;\n      font-size: medium;\n      font-weight: 200;\n      border-color: white;\n      border-style: solid;\n      border-width: thin;\n      border-radius: 4px;\n      background-color: #2B81AF; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok div:hover {\n      cursor: pointer;\n      background-color: #25597f; }\n\n.igv-popover {\n  position: absolute;\n  top: 0;\n  left: 0;\n  min-width: 128px;\n  z-index: 4096;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: small;\n  font-weight: 400;\n  color: #444;\n  background: white;\n  border-radius: 4px;\n  border-color: #7F7F7F;\n  border-style: solid;\n  border-width: thin;\n  display: none; }\n\n.igv-popover-header {\n  position: relative;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 20px;\n  border-top-left-radius: 4px;\n  border-top-right-radius: 4px;\n  border-bottom-color: #7F7F7F;\n  border-bottom-style: solid;\n  border-bottom-width: thin;\n  background-color: #eee; }\n  .igv-popover-header div {\n    position: absolute;\n    top: 3px;\n    right: 3px;\n    height: 100%;\n    width: 16px;\n    text-align: center;\n    line-height: 100%;\n    cursor: pointer;\n    color: #444;\n    font-size: small; }\n  .igv-popover-header div:hover {\n    color: white; }\n\n.igv-popover-track-popup-content {\n  position: relative;\n  top: 0;\n  left: 0;\n  max-height: 384px;\n  overflow-x: hidden;\n  overflow-y: auto; }\n\n.igv-popover-name-value {\n  cursor: default;\n  text-wrap: none;\n  white-space: nowrap;\n  max-width: 384px; }\n\n.igv-popover-name {\n  font-weight: bold;\n  padding-right: 4px;\n  float: left; }\n\n.igv-popover-value {\n  padding-left: 4px;\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  max-width: 256px;\n  display: inline-block; }\n\n.igv-spinner-container {\n  color: #3f3f3f;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  padding-top: 8px;\n  font-size: 24px;\n  z-index: 512; }\n\n.igv-fa-check-hidden {\n  color: rgba(255, 255, 255, 0); }\n\n.validateTips {\n  border: 1px solid transparent;\n  padding: 0.3em; }\n  .validateTips fieldset {\n    border: 0; }\n\n.igv-spacer-10 {\n  height: 10px;\n  width: 100%;\n  font-size: 0;\n  margin: 0;\n  padding: 0;\n  border: 0;\n  display: block; }\n\n@media (max-width: 1100px) {\n  .igv-navbar {\n    font-size: 10px; }\n    .igv-navbar .igv-nav-bar-left-container .igv-logo {\n      margin-right: 10px; }\n    .igv-navbar .igv-nav-bar-left-container .igv-current_genome {\n      margin-right: 10px; }\n    .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-chromosome-select-widget-container {\n      width: 84px; }\n      .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-chromosome-select-widget-container select {\n        font-size: 10px; }\n    .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group .igv-search-container {\n      width: 150px; }\n      .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group .igv-search-container input {\n        font-size: 10px; }\n    .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget input {\n      width: 72px; }\n\n  .igv-nav-bar-button {\n    min-width: 64px;\n    font-size: 10px; } }\n@media (max-width: 800px) {\n  .igv-navbar .igv-nav-bar-right-container .igv-nav-bar-toggle-button-container {\n    display: none; }\n  .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget {\n    margin-top: 6px;\n    font-size: 24px; }\n    .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget input {\n      display: none; } }\n\n/*# sourceMappingURL=igv.css.map */\n\n/*!\n * Font Awesome Free 5.0.8 by @fontawesome - https://fontawesome.com\n * License - https://fontawesome.com/license (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)\n */\nsvg:not(:root).svg-inline--fa5 {\n  overflow: visible;\n  }\n\n.svg-inline--fa5 {\n  display: inline-block;\n  font-size: inherit;\n  height: 1em;\n  overflow: visible;\n  vertical-align: -.125em; }\n  .svg-inline--fa5.fa5-lg {\n    vertical-align: -.225em; }\n  .svg-inline--fa5.fa5-w-1 {\n    width: 0.0625em; }\n  .svg-inline--fa5.fa5-w-2 {\n    width: 0.125em; }\n  .svg-inline--fa5.fa5-w-3 {\n    width: 0.1875em; }\n  .svg-inline--fa5.fa5-w-4 {\n    width: 0.25em; }\n  .svg-inline--fa5.fa5-w-5 {\n    width: 0.3125em; }\n  .svg-inline--fa5.fa5-w-6 {\n    width: 0.375em; }\n  .svg-inline--fa5.fa5-w-7 {\n    width: 0.4375em; }\n  .svg-inline--fa5.fa5-w-8 {\n    width: 0.5em; }\n  .svg-inline--fa5.fa5-w-9 {\n    width: 0.5625em; }\n  .svg-inline--fa5.fa5-w-10 {\n    width: 0.625em; }\n  .svg-inline--fa5.fa5-w-11 {\n    width: 0.6875em; }\n  .svg-inline--fa5.fa5-w-12 {\n    width: 0.75em; }\n  .svg-inline--fa5.fa5-w-13 {\n    width: 0.8125em; }\n  .svg-inline--fa5.fa5-w-14 {\n    width: 0.875em; }\n  .svg-inline--fa5.fa5-w-15 {\n    width: 0.9375em; }\n  .svg-inline--fa5.fa5-w-16 {\n    /* width: 1em; */\n    }\n  .svg-inline--fa5.fa5-w-17 {\n    width: 1.0625em; }\n  .svg-inline--fa5.fa5-w-18 {\n    width: 1.125em; }\n  .svg-inline--fa5.fa5-w-19 {\n    width: 1.1875em; }\n  .svg-inline--fa5.fa5-w-20 {\n    width: 1.25em; }\n  .svg-inline--fa5.fa5-pull-left {\n    margin-right: .3em;\n    width: auto; }\n  .svg-inline--fa5.fa5-pull-right {\n    margin-left: .3em;\n    width: auto; }\n  .svg-inline--fa5.fa5-border {\n    height: 1.5em; }\n  .svg-inline--fa5.fa5-li {\n    width: 2em; }\n  .svg-inline--fa5.fa5-fw {\n    width: 1.25em; }\n\n.fa5-layers svg.svg-inline--fa5 {\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  position: absolute;\n  right: 0;\n  top: 0; }\n\n.fa5-layers {\n  display: inline-block;\n  height: 1em;\n  position: relative;\n  text-align: center;\n  vertical-align: -.125em;\n  width: 1em; }\n  .fa5-layers svg.svg-inline--fa5 {\n    -webkit-transform-origin: center center;\n            transform-origin: center center; }\n\n.fa5-layers-text, .fa5-layers-counter {\n  display: inline-block;\n  position: absolute;\n  text-align: center; }\n\n.fa5-layers-text {\n  left: 50%;\n  top: 50%;\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n  -webkit-transform-origin: center center;\n          transform-origin: center center; }\n\n.fa5-layers-counter {\n  background-color: #ff253a;\n  border-radius: 1em;\n  color: #fff;\n  height: 1.5em;\n  line-height: 1;\n  max-width: 5em;\n  min-width: 1.5em;\n  overflow: hidden;\n  padding: .25em;\n  right: 0;\n  text-overflow: ellipsis;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top right;\n          transform-origin: top right; }\n\n.fa5-layers-bottom-right {\n  bottom: 0;\n  right: 0;\n  top: auto;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: bottom right;\n          transform-origin: bottom right; }\n\n.fa5-layers-bottom-left {\n  bottom: 0;\n  left: 0;\n  right: auto;\n  top: auto;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: bottom left;\n          transform-origin: bottom left; }\n\n.fa5-layers-top-right {\n  right: 0;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top right;\n          transform-origin: top right; }\n\n.fa5-layers-top-left {\n  left: 0;\n  right: auto;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top left;\n          transform-origin: top left; }\n\n.fa5-lg {\n  font-size: 1.33333em;\n  line-height: 0.75em;\n  vertical-align: -.0667em; }\n\n.fa5-xs {\n  font-size: .75em; }\n\n.fa5-sm {\n  font-size: .875em; }\n\n.fa5-1x {\n  font-size: 1em; }\n\n.fa5-2x {\n  font-size: 2em; }\n\n.fa5-3x {\n  font-size: 3em; }\n\n.fa5-4x {\n  font-size: 4em; }\n\n.fa5-5x {\n  font-size: 5em; }\n\n.fa5-6x {\n  font-size: 6em; }\n\n.fa5-7x {\n  font-size: 7em; }\n\n.fa5-8x {\n  font-size: 8em; }\n\n.fa5-9x {\n  font-size: 9em; }\n\n.fa5-10x {\n  font-size: 10em; }\n\n.fa5-fw {\n  text-align: center;\n  width: 1.25em; }\n\n.fa5-ul {\n  list-style-type: none;\n  margin-left: 2.5em;\n  padding-left: 0; }\n  .fa5-ul > li {\n    position: relative; }\n\n.fa5-li {\n  left: -2em;\n  position: absolute;\n  text-align: center;\n  width: 2em;\n  line-height: inherit; }\n\n.fa5-border {\n  border: solid 0.08em #eee;\n  border-radius: .1em;\n  padding: .2em .25em .15em; }\n\n.fa5-pull-left {\n  float: left; }\n\n.fa5-pull-right {\n  float: right; }\n\n.fa5.fa5-pull-left,\n.fas.fa5-pull-left,\n.far.fa5-pull-left,\n.fal.fa5-pull-left,\n.fab.fa5-pull-left {\n  margin-right: .3em; }\n\n.fa5.fa5-pull-right,\n.fas.fa5-pull-right,\n.far.fa5-pull-right,\n.fal.fa5-pull-right,\n.fab.fa5-pull-right {\n  margin-left: .3em; }\n\n.fa5-spin {\n  -webkit-animation: fa5-spin 2s infinite linear;\n          animation: fa5-spin 2s infinite linear; }\n\n.fa5-pulse {\n  -webkit-animation: fa5-spin 1s infinite steps(8);\n          animation: fa5-spin 1s infinite steps(8); }\n\n@-webkit-keyframes fa5-spin {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg); }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg); } }\n\n@keyframes fa5-spin {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg); }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg); } }\n\n.fa5-rotate-90 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=1)\";\n  -webkit-transform: rotate(90deg);\n          transform: rotate(90deg); }\n\n.fa5-rotate-180 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2)\";\n  -webkit-transform: rotate(180deg);\n          transform: rotate(180deg); }\n\n.fa5-rotate-270 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=3)\";\n  -webkit-transform: rotate(270deg);\n          transform: rotate(270deg); }\n\n.fa5-flip-horizontal {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)\";\n  -webkit-transform: scale(-1, 1);\n          transform: scale(-1, 1); }\n\n.fa5-flip-vertical {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)\";\n  -webkit-transform: scale(1, -1);\n          transform: scale(1, -1); }\n\n.fa5-flip-horizontal.fa5-flip-vertical {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)\";\n  -webkit-transform: scale(-1, -1);\n          transform: scale(-1, -1); }\n\n:root .fa5-rotate-90,\n:root .fa5-rotate-180,\n:root .fa5-rotate-270,\n:root .fa5-flip-horizontal,\n:root .fa5-flip-vertical {\n  -webkit-filter: none;\n          filter: none; }\n\n.fa5-stack {\n  display: inline-block;\n  height: 2em;\n  position: relative;\n  width: 2em; }\n\n.fa5-stack-1x,\n.fa5-stack-2x {\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  position: absolute;\n  right: 0;\n  top: 0; }\n\n.svg-inline--fa5.fa5-stack-1x {\n  height: 1em;\n  width: 1em; }\n\n.svg-inline--fa5.fa5-stack-2x {\n  height: 2em;\n  width: 2em; }\n\n.fa5-inverse {\n  color: #fff; }\n\n.sr-only {\n  border: 0;\n  clip: rect(0, 0, 0, 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px; }\n\n.sr-only-focusable:active, .sr-only-focusable:focus {\n  clip: auto;\n  height: auto;\n  margin: 0;\n  overflow: visible;\n  position: static;\n  width: auto; }\n';
     
     var style = document.createElement('style');
     style.setAttribute('type', 'text/css');
@@ -18396,1241 +18396,6 @@ Digest.prototype.check_continuous = function () {
     return false;
 };
 
-/*!!
- *  Canvas 2 Svg v1.0.19
- *  A low level canvas to SVG converter. Uses a mock canvas context to build an SVG document.
- *
- *  Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- *
- *  Author:
- *  Kerry Liu
- *
- *  Copyright (c) 2014 Gliffy Inc.
- */
-
-var C2S
-
-(function () {
-    "use strict";
-
-    var STYLES, ctx, CanvasGradient, CanvasPattern, namedEntities;
-
-    //helper function to format a string
-    function format(str, args) {
-        var keys = Object.keys(args), i;
-        for (i=0; i<keys.length; i++) {
-            str = str.replace(new RegExp("\\{" + keys[i] + "\\}", "gi"), args[keys[i]]);
-        }
-        return str;
-    }
-
-    //helper function that generates a random string
-    function randomString(holder) {
-        var chars, randomstring, i;
-        if (!holder) {
-            throw new Error("cannot create a random attribute name for an undefined object");
-        }
-        chars = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-        randomstring = "";
-        do {
-            randomstring = "";
-            for (i = 0; i < 12; i++) {
-                randomstring += chars[Math.floor(Math.random() * chars.length)];
-            }
-        } while (holder[randomstring]);
-        return randomstring;
-    }
-
-    //helper function to map named to numbered entities
-    function createNamedToNumberedLookup(items, radix) {
-        var i, entity, lookup = {}, base10, base16;
-        items = items.split(',');
-        radix = radix || 10;
-        // Map from named to numbered entities.
-        for (i = 0; i < items.length; i += 2) {
-            entity = '&' + items[i + 1] + ';';
-            base10 = parseInt(items[i], radix);
-            lookup[entity] = '&#'+base10+';';
-        }
-        //FF and IE need to create a regex from hex values ie &nbsp; == \xa0
-        lookup["\\xa0"] = '&#160;';
-        return lookup;
-    }
-
-    //helper function to map canvas-textAlign to svg-textAnchor
-    function getTextAnchor(textAlign) {
-        //TODO: support rtl languages
-        var mapping = {"left":"start", "right":"end", "center":"middle", "start":"start", "end":"end"};
-        return mapping[textAlign] || mapping.start;
-    }
-
-    //helper function to map canvas-textBaseline to svg-dominantBaseline
-    function getDominantBaseline(textBaseline) {
-        //INFO: not supported in all browsers
-        var mapping = {"alphabetic": "alphabetic", "hanging": "hanging", "top":"text-before-edge", "bottom":"text-after-edge", "middle":"central"};
-        return mapping[textBaseline] || mapping.alphabetic;
-    }
-
-    // Unpack entities lookup where the numbers are in radix 32 to reduce the size
-    // entity mapping courtesy of tinymce
-    namedEntities = createNamedToNumberedLookup(
-        '50,nbsp,51,iexcl,52,cent,53,pound,54,curren,55,yen,56,brvbar,57,sect,58,uml,59,copy,' +
-            '5a,ordf,5b,laquo,5c,not,5d,shy,5e,reg,5f,macr,5g,deg,5h,plusmn,5i,sup2,5j,sup3,5k,acute,' +
-            '5l,micro,5m,para,5n,middot,5o,cedil,5p,sup1,5q,ordm,5r,raquo,5s,frac14,5t,frac12,5u,frac34,' +
-            '5v,iquest,60,Agrave,61,Aacute,62,Acirc,63,Atilde,64,Auml,65,Aring,66,AElig,67,Ccedil,' +
-            '68,Egrave,69,Eacute,6a,Ecirc,6b,Euml,6c,Igrave,6d,Iacute,6e,Icirc,6f,Iuml,6g,ETH,6h,Ntilde,' +
-            '6i,Ograve,6j,Oacute,6k,Ocirc,6l,Otilde,6m,Ouml,6n,times,6o,Oslash,6p,Ugrave,6q,Uacute,' +
-            '6r,Ucirc,6s,Uuml,6t,Yacute,6u,THORN,6v,szlig,70,agrave,71,aacute,72,acirc,73,atilde,74,auml,' +
-            '75,aring,76,aelig,77,ccedil,78,egrave,79,eacute,7a,ecirc,7b,euml,7c,igrave,7d,iacute,7e,icirc,' +
-            '7f,iuml,7g,eth,7h,ntilde,7i,ograve,7j,oacute,7k,ocirc,7l,otilde,7m,ouml,7n,divide,7o,oslash,' +
-            '7p,ugrave,7q,uacute,7r,ucirc,7s,uuml,7t,yacute,7u,thorn,7v,yuml,ci,fnof,sh,Alpha,si,Beta,' +
-            'sj,Gamma,sk,Delta,sl,Epsilon,sm,Zeta,sn,Eta,so,Theta,sp,Iota,sq,Kappa,sr,Lambda,ss,Mu,' +
-            'st,Nu,su,Xi,sv,Omicron,t0,Pi,t1,Rho,t3,Sigma,t4,Tau,t5,Upsilon,t6,Phi,t7,Chi,t8,Psi,' +
-            't9,Omega,th,alpha,ti,beta,tj,gamma,tk,delta,tl,epsilon,tm,zeta,tn,eta,to,theta,tp,iota,' +
-            'tq,kappa,tr,lambda,ts,mu,tt,nu,tu,xi,tv,omicron,u0,pi,u1,rho,u2,sigmaf,u3,sigma,u4,tau,' +
-            'u5,upsilon,u6,phi,u7,chi,u8,psi,u9,omega,uh,thetasym,ui,upsih,um,piv,812,bull,816,hellip,' +
-            '81i,prime,81j,Prime,81u,oline,824,frasl,88o,weierp,88h,image,88s,real,892,trade,89l,alefsym,' +
-            '8cg,larr,8ch,uarr,8ci,rarr,8cj,darr,8ck,harr,8dl,crarr,8eg,lArr,8eh,uArr,8ei,rArr,8ej,dArr,' +
-            '8ek,hArr,8g0,forall,8g2,part,8g3,exist,8g5,empty,8g7,nabla,8g8,isin,8g9,notin,8gb,ni,8gf,prod,' +
-            '8gh,sum,8gi,minus,8gn,lowast,8gq,radic,8gt,prop,8gu,infin,8h0,ang,8h7,and,8h8,or,8h9,cap,8ha,cup,' +
-            '8hb,int,8hk,there4,8hs,sim,8i5,cong,8i8,asymp,8j0,ne,8j1,equiv,8j4,le,8j5,ge,8k2,sub,8k3,sup,8k4,' +
-            'nsub,8k6,sube,8k7,supe,8kl,oplus,8kn,otimes,8l5,perp,8m5,sdot,8o8,lceil,8o9,rceil,8oa,lfloor,8ob,' +
-            'rfloor,8p9,lang,8pa,rang,9ea,loz,9j0,spades,9j3,clubs,9j5,hearts,9j6,diams,ai,OElig,aj,oelig,b0,' +
-            'Scaron,b1,scaron,bo,Yuml,m6,circ,ms,tilde,802,ensp,803,emsp,809,thinsp,80c,zwnj,80d,zwj,80e,lrm,' +
-            '80f,rlm,80j,ndash,80k,mdash,80o,lsquo,80p,rsquo,80q,sbquo,80s,ldquo,80t,rdquo,80u,bdquo,810,dagger,' +
-            '811,Dagger,81g,permil,81p,lsaquo,81q,rsaquo,85c,euro', 32);
-
-
-    //Some basic mappings for attributes and default values.
-    STYLES = {
-        "strokeStyle":{
-            svgAttr : "stroke", //corresponding svg attribute
-            canvas : "#000000", //canvas default
-            svg : "none",       //svg default
-            apply : "stroke"    //apply on stroke() or fill()
-        },
-        "fillStyle":{
-            svgAttr : "fill",
-            canvas : "#000000",
-            svg : null, //svg default is black, but we need to special case this to handle canvas stroke without fill
-            apply : "fill"
-        },
-        "lineCap":{
-            svgAttr : "stroke-linecap",
-            canvas : "butt",
-            svg : "butt",
-            apply : "stroke"
-        },
-        "lineJoin":{
-            svgAttr : "stroke-linejoin",
-            canvas : "miter",
-            svg : "miter",
-            apply : "stroke"
-        },
-        "miterLimit":{
-            svgAttr : "stroke-miterlimit",
-            canvas : 10,
-            svg : 4,
-            apply : "stroke"
-        },
-        "lineWidth":{
-            svgAttr : "stroke-width",
-            canvas : 1,
-            svg : 1,
-            apply : "stroke"
-        },
-        "globalAlpha": {
-            svgAttr : "opacity",
-            canvas : 1,
-            svg : 1,
-            apply :  "fill stroke"
-        },
-        "font":{
-            //font converts to multiple svg attributes, there is custom logic for this
-            canvas : "10px sans-serif"
-        },
-        "shadowColor":{
-            canvas : "#000000"
-        },
-        "shadowOffsetX":{
-            canvas : 0
-        },
-        "shadowOffsetY":{
-            canvas : 0
-        },
-        "shadowBlur":{
-            canvas : 0
-        },
-        "textAlign":{
-            canvas : "start"
-        },
-        "textBaseline":{
-            canvas : "alphabetic"
-        },
-        "lineDash" : {
-            svgAttr : "stroke-dasharray",
-            canvas : [],
-            svg : null,
-            apply : "stroke"
-        }
-    };
-
-    /**
-     *
-     * @param gradientNode - reference to the gradient
-     * @constructor
-     */
-    CanvasGradient = function (gradientNode, ctx) {
-        this.__root = gradientNode;
-        this.__ctx = ctx;
-    };
-
-    /**
-     * Adds a color stop to the gradient root
-     */
-    CanvasGradient.prototype.addColorStop = function (offset, color) {
-        var stop = this.__ctx.__createElement("stop"), regex, matches;
-        stop.setAttribute("offset", offset);
-        if (color && color.indexOf("rgba") !== -1) {
-            //separate alpha value, since webkit can't handle it
-            regex = /rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d?\.?\d*)\s*\)/gi;
-            matches = regex.exec(color);
-            stop.setAttribute("stop-color", format("rgb({r},{g},{b})", {r:matches[1], g:matches[2], b:matches[3]}));
-            stop.setAttribute("stop-opacity", matches[4]);
-        } else {
-            stop.setAttribute("stop-color", color);
-        }
-        this.__root.appendChild(stop);
-    };
-
-    CanvasPattern = function (pattern, ctx) {
-        this.__root = pattern;
-        this.__ctx = ctx;
-    };
-
-    /**
-     * The mock canvas context
-     * @param o - options include:
-     * ctx - existing Context2D to wrap around
-     * width - width of your canvas (defaults to 500)
-     * height - height of your canvas (defaults to 500)
-     * enableMirroring - enables canvas mirroring (get image data) (defaults to false)
-     * document - the document object (defaults to the current document)
-     */
-    ctx = function (o) {
-        var defaultOptions = { width:500, height:500, enableMirroring : false}, options;
-
-        //keep support for this way of calling C2S: new C2S(width,height)
-        if (arguments.length > 1) {
-            options = defaultOptions;
-            options.width = arguments[0];
-            options.height = arguments[1];
-        } else if ( !o ) {
-            options = defaultOptions;
-        } else {
-            options = o;
-        }
-
-        if (!(this instanceof ctx)) {
-            //did someone call this without new?
-            return new ctx(options);
-        }
-
-        //setup options
-        this.width = options.width || defaultOptions.width;
-        this.height = options.height || defaultOptions.height;
-        this.enableMirroring = options.enableMirroring !== undefined ? options.enableMirroring : defaultOptions.enableMirroring;
-
-        this.canvas = this;   ///point back to this instance!
-        this.__document = options.document || document;
-
-        // allow passing in an existing context to wrap around
-        // if a context is passed in, we know a canvas already exist
-        if (options.ctx) {
-            this.__ctx = options.ctx;
-        } else {
-            this.__canvas = this.__document.createElement("canvas");
-            this.__ctx = this.__canvas.getContext("2d");
-        }
-
-        this.__setDefaultStyles();
-        this.__stack = [this.__getStyleState()];
-        this.__groupStack = [];
-
-        //the root svg element
-        this.__root = this.__document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        this.__root.setAttribute("version", 1.1);
-        this.__root.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-        this.__root.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-        this.__root.setAttribute("width", this.width);
-        this.__root.setAttribute("height", this.height);
-
-        if (options.viewbox) {
-            const str = options.viewbox.x + ' ' + options.viewbox.y + ' ' + options.viewbox.width + ' ' + options.viewbox.height;
-            this.__root.setAttribute("viewBox", str);
-
-            this.viewbox = options.viewbox;
-        }
-
-        //make sure we don't generate the same ids in defs
-        this.__ids = {};
-
-        //defs tag
-        this.__defs = this.__document.createElementNS("http://www.w3.org/2000/svg", "defs");
-        this.__root.appendChild(this.__defs);
-
-        //also add a group child. the svg element can't use the transform attribute
-        this.__currentElement = this.__document.createElementNS("http://www.w3.org/2000/svg", "g");
-        this.__root.appendChild(this.__currentElement);
-    };
-
-
-    /**
-     * Creates the specified svg element
-     * @private
-     */
-    ctx.prototype.__createElement = function (elementName, properties, resetFill) {
-        if (typeof properties === "undefined") {
-            properties = {};
-        }
-
-        var element = this.__document.createElementNS("http://www.w3.org/2000/svg", elementName),
-            keys = Object.keys(properties), i, key;
-        if (resetFill) {
-            //if fill or stroke is not specified, the svg element should not display. By default SVG's fill is black.
-            element.setAttribute("fill", "none");
-            element.setAttribute("stroke", "none");
-        }
-        for (i=0; i<keys.length; i++) {
-            key = keys[i];
-            element.setAttribute(key, properties[key]);
-        }
-        return element;
-    };
-
-    /**
-     * Applies default canvas styles to the context
-     * @private
-     */
-    ctx.prototype.__setDefaultStyles = function () {
-        //default 2d canvas context properties see:http://www.w3.org/TR/2dcontext/
-        var keys = Object.keys(STYLES), i, key;
-        for (i=0; i<keys.length; i++) {
-            key = keys[i];
-            this[key] = STYLES[key].canvas;
-        }
-    };
-
-    /**
-     * Applies styles on restore
-     * @param styleState
-     * @private
-     */
-    ctx.prototype.__applyStyleState = function (styleState) {
-        var keys = Object.keys(styleState), i, key;
-        for (i=0; i<keys.length; i++) {
-            key = keys[i];
-            this[key] = styleState[key];
-        }
-    };
-
-    /**
-     * Gets the current style state
-     * @return {Object}
-     * @private
-     */
-    ctx.prototype.__getStyleState = function () {
-        var i, styleState = {}, keys = Object.keys(STYLES), key;
-        for (i=0; i<keys.length; i++) {
-            key = keys[i];
-            styleState[key] = this[key];
-        }
-        return styleState;
-    };
-
-    /**
-     * Apples the current styles to the current SVG element. On "ctx.fill" or "ctx.stroke"
-     * @param type
-     * @private
-     */
-    ctx.prototype.__applyStyleToCurrentElement = function (type) {
-    	var currentElement = this.__currentElement;
-    	var currentStyleGroup = this.__currentElementsToStyle;
-    	if (currentStyleGroup) {
-    		currentElement.setAttribute(type, "");
-    		currentElement = currentStyleGroup.element;
-    		currentStyleGroup.children.forEach(function (node) {
-    			node.setAttribute(type, "");
-    		})
-    	}
-
-        var keys = Object.keys(STYLES), i, style, value, id, regex, matches;
-        for (i = 0; i < keys.length; i++) {
-            style = STYLES[keys[i]];
-            value = this[keys[i]];
-            if (style.apply) {
-                //is this a gradient or pattern?
-                if (value instanceof CanvasPattern) {
-                    //pattern
-                    if (value.__ctx) {
-                        //copy over defs
-                        while(value.__ctx.__defs.childNodes.length) {
-                            id = value.__ctx.__defs.childNodes[0].getAttribute("id");
-                            this.__ids[id] = id;
-                            this.__defs.appendChild(value.__ctx.__defs.childNodes[0]);
-                        }
-                    }
-                    currentElement.setAttribute(style.apply, format("url(#{id})", {id:value.__root.getAttribute("id")}));
-                }
-                else if (value instanceof CanvasGradient) {
-                    //gradient
-                    currentElement.setAttribute(style.apply, format("url(#{id})", {id:value.__root.getAttribute("id")}));
-                } else if (style && style.apply.indexOf(type) !== -1 && style.svg !== value) {
-                    if ((style.svgAttr === "stroke" || style.svgAttr === "fill") && value && value.indexOf("rgba") !== -1) {
-                        //separate alpha value, since illustrator can't handle it
-                        regex = /rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d?\.?\d*)\s*\)/gi;
-                        matches = regex.exec(value);
-                        currentElement.setAttribute(style.svgAttr, format("rgb({r},{g},{b})", {r:matches[1], g:matches[2], b:matches[3]}));
-                        //should take globalAlpha here
-                        var opacity = matches[4];
-                        var globalAlpha = this.globalAlpha;
-                        if (globalAlpha != null) {
-                            opacity *= globalAlpha;
-                        }
-                        currentElement.setAttribute(style.svgAttr+"-opacity", opacity);
-                    } else {
-                        var attr = style.svgAttr;
-                        if (keys[i] === 'globalAlpha') {
-                            attr = type+'-'+style.svgAttr;
-                            if (currentElement.getAttribute(attr)) {
-                                 //fill-opacity or stroke-opacity has already been set by stroke or fill.
-                                continue;
-                            }
-                        }
-                        //otherwise only update attribute if right type, and not svg default
-                        currentElement.setAttribute(attr, value);
-                    }
-                }
-            }
-        }
-    };
-
-    /**
-     * Will return the closest group or svg node. May return the current element.
-     * @private
-     */
-    ctx.prototype.__closestGroupOrSvg = function (node) {
-        node = node || this.__currentElement;
-        if (node.nodeName === "g" || node.nodeName === "svg") {
-            return node;
-        } else {
-            return this.__closestGroupOrSvg(node.parentNode);
-        }
-    };
-
-    /**
-     * Returns the serialized value of the svg so far
-     * @param fixNamedEntities - Standalone SVG doesn't support named entities, which document.createTextNode encodes.
-     *                           If true, we attempt to find all named entities and encode it as a numeric entity.
-     * @return serialized svg
-     */
-    ctx.prototype.getSerializedSvg = function (fixNamedEntities) {
-        var serialized = new XMLSerializer().serializeToString(this.__root),
-            keys, i, key, value, regexp, xmlns;
-
-        //IE search for a duplicate xmnls because they didn't implement setAttributeNS correctly
-        // xmlns = /xmlns="http:\/\/www\.w3\.org\/2000\/svg".+xmlns="http:\/\/www\.w3\.org\/2000\/svg/gi;
-        // if (xmlns.test(serialized)) {
-        //     serialized = serialized.replace('xmlns="http://www.w3.org/2000/svg','xmlns:xlink="http://www.w3.org/1999/xlink');
-        // }
-
-        if (fixNamedEntities) {
-            keys = Object.keys(namedEntities);
-            //loop over each named entity and replace with the proper equivalent.
-            for (i=0; i<keys.length; i++) {
-                key = keys[i];
-                value = namedEntities[key];
-                regexp = new RegExp(key, "gi");
-                if (regexp.test(serialized)) {
-                    serialized = serialized.replace(regexp, value);
-                }
-            }
-        }
-
-        return serialized;
-    };
-
-
-    /**
-     * Returns the root svg
-     * @return
-     */
-    ctx.prototype.getSvg = function () {
-        return this.__root;
-    };
-    /**
-     * Will generate a group tag.
-     */
-    ctx.prototype.save = function () {
-        var group = this.__createElement("g");
-        var parent = this.__closestGroupOrSvg();
-        this.__groupStack.push(parent);
-        parent.appendChild(group);
-        this.__currentElement = group;
-        this.__stack.push(this.__getStyleState());
-    };
-    /**
-     * Sets current element to parent, or just root if already root
-     */
-    ctx.prototype.restore = function () {
-        this.__currentElement = this.__groupStack.pop();
-        this.__currentElementsToStyle = null;
-        //Clearing canvas will make the poped group invalid, currentElement is set to the root group node.
-        if (!this.__currentElement) {
-            this.__currentElement = this.__root.childNodes[1];
-        }
-        var state = this.__stack.pop();
-        this.__applyStyleState(state);
-    };
-
-    /**
-     * Helper method to add transform
-     * @private
-     */
-    ctx.prototype.__addTransform = function (t) {
-        //if the current element has siblings, add another group
-        var parent = this.__closestGroupOrSvg();
-        if (parent.childNodes.length > 0) {
-        	if (this.__currentElement.nodeName === "path") {
-        		if (!this.__currentElementsToStyle) this.__currentElementsToStyle = {element: parent, children: []};
-        		this.__currentElementsToStyle.children.push(this.__currentElement)
-        		this.__applyCurrentDefaultPath();
-        	}
-
-            var group = this.__createElement("g");
-            parent.appendChild(group);
-            this.__currentElement = group;
-        }
-
-        var transform = this.__currentElement.getAttribute("transform");
-        if (transform) {
-            transform += " ";
-        } else {
-            transform = "";
-        }
-        transform += t;
-        this.__currentElement.setAttribute("transform", transform);
-    };
-
-    /**
-     *  scales the current element
-     */
-    ctx.prototype.scale = function (x, y) {
-        if (y === undefined) {
-            y = x;
-        }
-        this.__addTransform(format("scale({x},{y})", {x:x, y:y}));
-    };
-
-    /**
-     * rotates the current element
-     */
-    ctx.prototype.rotate = function (angle) {
-        var degrees = (angle * 180 / Math.PI);
-        this.__addTransform(format("rotate({angle},{cx},{cy})", {angle:degrees, cx:0, cy:0}));
-    };
-
-    /**
-     * translates the current element
-     */
-    ctx.prototype.translate = function (x, y) {
-        this.__addTransform(format("translate({x},{y})", {x:x,y:y}));
-    };
-
-    /**
-     * applies a transform to the current element
-     */
-    ctx.prototype.transform = function (a, b, c, d, e, f) {
-        this.__addTransform(format("matrix({a},{b},{c},{d},{e},{f})", {a:a, b:b, c:c, d:d, e:e, f:f}));
-    };
-
-    /**
-     * Create a new Path Element
-     */
-    ctx.prototype.beginPath = function () {
-        var path, parent;
-
-        // Note that there is only one current default path, it is not part of the drawing state.
-        // See also: https://html.spec.whatwg.org/multipage/scripting.html#current-default-path
-        this.__currentDefaultPath = "";
-        this.__currentPosition = {};
-
-        path = this.__createElement("path", {}, true);
-        parent = this.__closestGroupOrSvg();
-        parent.appendChild(path);
-        this.__currentElement = path;
-    };
-
-    /**
-     * Helper function to apply currentDefaultPath to current path element
-     * @private
-     */
-    ctx.prototype.__applyCurrentDefaultPath = function () {
-    	var currentElement = this.__currentElement;
-        if (currentElement.nodeName === "path") {
-			currentElement.setAttribute("d", this.__currentDefaultPath);
-        } else {
-			console.error("Attempted to apply path command to node", currentElement.nodeName);
-        }
-    };
-
-    /**
-     * Helper function to add path command
-     * @private
-     */
-    ctx.prototype.__addPathCommand = function (command) {
-        this.__currentDefaultPath += " ";
-        this.__currentDefaultPath += command;
-    };
-
-    /**
-     * Adds the move command to the current path element,
-     * if the currentPathElement is not empty create a new path element
-     */
-    ctx.prototype.moveTo = function (x,y) {
-        if (this.__currentElement.nodeName !== "path") {
-            this.beginPath();
-        }
-
-        // creates a new subpath with the given point
-        this.__currentPosition = {x: x, y: y};
-        this.__addPathCommand(format("M {x} {y}", {x:x, y:y}));
-    };
-
-    /**
-     * Closes the current path
-     */
-    ctx.prototype.closePath = function () {
-        if (this.__currentDefaultPath) {
-            this.__addPathCommand("Z");
-        }
-    };
-
-    /**
-     * Adds a line to command
-     */
-    ctx.prototype.lineTo = function (x, y) {
-        this.__currentPosition = {x: x, y: y};
-        if (this.__currentDefaultPath && this.__currentDefaultPath.indexOf('M') > -1) {
-            this.__addPathCommand(format("L {x} {y}", {x:x, y:y}));
-        } else {
-            this.__addPathCommand(format("M {x} {y}", {x:x, y:y}));
-        }
-    };
-
-    /**
-     * Add a bezier command
-     */
-    ctx.prototype.bezierCurveTo = function (cp1x, cp1y, cp2x, cp2y, x, y) {
-        this.__currentPosition = {x: x, y: y};
-        this.__addPathCommand(format("C {cp1x} {cp1y} {cp2x} {cp2y} {x} {y}",
-            {cp1x:cp1x, cp1y:cp1y, cp2x:cp2x, cp2y:cp2y, x:x, y:y}));
-    };
-
-    /**
-     * Adds a quadratic curve to command
-     */
-    ctx.prototype.quadraticCurveTo = function (cpx, cpy, x, y) {
-        this.__currentPosition = {x: x, y: y};
-        this.__addPathCommand(format("Q {cpx} {cpy} {x} {y}", {cpx:cpx, cpy:cpy, x:x, y:y}));
-    };
-
-
-    /**
-     * Return a new normalized vector of given vector
-     */
-    var normalize = function (vector) {
-        var len = Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
-        return [vector[0] / len, vector[1] / len];
-    };
-
-    /**
-     * Adds the arcTo to the current path
-     *
-     * @see http://www.w3.org/TR/2015/WD-2dcontext-20150514/#dom-context-2d-arcto
-     */
-    ctx.prototype.arcTo = function (x1, y1, x2, y2, radius) {
-        // Let the point (x0, y0) be the last point in the subpath.
-        var x0 = this.__currentPosition && this.__currentPosition.x;
-        var y0 = this.__currentPosition && this.__currentPosition.y;
-
-        // First ensure there is a subpath for (x1, y1).
-        if (typeof x0 == "undefined" || typeof y0 == "undefined") {
-            return;
-        }
-
-        // Negative values for radius must cause the implementation to throw an IndexSizeError exception.
-        if (radius < 0) {
-            throw new Error("IndexSizeError: The radius provided (" + radius + ") is negative.");
-        }
-
-        // If the point (x0, y0) is equal to the point (x1, y1),
-        // or if the point (x1, y1) is equal to the point (x2, y2),
-        // or if the radius radius is zero,
-        // then the method must add the point (x1, y1) to the subpath,
-        // and connect that point to the previous point (x0, y0) by a straight line.
-        if (((x0 === x1) && (y0 === y1))
-            || ((x1 === x2) && (y1 === y2))
-            || (radius === 0)) {
-            this.lineTo(x1, y1);
-            return;
-        }
-
-        // Otherwise, if the points (x0, y0), (x1, y1), and (x2, y2) all lie on a single straight line,
-        // then the method must add the point (x1, y1) to the subpath,
-        // and connect that point to the previous point (x0, y0) by a straight line.
-        var unit_vec_p1_p0 = normalize([x0 - x1, y0 - y1]);
-        var unit_vec_p1_p2 = normalize([x2 - x1, y2 - y1]);
-        if (unit_vec_p1_p0[0] * unit_vec_p1_p2[1] === unit_vec_p1_p0[1] * unit_vec_p1_p2[0]) {
-            this.lineTo(x1, y1);
-            return;
-        }
-
-        // Otherwise, let The Arc be the shortest arc given by circumference of the circle that has radius radius,
-        // and that has one point tangent to the half-infinite line that crosses the point (x0, y0) and ends at the point (x1, y1),
-        // and that has a different point tangent to the half-infinite line that ends at the point (x1, y1), and crosses the point (x2, y2).
-        // The points at which this circle touches these two lines are called the start and end tangent points respectively.
-
-        // note that both vectors are unit vectors, so the length is 1
-        var cos = (unit_vec_p1_p0[0] * unit_vec_p1_p2[0] + unit_vec_p1_p0[1] * unit_vec_p1_p2[1]);
-        var theta = Math.acos(Math.abs(cos));
-
-        // Calculate origin
-        var unit_vec_p1_origin = normalize([
-            unit_vec_p1_p0[0] + unit_vec_p1_p2[0],
-            unit_vec_p1_p0[1] + unit_vec_p1_p2[1]
-        ]);
-        var len_p1_origin = radius / Math.sin(theta / 2);
-        var x = x1 + len_p1_origin * unit_vec_p1_origin[0];
-        var y = y1 + len_p1_origin * unit_vec_p1_origin[1];
-
-        // Calculate start angle and end angle
-        // rotate 90deg clockwise (note that y axis points to its down)
-        var unit_vec_origin_start_tangent = [
-            -unit_vec_p1_p0[1],
-            unit_vec_p1_p0[0]
-        ];
-        // rotate 90deg counter clockwise (note that y axis points to its down)
-        var unit_vec_origin_end_tangent = [
-            unit_vec_p1_p2[1],
-            -unit_vec_p1_p2[0]
-        ];
-        var getAngle = function (vector) {
-            // get angle (clockwise) between vector and (1, 0)
-            var x = vector[0];
-            var y = vector[1];
-            if (y >= 0) { // note that y axis points to its down
-                return Math.acos(x);
-            } else {
-                return -Math.acos(x);
-            }
-        };
-        var startAngle = getAngle(unit_vec_origin_start_tangent);
-        var endAngle = getAngle(unit_vec_origin_end_tangent);
-
-        // Connect the point (x0, y0) to the start tangent point by a straight line
-        this.lineTo(x + unit_vec_origin_start_tangent[0] * radius,
-                    y + unit_vec_origin_start_tangent[1] * radius);
-
-        // Connect the start tangent point to the end tangent point by arc
-        // and adding the end tangent point to the subpath.
-        this.arc(x, y, radius, startAngle, endAngle);
-    };
-
-    /**
-     * Sets the stroke property on the current element
-     */
-    ctx.prototype.stroke = function () {
-        if (this.__currentElement.nodeName === "path") {
-            this.__currentElement.setAttribute("paint-order", "fill stroke markers");
-        }
-        this.__applyCurrentDefaultPath();
-        this.__applyStyleToCurrentElement("stroke");
-    };
-
-    /**
-     * Sets fill properties on the current element
-     */
-    ctx.prototype.fill = function () {
-        if (this.__currentElement.nodeName === "path") {
-            this.__currentElement.setAttribute("paint-order", "stroke fill markers");
-        }
-        this.__applyCurrentDefaultPath();
-        this.__applyStyleToCurrentElement("fill");
-    };
-
-    /**
-     *  Adds a rectangle to the path.
-     */
-    ctx.prototype.rect = function (x, y, width, height) {
-        if (this.__currentElement.nodeName !== "path") {
-            this.beginPath();
-        }
-        this.moveTo(x, y);
-        this.lineTo(x+width, y);
-        this.lineTo(x+width, y+height);
-        this.lineTo(x, y+height);
-        this.lineTo(x, y);
-        this.closePath();
-    };
-
-
-    /**
-     * adds a rectangle element
-     */
-    ctx.prototype.fillRect = function (x, y, width, height) {
-
-        // See if rect instersects current viewbox
-        var r2 = {
-            x: x,
-            y: y,
-            width: width,
-            height: height
-        };
-
-        if (this.viewbox) {
-            if (!intersectRect(this.viewbox, r2)) {
-                return;
-            }
-        }
-
-        var rect, parent;
-        rect = this.__createElement("rect", r2, true);
-        parent = this.__closestGroupOrSvg();
-        parent.appendChild(rect);
-        this.__currentElement = rect;
-        this.__applyStyleToCurrentElement("fill");
-    };
-
-    function intersectRect(rect1, rect2) {
-       return  (rect1.x < rect2.x + rect2.width &&
-           rect1.x + rect1.width > rect2.x &&
-           rect1.y < rect2.y + rect2.height &&
-           rect1.y + rect1.height > rect2.y);
-    }
-
-    /**
-     * Draws a rectangle with no fill
-     * @param x
-     * @param y
-     * @param width
-     * @param height
-     */
-    ctx.prototype.strokeRect = function (x, y, width, height) {
-        var rect, parent;
-        rect = this.__createElement("rect", {
-            x : x,
-            y : y,
-            width : width,
-            height : height
-        }, true);
-        parent = this.__closestGroupOrSvg();
-        parent.appendChild(rect);
-        this.__currentElement = rect;
-        this.__applyStyleToCurrentElement("stroke");
-    };
-
-
-    /**
-     * Clear entire canvas:
-     * 1. save current transforms
-     * 2. remove all the childNodes of the root g element
-     */
-    ctx.prototype.__clearCanvas = function () {
-        var current = this.__closestGroupOrSvg(),
-            transform = current.getAttribute("transform");
-        var rootGroup = this.__root.childNodes[1];
-        var childNodes = rootGroup.childNodes;
-        for (var i = childNodes.length - 1; i >= 0; i--) {
-            if (childNodes[i]) {
-                rootGroup.removeChild(childNodes[i]);
-            }
-        }
-        this.__currentElement = rootGroup;
-        //reset __groupStack as all the child group nodes are all removed.
-        this.__groupStack = [];
-        if (transform) {
-            this.__addTransform(transform);
-        }
-    };
-
-    /**
-     * "Clears" a canvas by just drawing a white rectangle in the current group.
-     */
-    ctx.prototype.clearRect = function (x, y, width, height) {
-        //clear entire canvas
-        if (x === 0 && y === 0 && width === this.width && height === this.height) {
-            this.__clearCanvas();
-            return;
-        }
-        var rect, parent = this.__closestGroupOrSvg();
-        rect = this.__createElement("rect", {
-            x : x,
-            y : y,
-            width : width,
-            height : height,
-            fill : "#FFFFFF"
-        }, true);
-        parent.appendChild(rect);
-    };
-
-    /**
-     * Adds a linear gradient to a defs tag.
-     * Returns a canvas gradient object that has a reference to it's parent def
-     */
-    ctx.prototype.createLinearGradient = function (x1, y1, x2, y2) {
-        var grad = this.__createElement("linearGradient", {
-            id : randomString(this.__ids),
-            x1 : x1+"px",
-            x2 : x2+"px",
-            y1 : y1+"px",
-            y2 : y2+"px",
-            "gradientUnits" : "userSpaceOnUse"
-        }, false);
-        this.__defs.appendChild(grad);
-        return new CanvasGradient(grad, this);
-    };
-
-    /**
-     * Adds a radial gradient to a defs tag.
-     * Returns a canvas gradient object that has a reference to it's parent def
-     */
-    ctx.prototype.createRadialGradient = function (x0, y0, r0, x1, y1, r1) {
-        var grad = this.__createElement("radialGradient", {
-            id : randomString(this.__ids),
-            cx : x1+"px",
-            cy : y1+"px",
-            r  : r1+"px",
-            fx : x0+"px",
-            fy : y0+"px",
-            "gradientUnits" : "userSpaceOnUse"
-        }, false);
-        this.__defs.appendChild(grad);
-        return new CanvasGradient(grad, this);
-
-    };
-
-    /**
-     * Parses the font string and returns svg mapping
-     * @private
-     */
-    ctx.prototype.__parseFont = function () {
-        var regex = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-,\'\"\sa-z0-9]+?)\s*$/i;
-        var fontPart = regex.exec( this.font );
-        var data = {
-            style : fontPart[1] || 'normal',
-            size : fontPart[4] || '10px',
-            family : fontPart[6] || 'sans-serif',
-            weight: fontPart[3] || 'normal',
-            decoration : fontPart[2] || 'normal',
-            href : null
-        };
-
-        //canvas doesn't support underline natively, but we can pass this attribute
-        if (this.__fontUnderline === "underline") {
-            data.decoration = "underline";
-        }
-
-        //canvas also doesn't support linking, but we can pass this as well
-        if (this.__fontHref) {
-            data.href = this.__fontHref;
-        }
-
-        return data;
-    };
-
-    /**
-     * Helper to link text fragments
-     * @param font
-     * @param element
-     * @return {*}
-     * @private
-     */
-    ctx.prototype.__wrapTextLink = function (font, element) {
-        if (font.href) {
-            var a = this.__createElement("a");
-            a.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", font.href);
-            a.appendChild(element);
-            return a;
-        }
-        return element;
-    };
-
-    /**
-     * Fills or strokes text
-     * @param text
-     * @param x
-     * @param y
-     * @param action - stroke or fill
-     * @private
-     */
-    ctx.prototype.__applyText = function (text, x, y, action) {
-        var font = this.__parseFont(),
-            parent = this.__closestGroupOrSvg(),
-            textElement = this.__createElement("text", {
-                "font-family" : font.family,
-                "font-size" : font.size,
-                "font-style" : font.style,
-                "font-weight" : font.weight,
-                "text-decoration" : font.decoration,
-                "x" : x,
-                "y" : y,
-                "text-anchor": getTextAnchor(this.textAlign),
-                "dominant-baseline": getDominantBaseline(this.textBaseline)
-            }, true);
-
-        textElement.appendChild(this.__document.createTextNode(text));
-        this.__currentElement = textElement;
-        this.__applyStyleToCurrentElement(action);
-        parent.appendChild(this.__wrapTextLink(font,textElement));
-    };
-
-    /**
-     * Creates a text element
-     * @param text
-     * @param x
-     * @param y
-     */
-    ctx.prototype.fillText = function (text, x, y) {
-        this.__applyText(text, x, y, "fill");
-    };
-
-    /**
-     * Strokes text
-     * @param text
-     * @param x
-     * @param y
-     */
-    ctx.prototype.strokeText = function (text, x, y) {
-        this.__applyText(text, x, y, "stroke");
-    };
-
-    /**
-     * No need to implement this for svg.
-     * @param text
-     * @return {TextMetrics}
-     */
-    ctx.prototype.measureText = function (text) {
-        this.__ctx.font = this.font;
-        return this.__ctx.measureText(text);
-    };
-
-    /**
-     *  Arc command!
-     */
-    ctx.prototype.arc = function (x, y, radius, startAngle, endAngle, counterClockwise) {
-        // in canvas no circle is drawn if no angle is provided.
-        if (startAngle === endAngle) {
-            return;
-        }
-        startAngle = startAngle % (2*Math.PI);
-        endAngle = endAngle % (2*Math.PI);
-        if (startAngle === endAngle) {
-            //circle time! subtract some of the angle so svg is happy (svg elliptical arc can't draw a full circle)
-            endAngle = ((endAngle + (2*Math.PI)) - 0.001 * (counterClockwise ? -1 : 1)) % (2*Math.PI);
-        }
-        var endX = x+radius*Math.cos(endAngle),
-            endY = y+radius*Math.sin(endAngle),
-            startX = x+radius*Math.cos(startAngle),
-            startY = y+radius*Math.sin(startAngle),
-            sweepFlag = counterClockwise ? 0 : 1,
-            largeArcFlag = 0,
-            diff = endAngle - startAngle;
-
-        // https://github.com/gliffy/canvas2svg/issues/4
-        if (diff < 0) {
-            diff += 2*Math.PI;
-        }
-
-        if (counterClockwise) {
-            largeArcFlag = diff > Math.PI ? 0 : 1;
-        } else {
-            largeArcFlag = diff > Math.PI ? 1 : 0;
-        }
-
-        this.lineTo(startX, startY);
-        this.__addPathCommand(format("A {rx} {ry} {xAxisRotation} {largeArcFlag} {sweepFlag} {endX} {endY}",
-            {rx:radius, ry:radius, xAxisRotation:0, largeArcFlag:largeArcFlag, sweepFlag:sweepFlag, endX:endX, endY:endY}));
-
-        this.__currentPosition = {x: endX, y: endY};
-    };
-
-    /**
-     * Generates a ClipPath from the clip command.
-     */
-    ctx.prototype.clip = function () {
-        var group = this.__closestGroupOrSvg(),
-            clipPath = this.__createElement("clipPath"),
-            id =  randomString(this.__ids),
-            newGroup = this.__createElement("g");
-
-        this.__applyCurrentDefaultPath();
-        group.removeChild(this.__currentElement);
-        clipPath.setAttribute("id", id);
-        clipPath.appendChild(this.__currentElement);
-
-        this.__defs.appendChild(clipPath);
-
-        //set the clip path to this group
-        group.setAttribute("clip-path", format("url(#{id})", {id:id}));
-
-        //clip paths can be scaled and transformed, we need to add another wrapper group to avoid later transformations
-        // to this path
-        group.appendChild(newGroup);
-
-        this.__currentElement = newGroup;
-
-    };
-
-    /**
-     * Draws a canvas, image or mock context to this canvas.
-     * Note that all svg dom manipulation uses node.childNodes rather than node.children for IE support.
-     * http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#dom-context-2d-drawimage
-     */
-    ctx.prototype.drawImage = function () {
-        //convert arguments to a real array
-        var args = Array.prototype.slice.call(arguments),
-            image=args[0],
-            dx, dy, dw, dh, sx=0, sy=0, sw, sh, parent, svg, defs, group,
-            currentElement, svgImage, canvas, context, id;
-
-        if (args.length === 3) {
-            dx = args[1];
-            dy = args[2];
-            sw = image.width;
-            sh = image.height;
-            dw = sw;
-            dh = sh;
-        } else if (args.length === 5) {
-            dx = args[1];
-            dy = args[2];
-            dw = args[3];
-            dh = args[4];
-            sw = image.width;
-            sh = image.height;
-        } else if (args.length === 9) {
-            sx = args[1];
-            sy = args[2];
-            sw = args[3];
-            sh = args[4];
-            dx = args[5];
-            dy = args[6];
-            dw = args[7];
-            dh = args[8];
-        } else {
-            throw new Error("Invalid number of arguments passed to drawImage: " + arguments.length);
-        }
-
-        parent = this.__closestGroupOrSvg();
-        currentElement = this.__currentElement;
-        var translateDirective = "translate(" + dx + ", " + dy + ")";
-        if (image instanceof ctx) {
-            //canvas2svg mock canvas context. In the future we may want to clone nodes instead.
-            //also I'm currently ignoring dw, dh, sw, sh, sx, sy for a mock context.
-            svg = image.getSvg().cloneNode(true);
-            if (svg.childNodes && svg.childNodes.length > 1) {
-                defs = svg.childNodes[0];
-                while(defs.childNodes.length) {
-                    id = defs.childNodes[0].getAttribute("id");
-                    this.__ids[id] = id;
-                    this.__defs.appendChild(defs.childNodes[0]);
-                }
-                group = svg.childNodes[1];
-                if (group) {
-                    //save original transform
-                    var originTransform = group.getAttribute("transform");
-                    var transformDirective;
-                    if (originTransform) {
-                        transformDirective = originTransform+" "+translateDirective;
-                    } else {
-                        transformDirective = translateDirective;
-                    }
-                    group.setAttribute("transform", transformDirective);
-                    parent.appendChild(group);
-                }
-            }
-        } else if (image.nodeName === "CANVAS" || image.nodeName === "IMG") {
-            //canvas or image
-            svgImage = this.__createElement("image");
-            svgImage.setAttribute("width", dw);
-            svgImage.setAttribute("height", dh);
-            svgImage.setAttribute("preserveAspectRatio", "none");
-
-            if (sx || sy || sw !== image.width || sh !== image.height) {
-                //crop the image using a temporary canvas
-                canvas = this.__document.createElement("canvas");
-                canvas.width = dw;
-                canvas.height = dh;
-                context = canvas.getContext("2d");
-                context.drawImage(image, sx, sy, sw, sh, 0, 0, dw, dh);
-                image = canvas;
-            }
-            svgImage.setAttribute("transform", translateDirective);
-            svgImage.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href",
-                image.nodeName === "CANVAS" ? image.toDataURL() : image.getAttribute("src"));
-            parent.appendChild(svgImage);
-        }
-    };
-
-    /**
-     * Generates a pattern tag
-     */
-    ctx.prototype.createPattern = function (image, repetition) {
-        var pattern = this.__document.createElementNS("http://www.w3.org/2000/svg", "pattern"), id = randomString(this.__ids),
-            img;
-        pattern.setAttribute("id", id);
-        pattern.setAttribute("width", image.width);
-        pattern.setAttribute("height", image.height);
-        if (image.nodeName === "CANVAS" || image.nodeName === "IMG") {
-            img = this.__document.createElementNS("http://www.w3.org/2000/svg", "image");
-            img.setAttribute("width", image.width);
-            img.setAttribute("height", image.height);
-            img.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href",
-                image.nodeName === "CANVAS" ? image.toDataURL() : image.getAttribute("src"));
-            pattern.appendChild(img);
-            this.__defs.appendChild(pattern);
-        } else if (image instanceof ctx) {
-            pattern.appendChild(image.__root.childNodes[1]);
-            this.__defs.appendChild(pattern);
-        }
-        return new CanvasPattern(pattern, this);
-    };
-
-    ctx.prototype.setLineDash = function (dashArray) {
-        if (dashArray && dashArray.length > 0) {
-            this.lineDash = dashArray.join(",");
-        } else {
-            this.lineDash = null;
-        }
-    };
-
-    /**
-     * Not yet implemented
-     */
-    ctx.prototype.drawFocusRing = function () {};
-    ctx.prototype.createImageData = function () {};
-    ctx.prototype.getImageData = function () {};
-    ctx.prototype.putImageData = function () {};
-    ctx.prototype.globalCompositeOperation = function () {};
-    ctx.prototype.setTransform = function () {};
-
-    //add options for alternative namespace
-    // MODIFIED by JTR for igv packaing
-    C2S = ctx;
-
-}());
-
 "use strict";
 
 /*
@@ -20516,6 +19281,9 @@ var igv = function (igv) {
                 return undefined;
             }
 
+            if (undefined === base) {
+                return Number.MAX_VALUE;
+            }
             if ('N' === base) {
                 return 2;
             } else if (reference === base || '=' === base) {
@@ -20772,7 +19540,7 @@ var igv = function (igv) {
 
         chunks.forEach(function (chunk) {
 
-            if (chunk.maxv.isGreaterThan(lowest)) {
+            if (!lowest || chunk.maxv.isGreaterThan(lowest)) {
                 if (lastChunk === null) {
                     mergedChunks.push(chunk);
                     lastChunk = chunk;
@@ -21160,10 +19928,7 @@ var igv = function (igv) {
         this.alignmentContainer = undefined;
         this.maxRows = config.maxRows || 1000;
 
-        if (igv.isFilePath(config.url)) {
-            // do nothing
-            console.log('ignore');
-        } else if (igv.isString(config.url) && config.url.startsWith("data:")) {
+        if (igv.isFilePath(config.url)) {} else if (igv.isString(config.url) && config.url.startsWith("data:")) {
             this.config.indexed = false;
         }
 
@@ -21995,27 +20760,27 @@ var igv = function (igv) {
 
                 // A
                 var tmp = coverage.posA + coverage.negA;
-                if (tmp > 0) tmp = tmp.toString() + " (" + Math.floor(tmp / coverage.total * 100.0) + "%, " + coverage.posA + "+, " + coverage.negA + "- )";
+                if (tmp > 0) tmp = tmp.toString() + " (" + Math.round(tmp / coverage.total * 100.0) + "%, " + coverage.posA + "+, " + coverage.negA + "- )";
                 nameValues.push({ name: 'A', value: tmp });
 
                 // C
                 tmp = coverage.posC + coverage.negC;
-                if (tmp > 0) tmp = tmp.toString() + " (" + Math.floor(tmp / coverage.total * 100.0) + "%, " + coverage.posC + "+, " + coverage.negC + "- )";
+                if (tmp > 0) tmp = tmp.toString() + " (" + Math.round(tmp / coverage.total * 100.0) + "%, " + coverage.posC + "+, " + coverage.negC + "- )";
                 nameValues.push({ name: 'C', value: tmp });
 
                 // G
                 tmp = coverage.posG + coverage.negG;
-                if (tmp > 0) tmp = tmp.toString() + " (" + Math.floor(tmp / coverage.total * 100.0) + "%, " + coverage.posG + "+, " + coverage.negG + "- )";
+                if (tmp > 0) tmp = tmp.toString() + " (" + Math.round(tmp / coverage.total * 100.0) + "%, " + coverage.posG + "+, " + coverage.negG + "- )";
                 nameValues.push({ name: 'G', value: tmp });
 
                 // T
                 tmp = coverage.posT + coverage.negT;
-                if (tmp > 0) tmp = tmp.toString() + " (" + Math.floor(tmp / coverage.total * 100.0) + "%, " + coverage.posT + "+, " + coverage.negT + "- )";
+                if (tmp > 0) tmp = tmp.toString() + " (" + Math.round(tmp / coverage.total * 100.0) + "%, " + coverage.posT + "+, " + coverage.negT + "- )";
                 nameValues.push({ name: 'T', value: tmp });
 
                 // N
                 tmp = coverage.posN + coverage.negN;
-                if (tmp > 0) tmp = tmp.toString() + " (" + Math.floor(tmp / coverage.total * 100.0) + "%, " + coverage.posN + "+, " + coverage.negN + "- )";
+                if (tmp > 0) tmp = tmp.toString() + " (" + Math.round(tmp / coverage.total * 100.0) + "%, " + coverage.posN + "+, " + coverage.negN + "- )";
                 nameValues.push({ name: 'N', value: tmp });
             }
 
@@ -22161,7 +20926,7 @@ var igv = function (igv) {
                 }
 
                 if (alignment.mq <= 0) {
-                    alignmentColor = igv.Color.addAlpha(alignmentColor, "0.15");
+                    alignmentColor = igv.Color.addAlpha(alignmentColor, 0.15);
                 }
 
                 igv.graphics.setProperties(ctx, { fillStyle: alignmentColor, strokeStyle: alignmentColor });
@@ -22174,7 +20939,7 @@ var igv = function (igv) {
                 var alignmentColor, outlineColor, lastBlockEnd, blocks, block, b, diagnosticColor;
 
                 alignmentColor = getAlignmentColor.call(self, alignment);
-                outlineColor = 'alignmentColor';
+                outlineColor = alignmentColor;
                 blocks = alignment.blocks;
 
                 if (alignment.start + alignment.lengthOnRef < bpStart || alignment.start > bpEnd) {
@@ -22182,7 +20947,7 @@ var igv = function (igv) {
                 }
 
                 if (alignment.mq <= 0) {
-                    alignmentColor = igv.Color.addAlpha(alignmentColor, "0.15");
+                    alignmentColor = igv.Color.addAlpha(alignmentColor, 0.15);
                 }
 
                 igv.graphics.setProperties(ctx, { fillStyle: alignmentColor, strokeStyle: outlineColor });
@@ -22193,7 +20958,10 @@ var igv = function (igv) {
 
                     block = blocks[b];
 
-                    if (block.start + block.len < bpStart) continue;
+                    // Somewhat complex test, neccessary to insure gaps are drawn.
+                    // If this is not the last block, and the next block starts before the orign (off screen to left)
+                    // then skip.
+                    if (b != blocks.length - 1 && blocks[b + 1].start < bpStart) continue;
 
                     drawBlock(block);
 
@@ -22472,9 +21240,7 @@ var igv = function (igv) {
                             color = alignment.strand ? self.posStrandColor : self.negStrandColor;
                         } else if (alignment.isSecondOfPair()) {
                             color = alignment.strand ? self.negStrandColor : self.posStrandColor;
-                        } else {
-                            console.log("ERROR. Paired alignments are either first or second.");
-                        }
+                        } else {}
                     }
                     break;
 
@@ -22484,9 +21250,7 @@ var igv = function (igv) {
                         if (oTypes) {
                             var pairColor = self.pairColors[oTypes[alignment.pairOrientation]];
                             if (pairColor) color = pairColor;
-                        } else {
-                            console.log("No orientation types for " + self.pairOrientation);
-                        }
+                        } else {}
                     }
                     break;
 
@@ -23119,7 +21883,6 @@ var igv = function (igv) {
                         break;
 
                     default:
-                        console.log('Error processing cigar element: ' + c.len + c.ltr);
                 }
             }
         } catch (err) {
@@ -24697,7 +23460,6 @@ var igv = function (igv) {
     function overlaps(item, chrIdx1, startBase, chrIdx2, endBase) {
 
         if (!item) {
-            console.log("null item for " + chrIdx1 + " " + startBase + " " + endBase);
             return false;
         }
 
@@ -25092,7 +23854,7 @@ var igv = function (igv) {
 
     igv.BinaryParser = function (dataView, littleEndian) {
 
-        this.littleEndian = littleEndian ? littleEndian : true;
+        this.littleEndian = littleEndian !== undefined ? littleEndian : true;
         this.position = 0;
         this.view = dataView;
         this.length = dataView.byteLength;
@@ -25391,6 +24153,12 @@ var igv = function (igv) {
         }
     }
 
+    igv.isWholeGenomeView = function (referenceFrame) {
+        var chromosomeName = referenceFrame.chrName.toLowerCase();
+
+        return 'all' === chromosomeName;
+    };
+
     igv.hasKnownFileExtension = function (config) {
         var extension = igv.getExtension(config);
 
@@ -25398,6 +24166,89 @@ var igv = function (igv) {
             return false;
         }
         return igv.knownFileExtensions.has(extension);
+    };
+
+    igv.Browser.prototype.renderSVG = function (config) {
+
+        var trackContainerBBox = this.trackContainerDiv.getBoundingClientRect();
+        var anyViewportContainerBBox = this.trackViews[0].$viewportContainer.get(0).getBoundingClientRect();
+        var ideoPanelBBox = this.ideoPanel ? this.ideoPanel.panels[0].$ideogram.get(0).getBoundingClientRect() : { height: 0, width: 0 };
+
+        // multi-locus inter-panel gap
+        var multiLocusGap = 8;
+
+        var w = trackContainerBBox.width + (this.genomicStateList.length - 1) * multiLocusGap;
+
+        var h_output = trackContainerBBox.height + ideoPanelBBox.height;
+        var h_render = 8000;
+
+        var svgContext = new C2S({
+
+            width: w,
+            height: h_render,
+
+            backdropColor: 'white',
+
+            multiLocusGap: multiLocusGap,
+
+            viewbox: {
+                x: 0,
+                y: 0,
+                width: w,
+                height: h_render
+            }
+
+        });
+
+        var dx = anyViewportContainerBBox.x - trackContainerBBox.x;
+
+        // ideoPanel -> SVG
+        if (this.ideoPanel) {
+
+            this.ideoPanel.renderSVGContext(svgContext, { deltaX: dx, deltaY: 0 });
+        }
+
+        // tracks -> SVG
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+            for (var _iterator = this.trackViews[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var trackView = _step.value;
+
+                trackView.renderSVGContext(svgContext, { deltaX: dx, deltaY: ideoPanelBBox.height - trackContainerBBox.y });
+            }
+
+            // reset height to trim away unneeded svg canvas real estate. Yes, a bit of a hack.
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+
+        svgContext.setHeight(h_output);
+
+        var svg = svgContext.getSerializedSvg(true);
+
+        if (config.$container) {
+            config.$container.empty();
+            config.$container.width(trackContainerBBox.width);
+            config.$container.append(svg);
+        }
+
+        var path = config.filename ? config.filename : 'igv-app.svg';
+        var data = URL.createObjectURL(new Blob([svg], { type: "application/octet-stream" }));
+        igv.download(path, data);
     };
 
     /**
@@ -25413,7 +24264,7 @@ var igv = function (igv) {
 
         if (!config) config = {};
 
-        self.removeAllTracks();
+        self.removeAllTracks(true);
 
         igv.TrackView.DisableUpdates = true;
 
@@ -25432,45 +24283,15 @@ var igv = function (igv) {
 
                 var genomicStates = {};
 
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = self.genomicStateList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var gs = _step.value;
-
-                        genomicStates[gs.locusSearchString] = gs;
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-
                 var _iteratorNormalCompletion2 = true;
                 var _didIteratorError2 = false;
                 var _iteratorError2 = undefined;
 
                 try {
-                    for (var _iterator2 = Object.getOwnPropertyNames(config.gtexSelections)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                        var _s = _step2.value;
+                    for (var _iterator2 = self.genomicStateList[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        var gs = _step2.value;
 
-                        var _gs = genomicStates[_s];
-                        if (_gs) {
-                            var gene = config.gtexSelections[_s].gene;
-                            var snp = config.gtexSelections[_s].snp;
-                            _gs.selection = new igv.GtexSelection(gene, snp);
-                        }
+                        genomicStates[gs.locusSearchString] = gs;
                     }
                 } catch (err) {
                     _didIteratorError2 = true;
@@ -25483,6 +24304,36 @@ var igv = function (igv) {
                     } finally {
                         if (_didIteratorError2) {
                             throw _iteratorError2;
+                        }
+                    }
+                }
+
+                var _iteratorNormalCompletion3 = true;
+                var _didIteratorError3 = false;
+                var _iteratorError3 = undefined;
+
+                try {
+                    for (var _iterator3 = Object.getOwnPropertyNames(config.gtexSelections)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                        var _s = _step3.value;
+
+                        var _gs = genomicStates[_s];
+                        if (_gs) {
+                            var gene = config.gtexSelections[_s].gene;
+                            var snp = config.gtexSelections[_s].snp;
+                            _gs.selection = new igv.GtexSelection(gene, snp);
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError3 = true;
+                    _iteratorError3 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                            _iterator3.return();
+                        }
+                    } finally {
+                        if (_didIteratorError3) {
+                            throw _iteratorError3;
                         }
                     }
                 }
@@ -25521,7 +24372,6 @@ var igv = function (igv) {
             self.resize();
         }).catch(function (error) {
             self.presentAlert(error, undefined);
-            console.log(error);
         });
 
         function loadSessionFile(urlOrFile) {
@@ -25711,20 +24561,59 @@ var igv = function (igv) {
     };
 
     function toggleTrackLabels(trackViews, isVisible) {
+        var _iteratorNormalCompletion4 = true;
+        var _didIteratorError4 = false;
+        var _iteratorError4 = undefined;
 
-        trackViews.forEach(function (trackView) {
-            trackView.viewports.forEach(function (viewport, index) {
+        try {
 
-                if (viewport.$trackLabel) {
+            for (var _iterator4 = trackViews[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                var trackView = _step4.value;
+                var _iteratorNormalCompletion5 = true;
+                var _didIteratorError5 = false;
+                var _iteratorError5 = undefined;
 
-                    if (0 === index && true === isVisible) {
-                        viewport.$trackLabel.show();
-                    } else {
-                        viewport.$trackLabel.hide();
+                try {
+                    for (var _iterator5 = trackView.viewports[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                        var viewport = _step5.value;
+
+                        if (viewport.$trackLabel) {
+                            if (0 === trackView.viewports.indexOf(viewport) && true === isVisible) {
+                                viewport.$trackLabel.show();
+                            } else {
+                                viewport.$trackLabel.hide();
+                            }
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError5 = true;
+                    _iteratorError5 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                            _iterator5.return();
+                        }
+                    } finally {
+                        if (_didIteratorError5) {
+                            throw _iteratorError5;
+                        }
                     }
                 }
-            });
-        });
+            }
+        } catch (err) {
+            _didIteratorError4 = true;
+            _iteratorError4 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                    _iterator4.return();
+                }
+            } finally {
+                if (_didIteratorError4) {
+                    throw _iteratorError4;
+                }
+            }
+        }
     }
 
     // cursor guide
@@ -26022,20 +24911,42 @@ var igv = function (igv) {
     /**
      * API function
      */
-    igv.Browser.prototype.removeAllTracks = function () {
+    igv.Browser.prototype.removeAllTracks = function (removeSequence) {
         var self = this,
             newTrackViews = [];
 
-        this.trackViews.forEach(function (tv) {
+        var _iteratorNormalCompletion6 = true;
+        var _didIteratorError6 = false;
+        var _iteratorError6 = undefined;
 
-            if (!(tv.track.id === 'sequence' || tv.track.id === 'ruler')) {
-                self.trackContainerDiv.removeChild(tv.trackDiv);
-                self.fireEvent('trackremoved', [tv.track]);
-                tv.dispose();
-            } else {
-                newTrackViews.push(tv);
+        try {
+            for (var _iterator6 = this.trackViews[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                var tv = _step6.value;
+
+
+                if ((removeSequence || tv.track.id !== 'sequence') && tv.track.id !== 'ruler') {
+                    self.trackContainerDiv.removeChild(tv.trackDiv);
+                    self.fireEvent('trackremoved', [tv.track]);
+                    tv.dispose();
+                } else {
+                    newTrackViews.push(tv);
+                }
             }
-        });
+        } catch (err) {
+            _didIteratorError6 = true;
+            _iteratorError6 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                    _iterator6.return();
+                }
+            } finally {
+                if (_didIteratorError6) {
+                    throw _iteratorError6;
+                }
+            }
+        }
+
         this.trackViews = newTrackViews;
     };
 
@@ -26073,24 +24984,12 @@ var igv = function (igv) {
 
         var self = this;
 
-        // Minimal attempt at responsiveness
-        var rootWidth = this.$root.width();
-        if (rootWidth < 1000) {
-            this.chromosomeSelectWidget.$container.hide();
-            this.$root.find(".igv-nav-bar-toggle-button-container").hide();
-            this.zoomWidget.hide();
-        } else {
-            if (this.config.showChromosomeWidget) {
-                this.chromosomeSelectWidget.$container.show();
-            }
-            this.$root.find(".igv-nav-bar-toggle-button-container").show();
-            this.$root.find(".igv-right-hand-gutter").show();
-            this.zoomWidget.show();
-            //this.$root.find(".igv-track-manipulation-handle").show();
-        }
-
         // Recompute bpPerPixel -- if previous width was zero this can be infinity
         var viewportWidth = this.viewportWidth();
+
+        if (viewportWidth === 0) {
+            return;
+        }
 
         if (this.genomicStateList && viewportWidth > 0) {
             this.genomicStateList.forEach(function (gstate) {
@@ -26117,6 +25016,8 @@ var igv = function (igv) {
             this.updateLocusSearchWidget(this.genomicStateList[0]);
             this.windowSizePanel.updateWithGenomicState(this.genomicStateList[0]);
         }
+
+        this.updateViews();
 
         function resizeWillExceedChromosomeLength(genomicState) {
 
@@ -26351,6 +25252,11 @@ var igv = function (igv) {
 
             self.updateViews(viewport.genomicState);
         });
+    };
+
+    igv.Browser.prototype.zoom = function (scaleFactor) {
+        var nuthin = undefined;
+        this.zoomWithScaleFactor(nuthin, nuthin, scaleFactor);
     };
 
     // Zoom in by a factor of 2, keeping the same center location
@@ -26618,27 +25524,27 @@ var igv = function (igv) {
                 self.buildViewportsWithGenomicStateList(genomicStateList);
 
                 // assign ids to the state objects
-                var _iteratorNormalCompletion3 = true;
-                var _didIteratorError3 = false;
-                var _iteratorError3 = undefined;
+                var _iteratorNormalCompletion7 = true;
+                var _didIteratorError7 = false;
+                var _iteratorError7 = undefined;
 
                 try {
-                    for (var _iterator3 = genomicStateList[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                        var gs = _step3.value;
+                    for (var _iterator7 = genomicStateList[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                        var gs = _step7.value;
 
                         gs.id = igv.guid();
                     }
                 } catch (err) {
-                    _didIteratorError3 = true;
-                    _iteratorError3 = err;
+                    _didIteratorError7 = true;
+                    _iteratorError7 = err;
                 } finally {
                     try {
-                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                            _iterator3.return();
+                        if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                            _iterator7.return();
                         }
                     } finally {
-                        if (_didIteratorError3) {
-                            throw _iteratorError3;
+                        if (_didIteratorError7) {
+                            throw _iteratorError7;
                         }
                     }
                 }
@@ -26834,7 +25740,6 @@ var igv = function (igv) {
 
                     //
                     if (!(result.hasOwnProperty(searchConfig.chromosomeField) && result.hasOwnProperty(searchConfig.startField))) {
-                        console.log("Search service results must includ chromosome and start fields: " + result);
                         return undefined;
                     }
 
@@ -26959,6 +25864,10 @@ var igv = function (igv) {
                         }
 
                         locusObject.start = parseInt(numeric, 10) - 1;
+
+                        if (isNaN(locusObject.start)) {
+                            return undefined;
+                        }
 
                         if (2 === b.length) {
 
@@ -27135,14 +26044,14 @@ var igv = function (igv) {
 
         json["tracks"] = trackJson;
 
-        return JSON.stringify(json);
+        return json; // This is an object, not a json string
     };
 
     igv.Browser.prototype.compressedSession = function () {
 
         var json, bytes, deflate, compressedBytes, compressedString, enc;
 
-        json = this.toJSON();
+        json = JSON.stringify(this.toJSON());
         bytes = [];
         for (var i = 0; i < json.length; i++) {
             bytes.push(json.charCodeAt(i));
@@ -27172,8 +26081,6 @@ var igv = function (igv) {
         bytes = new Zlib.RawInflate(compressedBytes).decompress();
         json = String.fromCharCode.apply(null, bytes);
 
-        console.log(json);
-
         return json;
     };
 
@@ -27194,7 +26101,7 @@ var igv = function (igv) {
         "404": "Not found"
     };
 
-    igv.Browser.prototype.presentAlert = function (alert, $parent) {
+    igv.Browser.prototype.presentAlert = function (alert, $parent, callback) {
 
         var string;
 
@@ -27206,6 +26113,10 @@ var igv = function (igv) {
 
         this.alertDialog.configure({ label: string });
         this.alertDialog.present($parent);
+    };
+
+    igv.Browser.prototype.presentMessageWithCallback = function (message, callback) {
+        this.alertDialog.presentMessageWithCallback(message, callback);
     };
 
     /**
@@ -27387,6 +26298,1309 @@ var igv = function (igv) {
 
     return igv;
 }(igv || {});
+
+"use strict";
+
+/*!!
+ *  Canvas 2 Svg v1.0.19
+ *  A low level canvas to SVG converter. Uses a mock canvas context to build an SVG document.
+ *
+ *  Licensed under the MIT license:
+ *  http://www.opensource.org/licenses/mit-license.php
+ *
+ *  Author:
+ *  Kerry Liu
+ *
+ *  Copyright (c) 2014 Gliffy Inc.
+ */
+
+var C2S;
+
+(function () {
+    "use strict";
+
+    var STYLES, _ctx, CanvasGradient, CanvasPattern, namedEntities;
+
+    //helper function to format a string
+    function format(str, args) {
+        var keys = Object.keys(args),
+            i;
+        for (i = 0; i < keys.length; i++) {
+            str = str.replace(new RegExp("\\{" + keys[i] + "\\}", "gi"), args[keys[i]]);
+        }
+        return str;
+    }
+
+    //helper function that generates a random string
+    function randomString(holder) {
+        var chars, randomstring, i;
+        if (!holder) {
+            throw new Error("cannot create a random attribute name for an undefined object");
+        }
+        chars = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+        randomstring = "";
+        do {
+            randomstring = "";
+            for (i = 0; i < 12; i++) {
+                randomstring += chars[Math.floor(Math.random() * chars.length)];
+            }
+        } while (holder[randomstring]);
+        return randomstring;
+    }
+
+    //helper function to map named to numbered entities
+    function createNamedToNumberedLookup(items, radix) {
+        var i,
+            entity,
+            lookup = {},
+            base10,
+            base16;
+        items = items.split(',');
+        radix = radix || 10;
+        // Map from named to numbered entities.
+        for (i = 0; i < items.length; i += 2) {
+            entity = '&' + items[i + 1] + ';';
+            base10 = parseInt(items[i], radix);
+            lookup[entity] = '&#' + base10 + ';';
+        }
+        //FF and IE need to create a regex from hex values ie &nbsp; == \xa0
+        lookup["\\xa0"] = '&#160;';
+        return lookup;
+    }
+
+    //helper function to map canvas-textAlign to svg-textAnchor
+    function getTextAnchor(textAlign) {
+        //TODO: support rtl languages
+        var mapping = { "left": "start", "right": "end", "center": "middle", "start": "start", "end": "end" };
+        return mapping[textAlign] || mapping.start;
+    }
+
+    //helper function to map canvas-textBaseline to svg-dominantBaseline
+    function getDominantBaseline(textBaseline) {
+        //INFO: not supported in all browsers
+        var mapping = { "alphabetic": "alphabetic", "hanging": "hanging", "top": "text-before-edge", "bottom": "text-after-edge", "middle": "central" };
+        return mapping[textBaseline] || mapping.alphabetic;
+    }
+
+    // Unpack entities lookup where the numbers are in radix 32 to reduce the size
+    // entity mapping courtesy of tinymce
+    namedEntities = createNamedToNumberedLookup('50,nbsp,51,iexcl,52,cent,53,pound,54,curren,55,yen,56,brvbar,57,sect,58,uml,59,copy,' + '5a,ordf,5b,laquo,5c,not,5d,shy,5e,reg,5f,macr,5g,deg,5h,plusmn,5i,sup2,5j,sup3,5k,acute,' + '5l,micro,5m,para,5n,middot,5o,cedil,5p,sup1,5q,ordm,5r,raquo,5s,frac14,5t,frac12,5u,frac34,' + '5v,iquest,60,Agrave,61,Aacute,62,Acirc,63,Atilde,64,Auml,65,Aring,66,AElig,67,Ccedil,' + '68,Egrave,69,Eacute,6a,Ecirc,6b,Euml,6c,Igrave,6d,Iacute,6e,Icirc,6f,Iuml,6g,ETH,6h,Ntilde,' + '6i,Ograve,6j,Oacute,6k,Ocirc,6l,Otilde,6m,Ouml,6n,times,6o,Oslash,6p,Ugrave,6q,Uacute,' + '6r,Ucirc,6s,Uuml,6t,Yacute,6u,THORN,6v,szlig,70,agrave,71,aacute,72,acirc,73,atilde,74,auml,' + '75,aring,76,aelig,77,ccedil,78,egrave,79,eacute,7a,ecirc,7b,euml,7c,igrave,7d,iacute,7e,icirc,' + '7f,iuml,7g,eth,7h,ntilde,7i,ograve,7j,oacute,7k,ocirc,7l,otilde,7m,ouml,7n,divide,7o,oslash,' + '7p,ugrave,7q,uacute,7r,ucirc,7s,uuml,7t,yacute,7u,thorn,7v,yuml,ci,fnof,sh,Alpha,si,Beta,' + 'sj,Gamma,sk,Delta,sl,Epsilon,sm,Zeta,sn,Eta,so,Theta,sp,Iota,sq,Kappa,sr,Lambda,ss,Mu,' + 'st,Nu,su,Xi,sv,Omicron,t0,Pi,t1,Rho,t3,Sigma,t4,Tau,t5,Upsilon,t6,Phi,t7,Chi,t8,Psi,' + 't9,Omega,th,alpha,ti,beta,tj,gamma,tk,delta,tl,epsilon,tm,zeta,tn,eta,to,theta,tp,iota,' + 'tq,kappa,tr,lambda,ts,mu,tt,nu,tu,xi,tv,omicron,u0,pi,u1,rho,u2,sigmaf,u3,sigma,u4,tau,' + 'u5,upsilon,u6,phi,u7,chi,u8,psi,u9,omega,uh,thetasym,ui,upsih,um,piv,812,bull,816,hellip,' + '81i,prime,81j,Prime,81u,oline,824,frasl,88o,weierp,88h,image,88s,real,892,trade,89l,alefsym,' + '8cg,larr,8ch,uarr,8ci,rarr,8cj,darr,8ck,harr,8dl,crarr,8eg,lArr,8eh,uArr,8ei,rArr,8ej,dArr,' + '8ek,hArr,8g0,forall,8g2,part,8g3,exist,8g5,empty,8g7,nabla,8g8,isin,8g9,notin,8gb,ni,8gf,prod,' + '8gh,sum,8gi,minus,8gn,lowast,8gq,radic,8gt,prop,8gu,infin,8h0,ang,8h7,and,8h8,or,8h9,cap,8ha,cup,' + '8hb,int,8hk,there4,8hs,sim,8i5,cong,8i8,asymp,8j0,ne,8j1,equiv,8j4,le,8j5,ge,8k2,sub,8k3,sup,8k4,' + 'nsub,8k6,sube,8k7,supe,8kl,oplus,8kn,otimes,8l5,perp,8m5,sdot,8o8,lceil,8o9,rceil,8oa,lfloor,8ob,' + 'rfloor,8p9,lang,8pa,rang,9ea,loz,9j0,spades,9j3,clubs,9j5,hearts,9j6,diams,ai,OElig,aj,oelig,b0,' + 'Scaron,b1,scaron,bo,Yuml,m6,circ,ms,tilde,802,ensp,803,emsp,809,thinsp,80c,zwnj,80d,zwj,80e,lrm,' + '80f,rlm,80j,ndash,80k,mdash,80o,lsquo,80p,rsquo,80q,sbquo,80s,ldquo,80t,rdquo,80u,bdquo,810,dagger,' + '811,Dagger,81g,permil,81p,lsaquo,81q,rsaquo,85c,euro', 32);
+
+    //Some basic mappings for attributes and default values.
+    STYLES = {
+        "strokeStyle": {
+            svgAttr: "stroke", //corresponding svg attribute
+            canvas: "#000000", //canvas default
+            svg: "none", //svg default
+            apply: "stroke" //apply on stroke() or fill()
+        },
+        "fillStyle": {
+            svgAttr: "fill",
+            canvas: "#000000",
+            svg: null, //svg default is black, but we need to special case this to handle canvas stroke without fill
+            apply: "fill"
+        },
+        "lineCap": {
+            svgAttr: "stroke-linecap",
+            canvas: "butt",
+            svg: "butt",
+            apply: "stroke"
+        },
+        "lineJoin": {
+            svgAttr: "stroke-linejoin",
+            canvas: "miter",
+            svg: "miter",
+            apply: "stroke"
+        },
+        "miterLimit": {
+            svgAttr: "stroke-miterlimit",
+            canvas: 10,
+            svg: 4,
+            apply: "stroke"
+        },
+        "lineWidth": {
+            svgAttr: "stroke-width",
+            canvas: 1,
+            svg: 1,
+            apply: "stroke"
+        },
+        "globalAlpha": {
+            svgAttr: "opacity",
+            canvas: 1,
+            svg: 1,
+            apply: "fill stroke"
+        },
+        "font": {
+            //font converts to multiple svg attributes, there is custom logic for this
+            canvas: "10px sans-serif"
+        },
+        "shadowColor": {
+            canvas: "#000000"
+        },
+        "shadowOffsetX": {
+            canvas: 0
+        },
+        "shadowOffsetY": {
+            canvas: 0
+        },
+        "shadowBlur": {
+            canvas: 0
+        },
+        "textAlign": {
+            canvas: "start"
+        },
+        "textBaseline": {
+            canvas: "alphabetic"
+        },
+        "lineDash": {
+            svgAttr: "stroke-dasharray",
+            canvas: [],
+            svg: null,
+            apply: "stroke"
+        }
+    };
+
+    /**
+     *
+     * @param gradientNode - reference to the gradient
+     * @constructor
+     */
+    CanvasGradient = function CanvasGradient(gradientNode, ctx) {
+        this.__root = gradientNode;
+        this.__ctx = ctx;
+    };
+
+    /**
+     * Adds a color stop to the gradient root
+     */
+    CanvasGradient.prototype.addColorStop = function (offset, color) {
+        var stop = this.__ctx.__createElement("stop"),
+            regex,
+            matches;
+        stop.setAttribute("offset", offset);
+        if (color && color.indexOf("rgba") !== -1) {
+            //separate alpha value, since webkit can't handle it
+            regex = /rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d?\.?\d*)\s*\)/gi;
+            matches = regex.exec(color);
+            stop.setAttribute("stop-color", format("rgb({r},{g},{b})", { r: matches[1], g: matches[2], b: matches[3] }));
+            stop.setAttribute("stop-opacity", matches[4]);
+        } else {
+            stop.setAttribute("stop-color", color);
+        }
+        this.__root.appendChild(stop);
+    };
+
+    CanvasPattern = function CanvasPattern(pattern, ctx) {
+        this.__root = pattern;
+        this.__ctx = ctx;
+    };
+
+    /**
+     * The mock canvas context
+     * @param config - options include:
+     * ctx - existing Context2D to wrap around
+     * width - width of your canvas (defaults to 500)
+     * height - height of your canvas (defaults to 500)
+     * enableMirroring - enables canvas mirroring (get image data) (defaults to false)
+     * document - the document object (defaults to the current document)
+     */
+    _ctx = function ctx(config) {
+
+        if (!(this instanceof _ctx)) {
+            //did someone call this without new?
+            return new _ctx(config);
+        }
+
+        // clone config
+        this.config = config;
+
+        //setup options
+        this.width = config.width;
+        this.height = config.height;
+        this.enableMirroring = config.enableMirroring || false;
+
+        this.canvas = this; ///point back to this instance!
+        this.__document = document;
+
+        // allow passing in an existing context to wrap around
+        // if a context is passed in, we know a canvas already exist
+        if (config.ctx) {
+            this.__ctx = config.ctx;
+        } else {
+            this.__canvas = this.__document.createElement("canvas");
+            this.__ctx = this.__canvas.getContext("2d");
+        }
+
+        // give this canvas a type
+        this.isSVG = true;
+
+        this.__setDefaultStyles();
+        this.__stack = [this.__getStyleState()];
+        this.__groupStack = [];
+
+        // root svg element
+        this.__root = this.__createElement("svg");
+        this.__root.setAttribute("width", this.width);
+        this.__root.setAttribute("height", this.height);
+
+        // allow contents to overflow svg bbox
+        this.__root.setAttribute('overflow', 'visible');
+
+        // viewbox
+        if (config.viewbox) {
+            var str = config.viewbox.x + ' ' + config.viewbox.y + ' ' + config.viewbox.width + ' ' + config.viewbox.height;
+            this.__root.setAttribute("viewBox", str);
+
+            this.viewbox = config.viewbox;
+        }
+
+        // make sure we don't generate the same ids in defs
+        this.__ids = {};
+
+        // defs
+        this.__defs = this.__createElement("defs");
+        this.__root.appendChild(this.__defs);
+
+        this.multiLocusGap = config.multiLocusGap;
+
+        // svg background color
+        var backdropConfig = {
+            id: 'svg_output_backdrop',
+            width: '100%',
+            height: '100%',
+            fill: config.backdropColor || 'white'
+        };
+
+        var backdropRect = this.__createElement('rect', backdropConfig);
+        this.__root.appendChild(backdropRect);
+
+        // root group
+        this.__rootGroup = this.__createElement('g', { id: 'root-group' });
+        this.__root.appendChild(this.__rootGroup);
+
+        // point current element to root group
+        this.__currentElement = this.__rootGroup;
+    };
+
+    _ctx.prototype.setWidth = function (width) {
+
+        this.width = width;
+        this.__root.setAttribute("width", this.width);
+
+        var str = this.config.viewbox.x + ' ' + this.config.viewbox.y + ' ' + width + ' ' + this.config.viewbox.height;
+        this.__root.setAttribute("viewBox", str);
+    };
+
+    _ctx.prototype.setHeight = function (height) {
+
+        this.height = height;
+        this.__root.setAttribute("height", this.height);
+
+        var str = this.config.viewbox.x + ' ' + this.config.viewbox.y + ' ' + this.config.viewbox.width + ' ' + height;
+        this.__root.setAttribute("viewBox", str);
+    };
+
+    /**
+     * Creates the specified svg element
+     * @private
+     */
+    _ctx.prototype.__createElement = function (elementName, properties, resetFill) {
+
+        if (typeof properties === "undefined") {
+            properties = {};
+        }
+
+        var element = this.__document.createElementNS("http://www.w3.org/2000/svg", elementName);
+
+        if (resetFill) {
+            //if fill or stroke is not specified, the svg element should not display. By default SVG's fill is black.
+            element.setAttribute("fill", "none");
+            element.setAttribute("stroke", "none");
+        }
+
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+            for (var _iterator = Object.keys(properties)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var key = _step.value;
+
+                element.setAttribute(key, properties[key]);
+            }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+
+        return element;
+    };
+
+    /**
+     * Applies default canvas styles to the context
+     * @private
+     */
+    _ctx.prototype.__setDefaultStyles = function () {
+        //default 2d canvas context properties see:http://www.w3.org/TR/2dcontext/
+        var keys = Object.keys(STYLES),
+            i,
+            key;
+        for (i = 0; i < keys.length; i++) {
+            key = keys[i];
+            this[key] = STYLES[key].canvas;
+        }
+    };
+
+    /**
+     * Applies styles on restore
+     * @param styleState
+     * @private
+     */
+    _ctx.prototype.__applyStyleState = function (styleState) {
+        var keys = Object.keys(styleState),
+            i,
+            key;
+        for (i = 0; i < keys.length; i++) {
+            key = keys[i];
+            this[key] = styleState[key];
+        }
+    };
+
+    /**
+     * Gets the current style state
+     * @return {Object}
+     * @private
+     */
+    _ctx.prototype.__getStyleState = function () {
+        var i,
+            styleState = {},
+            keys = Object.keys(STYLES),
+            key;
+        for (i = 0; i < keys.length; i++) {
+            key = keys[i];
+            styleState[key] = this[key];
+        }
+        return styleState;
+    };
+
+    /**
+     * Apples the current styles to the current SVG element. On "ctx.fill" or "ctx.stroke"
+     * @param type
+     * @private
+     */
+    _ctx.prototype.__applyStyleToCurrentElement = function (type) {
+        var currentElement = this.__currentElement;
+        var currentStyleGroup = this.__currentElementsToStyle;
+        if (currentStyleGroup) {
+            currentElement.setAttribute(type, "");
+            currentElement = currentStyleGroup.element;
+            currentStyleGroup.children.forEach(function (node) {
+                node.setAttribute(type, "");
+            });
+        }
+
+        var keys = Object.keys(STYLES),
+            i,
+            style,
+            value,
+            id,
+            regex,
+            matches;
+        for (i = 0; i < keys.length; i++) {
+            style = STYLES[keys[i]];
+            value = this[keys[i]];
+            if (style.apply) {
+                //is this a gradient or pattern?
+                if (value instanceof CanvasPattern) {
+                    //pattern
+                    if (value.__ctx) {
+                        //copy over defs
+                        while (value.__ctx.__defs.childNodes.length) {
+                            id = value.__ctx.__defs.childNodes[0].getAttribute("id");
+                            this.__ids[id] = id;
+                            this.__defs.appendChild(value.__ctx.__defs.childNodes[0]);
+                        }
+                    }
+                    currentElement.setAttribute(style.apply, format("url(#{id})", { id: value.__root.getAttribute("id") }));
+                } else if (value instanceof CanvasGradient) {
+                    //gradient
+                    currentElement.setAttribute(style.apply, format("url(#{id})", { id: value.__root.getAttribute("id") }));
+                } else if (style && style.apply.indexOf(type) !== -1 && style.svg !== value) {
+                    if ((style.svgAttr === "stroke" || style.svgAttr === "fill") && value && value.indexOf("rgba") !== -1) {
+                        //separate alpha value, since illustrator can't handle it
+                        regex = /rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d?\.?\d*)\s*\)/gi;
+                        matches = regex.exec(value);
+                        currentElement.setAttribute(style.svgAttr, format("rgb({r},{g},{b})", { r: matches[1], g: matches[2], b: matches[3] }));
+                        //should take globalAlpha here
+                        var opacity = matches[4];
+                        var globalAlpha = this.globalAlpha;
+                        if (globalAlpha != null) {
+                            opacity *= globalAlpha;
+                        }
+                        currentElement.setAttribute(style.svgAttr + "-opacity", opacity);
+                    } else {
+                        var attr = style.svgAttr;
+                        if (keys[i] === 'globalAlpha') {
+                            attr = type + '-' + style.svgAttr;
+                            if (currentElement.getAttribute(attr)) {
+                                //fill-opacity or stroke-opacity has already been set by stroke or fill.
+                                continue;
+                            }
+                        }
+                        //otherwise only update attribute if right type, and not svg default
+                        currentElement.setAttribute(attr, value);
+                    }
+                }
+            }
+        }
+    };
+
+    /**
+     * Will return the closest group or svg node. May return the current element.
+     * @private
+     */
+    _ctx.prototype.__closestGroupOrSvg = function (node) {
+        node = node || this.__currentElement;
+        if (node.nodeName === "g" || node.nodeName === "svg") {
+            return node;
+        } else {
+            return this.__closestGroupOrSvg(node.parentNode);
+        }
+    };
+
+    /**
+     * Returns the serialized value of the svg so far
+     * @param fixNamedEntities - Standalone SVG doesn't support named entities, which document.createTextNode encodes.
+     *                           If true, we attempt to find all named entities and encode it as a numeric entity.
+     * @return serialized svg
+     */
+    _ctx.prototype.getSerializedSvg = function (fixNamedEntities) {
+        var serialized = new XMLSerializer().serializeToString(this.__root),
+            keys,
+            i,
+            key,
+            value,
+            regexp,
+            xmlns;
+
+        //IE search for a duplicate xmnls because they didn't implement setAttributeNS correctly
+        // xmlns = /xmlns="http:\/\/www\.w3\.org\/2000\/svg".+xmlns="http:\/\/www\.w3\.org\/2000\/svg/gi;
+        // if (xmlns.test(serialized)) {
+        //     serialized = serialized.replace('xmlns="http://www.w3.org/2000/svg','xmlns:xlink="http://www.w3.org/1999/xlink');
+        // }
+
+        if (fixNamedEntities) {
+            keys = Object.keys(namedEntities);
+            //loop over each named entity and replace with the proper equivalent.
+            for (i = 0; i < keys.length; i++) {
+                key = keys[i];
+                value = namedEntities[key];
+                regexp = new RegExp(key, "gi");
+                if (regexp.test(serialized)) {
+                    serialized = serialized.replace(regexp, value);
+                }
+            }
+        }
+
+        return serialized;
+    };
+
+    /**
+     * Returns the root svg
+     * @return
+     */
+    _ctx.prototype.getSvg = function () {
+        return this.__root;
+    };
+    /**
+     * Will generate a group tag.
+     */
+    _ctx.prototype.save = function () {
+        var group = this.__createElement("g");
+        var parent = this.__closestGroupOrSvg();
+        this.__groupStack.push(parent);
+        parent.appendChild(group);
+        this.__currentElement = group;
+        this.__stack.push(this.__getStyleState());
+    };
+    /**
+     * Sets current element to parent, or just root if already root
+     */
+    _ctx.prototype.restore = function () {
+        this.__currentElement = this.__groupStack.pop();
+        this.__currentElementsToStyle = null;
+        //Clearing canvas will make the poped group invalid, currentElement is set to the root group node.
+        if (!this.__currentElement) {
+            this.__currentElement = this.__root.childNodes[1];
+        }
+        var state = this.__stack.pop();
+        this.__applyStyleState(state);
+    };
+
+    /**
+     * Helper method to add transform
+     * @private
+     */
+    _ctx.prototype.__addTransform = function (t) {
+        //if the current element has siblings, add another group
+        var parent = this.__closestGroupOrSvg();
+        if (parent.childNodes.length > 0) {
+            if (this.__currentElement.nodeName === "path") {
+                if (!this.__currentElementsToStyle) this.__currentElementsToStyle = { element: parent, children: [] };
+                this.__currentElementsToStyle.children.push(this.__currentElement);
+                this.__applyCurrentDefaultPath();
+            }
+
+            var group = this.__createElement("g");
+            parent.appendChild(group);
+            this.__currentElement = group;
+        }
+
+        var transform = this.__currentElement.getAttribute("transform");
+        if (transform) {
+            transform += " ";
+        } else {
+            transform = "";
+        }
+        transform += t;
+        this.__currentElement.setAttribute("transform", transform);
+    };
+
+    _ctx.prototype.addTrackGroupWithTranslationAndClipRect = function (id, tx, ty, width, height, clipYOffset) {
+
+        // clip rect
+        var clip_id = id + '_clip_rect';
+        var clipPath = this.__createElement('clipPath', { id: clip_id });
+
+        this.__defs.appendChild(clipPath);
+        clipPath.appendChild(this.__createElement('rect', { x: '0', y: clipYOffset.toString(), width: width.toString(), height: height.toString() }));
+
+        var group = this.__createElement('g');
+        this.__rootGroup.appendChild(group);
+
+        group.setAttribute('transform', format('translate({x},{y})', { x: tx, y: ty }));
+        group.setAttribute('id', id + '_group');
+
+        // add clip rect
+        group.setAttribute('clip-path', format('url(#{id})', { id: clip_id }));
+
+        this.__currentElement = group;
+
+        return group;
+    };
+
+    /**
+     *  scales the current element
+     */
+    _ctx.prototype.scale = function (x, y) {
+        if (y === undefined) {
+            y = x;
+        }
+        this.__addTransform(format("scale({x},{y})", { x: x, y: y }));
+    };
+
+    /**
+     * rotates the current element
+     */
+    _ctx.prototype.rotate = function (angle) {
+        var degrees = angle * 180 / Math.PI;
+        this.__addTransform(format("rotate({angle},{cx},{cy})", { angle: degrees, cx: 0, cy: 0 }));
+    };
+
+    /**
+     * translates the current element
+     */
+    _ctx.prototype.translate = function (x, y) {
+        this.__addTransform(format("translate({x},{y})", { x: x, y: y }));
+    };
+
+    /**
+     * applies a transform to the current element
+     */
+    _ctx.prototype.transform = function (a, b, c, d, e, f) {
+        this.__addTransform(format("matrix({a},{b},{c},{d},{e},{f})", { a: a, b: b, c: c, d: d, e: e, f: f }));
+    };
+
+    /**
+     * Create a new Path Element
+     */
+    _ctx.prototype.beginPath = function () {
+        var path, parent;
+
+        // Note that there is only one current default path, it is not part of the drawing state.
+        // See also: https://html.spec.whatwg.org/multipage/scripting.html#current-default-path
+        this.__currentDefaultPath = "";
+        this.__currentPosition = {};
+
+        path = this.__createElement("path", {}, true);
+        parent = this.__closestGroupOrSvg();
+        parent.appendChild(path);
+        this.__currentElement = path;
+    };
+
+    /**
+     * Helper function to apply currentDefaultPath to current path element
+     * @private
+     */
+    _ctx.prototype.__applyCurrentDefaultPath = function () {
+        var currentElement = this.__currentElement;
+        if (currentElement.nodeName === "path") {
+            currentElement.setAttribute("d", this.__currentDefaultPath);
+        } else {
+            console.error("Attempted to apply path command to node", currentElement.nodeName);
+        }
+    };
+
+    /**
+     * Helper function to add path command
+     * @private
+     */
+    _ctx.prototype.__addPathCommand = function (command) {
+        this.__currentDefaultPath += " ";
+        this.__currentDefaultPath += command;
+    };
+
+    /**
+     * Adds the move command to the current path element,
+     * if the currentPathElement is not empty create a new path element
+     */
+    _ctx.prototype.moveTo = function (x, y) {
+        if (this.__currentElement.nodeName !== "path") {
+            this.beginPath();
+        }
+
+        // creates a new subpath with the given point
+        this.__currentPosition = { x: x, y: y };
+        this.__addPathCommand(format("M {x} {y}", { x: x, y: y }));
+    };
+
+    /**
+     * Closes the current path
+     */
+    _ctx.prototype.closePath = function () {
+        if (this.__currentDefaultPath) {
+            this.__addPathCommand("Z");
+        }
+    };
+
+    /**
+     * Adds a line to command
+     */
+    _ctx.prototype.lineTo = function (x, y) {
+        this.__currentPosition = { x: x, y: y };
+        if (this.__currentDefaultPath && this.__currentDefaultPath.indexOf('M') > -1) {
+            this.__addPathCommand(format("L {x} {y}", { x: x, y: y }));
+        } else {
+            this.__addPathCommand(format("M {x} {y}", { x: x, y: y }));
+        }
+    };
+
+    /**
+     * Add a bezier command
+     */
+    _ctx.prototype.bezierCurveTo = function (cp1x, cp1y, cp2x, cp2y, x, y) {
+        this.__currentPosition = { x: x, y: y };
+        this.__addPathCommand(format("C {cp1x} {cp1y} {cp2x} {cp2y} {x} {y}", { cp1x: cp1x, cp1y: cp1y, cp2x: cp2x, cp2y: cp2y, x: x, y: y }));
+    };
+
+    /**
+     * Adds a quadratic curve to command
+     */
+    _ctx.prototype.quadraticCurveTo = function (cpx, cpy, x, y) {
+        this.__currentPosition = { x: x, y: y };
+        this.__addPathCommand(format("Q {cpx} {cpy} {x} {y}", { cpx: cpx, cpy: cpy, x: x, y: y }));
+    };
+
+    /**
+     * Return a new normalized vector of given vector
+     */
+    var normalize = function normalize(vector) {
+        var len = Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
+        return [vector[0] / len, vector[1] / len];
+    };
+
+    /**
+     * Adds the arcTo to the current path
+     *
+     * @see http://www.w3.org/TR/2015/WD-2dcontext-20150514/#dom-context-2d-arcto
+     */
+    _ctx.prototype.arcTo = function (x1, y1, x2, y2, radius) {
+        // Let the point (x0, y0) be the last point in the subpath.
+        var x0 = this.__currentPosition && this.__currentPosition.x;
+        var y0 = this.__currentPosition && this.__currentPosition.y;
+
+        // First ensure there is a subpath for (x1, y1).
+        if (typeof x0 == "undefined" || typeof y0 == "undefined") {
+            return;
+        }
+
+        // Negative values for radius must cause the implementation to throw an IndexSizeError exception.
+        if (radius < 0) {
+            throw new Error("IndexSizeError: The radius provided (" + radius + ") is negative.");
+        }
+
+        // If the point (x0, y0) is equal to the point (x1, y1),
+        // or if the point (x1, y1) is equal to the point (x2, y2),
+        // or if the radius radius is zero,
+        // then the method must add the point (x1, y1) to the subpath,
+        // and connect that point to the previous point (x0, y0) by a straight line.
+        if (x0 === x1 && y0 === y1 || x1 === x2 && y1 === y2 || radius === 0) {
+            this.lineTo(x1, y1);
+            return;
+        }
+
+        // Otherwise, if the points (x0, y0), (x1, y1), and (x2, y2) all lie on a single straight line,
+        // then the method must add the point (x1, y1) to the subpath,
+        // and connect that point to the previous point (x0, y0) by a straight line.
+        var unit_vec_p1_p0 = normalize([x0 - x1, y0 - y1]);
+        var unit_vec_p1_p2 = normalize([x2 - x1, y2 - y1]);
+        if (unit_vec_p1_p0[0] * unit_vec_p1_p2[1] === unit_vec_p1_p0[1] * unit_vec_p1_p2[0]) {
+            this.lineTo(x1, y1);
+            return;
+        }
+
+        // Otherwise, let The Arc be the shortest arc given by circumference of the circle that has radius radius,
+        // and that has one point tangent to the half-infinite line that crosses the point (x0, y0) and ends at the point (x1, y1),
+        // and that has a different point tangent to the half-infinite line that ends at the point (x1, y1), and crosses the point (x2, y2).
+        // The points at which this circle touches these two lines are called the start and end tangent points respectively.
+
+        // note that both vectors are unit vectors, so the length is 1
+        var cos = unit_vec_p1_p0[0] * unit_vec_p1_p2[0] + unit_vec_p1_p0[1] * unit_vec_p1_p2[1];
+        var theta = Math.acos(Math.abs(cos));
+
+        // Calculate origin
+        var unit_vec_p1_origin = normalize([unit_vec_p1_p0[0] + unit_vec_p1_p2[0], unit_vec_p1_p0[1] + unit_vec_p1_p2[1]]);
+        var len_p1_origin = radius / Math.sin(theta / 2);
+        var x = x1 + len_p1_origin * unit_vec_p1_origin[0];
+        var y = y1 + len_p1_origin * unit_vec_p1_origin[1];
+
+        // Calculate start angle and end angle
+        // rotate 90deg clockwise (note that y axis points to its down)
+        var unit_vec_origin_start_tangent = [-unit_vec_p1_p0[1], unit_vec_p1_p0[0]];
+        // rotate 90deg counter clockwise (note that y axis points to its down)
+        var unit_vec_origin_end_tangent = [unit_vec_p1_p2[1], -unit_vec_p1_p2[0]];
+        var getAngle = function getAngle(vector) {
+            // get angle (clockwise) between vector and (1, 0)
+            var x = vector[0];
+            var y = vector[1];
+            if (y >= 0) {
+                // note that y axis points to its down
+                return Math.acos(x);
+            } else {
+                return -Math.acos(x);
+            }
+        };
+        var startAngle = getAngle(unit_vec_origin_start_tangent);
+        var endAngle = getAngle(unit_vec_origin_end_tangent);
+
+        // Connect the point (x0, y0) to the start tangent point by a straight line
+        this.lineTo(x + unit_vec_origin_start_tangent[0] * radius, y + unit_vec_origin_start_tangent[1] * radius);
+
+        // Connect the start tangent point to the end tangent point by arc
+        // and adding the end tangent point to the subpath.
+        this.arc(x, y, radius, startAngle, endAngle);
+    };
+
+    /**
+     * Sets the stroke property on the current element
+     */
+    _ctx.prototype.stroke = function () {
+        if (this.__currentElement.nodeName === "path") {
+            this.__currentElement.setAttribute("paint-order", "fill stroke markers");
+        }
+        this.__applyCurrentDefaultPath();
+        this.__applyStyleToCurrentElement("stroke");
+    };
+
+    /**
+     * Sets fill properties on the current element
+     */
+    _ctx.prototype.fill = function () {
+        if (this.__currentElement.nodeName === "path") {
+            this.__currentElement.setAttribute("paint-order", "stroke fill markers");
+        }
+        this.__applyCurrentDefaultPath();
+        this.__applyStyleToCurrentElement("fill");
+    };
+
+    /**
+     *  Adds a rectangle to the path.
+     */
+    _ctx.prototype.rect = function (x, y, width, height) {
+        if (this.__currentElement.nodeName !== "path") {
+            this.beginPath();
+        }
+        this.moveTo(x, y);
+        this.lineTo(x + width, y);
+        this.lineTo(x + width, y + height);
+        this.lineTo(x, y + height);
+        this.lineTo(x, y);
+        this.closePath();
+    };
+
+    /**
+     * adds a rectangle element
+     */
+    _ctx.prototype.fillRect = function (x, y, width, height) {
+
+        // See if rect instersects current viewbox
+        var r2 = {
+            x: x,
+            y: y,
+            width: width,
+            height: height
+        };
+
+        if (this.viewbox) {
+            if (!intersectRect(this.viewbox, r2)) {
+                return;
+            }
+        }
+
+        var rect, parent;
+        rect = this.__createElement("rect", r2, true);
+        parent = this.__closestGroupOrSvg();
+        parent.appendChild(rect);
+        this.__currentElement = rect;
+        this.__applyStyleToCurrentElement("fill");
+    };
+
+    function intersectRect(rect1, rect2) {
+        return rect1.x < rect2.x + rect2.width && rect1.x + rect1.width > rect2.x && rect1.y < rect2.y + rect2.height && rect1.y + rect1.height > rect2.y;
+    }
+
+    /**
+     * Draws a rectangle with no fill
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     */
+    _ctx.prototype.strokeRect = function (x, y, width, height) {
+        var rect, parent;
+        rect = this.__createElement("rect", {
+            x: x,
+            y: y,
+            width: width,
+            height: height
+        }, true);
+        parent = this.__closestGroupOrSvg();
+        parent.appendChild(rect);
+        this.__currentElement = rect;
+        this.__applyStyleToCurrentElement("stroke");
+    };
+
+    /**
+     * Clear entire canvas:
+     * 1. save current transforms
+     * 2. remove all the childNodes of the root g element
+     */
+    _ctx.prototype.__clearCanvas = function () {
+        var current = this.__closestGroupOrSvg(),
+            transform = current.getAttribute("transform");
+        var rootGroup = this.__root.childNodes[1];
+        var childNodes = rootGroup.childNodes;
+        for (var i = childNodes.length - 1; i >= 0; i--) {
+            if (childNodes[i]) {
+                rootGroup.removeChild(childNodes[i]);
+            }
+        }
+        this.__currentElement = rootGroup;
+        //reset __groupStack as all the child group nodes are all removed.
+        this.__groupStack = [];
+        if (transform) {
+            this.__addTransform(transform);
+        }
+    };
+
+    /**
+     * "Clears" a canvas by just drawing a white rectangle in the current group.
+     */
+    _ctx.prototype.clearRect = function (x, y, width, height) {
+        //clear entire canvas
+        if (x === 0 && y === 0 && width === this.width && height === this.height) {
+            this.__clearCanvas();
+            return;
+        }
+        var rect,
+            parent = this.__closestGroupOrSvg();
+        rect = this.__createElement("rect", {
+            x: x,
+            y: y,
+            width: width,
+            height: height,
+            fill: "#FFFFFF"
+        }, true);
+        parent.appendChild(rect);
+    };
+
+    /**
+     * Adds a linear gradient to a defs tag.
+     * Returns a canvas gradient object that has a reference to it's parent def
+     */
+    _ctx.prototype.createLinearGradient = function (x1, y1, x2, y2) {
+        var grad = this.__createElement("linearGradient", {
+            id: randomString(this.__ids),
+            x1: x1 + "px",
+            x2: x2 + "px",
+            y1: y1 + "px",
+            y2: y2 + "px",
+            "gradientUnits": "userSpaceOnUse"
+        }, false);
+        this.__defs.appendChild(grad);
+        return new CanvasGradient(grad, this);
+    };
+
+    /**
+     * Adds a radial gradient to a defs tag.
+     * Returns a canvas gradient object that has a reference to it's parent def
+     */
+    _ctx.prototype.createRadialGradient = function (x0, y0, r0, x1, y1, r1) {
+        var grad = this.__createElement("radialGradient", {
+            id: randomString(this.__ids),
+            cx: x1 + "px",
+            cy: y1 + "px",
+            r: r1 + "px",
+            fx: x0 + "px",
+            fy: y0 + "px",
+            "gradientUnits": "userSpaceOnUse"
+        }, false);
+        this.__defs.appendChild(grad);
+        return new CanvasGradient(grad, this);
+    };
+
+    /**
+     * Parses the font string and returns svg mapping
+     * @private
+     */
+    _ctx.prototype.__parseFont = function () {
+        var regex = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-,\'\"\sa-z0-9]+?)\s*$/i;
+        var fontPart = regex.exec(this.font);
+        var data = {
+            style: fontPart[1] || 'normal',
+            size: fontPart[4] || '10px',
+            family: fontPart[6] || 'sans-serif',
+            weight: fontPart[3] || 'normal',
+            decoration: fontPart[2] || 'normal',
+            href: null
+        };
+
+        //canvas doesn't support underline natively, but we can pass this attribute
+        if (this.__fontUnderline === "underline") {
+            data.decoration = "underline";
+        }
+
+        //canvas also doesn't support linking, but we can pass this as well
+        if (this.__fontHref) {
+            data.href = this.__fontHref;
+        }
+
+        return data;
+    };
+
+    /**
+     * Helper to link text fragments
+     * @param font
+     * @param element
+     * @return {*}
+     * @private
+     */
+    _ctx.prototype.__wrapTextLink = function (font, element) {
+        if (font.href) {
+            var a = this.__createElement("a");
+            a.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", font.href);
+            a.appendChild(element);
+            return a;
+        }
+        return element;
+    };
+
+    /**
+     * Fills or strokes text
+     * @param text
+     * @param x
+     * @param y
+     * @param action - stroke or fill
+     * @private
+     */
+    _ctx.prototype.__applyText = function (text, x, y, action) {
+        var font = this.__parseFont(),
+            parent = this.__closestGroupOrSvg(),
+            textElement = this.__createElement("text", {
+            "font-family": font.family,
+            "font-size": font.size,
+            "font-style": font.style,
+            "font-weight": font.weight,
+            "text-decoration": font.decoration,
+            "x": x,
+            "y": y,
+            "text-anchor": getTextAnchor(this.textAlign),
+            "dominant-baseline": getDominantBaseline(this.textBaseline)
+        }, true);
+
+        textElement.appendChild(this.__document.createTextNode(text));
+        this.__currentElement = textElement;
+        this.__applyStyleToCurrentElement(action);
+        parent.appendChild(this.__wrapTextLink(font, textElement));
+    };
+
+    /**
+     * Creates a text element
+     * @param text
+     * @param x
+     * @param y
+     */
+    _ctx.prototype.fillText = function (text, x, y) {
+        this.__applyText(text, x, y, "fill");
+    };
+
+    /**
+     * Strokes text
+     * @param text
+     * @param x
+     * @param y
+     */
+    _ctx.prototype.strokeText = function (text, x, y) {
+        this.__applyText(text, x, y, "stroke");
+    };
+
+    /**
+     * No need to implement this for svg.
+     * @param text
+     * @return {TextMetrics}
+     */
+    _ctx.prototype.measureText = function (text) {
+        this.__ctx.font = this.font;
+        return this.__ctx.measureText(text);
+    };
+
+    /**
+     *  Arc command!
+     */
+    _ctx.prototype.arc = function (x, y, radius, startAngle, endAngle, counterClockwise) {
+        // in canvas no circle is drawn if no angle is provided.
+        if (startAngle === endAngle) {
+            return;
+        }
+        startAngle = startAngle % (2 * Math.PI);
+        endAngle = endAngle % (2 * Math.PI);
+        if (startAngle === endAngle) {
+            //circle time! subtract some of the angle so svg is happy (svg elliptical arc can't draw a full circle)
+            endAngle = (endAngle + 2 * Math.PI - 0.001 * (counterClockwise ? -1 : 1)) % (2 * Math.PI);
+        }
+        var endX = x + radius * Math.cos(endAngle),
+            endY = y + radius * Math.sin(endAngle),
+            startX = x + radius * Math.cos(startAngle),
+            startY = y + radius * Math.sin(startAngle),
+            sweepFlag = counterClockwise ? 0 : 1,
+            largeArcFlag = 0,
+            diff = endAngle - startAngle;
+
+        // https://github.com/gliffy/canvas2svg/issues/4
+        if (diff < 0) {
+            diff += 2 * Math.PI;
+        }
+
+        if (counterClockwise) {
+            largeArcFlag = diff > Math.PI ? 0 : 1;
+        } else {
+            largeArcFlag = diff > Math.PI ? 1 : 0;
+        }
+
+        this.lineTo(startX, startY);
+        this.__addPathCommand(format("A {rx} {ry} {xAxisRotation} {largeArcFlag} {sweepFlag} {endX} {endY}", { rx: radius, ry: radius, xAxisRotation: 0, largeArcFlag: largeArcFlag, sweepFlag: sweepFlag, endX: endX, endY: endY }));
+
+        this.__currentPosition = { x: endX, y: endY };
+    };
+
+    /**
+     * Generates a ClipPath from the clip command.
+     */
+    _ctx.prototype.clip = function () {
+        var group = this.__closestGroupOrSvg(),
+            clipPath = this.__createElement("clipPath"),
+            id = randomString(this.__ids),
+            newGroup = this.__createElement("g");
+
+        this.__applyCurrentDefaultPath();
+        group.removeChild(this.__currentElement);
+        clipPath.setAttribute("id", id);
+        clipPath.appendChild(this.__currentElement);
+
+        this.__defs.appendChild(clipPath);
+
+        //set the clip path to this group
+        group.setAttribute("clip-path", format("url(#{id})", { id: id }));
+
+        //clip paths can be scaled and transformed, we need to add another wrapper group to avoid later transformations
+        // to this path
+        group.appendChild(newGroup);
+
+        this.__currentElement = newGroup;
+    };
+
+    /**
+     * Draws a canvas, image or mock context to this canvas.
+     * Note that all svg dom manipulation uses node.childNodes rather than node.children for IE support.
+     * http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#dom-context-2d-drawimage
+     */
+    _ctx.prototype.drawImage = function () {
+        //convert arguments to a real array
+        var args = Array.prototype.slice.call(arguments),
+            image = args[0],
+            dx,
+            dy,
+            dw,
+            dh,
+            sx = 0,
+            sy = 0,
+            sw,
+            sh,
+            parent,
+            svg,
+            defs,
+            group,
+            currentElement,
+            svgImage,
+            canvas,
+            context,
+            id;
+
+        if (args.length === 3) {
+            dx = args[1];
+            dy = args[2];
+            sw = image.width;
+            sh = image.height;
+            dw = sw;
+            dh = sh;
+        } else if (args.length === 5) {
+            dx = args[1];
+            dy = args[2];
+            dw = args[3];
+            dh = args[4];
+            sw = image.width;
+            sh = image.height;
+        } else if (args.length === 9) {
+            sx = args[1];
+            sy = args[2];
+            sw = args[3];
+            sh = args[4];
+            dx = args[5];
+            dy = args[6];
+            dw = args[7];
+            dh = args[8];
+        } else {
+            throw new Error("Invalid number of arguments passed to drawImage: " + arguments.length);
+        }
+
+        parent = this.__closestGroupOrSvg();
+        currentElement = this.__currentElement;
+        var translateDirective = "translate(" + dx + ", " + dy + ")";
+        if (image instanceof _ctx) {
+            //canvas2svg mock canvas context. In the future we may want to clone nodes instead.
+            //also I'm currently ignoring dw, dh, sw, sh, sx, sy for a mock context.
+            svg = image.getSvg().cloneNode(true);
+            if (svg.childNodes && svg.childNodes.length > 1) {
+                defs = svg.childNodes[0];
+                while (defs.childNodes.length) {
+                    id = defs.childNodes[0].getAttribute("id");
+                    this.__ids[id] = id;
+                    this.__defs.appendChild(defs.childNodes[0]);
+                }
+                group = svg.childNodes[1];
+                if (group) {
+                    //save original transform
+                    var originTransform = group.getAttribute("transform");
+                    var transformDirective;
+                    if (originTransform) {
+                        transformDirective = originTransform + " " + translateDirective;
+                    } else {
+                        transformDirective = translateDirective;
+                    }
+                    group.setAttribute("transform", transformDirective);
+                    parent.appendChild(group);
+                }
+            }
+        } else if (image.nodeName === "CANVAS" || image.nodeName === "IMG") {
+            //canvas or image
+            svgImage = this.__createElement("image");
+            svgImage.setAttribute("width", dw);
+            svgImage.setAttribute("height", dh);
+            svgImage.setAttribute("preserveAspectRatio", "none");
+
+            if (sx || sy || sw !== image.width || sh !== image.height) {
+                //crop the image using a temporary canvas
+                canvas = this.__document.createElement("canvas");
+                canvas.width = dw;
+                canvas.height = dh;
+                context = canvas.getContext("2d");
+                context.drawImage(image, sx, sy, sw, sh, 0, 0, dw, dh);
+                image = canvas;
+            }
+            svgImage.setAttribute("transform", translateDirective);
+            svgImage.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", image.nodeName === "CANVAS" ? image.toDataURL() : image.getAttribute("src"));
+            parent.appendChild(svgImage);
+        }
+    };
+
+    /**
+     * Generates a pattern tag
+     */
+    _ctx.prototype.createPattern = function (image, repetition) {
+
+        var pattern = this.__document.__createElement("pattern");
+        var id = randomString(this.__ids);
+        var img = void 0;
+
+        pattern.setAttribute("id", id);
+        pattern.setAttribute("width", image.width);
+        pattern.setAttribute("height", image.height);
+        if (image.nodeName === "CANVAS" || image.nodeName === "IMG") {
+            img = this.__createElement("image");
+            img.setAttribute("width", image.width);
+            img.setAttribute("height", image.height);
+            img.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", image.nodeName === "CANVAS" ? image.toDataURL() : image.getAttribute("src"));
+            pattern.appendChild(img);
+            this.__defs.appendChild(pattern);
+        } else if (image instanceof _ctx) {
+            pattern.appendChild(image.__root.childNodes[1]);
+            this.__defs.appendChild(pattern);
+        }
+        return new CanvasPattern(pattern, this);
+    };
+
+    _ctx.prototype.setLineDash = function (dashArray) {
+        if (dashArray && dashArray.length > 0) {
+            this.lineDash = dashArray.join(",");
+        } else {
+            this.lineDash = null;
+        }
+    };
+
+    /**
+     * Not yet implemented
+     */
+    _ctx.prototype.drawFocusRing = function () {};
+    _ctx.prototype.createImageData = function () {};
+    _ctx.prototype.getImageData = function () {};
+    _ctx.prototype.putImageData = function () {};
+    _ctx.prototype.globalCompositeOperation = function () {};
+    _ctx.prototype.setTransform = function () {};
+
+    //add options for alternative namespace
+    // MODIFIED by JTR for igv packaing
+    C2S = _ctx;
+})();
 
 /*
  * The MIT License (MIT)
@@ -27606,6 +27820,170 @@ var igv = function (igv) {
     };return igv;
 }(igv || {});
 
+"use strict";
+
+var igv = function (igv) {
+
+    igv.CivicReader = function (config) {
+        this.config = config;
+    };
+
+    igv.CivicReader.prototype.readFeatures = function (chr, start, end) {
+
+        var self = this;
+
+        return igv.xhr.loadJson(this.config.url + "/variants/?count=5000").then(function (json) {
+
+            var records = json.records;
+            var features = [];
+
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = records[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var record = _step.value;
+
+
+                    if (record.coordinates) {
+
+                        var id = record.id;
+                        var coordinates = record.coordinates;
+
+                        if (coordinates.chromosome) {
+                            features.push(new CivicVariant(coordinates.chromosome, coordinates.start - 1, // UCSC 0 convention
+                            coordinates.stop, record));
+                        }
+
+                        if (coordinates.chromosome2) {
+                            features.push(new CivicVariant(coordinates.chromosome2, coordinates.start2 - 1, // UCSC 0 convention
+                            coordinates.stop2, record));
+                        }
+                    }
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
+            return features;
+        });
+    };
+
+    function CivicVariant(chr, start, end, record) {
+        this.chr = chr;
+        this.start = start;
+        this.end = end;
+        this.id = record.id;
+        this.entrezName = record.entrez_name;
+        this.name = record.name;
+        this.actionabilityScore = record.civic_actionability_score;
+
+        if (record.coordinates.reference_bases) {
+            this.refBases = record.coordinates.reference_bases;
+        }
+        if (record.coordinates.variant_bases) {
+            this.altBases = record.coordinates.variant_bases;
+        }
+        if (record.variant_types) {
+            this.variant_types = record.variant_types;
+        }
+
+        this.locationString = this.chr + ":" + igv.numberFormatter(this.start + 1) + "-" + igv.numberFormatter(this.end);
+
+        // Color based on actionability score
+        if (this.actionabilityScore !== undefined) {
+            var alpha = void 0;
+            if (this.actionabilityScore <= 10) {
+                alpha = 0.2;
+            } else {
+                var v = Math.min(30, this.actionabilityScore);
+                alpha = 0.2 + 0.8 * Math.log10((v - 10) / 2);
+            }
+            this.alpha = alpha;
+        }
+    }
+
+    CivicVariant.prototype.popupData = function () {
+
+        var link = createLink("CIViC", "https://civicdb.org/links/variants/" + this.id);
+
+        var cravatLink = void 0;
+        var isSnp = this.refBases !== this.altBases && this.refBases && this.refBases.length === 1 && this.altBases && this.altBases.length === 1;
+
+        if (isSnp) {
+            var ref = this.refBases;
+            var alt = this.altBases;
+            cravatLink = createLink("CRAVAT", "http://www.cravat.us/CRAVAT/variant.html?variant=chr7_140808049_+_" + ref + "_" + alt);
+        }
+
+        var pd = [link];
+
+        if (cravatLink) {
+            pd.push(cravatLink);
+        }
+
+        pd.push({ name: "Entrez", value: createLink(this.entrezName, "https://ghr.nlm.nih.gov/gene/" + this.entrezName) });
+        pd.push({ name: "Name", value: this.name });
+
+        if (this.variant_types && this.variant_types.length > 0) {
+
+            var name = this.variant_types.length === 1 ? "Type" : "Types";
+            var typeString = void 0;
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+                for (var _iterator2 = this.variant_types[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var vt = _step2.value;
+
+                    if (!typeString) typeString = vt.display_name;else typeString += ", " + vt.display_name;
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
+                    }
+                }
+            }
+
+            ;
+            pd.push({ name: name, value: typeString });
+        }
+
+        pd.push({ name: "Actionability", value: this.actionabilityScore });
+
+        pd.push({ name: "Location", value: this.locationString });
+
+        return pd;
+
+        function createLink(text, href) {
+            return "<a target='_blank' " + "href='" + href + "'>" + text + "</a>";
+        }
+    };
+
+    return igv;
+}(igv || {});
+
 'use strict';
 
 /*
@@ -27674,19 +28052,14 @@ var igv = function (igv) {
 
         if (self.indexed) {
 
-            return new Promise(function (fulfill, reject) {
+            return self.getIndex().then(function (index) {
 
-                self.getIndex().then(function (index) {
-                    var order = 0;
-                    self.chromosomes = {};
-                    self.chromosomeNames.forEach(function (chrName) {
-                        var bpLength = self.index[chrName].size;
-                        self.chromosomes[chrName] = new igv.Chromosome(chrName, order++, bpLength);
-                    });
-
-                    // Ignore index, getting chr names as a side effect.  Really bad practice
-                    fulfill();
-                }).catch(reject);
+                var order = 0;
+                self.chromosomes = {};
+                self.chromosomeNames.forEach(function (chrName) {
+                    var bpLength = self.index[chrName].size;
+                    self.chromosomes[chrName] = new igv.Chromosome(chrName, order++, bpLength);
+                });
             });
         } else {
             return self.loadAll();
@@ -27698,7 +28071,24 @@ var igv = function (igv) {
         if (this.indexed) {
             return getSequenceIndexed.call(this, chr, start, end);
         } else {
-            return getSequenceNonIndexed.call(this, chr, start, end);
+            if (this.offset) {
+                start -= this.offset;
+                end -= this.offset;
+            }
+            var prefix = "";
+            if (start < 0) {
+                for (var i = start; i < Math.min(end, 0); i++) {
+                    prefix += "*";
+                }
+            }
+
+            if (end <= 0) {
+                return Promise.resolve(prefix);
+            } else {
+                return getSequenceNonIndexed.call(this, chr, start, end).then(function (seq) {
+                    return prefix + seq;
+                });
+            }
         }
     };
 
@@ -27835,8 +28225,14 @@ var igv = function (igv) {
                         self.sequences[currentChr] = currentSeq;
                         self.chromosomes[currentChr] = new igv.Chromosome(currentChr, order++, currentSeq.length);
                     }
-                    currentChr = nextLine.substr(1).split(/(\s+)/)[0];
+
+                    var parts = nextLine.substr(1).split(/\s+/);
+                    currentChr = parts[0];
                     currentSeq = "";
+
+                    if (parts[1] && parts[1].startsWith("@start=")) {
+                        self.offset = Number.parseInt(parts[1].substr(7)) - 1;
+                    }
                 } else {
                     currentSeq += nextLine;
                 }
@@ -27855,68 +28251,81 @@ var igv = function (igv) {
         //console.log("Read sequence " + chr + ":" + qstart + "-" + qend);
         var self = this;
 
-        return new Promise(function (fulfill, reject) {
-            self.getIndex().then(function () {
+        var offset = void 0;
+        var start = void 0;
+        var end = void 0;
+        var basesPerLine = void 0;
+        var nEndBytes = void 0;
 
-                var idxEntry = self.index[chr];
-                if (!idxEntry) {
-                    console.log("No index entry for chr: " + chr);
+        return self.getIndex().then(function () {
 
-                    // Tag interval with null so we don't try again
-                    self.interval = new igv.GenomicInterval(chr, qstart, qend, null);
-                    fulfill(null);
+            var idxEntry = self.index[chr];
+            if (!idxEntry) {
+
+                // Tag interval with null so we don't try again
+                self.interval = new igv.GenomicInterval(chr, qstart, qend, null);
+                return null;
+            } else {
+
+                start = Math.max(0, qstart); // qstart should never be < 0
+                end = Math.min(idxEntry.size, qend);
+                var bytesPerLine = idxEntry.bytesPerLine;
+                basesPerLine = idxEntry.basesPerLine;
+                var position = idxEntry.position;
+                nEndBytes = bytesPerLine - basesPerLine;
+
+                var startLine = Math.floor(start / basesPerLine);
+                var endLine = Math.floor(end / basesPerLine);
+
+                var base0 = startLine * basesPerLine; // Base at beginning of start line
+
+                offset = start - base0;
+
+                var startByte = position + startLine * bytesPerLine + offset;
+
+                var base1 = endLine * basesPerLine;
+                var offset1 = end - base1;
+                var endByte = position + endLine * bytesPerLine + offset1 - 1;
+                var byteCount = endByte - startByte + 1;
+
+                if (byteCount <= 0) {
+                    return null;
                 } else {
-
-                    var start = Math.max(0, qstart); // qstart should never be < 0
-                    var end = Math.min(idxEntry.size, qend);
-                    var bytesPerLine = idxEntry.bytesPerLine;
-                    var basesPerLine = idxEntry.basesPerLine;
-                    var position = idxEntry.position;
-                    var nEndBytes = bytesPerLine - basesPerLine;
-
-                    var startLine = Math.floor(start / basesPerLine);
-                    var endLine = Math.floor(end / basesPerLine);
-
-                    var base0 = startLine * basesPerLine; // Base at beginning of start line
-
-                    var offset = start - base0;
-
-                    var startByte = position + startLine * bytesPerLine + offset;
-
-                    var base1 = endLine * basesPerLine;
-                    var offset1 = end - base1;
-                    var endByte = position + endLine * bytesPerLine + offset1 - 1;
-                    var byteCount = endByte - startByte + 1;
-                    if (byteCount <= 0) {
-                        fulfill(null);
-                    }
-
-                    igv.xhr.load(self.file, igv.buildOptions(self.config, { range: { start: startByte, size: byteCount } })).then(function (allBytes) {
-
-                        var nBases,
-                            seqBytes = "",
-                            srcPos = 0,
-                            desPos = 0,
-                            allBytesLength = allBytes.length;
-
-                        if (offset > 0) {
-                            nBases = Math.min(end - start, basesPerLine - offset);
-                            seqBytes += allBytes.substr(srcPos, nBases);
-                            srcPos += nBases + nEndBytes;
-                            desPos += nBases;
+                    return igv.xhr.load(self.file, igv.buildOptions(self.config, {
+                        range: {
+                            start: startByte,
+                            size: byteCount
                         }
-
-                        while (srcPos < allBytesLength) {
-                            nBases = Math.min(basesPerLine, allBytesLength - srcPos);
-                            seqBytes += allBytes.substr(srcPos, nBases);
-                            srcPos += nBases + nEndBytes;
-                            desPos += nBases;
-                        }
-
-                        fulfill(seqBytes);
-                    }).catch(reject);
+                    }));
                 }
-            }).catch(reject);
+            }
+        }).then(function (allBytes) {
+
+            if (!allBytes) {
+                return null;
+            } else {
+                var nBases = void 0,
+                    seqBytes = "",
+                    srcPos = 0,
+                    desPos = 0,
+                    allBytesLength = allBytes.length;
+
+                if (offset > 0) {
+                    nBases = Math.min(end - start, basesPerLine - offset);
+                    seqBytes += allBytes.substr(srcPos, nBases);
+                    srcPos += nBases + nEndBytes;
+                    desPos += nBases;
+                }
+
+                while (srcPos < allBytesLength) {
+                    nBases = Math.min(basesPerLine, allBytesLength - srcPos);
+                    seqBytes += allBytes.substr(srcPos, nBases);
+                    srcPos += nBases + nEndBytes;
+                    desPos += nBases;
+                }
+
+                return seqBytes;
+            }
         });
     };
 
@@ -28243,6 +28652,11 @@ var igv = function (igv) {
         }
     };
 
+    /**
+     * Returns all features, unsorted.
+     *
+     * @returns {Array}
+     */
     igv.FeatureCache.prototype.getAllFeatures = function () {
 
         var allFeatures = [];
@@ -28258,10 +28672,6 @@ var igv = function (igv) {
                 }
             }
         }
-
-        allFeatures.sort(function (a, b) {
-            return a.start - b.start;
-        });
 
         return allFeatures;
     };
@@ -28773,6 +29183,11 @@ var igv = function (igv) {
                     this.decode = decodeGenePredExt;
                     this.delimiter = /\s+/;
                     break;
+                case "ensgene":
+                    this.decode = decodeGenePred;
+                    this.shift = 1;
+                    this.delimiter = /\s+/;
+                    break;
                 case "refgene":
                     this.decode = decodeGenePredExt;
                     this.delimiter = /\s+/;
@@ -28812,7 +29227,7 @@ var igv = function (igv) {
                     break;
                 default:
 
-                    customFormat = igv.getFormat(format);
+                    customFormat = igv.getFormat(this.format);
                     if (customFormat !== undefined) {
                         this.decode = decodeCustom;
                         this.format = customFormat;
@@ -29764,7 +30179,6 @@ var igv = function (igv) {
 
         // Each aed row must match the exact number of columns or we skip it
         if (tokens.length !== aedColumns.length) {
-            console.log('Corrupted AED file row: ' + tokens.join(','));
             return undefined;
         }
 
@@ -29801,7 +30215,6 @@ var igv = function (igv) {
         var feature = new AedFeature(this.aed, tokens);
 
         if (!feature.chr || !feature.start || !feature.end) {
-            console.log('Cannot parse feature: ' + tokens.join(','));
             return undefined;
         }
 
@@ -29811,7 +30224,6 @@ var igv = function (igv) {
     function decodeBedpe(tokens, ignore) {
 
         if (tokens.length < 6) {
-            console.log("Skipping line: " + nextLine);
             return undefined;
         }
 
@@ -29868,7 +30280,6 @@ var igv = function (igv) {
     function decodeInteract(tokens, ignore) {
 
         if (tokens.length < 6) {
-            console.log("Skipping line: " + nextLine);
             return undefined;
         }
 
@@ -29951,6 +30362,7 @@ var igv = function (igv) {
     }
 
     /**
+     * Decode a custom columnar format.  Required columns are 'chr' and 'start'
      *
      * @param tokens
      * @param ignore
@@ -29958,31 +30370,69 @@ var igv = function (igv) {
      */
     function decodeCustom(tokens, ignore) {
 
-        var feature,
-            chr,
-            start,
-            end,
-            format = this.format,
-            // "this" refers to FeatureParser instance
-        coords = format.coords || 0;
+        var format = this.format; // "this" refers to FeatureParser instance
+        var coords = format.coords || 0;
 
-        if (tokens.length < 3) return null;
+        // Insure that chr and start fields are defined.
+        //if(!this.format.chr && this.format.start) {
+        //}
 
-        chr = tokens[format.chr];
-        start = parseInt(tokens[format.start]) - coords;
-        end = format.end !== undefined ? parseInt(tokens[format.end]) : start + 1;
 
-        feature = { chr: chr, start: start, end: end };
+        var chr = tokens[format.chr];
+        var start = parseInt(tokens[format.start]) - coords;
+        var end = format.end !== undefined ? parseInt(tokens[format.end]) : start + 1;
+
+        var feature = { chr: chr, start: start, end: end };
 
         if (format.fields) {
+
             format.fields.forEach(function (field, index) {
+
                 if (index != format.chr && index != format.start && index != format.end) {
+
                     feature[field] = tokens[index];
                 }
             });
         }
 
         return feature;
+    }
+
+    function expandFormat(format) {
+
+        var fields = format.fields;
+        var keys = ['chr', 'start', 'end'];
+
+        for (var _i2 = 0; _i2 < fields.length; _i2++) {
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = keys[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var key = _step.value;
+
+                    if (key === fields[_i2]) {
+                        format[key] = _i2;
+                    }
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+        }
+
+        return format;
     }
 
     return igv;
@@ -30062,6 +30512,9 @@ var igv = function (igv) {
             // Second test for backward compatibility
             this.reader = new igv.CustomServiceReader(config.source);
             this.queryable = config.source.queryable !== undefined ? config.source.queryable : true;
+        } else if ("civic-ws" === config.sourceType) {
+            this.reader = new igv.CivicReader(config);
+            this.queryable = false;
         } else {
             this.reader = new igv.FeatureFileReader(config, genome);
             if (config.queryable != undefined) {
@@ -30152,6 +30605,7 @@ var igv = function (igv) {
     igv.FeatureSource.prototype.getFeatures = function (chr, bpStart, bpEnd, bpPerPixel, visibilityWindow) {
 
         var self = this;
+        var reader = this.reader;
         var genome = this.genome;
         var queryChr = genome ? genome.getChromosomeName(chr) : chr;
         var maxRows = self.config.maxRows || 500;
@@ -30164,8 +30618,7 @@ var igv = function (igv) {
                 if (isQueryable) {
                     return [];
                 } else {
-                    var wgFeatureCache = self.getWGFeatureCache(featureCache.getAllFeatures());
-                    return wgFeatureCache.queryFeatures("all", bpStart, bpEnd);
+                    return self.getWGFeatures(featureCache.getAllFeatures());
                 }
             } else {
                 return self.featureCache.queryFeatures(queryChr, bpStart, bpEnd);
@@ -30186,7 +30639,8 @@ var igv = function (igv) {
                 return Promise.resolve(self.featureCache);
             } else {
 
-                // If a visibility window is defined, expand query interval
+                // If a visibility window is defined, potentially expand query interval.
+                // This can save re-queries as we zoom out.
 
                 if (-1 !== visibilityWindow) {
                     if (visibilityWindow <= 0) {
@@ -30194,7 +30648,7 @@ var igv = function (igv) {
                         intervalStart = 0;
                         intervalEnd = Number.MAX_VALUE;
                     } else {
-                        if (visibilityWindow > bpEnd - bpStart) {
+                        if (reader.expandQueryInterval !== false && visibilityWindow > bpEnd - bpStart) {
                             intervalStart = Math.max(0, (bpStart + bpEnd - visibilityWindow) / 2);
                             intervalEnd = bpStart + visibilityWindow;
                         }
@@ -30202,9 +30656,9 @@ var igv = function (igv) {
                     genomicInterval = new igv.GenomicInterval(queryChr, intervalStart, intervalEnd);
                 }
 
-                return self.reader.readFeatures(queryChr, genomicInterval.start, genomicInterval.end).then(function (featureList) {
+                return reader.readFeatures(queryChr, genomicInterval.start, genomicInterval.end).then(function (featureList) {
 
-                    if (self.queryable === undefined) self.queryable = self.reader.indexed;
+                    if (self.queryable === undefined) self.queryable = reader.indexed;
 
                     if (featureList) {
 
@@ -30295,35 +30749,57 @@ var igv = function (igv) {
     }
 
     // TODO -- filter by pixel size
-    igv.FeatureSource.prototype.getWGFeatureCache = function (features) {
+    igv.FeatureSource.prototype.getWGFeatures = function (features) {
 
         var genome = this.genome;
 
-        if (!this.wgFeatureCache) {
+        var wgChromosomeNames = new Set(genome.wgChromosomeNames);
 
-            var wgChromosomeNames = new Set(genome.wgChromosomeNames);
+        var wgFeatures = [];
 
-            var wgFeatures = [];
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
-            features.forEach(function (f) {
+        try {
+            for (var _iterator = features[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var f = _step.value;
+
 
                 var queryChr = genome.getChromosomeName(f.chr);
 
                 if (wgChromosomeNames.has(queryChr)) {
 
-                    var wg = Object.assign({}, f);
+                    var wg = Object.create(Object.getPrototypeOf(f));
+                    Object.assign(wg, f);
+
                     wg.chr = "all";
                     wg.start = genome.getGenomeCoordinate(f.chr, f.start);
                     wg.end = genome.getGenomeCoordinate(f.chr, f.end);
 
                     wgFeatures.push(wg);
                 }
-            });
-
-            this.wgFeatureCache = new igv.FeatureCache(wgFeatures, genome);
+            }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
         }
 
-        return this.wgFeatureCache;
+        wgFeatures.sort(function (a, b) {
+            return a.start - b.start;
+        });
+
+        return wgFeatures;
     };
 
     function mapProperties(features, mappings) {
@@ -30602,9 +31078,7 @@ var igv = function (igv) {
                     self.render.call(this, selectedFeature, bpStart, bpPerPixel, pixelHeight, ctx, options);
                     selectedFeature.color = c;
                 }
-            } else {
-                console.log("No feature list");
-            }
+            } else {}
         };
 
         /**
@@ -30811,6 +31285,11 @@ var igv = function (igv) {
             var browser = this.browser;
 
             var color = this.color; // default
+
+            if (feature.alpha && feature.alpha !== 1) {
+                color = igv.Color.addAlpha(this.color, feature.alpha);
+            }
+
             if (this.config.colorBy) {
                 var colorByValue = feature[this.config.colorBy.field];
                 if (colorByValue) {
@@ -31336,6 +31815,56 @@ var igv = function (igv) {
 
 'use strict';
 
+var igv = function (igv) {
+
+    "use strict";
+
+    igv.FileFormats = {
+
+        gwascatalog: {
+            fields: ['bin', 'chr', 'start', 'end', 'name', 'pubMedID', 'author', 'pubDate', 'journal', 'title', 'trait', 'initSample', 'replSample', 'region', 'genes', 'riskAllele', 'riskAlFreq', 'pValue', 'pValueDesc', 'orOrBeta', 'ci95', 'platform', 'cnv']
+        },
+
+        wgrna: {
+            fields: ['bin', 'chr', 'start', 'end', 'name', 'score', 'strand', 'thickStart', 'thickEnd', 'type']
+        },
+
+        cpgislandext: {
+            fields: ['bin', 'chr', 'start', 'end', 'name', 'length', 'cpgNum', 'gcNum', 'perCpg', 'perGc', 'obsExp']
+        },
+
+        clinVarMain: {
+            fields: ['chr1', 'start', 'end', 'name', 'score', 'strand', 'thickStart', 'thickEnd', 'reserved', 'blockCount', // Number of blocks
+            'blockSizes', // Comma separated list of block sizes
+            'chromStarts', // Start positions relative to chromStart
+            'origName', // NM_198053.2(CD247):c.462C>T (p.Asp154=)	ClinVar Variation Report
+            'clinSign', // Likely benign	Clinical significance
+            'reviewStatus', // 	based on: criteria provided,single submitter	Review Status
+            'type', // single nucleotide variant	Type of Variant
+            'geneId', // CD247	Gene Symbol
+            'snpId', //	181656780	dbSNP ID
+            'nsvId', //		dbVar ID
+            'rcvAcc', //	RCV000642347	ClinVar Allele Submission
+            'testedInGtr', //	N	Genetic Testing Registry
+            'phenotypeList', //	Immunodeficiency due to defect in cd3-zeta	Phenotypes
+            'phenotype', //	MedGen:C1857798, OMIM:610163	Phenotype identifiers
+            'origin', //	germline	Data origin
+            'assembly', //	GRCh37	Genome assembly
+            'cytogenetic', //	1q24.2	Cytogenetic status
+            'hgvsCod', //	NM_198053.2:c.462C>T	Nucleotide HGVS
+            'hgvsProt', //	NP_932170.1:p.Asp154=	Protein HGVS
+            'numSubmit', //	1	Number of submitters
+            'lastEval', //	Dec 19,2017	Last evaluation
+            'guidelines', //		Guidelines
+            'otherIds']
+        }
+    };
+
+    return igv;
+}(igv || {});
+
+'use strict';
+
 /*
  * The MIT License (MIT)
  *
@@ -31851,7 +32380,7 @@ var igv = function (igv) {
                         max = Math.max(max, pixelEnd - pixelStart);
                     }
                 });
-                var a = Math.min(pixelWidth, max) / 2;
+                var a = Math.min(viewportWidth, max) / 2;
                 if (max > 0) {
                     var coa = pixelHeight / a;
                     self.theta = estimateTheta(coa);
@@ -31874,7 +32403,7 @@ var igv = function (igv) {
             }, {
                 name: "Set track color",
                 click: function click() {
-                    self.trackView.$colorpicker_container.toggle();
+                    self.trackView.presentColorPicker();
                 }
             }];
         };
@@ -32007,7 +32536,6 @@ var igv = function (igv) {
             var self = this;
 
             if (!config.tracks) {
-                console.log("Error: not tracks defined for merged track. " + config);
                 return;
             }
 
@@ -32027,9 +32555,7 @@ var igv = function (igv) {
                 if (t) {
                     t.autoscale = false; // Scaling done from merged track
                     self.tracks.push(t);
-                } else {
-                    console.log("Could not create track " + tconf);
-                }
+                } else {}
             });
         });
 
@@ -32274,6 +32800,8 @@ var igv = function (igv) {
 
             this.isLog = config.isLog;
 
+            this.supportHiDPI = config.supportHiDPI !== undefined ? config.supportHiDPI : false;
+
             this.displayMode = config.displayMode || "SQUISHED"; // EXPANDED | SQUISHED
             this.maxHeight = config.maxHeight || 500;
             this.squishedRowHeight = config.sampleSquishHeight || config.squishedRowHeight || 2;
@@ -32414,10 +32942,18 @@ var igv = function (igv) {
                             color = "white";
                         }
 
-                        var px = Math.round((segment.start - bpStart) / xScale);
-                        var px1 = Math.round((segment.end - bpStart) / xScale);
+                        var segmentStart = Math.max(segment.start, bpStart);
+                        // const segmentStart = segment.start;
+                        var px = Math.round((segmentStart - bpStart) / xScale);
+
+                        var segmentEnd = Math.min(segment.end, bpEnd);
+                        // const segmentEnd = segment.end;
+                        var px1 = Math.round((segmentEnd - bpStart) / xScale);
+
                         var pw = Math.max(1, px1 - px);
 
+                        // const sign = px < 0 ? '-' : '+';
+                        // console.log('start ' + sign + igv.numberFormatter(Math.abs(px)) + ' width ' + igv.numberFormatter(pw) + ' end ' + igv.numberFormatter(px + pw));
                         igv.graphics.fillRect(ctx, px, y, pw, sampleHeight - 2 * border, { fillStyle: color });
                     }
                 } catch (err) {
@@ -32434,9 +32970,7 @@ var igv = function (igv) {
                         }
                     }
                 }
-            } else {
-                console.log("No feature list");
-            }
+            } else {}
 
             function checkForLog(featureList) {
                 var i;
@@ -32736,7 +33270,6 @@ var igv = function (igv) {
                     fullfill(null);
                 }
             }).catch(function (error) {
-                console.log(error);
                 fullfill(null);
             });
 
@@ -32892,6 +33425,7 @@ var igv = function (igv) {
     igv.UCSCServiceReader = function (config, genome) {
         this.config = config;
         this.genome = genome;
+        this.expandQueryInterval = false;
     };
 
     igv.UCSCServiceReader.prototype.readFeatures = function (chr, start, end) {
@@ -33030,6 +33564,8 @@ var igv = function (igv) {
             this.windowFunction = config.windowFunction || "mean";
 
             this.paintAxis = igv.paintAxis;
+
+            this.graphType = config.graphType || "bar";
         });
 
         WigTrack.prototype.getFeatures = function (chr, bpStart, bpEnd, bpPerPixel) {
@@ -33140,32 +33676,27 @@ var igv = function (igv) {
 
                     featureValueRange = featureValueMaximum - featureValueMinimum;
 
+                    if (renderFeature.end < bpStart) return;
+                    if (renderFeature.start > bpEnd) return;
+
                     features.forEach(renderFeature);
 
                     // If the track includes negative values draw a baseline
-                    if (featureValueMaximum > 0 && featureValueMinimum < 0) {
-                        var alpha = ctx.lineWidth;
-                        ctx.lineWidth = 5;
+                    if (featureValueMinimum < 0) {
                         var basepx = featureValueMaximum / (featureValueMaximum - featureValueMinimum) * options.pixelHeight;
-                        ctx.lineWidth = alpha;
+                        igv.graphics.strokeLine(ctx, 0, basepx, options.pixelWidth, basepx, { strokeStyle: baselineColor });
                     }
-                    igv.graphics.strokeLine(ctx, 0, basepx, options.pixelWidth, basepx, { strokeStyle: baselineColor });
                 }
             }
 
             function renderFeature(feature) {
 
-                var yUnitless, y, yb, y2, heightUnitLess, x, width, color, rectEnd;
+                var x = Math.floor((feature.start - bpStart) / bpPerPixel);
+                var rectEnd = Math.ceil((feature.end - bpStart) / bpPerPixel);
+                var width = Math.max(1, rectEnd - x);
+                var y = (featureValueMaximum - feature.value) / featureValueRange;
 
-                if (feature.end < bpStart) return;
-                if (feature.start > bpEnd) return;
-
-                x = Math.floor((feature.start - bpStart) / bpPerPixel);
-                rectEnd = Math.ceil((feature.end - bpStart) / bpPerPixel);
-                width = Math.max(1, rectEnd - x);
-
-                y = (featureValueMaximum - feature.value) / featureValueRange;
-
+                var yb = void 0;
                 if (featureValueMinimum > 0) {
                     yb = 1;
                 } else if (featureValueMaximum < 0) {
@@ -33174,15 +33705,25 @@ var igv = function (igv) {
                     yb = featureValueMaximum / featureValueRange;
                 }
 
-                yUnitless = Math.min(y, yb);
-                y2 = Math.max(y, yb);
-                heightUnitLess = y2 - yUnitless;
+                var yUnitless = Math.min(y, yb);
+                var y2 = Math.max(y, yb);
+                var heightUnitLess = y2 - yUnitless;
 
                 if (yUnitless >= 1 || y2 <= 0) return; //  Value < minimum
 
-                color = typeof self.color === "function" ? self.color(feature.value) : self.color;
+                var color = typeof self.color === "function" ? self.color(feature.value) : self.color;
 
-                igv.graphics.fillRect(ctx, x, yUnitless * pixelHeight, width, heightUnitLess * pixelHeight, { fillStyle: color });
+                if (self.graphType === "points") {
+                    var pointSize = self.config.pointSize || 3;
+                    var py = feature.value < 0 ? (yUnitless + heightUnitLess) * pixelHeight : yUnitless * pixelHeight;
+                    var px = x + width / 2;
+
+                    if (isNaN(x)) {} else {
+                        igv.graphics.fillCircle(ctx, px, py, pointSize / 2);
+                    }
+                } else {
+                    igv.graphics.fillRect(ctx, x, yUnitless * pixelHeight, width, heightUnitLess * pixelHeight, { fillStyle: color });
+                }
             }
         };
 
@@ -33289,7 +33830,6 @@ var igv = function (igv) {
                 }
                 return candidateFeature;
             } else {
-                console.log(position + ' not found!');
                 return undefined;
             }
 
@@ -33833,7 +34373,6 @@ var igv = function (igv) {
                     pos += c.len;
                     break;
                 default:
-                    console.log("Error processing cigar element: " + c.len + c.ltr);
             }
         }
 
@@ -34175,7 +34714,6 @@ var igv = function (igv) {
                             break;
 
                         default:
-                            console.log("Error processing cigar element: " + c.len + c.ltr);
                     }
                 }
 
@@ -34356,9 +34894,7 @@ var igv = function (igv) {
             }
         }).then(function (results) {
             options.success(results);
-        }).catch(function (error) {
-            console.log(error);
-        });
+        }).catch(function (error) {});
     };
 
     igv.ga4ghSearchVariantSets = function (options) {
@@ -34374,9 +34910,7 @@ var igv = function (igv) {
             }
         }).then(function (results) {
             options.success(results);
-        }).catch(function (error) {
-            console.log(error);
-        });
+        }).catch(function (error) {});
     };
 
     igv.ga4ghSearchCallSets = function (options) {
@@ -34419,9 +34953,7 @@ var igv = function (igv) {
                 }
             }).then(function (results) {
                 options.success(results);
-            }).catch(function (error) {
-                console.log(error);
-            });
+            }).catch(function (error) {});
         }
     };
 
@@ -34702,7 +35234,6 @@ var igv = function (igv) {
             qIdx = gsUrl.indexOf('?');
 
             if (i < 0) {
-                console.log("Invalid gs url: " + gsUrl);
                 return gsUrl;
             }
 
@@ -34835,7 +35366,7 @@ var igv = function (igv) {
         this.nameFields = new Set(["gene"]);
     };
 
-    igv.GenbankParser.parseFeatures = function (data) {
+    igv.GenbankParser.prototype.parseFeatures = function (data) {
 
         var line, locusName, accession, sequence, aliases, chr;
 
@@ -34870,9 +35401,7 @@ var igv = function (igv) {
         function readAccession(line) {
 
             var tokens = line.split(wsRegex);
-            if (tokens.length < 2) {
-                console.log("Genbank file missing ACCESSION number.");
-            } else {
+            if (tokens.length < 2) {} else {
                 accession = tokens[1].trim();
             }
         }
@@ -35168,21 +35697,32 @@ var igv = function (igv) {
 
         getKnownGenomes: function getKnownGenomes() {
 
+            var genomeList = igv.GenomeUtils.genomeList;
+
             if (KNOWN_GENOMES) {
                 return Promise.resolve(KNOWN_GENOMES);
-            } else {
-                return igv.xhr.loadJson("https://s3.amazonaws.com/igv.org.genomes/genomes.json", {}).then(function (jsonArray) {
+            } else if (!genomeList) {
+                return Promise.resolve({});
+            } else if (typeof genomeList === 'string') {
 
-                    var table = {};
-
-                    jsonArray.forEach(function (json) {
-                        table[json.id] = json;
-                    });
-
-                    KNOWN_GENOMES = table;
-
-                    return table;
+                return igv.xhr.loadJson(genomeList, {}).then(function (jsonArray) {
+                    return processJson(jsonArray);
                 });
+            } else {
+                return Promise.resolve(processJson(genomeList));
+            }
+
+            function processJson(jsonArray) {
+
+                var table = {};
+
+                jsonArray.forEach(function (json) {
+                    table[json.id] = json;
+                });
+
+                KNOWN_GENOMES = table;
+
+                return table;
             }
         }
     };
@@ -36736,11 +37276,40 @@ var igv = function (igv) {
         this.buildPanels($parent, panelWidth);
     };
 
+    igv.IdeoPanel.prototype.renderSVGContext = function (context, offset) {
+
+        var self = this;
+
+        this.panels.forEach(function (panel, i) {
+
+            var bbox = panel.$ideogram.get(0).getBoundingClientRect();
+
+            var dx = offset.deltaX + i * (panel.$canvas.width() + context.multiLocusGap);
+            var dy = offset.deltaY;
+            context.addTrackGroupWithTranslationAndClipRect('ideogram', dx, dy, bbox.width, bbox.height, 0);
+
+            context.save();
+
+            var paintConfig = {
+                ctx: context,
+                width: panel.$canvas.width(),
+                height: panel.$canvas.height(),
+                genome: self.browser.genome,
+                referenceFrame: panel.genomicState.referenceFrame,
+                ideogramWidth: panel.$ideogram.width()
+            };
+
+            repaintContext(paintConfig);
+
+            context.restore();
+        });
+    };
+
     igv.IdeoPanel.prototype.buildPanels = function ($parent, width) {
 
         var self = this;
 
-        $parent.append($('<div class="igv-ideogram-left-shim"></div>'));
+        $parent.append($('<div class="igv-ideogram-shim"></div>'));
 
         this.panels = this.browser.genomicStateList.map(function (genomicState) {
             return panelWithGenomicState.call(self, $parent, genomicState, width);
@@ -36769,11 +37338,19 @@ var igv = function (igv) {
     };
 
     igv.IdeoPanel.prototype.repaint = function () {
-
-        var browser = this.browser;
+        var self = this;
 
         this.panels.forEach(function (panel) {
-            repaintPanel(browser, panel);
+            var config = {
+                ctx: panel.ctx,
+                width: panel.$canvas.width(),
+                height: panel.$canvas.height(),
+                genome: self.browser.genome,
+                referenceFrame: panel.genomicState.referenceFrame,
+                ideogramWidth: panel.$ideogram.width()
+            };
+
+            repaintContext(config);
         });
     };
 
@@ -36815,14 +37392,23 @@ var igv = function (igv) {
 
     igv.IdeoPanel.prototype.repaintPanelWithGenomicState = function (genomicState) {
 
-        var browser = this.browser;
-        var index = this.browser.genomicStateList.indexOf(genomicState);
-        repaintPanel(browser, this.panels[index]);
+        var panel = this.panels[this.browser.genomicStateList.indexOf(genomicState)];
+
+        var config = {
+            ctx: panel.ctx,
+            width: panel.$canvas.width(),
+            height: panel.$canvas.height(),
+            genome: this.browser.genome,
+            referenceFrame: panel.genomicState.referenceFrame,
+            ideogramWidth: panel.$ideogram.width()
+        };
+
+        repaintContext(config);
     };
 
     function panelWithGenomicState($parent, genomicState, width) {
 
-        var canvas, panel;
+        var panel;
 
         var browser = this.browser;
 
@@ -36830,7 +37416,7 @@ var igv = function (igv) {
 
         panel.genomicState = genomicState;
 
-        panel.$ideogram = $('<div class="igv-ideogram-content-div"></div>');
+        panel.$ideogram = $('<div class="igv-ideogram-content"></div>');
 
         $parent.append(panel.$ideogram);
 
@@ -36855,9 +37441,9 @@ var igv = function (igv) {
     function addBorder($ideogram, index, length) {
 
         if (index < length && 1 + index !== length) {
-            $ideogram.addClass('igv-ideogram-content-div-border-right');
+            $ideogram.addClass('igv-ideogram-content-border-right');
         } else {
-            $ideogram.removeClass('igv-ideogram-content-div-border-right');
+            $ideogram.removeClass('igv-ideogram-content-border-right');
         }
     }
 
@@ -36866,165 +37452,178 @@ var igv = function (igv) {
         panels.forEach(function (panel, p) {
 
             if (1 === panels.length || 1 + p === panels.length) {
-                panel.$ideogram.removeClass('igv-ideogram-content-div-border-right');
+                panel.$ideogram.removeClass('igv-ideogram-content-border-right');
             } else {
-                panel.$ideogram.addClass('igv-ideogram-content-div-border-right');
+                panel.$ideogram.addClass('igv-ideogram-content-border-right');
             }
         });
     }
 
-    function repaintPanel(browser, panel) {
+    function repaintContext(_ref) {
+        var ctx = _ref.ctx,
+            width = _ref.width,
+            height = _ref.height,
+            genome = _ref.genome,
+            referenceFrame = _ref.referenceFrame,
+            ideogramWidth = _ref.ideogramWidth;
 
-        var image, chromosome, percentWidth, percentX, width, widthBP, x, xBP, referenceFrame, stainColors, xx, yy, ww, hh;
+        var chromosome, percentWidth, percentX, widthBP, x, xBP, stainColors, xx, yy, ww, hh;
 
-        var w = panel.$canvas.width();
-        var h = panel.$canvas.height();
+        if (!(width > 0 && height > 0)) {
+            return;
+        }
 
-        if (!(w > 0 && h > 0)) return;
-
-        referenceFrame = panel.genomicState.referenceFrame;
-        if (!(browser.genome && referenceFrame && browser.genome.getChromosome(referenceFrame.chrName) && panel.$canvas.height() > 0)) {
+        if (!(genome && referenceFrame && genome.getChromosome(referenceFrame.chrName) && height > 0)) {
             return;
         }
 
         stainColors = [];
-        igv.graphics.fillRect(panel.ctx, 0, 0, panel.$canvas.width(), panel.$canvas.height(), { fillStyle: igv.Color.greyScale(255) });
+        igv.graphics.fillRect(ctx, 0, 0, width, height, { fillStyle: igv.Color.greyScale(255) });
 
         if (referenceFrame.chrName.toLowerCase() === "all") {
             return;
         }
 
-        drawIdeogram(panel.ctx, panel.$canvas.width(), panel.$canvas.height());
+        drawIdeogram({ ctx: ctx, referenceFrame: referenceFrame, genome: genome, width: width, height: height, stainColors: stainColors });
 
-        chromosome = browser.genome.getChromosome(referenceFrame.chrName);
+        chromosome = genome.getChromosome(referenceFrame.chrName);
 
-        widthBP = Math.round(referenceFrame.bpPerPixel * panel.$ideogram.width());
+        widthBP = Math.round(referenceFrame.bpPerPixel * ideogramWidth);
         xBP = referenceFrame.start;
 
         if (widthBP < chromosome.bpLength) {
 
+            var _ww = void 0;
+
             percentWidth = widthBP / chromosome.bpLength;
             percentX = xBP / chromosome.bpLength;
 
-            x = Math.floor(percentX * panel.$canvas.width());
-            width = Math.floor(percentWidth * panel.$canvas.width());
+            x = Math.floor(percentX * width);
+            _ww = Math.floor(percentWidth * width);
 
             x = Math.max(0, x);
-            x = Math.min(panel.$canvas.width() - width, x);
+            x = Math.min(width - _ww, x);
 
             // Push current context
-            panel.ctx.save();
+            ctx.save();
 
             // Draw red box
-            panel.ctx.strokeStyle = "red";
-            panel.ctx.lineWidth = width < 2 ? 1 : 2;
+            ctx.strokeStyle = "red";
+            ctx.lineWidth = _ww < 2 ? 1 : 2;
 
-            xx = x + panel.ctx.lineWidth / 2;
-            ww = width < 2 ? 1 : width - panel.ctx.lineWidth;
+            xx = x + ctx.lineWidth / 2;
+            _ww = _ww < 2 ? 1 : _ww - ctx.lineWidth;
 
-            yy = panel.ctx.lineWidth / 2;
-            hh = panel.$canvas.height() - panel.ctx.lineWidth;
+            yy = ctx.lineWidth / 2;
+            hh = height - ctx.lineWidth;
 
-            panel.ctx.strokeRect(xx, yy, ww, hh);
+            ctx.strokeRect(xx, yy, _ww, hh);
 
             // Pop current context
-            panel.ctx.restore();
+            ctx.restore();
+        }
+    }
+
+    function drawIdeogram(_ref2) {
+        var ctx = _ref2.ctx,
+            referenceFrame = _ref2.referenceFrame,
+            genome = _ref2.genome,
+            width = _ref2.width,
+            height = _ref2.height,
+            stainColors = _ref2.stainColors;
+
+
+        var shim, shim2, ideogramTop, cytobands, cytoband, center, xC, yC, chrLength, scale, start, end, i;
+
+        shim = 1;
+        shim2 = 0.5 * shim;
+        ideogramTop = 0;
+
+        if (undefined === genome) {
+            return;
         }
 
-        function drawIdeogram(ctx, width, height) {
+        igv.graphics.fillRect(ctx, 0, 0, width, height, { fillStyle: igv.Color.greyScale(255) });
 
-            var shim, shim2, ideogramTop, cytobands, cytoband, center, xC, yC, chrLength, scale, start, end, i;
+        cytobands = genome.getCytobands(referenceFrame.chrName);
+        if (cytobands) {
 
-            shim = 1;
-            shim2 = 0.5 * shim;
-            ideogramTop = 0;
+            center = ideogramTop + height / 2;
 
-            if (undefined === browser.genome) {
+            xC = [];
+            yC = [];
+
+            if (0 === cytobands.length) {
                 return;
             }
 
-            igv.graphics.fillRect(ctx, 0, 0, width, height, { fillStyle: igv.Color.greyScale(255) });
+            chrLength = cytobands[cytobands.length - 1].end;
 
-            cytobands = browser.genome.getCytobands(referenceFrame.chrName);
-            if (cytobands) {
+            scale = width / chrLength;
 
-                center = ideogramTop + height / 2;
+            // round rect clipping path
+            ctx.beginPath();
+            igv.graphics.roundRect(ctx, shim2, shim2 + ideogramTop, width - 2 * shim2, height - 2 * shim2, (height - 2 * shim2) / 2, 0, 1);
+            ctx.clip();
 
-                xC = [];
-                yC = [];
+            for (i = 0; i < cytobands.length; i++) {
 
-                if (0 === cytobands.length) {
-                    return;
-                }
+                cytoband = cytobands[i];
+                start = scale * cytoband.start;
+                end = scale * cytoband.end;
 
-                chrLength = cytobands[cytobands.length - 1].end;
+                if (cytoband.type === 'c') {
 
-                scale = width / chrLength;
-
-                // round rect clipping path
-                ctx.beginPath();
-                igv.graphics.roundRect(ctx, shim2, shim2 + ideogramTop, width - 2 * shim2, height - 2 * shim2, (height - 2 * shim2) / 2, 0, 1);
-                ctx.clip();
-
-                for (i = 0; i < cytobands.length; i++) {
-
-                    cytoband = cytobands[i];
-                    start = scale * cytoband.start;
-                    end = scale * cytoband.end;
-
-                    if (cytoband.type === 'c') {
-
-                        if (cytoband.name.charAt(0) === 'p') {
-                            xC[0] = start;
-                            yC[0] = height + ideogramTop;
-                            xC[1] = start;
-                            yC[1] = ideogramTop;
-                            xC[2] = end;
-                            yC[2] = center;
-                        } else {
-                            xC[0] = end;
-                            yC[0] = height + ideogramTop;
-                            xC[1] = end;
-                            yC[1] = ideogramTop;
-                            xC[2] = start;
-                            yC[2] = center;
-                        }
-
-                        ctx.fillStyle = "rgb(150, 0, 0)";
-                        ctx.strokeStyle = "rgb(150, 0, 0)";
-                        igv.graphics.polygon(ctx, xC, yC, 1, 0);
+                    if (cytoband.name.charAt(0) === 'p') {
+                        xC[0] = start;
+                        yC[0] = height + ideogramTop;
+                        xC[1] = start;
+                        yC[1] = ideogramTop;
+                        xC[2] = end;
+                        yC[2] = center;
                     } else {
-
-                        ctx.fillStyle = getCytobandColor(stainColors, cytoband);
-                        igv.graphics.fillRect(ctx, start, shim + ideogramTop, end - start, height - 2 * shim);
+                        xC[0] = end;
+                        yC[0] = height + ideogramTop;
+                        xC[1] = end;
+                        yC[1] = ideogramTop;
+                        xC[2] = start;
+                        yC[2] = center;
                     }
+
+                    ctx.fillStyle = "rgb(150, 0, 0)";
+                    ctx.strokeStyle = "rgb(150, 0, 0)";
+                    igv.graphics.polygon(ctx, xC, yC, 1, 0);
+                } else {
+
+                    ctx.fillStyle = getCytobandColor(stainColors, cytoband);
+                    igv.graphics.fillRect(ctx, start, shim + ideogramTop, end - start, height - 2 * shim);
                 }
             }
-
-            // round rect border
-            ctx.strokeStyle = igv.Color.greyScale(41);
-            igv.graphics.roundRect(ctx, shim2, shim2 + ideogramTop, width - 2 * shim2, height - 2 * shim2, (height - 2 * shim2) / 2, 0, 1);
         }
 
-        function getCytobandColor(colors, data) {
+        // round rect border
+        ctx.strokeStyle = igv.Color.greyScale(41);
+        igv.graphics.roundRect(ctx, shim2, shim2 + ideogramTop, width - 2 * shim2, height - 2 * shim2, (height - 2 * shim2) / 2, 0, 1);
+    }
 
-            if (data.type === 'c') {
-                // centermere: "acen"
-                return "rgb(150, 10, 10)";
-            } else {
-                var stain = data.stain; // + 4;
+    function getCytobandColor(colors, data) {
 
-                var shade = 230;
-                if (data.type === 'p') {
-                    shade = Math.floor(230 - stain / 100.0 * 230);
-                }
-                var c = colors[shade];
-                if (!c) {
-                    c = "rgb(" + shade + "," + shade + "," + shade + ")";
-                    colors[shade] = c;
-                }
-                return c;
+        if (data.type === 'c') {
+            // centermere: "acen"
+            return "rgb(150, 10, 10)";
+        } else {
+            var stain = data.stain; // + 4;
+
+            var shade = 230;
+            if (data.type === 'p') {
+                shade = Math.floor(230 - stain / 100.0 * 230);
             }
+            var c = colors[shade];
+            if (!c) {
+                c = "rgb(" + shade + "," + shade + "," + shade + ")";
+                colors[shade] = c;
+            }
+            return c;
         }
     }
 
@@ -37042,25 +37641,17 @@ var igv = function (igv) {
 
     function clickHandler(browser, panel, e) {
 
-        var xy,
-            xPercentage,
-            genomicState = panel.genomicState,
-            referenceFrame = genomicState.referenceFrame,
-            chr,
-            locusLength,
-            chrCoveragePercentage,
-            locus,
-            ss,
-            ee;
+        var xy = igv.translateMouseCoordinates(e, panel.$ideogram.get(0));
 
-        xy = igv.translateMouseCoordinates(e, panel.$ideogram.get(0));
-        xPercentage = xy.x / panel.$ideogram.width();
+        var referenceFrame = panel.genomicState.referenceFrame;
 
-        locusLength = referenceFrame.bpPerPixel * panel.$ideogram.width();
+        var locusLength = referenceFrame.bpPerPixel * panel.$ideogram.width();
 
-        chr = browser.genome.getChromosome(referenceFrame.chrName);
-        chrCoveragePercentage = locusLength / chr.bpLength;
+        var chr = browser.genome.getChromosome(referenceFrame.chrName);
 
+        var chrCoveragePercentage = locusLength / chr.bpLength;
+
+        var xPercentage = xy.x / panel.$ideogram.width();
         if (xPercentage - chrCoveragePercentage / 2.0 < 0) {
             xPercentage = chrCoveragePercentage / 2.0;
         }
@@ -37069,13 +37660,13 @@ var igv = function (igv) {
             xPercentage = 1.0 - chrCoveragePercentage / 2.0;
         }
 
-        ss = Math.round((xPercentage - chrCoveragePercentage / 2.0) * chr.bpLength);
-        ee = Math.round((xPercentage + chrCoveragePercentage / 2.0) * chr.bpLength);
+        var ss = Math.round((xPercentage - chrCoveragePercentage / 2.0) * chr.bpLength);
+        var ee = Math.round((xPercentage + chrCoveragePercentage / 2.0) * chr.bpLength);
 
         referenceFrame.start = Math.round((xPercentage - chrCoveragePercentage / 2.0) * chr.bpLength);
         referenceFrame.bpPerPixel = (ee - ss) / panel.$ideogram.width();
 
-        browser.updateLocusSearchWidget(genomicState);
+        browser.updateLocusSearchWidget(panel.genomicState);
 
         browser.updateViews();
     }
@@ -37125,9 +37716,7 @@ var igv = function (igv) {
         if (debug) {
             var d = new Date();
             var time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-            if (typeof console != "undefined") {
-                console.log("igv-canvas: " + time + " " + msg);
-            }
+            if (typeof console != "undefined") {}
         }
     };
 
@@ -37436,51 +38025,25 @@ var igv = function (igv) {
  */
 var igv = function (igv) {
 
-    igv.createColorSwatchSelector = function ($genericContainer, colorHandler) {
-
-        var rgbs, dev_null, s;
-
-        s = 1;
-        rgbs = [];
-        for (var v = 1; v >= 0.5; v -= .1) {
-            for (var r, h = 0; h < 1; h += 1 / 28) {
-                r = "rgb(" + igv.Color.hsvToRgb(h, s, v).join(",") + ")";
-                rgbs.push(r);
-            }
-        }
-
-        // add black
-        dev_null = rgbs.pop();
-        rgbs.push(igv.Color.rgbColor(16, 16, 16));
-
-        rgbs.forEach(function (rgb) {
-            var $swatch;
-
-            $swatch = igv.colorSwatch(rgb);
-            $genericContainer.append($swatch);
-
-            $swatch.click(function () {
-                colorHandler(rgb);
-            });
-
-            $swatch.on('touchend', function () {
-                colorHandler(rgb);
-            });
-        });
-    };
-
-    igv.colorSwatch = function (rgbString) {
-        var $swatch, $fa;
-
-        $swatch = $('<div>', { class: 'igv-color-swatch' });
-
-        $fa = igv.createIcon("square", rgbString);
-        $swatch.append($fa);
-
-        return $swatch;
-    };
-
     igv.Color = {
+
+        rgbListFromHSV: function rgbListFromHSV() {
+
+            var s = 1;
+            var accumulation = [];
+            for (var v = 1; v >= 0.5; v -= .1) {
+                for (var h = 0; h < 1; h += 1 / 28) {
+                    var r = "rgb(" + igv.Color.hsvToRgb(h, s, v).join(",") + ")";
+                    accumulation.push(r);
+                }
+            }
+
+            // add black
+            accumulation.pop();
+            accumulation.push(igv.Color.rgbColor(16, 16, 16));
+
+            return accumulation;
+        },
 
         rgbToHex: function rgbToHex(rgb) {
             rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
@@ -37567,12 +38130,21 @@ var igv = function (igv) {
                 var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
                 var p = 2 * l - q;
 
-                r = hue2rgb(p, q, h + 1 / 3);
-                g = hue2rgb(p, q, h);
-                b = hue2rgb(p, q, h - 1 / 3);
+                r = igv.Color.hue2rgb(p, q, h + 1 / 3);
+                g = igv.Color.hue2rgb(p, q, h);
+                b = igv.Color.hue2rgb(p, q, h - 1 / 3);
             }
 
             return [r * 255, g * 255, b * 255];
+        },
+
+        hue2rgb: function hue2rgb(p, q, t) {
+            if (t < 0) t += 1;
+            if (t > 1) t -= 1;
+            if (t < 1 / 6) return p + (q - p) * 6 * t;
+            if (t < 1 / 2) return q;
+            if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+            return p;
         },
 
         rgbaColor: function rgbaColor(r, g, b, a) {
@@ -37650,7 +38222,6 @@ var igv = function (igv) {
             if (color.startsWith("rgb")) {
                 return color.replace("rgb", "rgba").replace(")", ", " + alpha + ")");
             } else {
-                console.log(color + " is not an rgb style string");
                 return color;
             }
         },
@@ -37693,14 +38264,69 @@ var igv = function (igv) {
         }
     };
 
-    function hue2rgb(p, q, t) {
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1 / 6) return p + (q - p) * 6 * t;
-        if (t < 1 / 2) return q;
-        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-        return p;
-    }
+    // Used to generate color list
+    // let hexs = [];
+    // for (let rgbList of Object.values(igv.colorPalettes)) {
+    //     for (let rgb of rgbList) {
+    //         let obj = {};
+    //         obj[ rgb ] = igv.Color.rgbToHex(rgb);
+    //         hexs.push(obj);
+    //     }
+    // }
+
+    igv.appleCrayonPalette = {
+        licorice: "#000000",
+        lead: "#1e1e1e",
+        tungsten: "#3a3a3a",
+        iron: "#545453",
+        steel: "#6e6e6e",
+        tin: "#878687",
+        nickel: "#888787",
+        aluminum: "#a09fa0",
+        magnesium: "#b8b8b8",
+        silver: "#d0d0d0",
+        mercury: "#e8e8e8",
+        snow: "white",
+        //
+        cayenne: "#891100",
+        mocha: "#894800",
+        aspargus: "#888501",
+        fern: "#458401",
+        clover: "#028401",
+        moss: "#018448",
+        teal: "#008688",
+        ocean: "#004a88",
+        midnight: "#001888",
+        eggplant: "#491a88",
+        plum: "#891e88",
+        maroon: "#891648",
+        //
+        maraschino: "#ff2101",
+        tangerine: "#ff8802",
+        lemon: "#fffa03",
+        lime: "#83f902",
+        spring: "#05f802",
+        seam_foam: "#03f987",
+        turquoise: "#00fdff",
+        aqua: "#008cff",
+        blueberry: "#002eff",
+        grape: "#8931ff",
+        magenta: "#ff39ff",
+        strawberry: "#ff2987",
+        //
+        salmon: "#ff726e",
+        cantaloupe: "#ffce6e",
+        banana: "#fffb6d",
+        honeydew: "#cefa6e",
+        flora: "#68f96e",
+        spindrift: "#68fbd0",
+        ice: "#68fdff",
+        sky: "#6acfff",
+        orchid: "#6e76ff",
+        lavender: "#d278ff",
+        bubblegum: "#ff7aff",
+        carnation: "#ff7fd3"
+    };
 
     igv.nucleotideColorComponents = {
         "A": [0, 200, 0],
@@ -37724,12 +38350,231 @@ var igv = function (igv) {
         "g": "rgb(209, 113,   5)"
     };
 
-    // Color scale objects.  Implement a single method,  getColor(value)
+    var bootstrapPalette = ['#007bff', '#17a2b8', '#20c997', '#28a745', '#404EB0', '#6610f2', '#e83e8c', '#dc3545', '#fd7e14', '#ffc107', 'white', '#343a40', '#6c757d'];
+
+    var colorPalettes_concat_RGB2Hex = [{
+        "rgb(228,26,28)": "#e41a1c"
+    }, {
+        "rgb(55,126,184)": "#377eb8"
+    }, {
+        "rgb(77,175,74)": "#4daf4a"
+    }, {
+        "rgb(166,86,40)": "#a65628"
+    }, {
+        "rgb(152,78,163)": "#984ea3"
+    }, {
+        "rgb(255,127,0)": "#ff7f00"
+    }, {
+        "rgb(247,129,191)": "#f781bf"
+    }, {
+        "rgb(153,153,153)": "#999999"
+    }, {
+        "rgb(255,255,51)": "#ffff33"
+    }, {
+        "rgb(27,158,119)": "#1b9e77"
+    }, {
+        "rgb(217,95,2)": "#d95f02"
+    }, {
+        "rgb(117,112,179)": "#7570b3"
+    }, {
+        "rgb(231,41,138)": "#e7298a"
+    }, {
+        "rgb(102,166,30)": "#66a61e"
+    }, {
+        "rgb(230,171,2)": "#e6ab02"
+    }, {
+        "rgb(166,118,29)": "#a6761d"
+    }, {
+        "rgb(102,102,102)": "#666666"
+    }, {
+        "rgb(102, 194,165)": "#66c2a5"
+    }, {
+        "rgb(252,141,98)": "#fc8d62"
+    }, {
+        "rgb(141,160,203)": "#8da0cb"
+    }, {
+        "rgb(231,138,195)": "#e78ac3"
+    }, {
+        "rgb(166,216,84)": "#a6d854"
+    }, {
+        "rgb(255,217,47)": "#ffd92f"
+    }, {
+        "rgb(229,196,148)": "#e5c494"
+    }, {
+        "rgb(179,179,179)": "#b3b3b3"
+    }, {
+        "rgb(141,211,199)": "#8dd3c7"
+    }, {
+        "rgb(255,255,179)": "#ffffb3"
+    }, {
+        "rgb(190,186,218)": "#bebada"
+    }, {
+        "rgb(251,128,114)": "#fb8072"
+    }, {
+        "rgb(128,177,211)": "#80b1d3"
+    }, {
+        "rgb(253,180,98)": "#fdb462"
+    }, {
+        "rgb(179,222,105)": "#b3de69"
+    }, {
+        "rgb(252,205,229)": "#fccde5"
+    }, {
+        "rgb(217,217,217)": "#d9d9d9"
+    }, {
+        "rgb(188,128,189)": "#bc80bd"
+    }, {
+        "rgb(204,235,197)": "#ccebc5"
+    }, {
+        "rgb(255,237,111)": "#ffed6f"
+    }, {
+        "rgb(251,180,174)": "#fbb4ae"
+    }, {
+        "rgb(179,205,227)": "#b3cde3"
+    }, {
+        "rgb(204,235,197)": "#ccebc5"
+    }, {
+        "rgb(222,203,228)": "#decbe4"
+    }, {
+        "rgb(254,217,166)": "#fed9a6"
+    }, {
+        "rgb(255,255,204)": "#ffffcc"
+    }, {
+        "rgb(229,216,189)": "#e5d8bd"
+    }, {
+        "rgb(253,218,236)": "#fddaec"
+    }, {
+        "rgb(173,226,207)": "#ade2cf"
+    }, {
+        "rgb(253,205,172)": "#fdcdac"
+    }, {
+        "rgb(203,213,232)": "#cbd5e8"
+    }, {
+        "rgb(244,202,228)": "#f4cae4"
+    }, {
+        "rgb(230,245,201)": "#e6f5c9"
+    }, {
+        "rgb(255,242,174)": "#fff2ae"
+    }, {
+        "rgb(243,225,206)": "#f3e1ce"
+    }, {
+        "rgb(127,201,127)": "#7fc97f"
+    }, {
+        "rgb(190,174,212)": "#beaed4"
+    }, {
+        "rgb(253,192,134)": "#fdc086"
+    }, {
+        "rgb(255,255,153)": "#ffff99"
+    }, {
+        "rgb(56,108,176)": "#386cb0"
+    }, {
+        "rgb(240,2,127)": "#f0027f"
+    }, {
+        "rgb(191,91,23)": "#bf5b17"
+    }];
+
+    igv.colorPalettes = {
+
+        Set1: ["rgb(228,26,28)", "rgb(55,126,184)", "rgb(77,175,74)", "rgb(166,86,40)", "rgb(152,78,163)", "rgb(255,127,0)", "rgb(247,129,191)", "rgb(153,153,153)", "rgb(255,255,51)"],
+
+        Dark2: ["rgb(27,158,119)", "rgb(217,95,2)", "rgb(117,112,179)", "rgb(231,41,138)", "rgb(102,166,30)", "rgb(230,171,2)", "rgb(166,118,29)", "rgb(102,102,102)"],
+
+        Set2: ["rgb(102, 194,165)", "rgb(252,141,98)", "rgb(141,160,203)", "rgb(231,138,195)", "rgb(166,216,84)", "rgb(255,217,47)", "rgb(229,196,148)", "rgb(179,179,179)"],
+
+        Set3: ["rgb(141,211,199)", "rgb(255,255,179)", "rgb(190,186,218)", "rgb(251,128,114)", "rgb(128,177,211)", "rgb(253,180,98)", "rgb(179,222,105)", "rgb(252,205,229)", "rgb(217,217,217)", "rgb(188,128,189)", "rgb(204,235,197)", "rgb(255,237,111)"],
+
+        Pastel1: ["rgb(251,180,174)", "rgb(179,205,227)", "rgb(204,235,197)", "rgb(222,203,228)", "rgb(254,217,166)", "rgb(255,255,204)", "rgb(229,216,189)", "rgb(253,218,236)"],
+
+        Pastel2: ["rgb(173,226,207)", "rgb(253,205,172)", "rgb(203,213,232)", "rgb(244,202,228)", "rgb(230,245,201)", "rgb(255,242,174)", "rgb(243,225,206)"],
+
+        Accent: ["rgb(127,201,127)", "rgb(190,174,212)", "rgb(253,192,134)", "rgb(255,255,153)", "rgb(56,108,176)", "rgb(240,2,127)", "rgb(191,91,23)"]
+    };
+
+    igv.PaletteColorTable = function (palette) {
+
+        this.colors = igv.colorPalettes[palette];
+
+        if (!Array.isArray(this.colors)) this.colors = [];
+        this.colorTable = {};
+        this.nextIdx = 0;
+        this.colorGenerator = new RandomColorGenerator();
+    };
+
+    igv.PaletteColorTable.prototype.getColor = function (key) {
+
+        if (!this.colorTable.hasOwnProperty(key)) {
+            if (this.nextIdx < this.colors.length) {
+                this.colorTable[key] = this.colors[this.nextIdx];
+            } else {
+                this.colorTable[key] = this.colorGenerator.get();
+            }
+            this.nextIdx++;
+        }
+        return this.colorTable[key];
+    };
+
+    // Random color generator from https://github.com/sterlingwes/RandomColor/blob/master/rcolor.js
+    // Free to use & distribute under the MIT license
+    // Wes Johnson (@SterlingWes)
+    //
+    // inspired by http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
+    var RandomColorGenerator = function RandomColorGenerator() {
+        this.hue = Math.random();
+        this.goldenRatio = 0.618033988749895;
+        this.hexwidth = 2;
+    };
+
+    RandomColorGenerator.prototype.hsvToRgb = function (h, s, v) {
+        var h_i = Math.floor(h * 6),
+            f = h * 6 - h_i,
+            p = v * (1 - s),
+            q = v * (1 - f * s),
+            t = v * (1 - (1 - f) * s),
+            r = 255,
+            g = 255,
+            b = 255;
+        switch (h_i) {
+            case 0:
+                r = v, g = t, b = p;
+                break;
+            case 1:
+                r = q, g = v, b = p;
+                break;
+            case 2:
+                r = p, g = v, b = t;
+                break;
+            case 3:
+                r = p, g = q, b = v;
+                break;
+            case 4:
+                r = t, g = p, b = v;
+                break;
+            case 5:
+                r = v, g = p, b = q;
+                break;
+        }
+        return [Math.floor(r * 256), Math.floor(g * 256), Math.floor(b * 256)];
+    };
+
+    RandomColorGenerator.prototype.padHex = function (str) {
+        if (str.length > this.hexwidth) return str;
+        return new Array(this.hexwidth - str.length + 1).join('0') + str;
+    };
+
+    RandomColorGenerator.prototype.get = function (saturation, value) {
+        this.hue += this.goldenRatio;
+        this.hue %= 1;
+        if (typeof saturation !== "number") saturation = 0.5;
+        if (typeof value !== "number") value = 0.95;
+        var rgb = this.hsvToRgb(this.hue, saturation, value);
+
+        return "#" + this.padHex(rgb[0].toString(16)) + this.padHex(rgb[1].toString(16)) + this.padHex(rgb[2].toString(16));
+    };
 
     /**
      *
-     * @param thresholds - array of threshold values defining bin boundaries in ascending order
-     * @param colors - array of colors for bins  (length == thresholds.length + 1)
+     * @param cs - object containing
+     * 1) array of threshold values defining bin boundaries in ascending order
+     * 2) array of colors for bins  (length == thresholds.length + 1)
      * @constructor
      */
     igv.BinnedColorScale = function (cs) {
@@ -37738,13 +38583,31 @@ var igv = function (igv) {
     };
 
     igv.BinnedColorScale.prototype.getColor = function (value) {
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
-        var i,
-            len = this.thresholds.length;
+        try {
 
-        for (i = 0; i < len; i++) {
-            if (value < this.thresholds[i]) {
-                return this.colors[i];
+            for (var _iterator = this.thresholds[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var threshold = _step.value;
+
+                if (value < threshold) {
+                    return this.colors[this.thresholds.indexOf(threshold)];
+                }
+            }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
             }
         }
 
@@ -37791,99 +38654,10 @@ var igv = function (igv) {
         return "rgb(" + r + "," + g + "," + b + ")";
     };
 
-    var colorPalettes = {
-        Set1: ["rgb(228,26,28)", "rgb(55,126,184)", "rgb(77,175,74)", "rgb(166,86,40)", "rgb(152,78,163)", "rgb(255,127,0)", "rgb(247,129,191)", "rgb(153,153,153)", "rgb(255,255,51)"],
-        Dark2: ["rgb(27,158,119)", "rgb(217,95,2)", "rgb(117,112,179)", "rgb(231,41,138)", "rgb(102,166,30)", "rgb(230,171,2)", "rgb(166,118,29)", "rgb(102,102,102)"],
-        Set2: ["rgb(102, 194,165)", "rgb(252,141,98)", "rgb(141,160,203)", "rgb(231,138,195)", "rgb(166,216,84)", "rgb(255,217,47)", "rgb(229,196,148)", "rgb(179,179,179)"],
-        Set3: ["rgb(141,211,199)", "rgb(255,255,179)", "rgb(190,186,218)", "rgb(251,128,114)", "rgb(128,177,211)", "rgb(253,180,98)", "rgb(179,222,105)", "rgb(252,205,229)", "rgb(217,217,217)", "rgb(188,128,189)", "rgb(204,235,197)", "rgb(255,237,111)"],
-        Pastel1: ["rgb(251,180,174)", "rgb(179,205,227)", "rgb(204,235,197)", "rgb(222,203,228)", "rgb(254,217,166)", "rgb(255,255,204)", "rgb(229,216,189)", "rgb(253,218,236)"],
-        Pastel2: ["rgb(173,226,207)", "rgb(253,205,172)", "rgb(203,213,232)", "rgb(244,202,228)", "rgb(230,245,201)", "rgb(255,242,174)", "rgb(243,225,206)"],
-        Accent: ["rgb(127,201,127)", "rgb(190,174,212)", "rgb(253,192,134)", "rgb(255,255,153)", "rgb(56,108,176)", "rgb(240,2,127)", "rgb(191,91,23)"]
-    };
-
-    igv.PaletteColorTable = function (palette) {
-        this.colors = colorPalettes[palette];
-        if (!Array.isArray(this.colors)) this.colors = [];
-        this.colorTable = {};
-        this.nextIdx = 0;
-        this.colorGenerator = new RColor();
-    };
-
-    igv.PaletteColorTable.prototype.getColor = function (key) {
-
-        if (!this.colorTable.hasOwnProperty(key)) {
-            if (this.nextIdx < this.colors.length) {
-                this.colorTable[key] = this.colors[this.nextIdx];
-            } else {
-                this.colorTable[key] = this.colorGenerator.get();
-            }
-            this.nextIdx++;
-        }
-        return this.colorTable[key];
-    };
-
-    // Random color generator from https://github.com/sterlingwes/RandomColor/blob/master/rcolor.js
-    // Free to use & distribute under the MIT license
-    // Wes Johnson (@SterlingWes)
-    //
-    // inspired by http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
-
-    var RColor = function RColor() {
-        this.hue = Math.random(), this.goldenRatio = 0.618033988749895;
-        this.hexwidth = 2;
-    };
-
-    RColor.prototype.hsvToRgb = function (h, s, v) {
-        var h_i = Math.floor(h * 6),
-            f = h * 6 - h_i,
-            p = v * (1 - s),
-            q = v * (1 - f * s),
-            t = v * (1 - (1 - f) * s),
-            r = 255,
-            g = 255,
-            b = 255;
-        switch (h_i) {
-            case 0:
-                r = v, g = t, b = p;
-                break;
-            case 1:
-                r = q, g = v, b = p;
-                break;
-            case 2:
-                r = p, g = v, b = t;
-                break;
-            case 3:
-                r = p, g = q, b = v;
-                break;
-            case 4:
-                r = t, g = p, b = v;
-                break;
-            case 5:
-                r = v, g = p, b = q;
-                break;
-        }
-        return [Math.floor(r * 256), Math.floor(g * 256), Math.floor(b * 256)];
-    };
-
-    RColor.prototype.padHex = function (str) {
-        if (str.length > this.hexwidth) return str;
-        return new Array(this.hexwidth - str.length + 1).join('0') + str;
-    };
-
-    RColor.prototype.get = function (saturation, value) {
-        this.hue += this.goldenRatio;
-        this.hue %= 1;
-        if (typeof saturation !== "number") saturation = 0.5;
-        if (typeof value !== "number") value = 0.95;
-        var rgb = this.hsvToRgb(this.hue, saturation, value);
-
-        return "#" + this.padHex(rgb[0].toString(16)) + this.padHex(rgb[1].toString(16)) + this.padHex(rgb[2].toString(16));
-    };
-
     return igv;
 }(igv || {});
 
-'use strict';
+"use strict";
 
 /*
  * The MIT License (MIT)
@@ -37927,6 +38701,9 @@ var igv = function (igv) {
     igv.createBrowser = function (parentDiv, config) {
 
         if (undefined === config) config = {};
+
+        // Path to genomes.json file.   This is globally shared among all browser objects
+        igv.GenomeUtils.genomeList = config.genomeList || "https://s3.amazonaws.com/igv.org.genomes/genomes.json";
 
         setDefaults(config);
 
@@ -38056,8 +38833,7 @@ var igv = function (igv) {
 
     /**
      * This function provided so clients can inform igv of a visibility change, typically when an igv instance is
-     * made visible from a tab, accordion, or similar widget.   There are no events to catch for this case,
-     * igv has to be told.
+     * made visible from a tab, accordion, or similar widget.
      */
     igv.visibilityChange = function () {
         allBrowsers.forEach(function (browser) {
@@ -38797,7 +39573,7 @@ var igv = function (igv) {
     return igv;
 }(igv || {});
 
-'use strict';
+"use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -38827,60 +39603,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  */
 
 var igv = function (igv) {
-
-    igv.genericContainer = function ($parent, config, closeHandler) {
-
-        var $generic_container, $header, $fa;
-
-        $generic_container = $('<div>', { class: 'igv-generic-container' });
-        $parent.append($generic_container);
-
-        // width
-        if (config && config.width) {
-            $generic_container.width(config.width);
-        }
-
-        // height
-        if (config && config.height) {
-            $generic_container.height(config.height);
-        }
-
-        // height
-        if (config && config.classes) {
-            $generic_container.addClass(config.classes.join(' '));
-        }
-
-        // header
-        $header = $('<div>');
-        $generic_container.append($header);
-
-        // close button
-        $fa = igv.createIcon("times");
-        $header.append($fa);
-
-        $fa.on('mousedown', function (e) {
-            e.stopPropagation();
-        });
-
-        $fa.on('mouseup', function (e) {
-            e.stopPropagation();
-        });
-
-        $fa.on('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            closeHandler(e);
-        });
-        $fa.on('touchend', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            closeHandler(e);
-        });
-
-        // $generic_container.draggable({handle: $header.get(0)});
-        igv.makeDraggable($generic_container.get(0), $header.get(0));
-        return $generic_container;
-    };
 
     igv.getExtension = function (config) {
         var path, filename, index;
@@ -39138,9 +39860,7 @@ var igv = function (igv) {
             posx,
             posy;
 
-        if (undefined === $target.offset()) {
-            console.log('igv.translateMouseCoordinates - $target.offset() is undefined.');
-        }
+        if (undefined === $target.offset()) {}
 
         var pageCoordinates = igv.pageCoordinates(e);
 
@@ -39243,7 +39963,7 @@ var igv = function (igv) {
     var simpleTypes = new Set(["boolean", "number", "string", "symbol"]);
     igv.isSimpleType = function (value) {
 
-        var valueType = typeof value === 'undefined' ? 'undefined' : _typeof(value);
+        var valueType = typeof value === "undefined" ? "undefined" : _typeof(value);
 
         return value != undefined && (simpleTypes.has(valueType) || value.substring || value.toFixed);
     };
@@ -39285,9 +40005,7 @@ var igv = function (igv) {
     };
 
     igv.log = function (message) {
-        if (igv.enableLogging && console && console.log) {
-            console.log(message);
-        }
+        if (igv.enableLogging && console && function () {}) {}
     };
 
     igv.buildOptions = function (config, options) {
@@ -39382,6 +40100,17 @@ var igv = function (igv) {
         }
 
         return { min: min, max: max };
+    };
+
+    igv.getGlobalObject = function () {
+        if (typeof self !== 'undefined') {
+            return self;
+        }
+        if (typeof global !== 'undefined') {
+            return global;
+        } else {
+            return window;
+        }
     };
 
     return igv;
@@ -39636,7 +40365,6 @@ var igv = function (igv) {
                 };
 
                 xhr.onabort = function (event) {
-                    console.log("Aborted");
                     reject(event);
                 };
 
@@ -39671,7 +40399,6 @@ var igv = function (igv) {
             };
 
             fileReader.onerror = function (e) {
-                console.log("reject uploading local file " + localfile.name);
                 reject(null, fileReader);
             };
 
@@ -39718,7 +40445,6 @@ var igv = function (igv) {
             };
 
             fileReader.onerror = function (e) {
-                console.log("reject uploading local file " + localfile.name);
                 reject(null, fileReader);
             };
 
@@ -39829,7 +40555,11 @@ var igv = function (igv) {
             plain = new Uint8Array(arraybuffer);
         }
 
-        return new TextDecoder().decode(plain);
+        if ('TextDecoder' in igv.getGlobalObject()) {
+            return new TextDecoder().decode(plain);
+        } else {
+            return decodeUTF8(plain);
+        }
     };
 
     /**
@@ -39862,13 +40592,19 @@ var igv = function (igv) {
 
                 loginTried = true;
 
-                return gapi.auth2.getAuthInstance().signIn(options).then(function (user) {
+                return new Promise(function (resolve, reject) {
 
-                    var authResponse = user.getAuthResponse();
+                    igv.browser.presentMessageWithCallback("Google Login required", function () {
 
-                    igv.setGoogleOauthToken(authResponse["access_token"]);
+                        gapi.auth2.getAuthInstance().signIn(options).then(function (user) {
 
-                    return authResponse["access_token"];
+                            var authResponse = user.getAuthResponse();
+
+                            igv.setGoogleOauthToken(authResponse["access_token"]);
+
+                            resolve(authResponse["access_token"]);
+                        }).catch(reject);
+                    });
                 });
             }
         }
@@ -39877,6 +40613,7 @@ var igv = function (igv) {
     //Increments an anonymous usage count.  Count is anonymous, needed for our continued funding.  Please don't delete
 
     var startupCalls = 0;
+
     function startup() {
 
         var href = window.document.location.href;
@@ -39886,11 +40623,7 @@ var igv = function (igv) {
             startupCalls++;
 
             var url = "https://data.broadinstitute.org/igv/projects/current/counter_igvjs.php?version=" + "0";
-            loadURL.call(this, url).then(function (ignore) {
-                console.log(ignore);
-            }).catch(function (error) {
-                console.log(error);
-            });
+            loadURL.call(this, url).then(function (ignore) {}).catch(function (error) {});
         }
     }
 
@@ -39899,6 +40632,51 @@ var igv = function (igv) {
         var regex = new RegExp(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/);
         return regex.test(address);
     }
+
+    /**
+     * Use when TextDecoder is not available (primarily IE).
+     *
+     * From: https://gist.github.com/Yaffle/5458286
+     *
+     * @param octets
+     * @returns {string}
+     */
+    decodeUTF8 = function decodeUTF8(octets) {
+        var string = "";
+        var i = 0;
+        while (i < octets.length) {
+            var octet = octets[i];
+            var bytesNeeded = 0;
+            var codePoint = 0;
+            if (octet <= 0x7F) {
+                bytesNeeded = 0;
+                codePoint = octet & 0xFF;
+            } else if (octet <= 0xDF) {
+                bytesNeeded = 1;
+                codePoint = octet & 0x1F;
+            } else if (octet <= 0xEF) {
+                bytesNeeded = 2;
+                codePoint = octet & 0x0F;
+            } else if (octet <= 0xF4) {
+                bytesNeeded = 3;
+                codePoint = octet & 0x07;
+            }
+            if (octets.length - i - bytesNeeded > 0) {
+                var k = 0;
+                while (k < bytesNeeded) {
+                    octet = octets[i + k + 1];
+                    codePoint = codePoint << 6 | octet & 0x3F;
+                    k += 1;
+                }
+            } else {
+                codePoint = 0xFFFD;
+                bytesNeeded = octets.length - i;
+            }
+            string += String.fromCodePoint(codePoint);
+            i += bytesNeeded + 1;
+        }
+        return string;
+    };
 
     return igv;
 }(igv || {});
@@ -40033,7 +40811,7 @@ var igv = function (igv) {
             var space = "";
             for (var i = 0; i < indent; i++) {
                 space += " ";
-            }console.log(space + node.interval.low + " " + node.interval.high); // + " " + (node.interval.value ? node.interval.value : " null"));
+            } // + " " + (node.interval.value ? node.interval.value : " null"));
 
             indent += 5;
 
@@ -41419,6 +42197,7 @@ var igv = function (igv) {
         this.order = -Number.MAX_VALUE;
         this.rulerSweepers = [];
         this.removable = false;
+        this.type = 'ruler';
     };
 
     igv.RulerTrack.prototype.updateLocusLabel = function () {
@@ -41462,27 +42241,37 @@ var igv = function (igv) {
         return Promise.resolve([]);
     };
 
-    igv.RulerTrack.prototype.draw = function (options) {
-        var key, rulerSweeper, $viewportContent, pixelWidthBP, tick, shim, tickHeight;
+    igv.RulerTrack.prototype.computePixelHeight = function (ignore) {
+        return this.height;
+    };
 
-        key = this.browser.genomicStateList.indexOf(options.genomicState).toString();
-        rulerSweeper = this.rulerSweepers[key];
+    igv.RulerTrack.prototype.getRulerSweeper = function (genomicState) {
+
+        var key = this.browser.genomicStateList.indexOf(genomicState).toString();
+        return this.rulerSweepers[key];
+    };
+
+    igv.RulerTrack.prototype.draw = function (options) {
+        var rulerSweeper, pixelWidthBP, tick, shim, tickHeight;
+
+        rulerSweeper = this.getRulerSweeper(options.genomicState);
         if (!rulerSweeper) {
-            //console.log("No rulerSweeper for key: " + key);
             return;
         }
 
-        $viewportContent = $(rulerSweeper.viewport.contentDiv);
+        if (igv.isWholeGenomeView(options.referenceFrame)) {
 
-        if ('all' === options.referenceFrame.chrName.toLowerCase()) {
+            $(this.canvas).hide();
+            rulerSweeper.viewport.$wholeGenomeContainer.show();
 
-            $viewportContent.find('canvas').hide();
-            $viewportContent.find('.igv-whole-genome-container').show();
+            createWholeGenomeRectList(rulerSweeper.viewport.$wholeGenomeContainer);
+
             rulerSweeper.disableMouseHandlers();
         } else {
 
-            $viewportContent.find('.igv-whole-genome-container').hide();
-            $viewportContent.find('canvas').show();
+            rulerSweeper.viewport.$wholeGenomeContainer.hide();
+            $(this.canvas).show();
+
             rulerSweeper.addMouseHandlers();
 
             tickHeight = 6;
@@ -41496,6 +42285,14 @@ var igv = function (igv) {
             igv.graphics.strokeLine(options.context, 0, this.height - shim, options.pixelWidth, this.height - shim);
         }
     };
+
+    function createWholeGenomeRectList($wholeGenomeContainer) {
+
+        $wholeGenomeContainer.find('div').each(function (i) {
+            var element = $(this).get(0);
+            // console.log(i);
+        });
+    }
 
     igv.RulerTrack.prototype.supportsWholeGenome = function () {
         return true;
@@ -41516,8 +42313,10 @@ var igv = function (igv) {
 
             var numberOfZeroes, majorUnit, unitMultiplier, numberOfMajorTicks, str;
 
+            var isSVGContext = options.context.isSVG || false;
+
             if (pixelWidthBP < 10) {
-                set.call(this, 1, "bp", 1);
+                set.call(this, 1, "bp", 1, isSVGContext);
             }
 
             numberOfZeroes = Math.floor(Math.log10(pixelWidthBP));
@@ -41542,17 +42341,16 @@ var igv = function (igv) {
             numberOfMajorTicks = pixelWidthBP / Math.pow(10, numberOfZeroes - 1);
 
             if (numberOfMajorTicks < 25) {
-                set.call(this, Math.pow(10, numberOfZeroes - 1), majorUnit, unitMultiplier);
+                set.call(this, Math.pow(10, numberOfZeroes - 1), majorUnit, unitMultiplier, isSVGContext);
             } else {
-                set.call(this, Math.pow(10, numberOfZeroes) / 2, majorUnit, unitMultiplier);
+                set.call(this, Math.pow(10, numberOfZeroes) / 2, majorUnit, unitMultiplier, isSVGContext);
             }
-
-            // this.description( (Math.floor(numberOfMajorTicks)) );
         }
 
-        function set(majorTick, majorUnit, unitMultiplier) {
+        function set(majorTick, majorUnit, unitMultiplier, isSVGContext) {
 
-            this.majorTick = majorTick;
+            // reduce label frequency by half for SVG rendering
+            this.majorTick = true === isSVGContext ? 2 * majorTick : majorTick;
             this.majorUnit = majorUnit;
 
             this.halfTick = majorTick / 2;
@@ -41565,8 +42363,9 @@ var igv = function (igv) {
 
         var numberOfTicks, bp, pixel, label, labelWidth, labelX, numer, floored;
 
-        // major ticks
         numberOfTicks = Math.floor(options.bpStart / this.majorTick) - 1;
+        labelWidth = 0;
+        labelX = 0;
         pixel = 0;
         while (pixel < options.pixelWidth) {
 
@@ -41575,15 +42374,15 @@ var igv = function (igv) {
 
             label = igv.numberFormatter(Math.floor(bp / this.unitMultiplier)) + " " + this.majorUnit;
             labelWidth = options.context.measureText(label).width;
-            labelX = pixel - labelWidth / 2;
-            igv.graphics.fillText(options.context, label, labelX, height - tickHeight / 0.75);
 
+            labelX = Math.round(pixel - labelWidth / 2);
+
+            igv.graphics.fillText(options.context, label, labelX, height - tickHeight / 0.75);
             igv.graphics.strokeLine(options.context, pixel, height - tickHeight, pixel, height - shim);
 
             ++numberOfTicks;
         }
 
-        // major ticks
         numberOfTicks = Math.floor(options.bpStart / this.halfTick) - 1;
         pixel = 0;
         while (pixel < options.pixelWidth) {
@@ -41592,7 +42391,7 @@ var igv = function (igv) {
             pixel = Math.round(options.referenceFrame.toPixels(bp - 1 - options.bpStart + 0.5));
             numer = bp / this.unitMultiplier;
             floored = Math.floor(numer);
-            // console.log(numer - floored);
+
             if (numer === floored && this.majorTick / this.labelWidthBP > 8) {
                 label = igv.numberFormatter(Math.floor(numer)) + " " + this.majorUnit;
                 labelWidth = options.context.measureText(label).width;
@@ -41606,9 +42405,7 @@ var igv = function (igv) {
         }
     };
 
-    Tick.prototype.description = function (blurb) {
-        console.log((blurb || '') + ' tick ' + igv.numberFormatter(this.majorTick) + ' label width ' + igv.numberFormatter(this.labelWidthBP) + ' multiplier ' + this.unitMultiplier);
-    };
+    Tick.prototype.description = function (blurb) {};
 
     return igv;
 }(igv || {});
@@ -41905,76 +42702,60 @@ var igv = function (igv) {
 
             var browser = this.browser;
 
-            return new Promise(function (fulfill, reject) {
-                if (bpPerPixel && bpPerPixel > 1) {
-                    fulfill(null);
-                } else {
-                    browser.genome.sequence.getSequence(chr, bpStart, bpEnd).then(fulfill).catch(reject);
-                }
-            });
+            if (bpPerPixel && bpPerPixel > 1) {
+                return Promise.resolve(null);
+            } else {
+                return browser.genome.sequence.getSequence(chr, bpStart, bpEnd).then(function (sequence) {
+                    return {
+                        bpStart: bpStart,
+                        sequence: sequence
+                    };
+                });
+            }
         };
 
         SequenceTrack.prototype.draw = function (options) {
 
-            var self = this,
-                sequence = options.features,
-                ctx = options.context,
-                bpPerPixel = options.bpPerPixel,
-                bpStart = options.bpStart,
-                pixelWidth = options.pixelWidth,
-                bpEnd = bpStart + pixelWidth * bpPerPixel + 1,
-                len,
-                w,
-                y,
-                pos,
-                offset,
-                b,
-                p0,
-                p1,
-                pc,
-                c,
-                h;
-            var transSeq, aaS;
+            var self = this;
 
-            if (sequence) {
+            if (options.features) {
 
-                len = sequence.length;
-                w = 1 / bpPerPixel;
+                var sequence = options.features.sequence;
+                var sequenceBpStart = options.features.bpStart;
 
-                h = 15; //Separate sequence height from view height.
-                for (pos = bpStart; pos <= bpEnd; pos++) {
+                var bpEnd = 1 + options.bpStart + options.pixelWidth * options.bpPerPixel;
 
-                    offset = pos - bpStart;
-                    if (offset < len) {
-                        b = sequence[offset];
+                var height = 15;
+                for (var bp = options.bpStart; bp <= bpEnd; bp++) {
+
+                    var seqOffsetBp = Math.floor(bp - sequenceBpStart);
+
+                    if (seqOffsetBp < sequence.length) {
+                        var letter = sequence[seqOffsetBp];
 
                         if (this.reversed) {
-                            b = this.complement[b.toUpperCase()];
+                            letter = this.complement[letter.toUpperCase()];
                         }
 
-                        p0 = Math.floor(offset * w);
-                        p1 = Math.floor((offset + 1) * w);
-                        pc = Math.round((p0 + p1) / 2);
+                        var offsetBP = bp - options.bpStart;
+                        var aPixel = offsetBP / options.bpPerPixel;
+                        var bPixel = (offsetBP + 1) / options.bpPerPixel;
 
-                        if (this.color) {
-                            c = this.color;
-                        } else if ("dna" === this.sequenceType) {
-                            c = igv.nucleotideColors[b];
+                        var color = fillColor.call(this, letter);
+
+                        var _ctx = options.context;
+                        if (options.bpPerPixel > 1 / 10) {
+                            igv.graphics.fillRect(_ctx, aPixel, 5, bPixel - aPixel, height - 5, { fillStyle: color });
                         } else {
-                            c = "rgb(0, 0, 150)";
-                        }
-
-                        if (!c) c = "gray";
-
-                        if (bpPerPixel > 1 / 10) {
-                            igv.graphics.fillRect(ctx, p0, 5, p1 - p0, h - 5, { fillStyle: c });
-                        } else {
-                            igv.graphics.strokeText(ctx, b, pc - ctx.measureText(b).width / 2, h, { strokeStyle: c });
+                            var xPixel = 0.5 * (aPixel + bPixel - _ctx.measureText(letter).width);
+                            igv.graphics.strokeText(_ctx, letter, xPixel, height, { strokeStyle: color });
                         }
                     }
                 }
+
                 if (this.frameTranslate) {
 
+                    var transSeq = void 0;
                     if (this.reversed) {
                         transSeq = sequence.split('').map(function (cv) {
                             return self.complement[cv];
@@ -41984,44 +42765,109 @@ var igv = function (igv) {
                         transSeq = sequence;
                     }
 
-                    y = h;
-                    this.translateSequence(transSeq).forEach(function (arr, i) {
-                        var fNum = i;
-                        var h = 25;
-                        y = i === 0 ? y + 10 : y + 30; //Little less room at first.
-                        arr.forEach(function (cv, idx) {
-                            var xSeed = idx + fNum + 2 * idx;
-                            if (idx % 2 === 0) {
-                                c = 'rgb(160,160,160)';
-                            } else {
-                                c = 'rgb(224,224,224)';
+                    var y = height;
+                    var translatedSequence = this.translateSequence(transSeq);
+                    var _iteratorNormalCompletion = true;
+                    var _didIteratorError = false;
+                    var _iteratorError = undefined;
+
+                    try {
+                        for (var _iterator = translatedSequence[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                            var arr = _step.value;
+
+
+                            var i = translatedSequence.indexOf(arr);
+                            var fNum = i;
+                            var h = 25;
+
+                            y = i === 0 ? y + 10 : y + 30; //Little less room at first.
+
+                            var _iteratorNormalCompletion2 = true;
+                            var _didIteratorError2 = false;
+                            var _iteratorError2 = undefined;
+
+                            try {
+                                for (var _iterator2 = arr[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                                    var cv = _step2.value;
+
+
+                                    var aaS = void 0;
+                                    var idx = arr.indexOf(cv);
+                                    var xSeed = idx + fNum + 2 * idx;
+                                    var _color = 0 === idx % 2 ? 'rgb(160,160,160)' : 'rgb(224,224,224)';
+
+                                    var p0 = Math.floor(xSeed / options.bpPerPixel);
+                                    var p1 = Math.floor((xSeed + 3) / options.bpPerPixel);
+                                    var pc = Math.round((p0 + p1) / 2);
+
+                                    if (cv.aminoA.indexOf('STOP') > -1) {
+                                        _color = 'rgb(255, 0, 0)';
+                                        aaS = 'STOP'; //Color blind accessible
+                                    } else {
+                                        aaS = cv.aminoA;
+                                    }
+
+                                    if (cv.aminoA === 'M') {
+                                        _color = 'rgb(0, 153, 0)';
+                                        aaS = 'START'; //Color blind accessible
+                                    }
+
+                                    igv.graphics.fillRect(ctx, p0, y, p1 - p0, h, { fillStyle: _color });
+
+                                    if (options.bpPerPixel <= 1 / 10) {
+                                        igv.graphics.strokeText(ctx, aaS, pc - ctx.measureText(aaS).width / 2, y + 15);
+                                    }
+                                }
+                            } catch (err) {
+                                _didIteratorError2 = true;
+                                _iteratorError2 = err;
+                            } finally {
+                                try {
+                                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                                        _iterator2.return();
+                                    }
+                                } finally {
+                                    if (_didIteratorError2) {
+                                        throw _iteratorError2;
+                                    }
+                                }
                             }
-                            p0 = Math.floor(xSeed * w);
-                            p1 = Math.floor((xSeed + 3) * w);
-                            pc = Math.round((p0 + p1) / 2);
-                            if (cv.aminoA.indexOf('STOP') > -1) {
-                                c = 'rgb(255, 0, 0)';
-                                aaS = 'STOP'; //Color blind accessible
-                            } else {
-                                aaS = cv.aminoA;
+                        }
+                    } catch (err) {
+                        _didIteratorError = true;
+                        _iteratorError = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion && _iterator.return) {
+                                _iterator.return();
                             }
-                            if (cv.aminoA === 'M') {
-                                c = 'rgb(0, 153, 0)';
-                                aaS = 'START'; //Color blind accessible
+                        } finally {
+                            if (_didIteratorError) {
+                                throw _iteratorError;
                             }
-                            ctx.fillRect(p0, y, p1 - p0, h);
-                            igv.graphics.fillRect(ctx, p0, y, p1 - p0, h, { fillStyle: c });
-                            if (bpPerPixel <= 1 / 10) {
-                                igv.graphics.strokeText(ctx, aaS, pc - ctx.measureText(aaS).width / 2, y + 15); //centers text in rect
-                            }
-                        });
-                    });
+                        }
+                    }
                 }
             }
         };
 
+        function fillColor(index) {
+
+            if (this.color) {
+                return this.color;
+            } else if ("dna" === this.sequenceType) {
+                return igv.nucleotideColors[index] || 'gray';
+            } else {
+                return 'rgb(0, 0, 150)';
+            }
+        }
+
         SequenceTrack.prototype.supportsWholeGenome = function () {
             return false;
+        };
+
+        SequenceTrack.prototype.computePixelHeight = function (ignore) {
+            return this.height;
         };
     }
 
@@ -42295,9 +43141,7 @@ var igv = function (igv) {
                     str += 'stroke:' + value + ';';
                 } else if (key === 'stroke-width') {
                     str += 'stroke-width:' + value + ';';
-                } else {
-                    console.log('Unknown property: ' + key);
-                }
+                } else {}
             }
         }
 
@@ -42330,9 +43174,7 @@ var igv = function (igv) {
                     }
 
                     str += ')';
-                } else {
-                    console.log('Unknown transform: ' + key);
-                }
+                } else {}
             }
 
             str += ' ';
@@ -43334,6 +44176,10 @@ var igv = function (igv) {
      */
     igv.TrackBase = function (config, browser) {
 
+        if (config.displayMode) {
+            config.displayMode = config.displayMode.toUpperCase();
+        }
+
         this.config = config;
         this.browser = browser;
         this.url = config.url;
@@ -43347,7 +44193,13 @@ var igv = function (igv) {
         }
 
         this.order = config.order;
-        this.color = config.color || config.defaultColor || "rgb(0,0,150)";
+
+        if ("civic-ws" === config.sourceType) {
+            // Ugly proxy for specialized track type
+            this.color = "rgb(155,20,20)";
+        } else {
+            this.color = config.color || config.defaultColor || "rgb(0,0,150)";
+        }
 
         this.autoscaleGroup = config.autoscaleGroup;
 
@@ -43518,10 +44370,51 @@ var igv = function (igv) {
      */
     igv.getFormat = function (name) {
 
-        if (undefined === igv.browser || undefined === igv.browser.formats) {
-            return undefined;
+        if (igv.browser && igv.browser.formats && igv.browser.format[name]) {
+
+            return expandFormat(igv.browser.formats[name]);
+        } else if (igv.FileFormats && igv.FileFormats[name]) {
+
+            return expandFormat(igv.FileFormats[name]);
         } else {
-            return igv.browser.formats[name];
+            return undefined;
+        }
+
+        function expandFormat(format) {
+
+            var fields = format.fields;
+            var keys = ['chr', 'start', 'end'];
+
+            for (var i = 0; i < fields.length; i++) {
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = keys[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var key = _step.value;
+
+                        if (key === fields[i]) {
+                            format[key] = i;
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+            }
+
+            return format;
         }
     };
 
@@ -43547,7 +44440,6 @@ var igv = function (igv) {
             case "genes":
             case "fusionjuncspan":
             case "snp":
-            case "rmsk":
 
                 return igv.trackFactory["feature"](trackConfig, browser);
 
@@ -43869,7 +44761,7 @@ var igv = function (igv) {
     };
 
     function doProvideColoSwatchWidget(track) {
-        return "alignment" === track.type || "feature" === track.type || "variant" === track.type || "wig" === track.type;
+        return "alignment" === track.type || "annotation" === track.type || "variant" === track.type || "wig" === track.type;
     };
 
     igv.trackMenuItemListHelper = function (itemList, $popover) {
@@ -44018,7 +44910,7 @@ var igv = function (igv) {
         $e.text('Set track color');
 
         clickHandler = function clickHandler() {
-            trackView.$colorpicker_container.toggle();
+            trackView.presentColorPicker();
         };
 
         return {
@@ -44100,52 +44992,6 @@ var igv = function (igv) {
         };
 
         return { object: $e, click: menuClickHandler };
-    };
-
-    var baseProperties = {
-        /**
-         * Default implementation -- return the current state of the "this" object, which should be a track.  Used
-         * to create session object for bookmarking, sharing.  Updates the track "config" object to reflect the
-         * current state.  Only simple properties (string, number, boolean) are updated.
-         */
-        getState: function getState() {
-
-            var config = Object.assign({}, this.config);
-            var self = this;
-
-            Object.keys(config).forEach(function (key) {
-                var value = self[key];
-                if (value && (igv.isSimpleType(value) || typeof value === "boolean")) {
-                    config[key] = value;
-                }
-            });
-
-            return config;
-        },
-
-        clickedFeatures: function clickedFeatures(clickState) {
-
-            // We use the cached features rather than method to avoid async load.  If the
-            // feature is not already loaded this won't work,  but the user wouldn't be mousing over it either.
-            var features = clickState.viewport.getCachedFeatures();
-
-            if (!features || features.length === 0) {
-                return [];
-            }
-
-            var genomicLocation = clickState.genomicLocation;
-
-            // We need some tolerance around genomicLocation
-            var tolerance = 3 * clickState.referenceFrame.bpPerPixel;
-            var ss = Math.floor(genomicLocation) - tolerance;
-            var ee = Math.ceil(genomicLocation) + tolerance;
-
-            return igv.FeatureUtils.findOverlapping(features, ss, ee);
-        },
-
-        supportsWholeGenome: function supportsWholeGenome() {
-            return false;
-        }
     };
 
     return igv;
@@ -44241,23 +45087,50 @@ var igv = function (igv) {
             attachDragWidget.call(this, $(this.trackDiv), this.$viewportContainer);
         }
 
-        // Create color picker.
-        config = {
-            // width = (29 * swatch-width) + border-width + border-width
-            width: 29 * 24 + 1 + 1,
-            classes: ['igv-position-absolute']
-        };
+        if ("sequence" === this.track.type) {
+            // do nothing
+        } else if (this.track instanceof igv.RulerTrack) {
+            // do nothing
+        } else {
+            this.createColorPicker();
+        }
+    };
 
-        this.$colorpicker_container = igv.genericContainer($track, config, function () {
-            self.$colorpicker_container.toggle();
-        });
+    igv.TrackView.prototype.renderSVGContext = function (context, offset) {
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
-        igv.createColorSwatchSelector(this.$colorpicker_container, function (rgb) {
-            self.setColor(rgb);
-            self.$colorpicker_container.hide();
-        });
+        try {
 
-        this.$colorpicker_container.hide();
+            for (var _iterator = this.viewports[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var viewport = _step.value;
+
+
+                var index = viewport.browser.genomicStateList.indexOf(viewport.genomicState);
+                var bbox = viewport.$viewport.get(0).getBoundingClientRect();
+
+                var o = {
+                    deltaX: offset.deltaX + index * viewport.$viewport.width(),
+                    deltaY: offset.deltaY + bbox.y
+                };
+
+                viewport.renderSVGContext(context, o);
+            }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
     };
 
     igv.TrackView.prototype.configureViewportContainer = function ($viewportContainer, viewports) {
@@ -44452,6 +45325,35 @@ var igv = function (igv) {
         this.repaintViews(true);
     };
 
+    igv.TrackView.prototype.createColorPicker = function () {
+
+        var self = this;
+
+        var config = {
+            $parent: $(this.trackDiv),
+            width: 456,
+            height: undefined,
+            closeHandler: function closeHandler() {
+                self.colorPicker.$container.hide();
+            }
+        };
+
+        this.colorPicker = new igv.genericContainer(config);
+
+        createColorSwatchSelector.call(this, this.colorPicker.$container, function (rgb) {
+            self.setColor(rgb);
+        });
+
+        self.colorPicker.$container.hide();
+    };
+
+    igv.TrackView.prototype.presentColorPicker = function () {
+        var bbox = this.trackDiv.getBoundingClientRect();
+        this.colorPicker.origin = { x: bbox.x, y: 0 };
+        this.colorPicker.$container.offset({ left: this.colorPicker.origin.x, top: this.colorPicker.origin.y });
+        this.colorPicker.$container.show();
+    };
+
     igv.TrackView.prototype.setTrackHeight = function (newHeight, update, force) {
 
         if (!force) {
@@ -44505,6 +45407,9 @@ var igv = function (igv) {
         this.viewports.forEach(function (viewport) {
             viewport.setWidth(width);
         });
+
+        var $leftHandGutter = $(this.leftHandGutter);
+        resizeControlCanvas.call(this, $leftHandGutter.outerWidth(), $leftHandGutter.outerHeight());
 
         this.updateViews(true);
     };
@@ -44764,6 +45669,70 @@ var igv = function (igv) {
         this.scrollbar.moveScrollerBy(delta);
     };
 
+    function createColorSwatchSelector($genericContainer, colorHandler) {
+
+        var appleColors = Object.values(igv.appleCrayonPalette);
+
+        if (this.track.color) {
+
+            // Remove 'snow' color.
+            appleColors.splice(11, 1);
+
+            // Add default color.
+            appleColors.unshift(igv.Color.rgbToHex(this.track.color));
+        }
+
+        var _loop = function _loop(color) {
+
+            var $swatch = $('<div>', { class: 'igv-color-swatch' });
+            $genericContainer.append($swatch);
+
+            $swatch.css('background-color', color);
+
+            if ('white' === color) {} else {
+
+                $swatch.hover(function () {
+                    $swatch.get(0).style.borderColor = color;
+                }, function () {
+                    $swatch.get(0).style.borderColor = 'white';
+                });
+
+                $swatch.click(function () {
+                    colorHandler(color);
+                });
+
+                $swatch.on('touchend', function () {
+                    colorHandler(color);
+                });
+            }
+        };
+
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+            for (var _iterator2 = appleColors[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                var color = _step2.value;
+
+                _loop(color);
+            }
+        } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                    _iterator2.return();
+                }
+            } finally {
+                if (_didIteratorError2) {
+                    throw _iteratorError2;
+                }
+            }
+        }
+    }
+
     var TrackScrollbar = function TrackScrollbar($viewportContainer, viewports, rootDiv) {
 
         var self = this;
@@ -44933,6 +45902,7 @@ var igv = function (igv) {
         // ok
         this.$ok = $("<div>");
         $ok_container.append(this.$ok);
+
         this.$ok.text('OK');
 
         this.$ok.on('click', function () {
@@ -44949,6 +45919,31 @@ var igv = function (igv) {
 
     igv.AlertDialog.prototype.configure = function (config) {
         this.$label.html(config.label);
+    };
+
+    igv.AlertDialog.prototype.presentMessageWithCallback = function (message, callback) {
+
+        this.$label.text(message);
+
+        var css = {
+            left: (this.$parent.width() - this.$container.width()) / 2,
+            top: (this.$parent.height() - this.$container.height()) / 2
+        };
+        this.$container.css(css);
+
+        this.$container.show();
+
+        this.$ok.text('OK');
+
+        var self = this;
+        this.$ok.on('click', function () {
+
+            callback('OK');
+
+            self.$label.html('');
+            self.$container.offset({ left: 0, top: 0 });
+            self.$container.hide();
+        });
     };
 
     igv.AlertDialog.prototype.present = function ($alternativeParent) {
@@ -45514,19 +46509,16 @@ var igv = function (igv) {
         event.stopPropagation();
         event.preventDefault();
 
-        var target = this;
-        var x = event.screenX;
-        var y = event.screenY;
-        var styleX = Math.round(parseFloat(target.style.left.replace("px", "")));
-        var styleY = Math.round(parseFloat(target.style.top.replace("px", "")));
+        var styleX = Math.round(parseFloat(this.style.left.replace("px", "")));
+        var styleY = Math.round(parseFloat(this.style.top.replace("px", "")));
+        var dragFunction = drag.bind(this);
+        var dragEndFunction = dragEnd.bind(this);
 
-        var dragFunction = drag.bind(target);
-        var dragEndFunction = dragEnd.bind(target);
         dragData = {
             dragFunction: dragFunction,
             dragEndFunction: dragEndFunction,
-            dx: styleX - x,
-            dy: styleY - y
+            dx: styleX - event.screenX,
+            dy: styleY - event.screenY
         };
 
         $(document).on('mousemove' + namespace, dragFunction);
@@ -45538,37 +46530,33 @@ var igv = function (igv) {
     function drag(event) {
 
         if (!dragData) {
-            console.log("No drag data!");
             return;
         }
 
         event.stopPropagation();
         event.preventDefault();
-        var target = this;
-        var x = event.screenX;
-        var y = event.screenY;
-        var styleX = dragData.dx + x;
-        var styleY = dragData.dy + y;
-        target.style.left = styleX + "px";
-        target.style.top = styleY + "px";
+
+        var styleX = dragData.dx + event.screenX;
+        var styleY = dragData.dy + event.screenY;
+
+        this.style.left = styleX + "px";
+        this.style.top = styleY + "px";
     }
 
     function dragEnd(event) {
 
         if (!dragData) {
-            console.log("No drag data!");
             return;
         }
 
         event.stopPropagation();
         event.preventDefault();
-        var target = this;
-        var x = event.screenX;
-        var y = event.screenY;
-        var styleX = dragData.dx + x;
-        var styleY = dragData.dy + y;
-        target.style.left = styleX + "px";
-        target.style.top = styleY + "px";
+
+        var styleX = dragData.dx + event.screenX;
+        var styleY = dragData.dy + event.screenY;
+
+        this.style.left = styleX + "px";
+        this.style.top = styleY + "px";
 
         $(document).off(namespace);
         dragData = undefined;
@@ -45576,6 +46564,93 @@ var igv = function (igv) {
 
     return igv;
 }(igv || {});
+
+'use strict';
+
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014 Broad Institute
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+igv.genericContainer = function (_ref) {
+    var $parent = _ref.$parent,
+        width = _ref.width,
+        height = _ref.height,
+        closeHandler = _ref.closeHandler;
+
+
+    var self = this,
+        $header,
+        $fa;
+
+    this.namespace = '.generic_container_' + igv.guid();
+
+    var $container = $('<div>', { class: 'igv-generic-container' });
+    $parent.append($container);
+    this.$container = $container;
+
+    if (width) {
+        this.$container.width(width);
+    }
+
+    if (height) {
+        this.$container.height(height);
+    }
+
+    var bbox = $parent.get(0).getBoundingClientRect();
+    this.origin = { x: bbox.x, y: bbox.y };
+    this.$container.offset({ left: this.origin.x, top: this.origin.y });
+
+    // header
+    $header = $('<div>');
+    this.$container.append($header);
+
+    // close button
+    $fa = igv.createIcon("times");
+    $header.append($fa);
+
+    $fa.on('mousedown' + self.namespace, function (e) {
+        e.stopPropagation();
+    });
+
+    $fa.on('mouseup' + self.namespace, function (e) {
+        e.stopPropagation();
+    });
+
+    $fa.on('click' + self.namespace, function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeHandler(e);
+    });
+
+    $fa.on('touchend' + self.namespace, function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeHandler(e);
+    });
+
+    igv.makeDraggable(this.$container.get(0), $header.get(0));
+};
 
 "use strict";
 
@@ -46327,7 +47402,7 @@ var igv = function (igv) {
         $parent.append(this.$zoomContainer);
 
         // zoom out
-        $div = $('<div style="margin: 5px">');
+        $div = $('<div>');
         this.$zoomContainer.append($div);
 
         svg = igv.createIcon("minus-circle");
@@ -46349,7 +47424,7 @@ var igv = function (igv) {
         });
 
         // zoom in
-        $div = $('<div style="margin: 5px">');
+        $div = $('<div>');
         this.$zoomContainer.append($div);
 
         svg = igv.createIcon("plus-circle");
@@ -47043,9 +48118,7 @@ var igv = function (igv) {
                         }
                     }
                 }
-            } else {
-                console.log("No feature list");
-            }
+            } else {}
 
             function getFillColor(allele) {
                 if (allele.length < variant.referenceBases.length) {
@@ -47434,9 +48507,7 @@ var igv = function (igv) {
                             }
                         });
                     });
-                } catch (err) {
-                    console.log(err);
-                }
+                } catch (err) {}
             }
         };
 
@@ -47576,7 +48647,6 @@ var igv = function (igv) {
                         gtIdx = line.lastIndexOf(">");
 
                         if (!(ltIdx > 2 && gtIdx > 0)) {
-                            console.log("Malformed VCF header line: " + line);
                             continue;
                         }
 
@@ -47736,6 +48806,8 @@ var igv = function (igv) {
     "use strict";
 
     var NOT_LOADED_MESSAGE = 'Error loading track data';
+    var MAX_PIXEL_HEIGHT = 32000;
+    var MAX_PIXEL_COUNT = 200000000;
 
     igv.Viewport = function (trackView, $container, genomicState, width) {
 
@@ -47767,7 +48839,7 @@ var igv = function (igv) {
             this.$viewport.addClass('igv-viewport-sequence');
         }
 
-        if (trackView.track instanceof igv.RulerTrack) {
+        if ('ruler' === trackView.track.type) {
 
             this.$wholeGenomeContainer = $('<div>', { class: 'igv-whole-genome-container' });
             $(this.contentDiv).append(this.$wholeGenomeContainer);
@@ -47788,7 +48860,7 @@ var igv = function (igv) {
         } else {
             addMouseHandlers.call(this);
 
-            var dimen = Math.min(32, this.$viewport.height());
+            var dimen = 32;
             var $spinnerContainer = $('<div class="igv-viewport-spinner">');
             $spinnerContainer.css({ 'font-size': dimen + 'px' });
 
@@ -47801,7 +48873,7 @@ var igv = function (igv) {
 
         if ("sequence" === trackView.track.type) {
             // do nuthin
-        } else if (trackView.track instanceof igv.RulerTrack) {
+        } else if ('ruler' === trackView.track.type) {
             // do nuthin
         } else {
             self.$zoomInNotice = createZoomInNotice.call(this, $(this.contentDiv));
@@ -48002,6 +49074,23 @@ var igv = function (igv) {
         var bpEnd = tile.endBP;
         var pixelWidth = Math.ceil((bpEnd - bpStart) / bpPerPixel);
         var pixelHeight = self.getContentHeight();
+        if (pixelWidth == 0 || pixelHeight === 0) {
+            if (self.canvas) {
+                $(self.canvas).remove();
+            }
+            return;
+        }
+
+        // Set limits on canvas size.  See https://github.com/igvteam/igv.js/issues/792
+        var devicePixelRatio = this.trackView.track.supportHiDPI === false ? 1 : window.devicePixelRatio;
+        var origPixelHeight = pixelHeight;
+        pixelHeight = Math.min(Math.floor(MAX_PIXEL_COUNT / (pixelWidth * devicePixelRatio)), pixelHeight);
+        pixelHeight = Math.min(Math.floor(MAX_PIXEL_HEIGHT) / (devicePixelRatio * devicePixelRatio), pixelHeight);
+        if (pixelHeight < origPixelHeight) {
+            console.error("Maximum pixel height exceeded for track " + this.trackView.track.name);
+        }
+
+        // console.log(pixelHeight);
 
         var drawConfiguration = {
             features: features,
@@ -48019,7 +49108,6 @@ var igv = function (igv) {
             viewportContainerWidth: this.browser.viewportContainerWidth()
         };
 
-        var devicePixelRatio = window.devicePixelRatio;
         var newCanvas = $('<canvas>').get(0);
         newCanvas.style.width = pixelWidth + "px";
         newCanvas.style.height = pixelHeight + "px";
@@ -48032,7 +49120,6 @@ var igv = function (igv) {
         newCanvas.style.position = 'absolute';
         newCanvas.style.left = pixelOffset + "px";
         newCanvas.style.top = self.canvas.style.top + "px";
-
         drawConfiguration.context = ctx;
 
         ctx.save();
@@ -48200,6 +49287,145 @@ var igv = function (igv) {
         var data = exportCanvas.toDataURL("image/png");
         igv.download(filename, data);
     };
+
+    igv.Viewport.prototype.renderSVGContext = function (context, offset) {
+
+        var yScrollDelta = $(this.contentDiv).position().top;
+        var viewportBBox = this.$viewport.get(0).getBoundingClientRect();
+
+        var str = this.trackView.track.name || this.trackView.track.id;
+        str = str.replace(/\W/g, '');
+
+        var index = this.browser.genomicStateList.indexOf(this.genomicState);
+        var id = str.toLowerCase() + '_genomic_index_' + index;
+
+        // If present, paint axis canvas. Only in first multi-locus panel
+
+        if (0 === index && typeof this.trackView.track.paintAxis === 'function') {
+
+            var w = $(this.trackView.controlCanvas).width();
+            var h = $(this.trackView.controlCanvas).height();
+
+            context.addTrackGroupWithTranslationAndClipRect(id + '_axis', offset.deltaX - w, offset.deltaY, w, h, 0);
+
+            context.save();
+            this.trackView.track.paintAxis(context, w, h);
+            context.restore();
+        }
+
+        var dx = offset.deltaX + index * context.multiLocusGap;
+        var dy = offset.deltaY + yScrollDelta;
+        var group = context.addTrackGroupWithTranslationAndClipRect(id, dx, dy, viewportBBox.width, viewportBBox.height, -yScrollDelta);
+
+        if ('ruler' === this.trackView.track.type && igv.isWholeGenomeView(this.genomicState.referenceFrame)) {
+            drawWholeGenomeRuler.call(this, context, group);
+        } else {
+
+            var width = this.$viewport.width();
+            var height = this.$viewport.height();
+
+            var referenceFrame = this.genomicState.referenceFrame;
+
+            context.save();
+
+            var drawConfig = {
+                context: context,
+
+                viewport: this,
+
+                referenceFrame: referenceFrame,
+
+                genomicState: this.genomicState,
+
+                pixelWidth: width,
+                pixelHeight: height,
+
+                viewportWidth: width,
+
+                viewportContainerX: 0,
+                viewportContainerWidth: this.browser.viewportContainerWidth(),
+
+                bpStart: referenceFrame.start,
+                bpEnd: referenceFrame.start + width * referenceFrame.bpPerPixel,
+
+                bpPerPixel: referenceFrame.bpPerPixel,
+
+                selection: this.selection
+            };
+
+            var features = this.tile ? this.tile.features : [];
+
+            draw.call(this, drawConfig, features);
+
+            context.restore();
+        }
+    };
+
+    function drawWholeGenomeRuler(svgContext, group) {
+
+        var index = this.browser.genomicStateList.indexOf(this.genomicState);
+        var rulerSweeper = this.trackView.track.rulerSweepers[index];
+
+        var dx = void 0;
+        var dy = void 0;
+        var $selection = rulerSweeper.viewport.$wholeGenomeContainer.find('div');
+        $selection.each(function (i) {
+            var domRect = $(this).get(0).getBoundingClientRect();
+
+            if (0 === i) {
+                dx = domRect.x;
+                dy = domRect.y;
+            }
+
+            var x = domRect.x - dx;
+            var y = domRect.y - dy;
+            var w = domRect.width;
+            var h = domRect.height;
+
+            var stroke_dash_array = void 0;
+            if (i === $selection.length - 1) {
+                stroke_dash_array = '0 ' + w + ' 0 ' + h + ' 0 ' + w + ' 0 ' + h;
+            } else {
+                stroke_dash_array = '0 ' + w + ' ' + h + ' ' + w + ' 0 ' + h;
+            }
+
+            var stroke_width = 1;
+            var rect_settings = {
+                x: x,
+                width: w,
+                y: y,
+                height: h,
+
+                // fill: igv.Color.randomRGB(200, 255),
+                fill: 'white',
+
+                'stroke-width': stroke_width,
+                'stroke': 'black',
+                'stroke-dasharray': stroke_dash_array
+            };
+
+            var rect = svgContext.__createElement('rect', rect_settings, true);
+            group.appendChild(rect);
+
+            var text_settings = {
+                "font-family": 'sans-serif',
+                "font-size": '10px',
+                "font-style": 'normal',
+                "font-weight": 'normal',
+                "text-anchor": 'middle',
+                "dominant-baseline": 'middle',
+                x: x + w / 2,
+                y: y + h / 2,
+                fill: 'grey'
+            };
+
+            var text = svgContext.__createElement('text', text_settings, true);
+            group.appendChild(text);
+
+            var str = $(this).find('span').text();
+            text.appendChild(svgContext.__document.createTextNode(str));
+        });
+    }
 
     igv.Viewport.prototype.saveSVG = function () {
         var str = this.$trackLabel ? this.$trackLabel.text() : this.trackView.track.id;
