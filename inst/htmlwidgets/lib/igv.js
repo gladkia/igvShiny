@@ -29,7 +29,7 @@
 
 (function () {
 
-    var css =  '.igv-color-swatch {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  width: 32px;\n  height: 32px;\n  border-style: solid;\n  border-width: 2px;\n  border-color: white;\n  border-radius: 4px;\n  margin: 1px; }\n\n.igv-colorpicker-menu-close-button {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: flex-end;\n  align-items: center;\n  width: 100%;\n  height: 32px;\n  margin-top: 4px;\n  margin-bottom: 4px;\n  padding-right: 8px; }\n  .igv-colorpicker-menu-close-button i.fa {\n    display: block;\n    margin-left: 4px;\n    margin-right: 4px;\n    color: #5f5f5f; }\n  .igv-colorpicker-menu-close-button i.fa:hover,\n  .igv-colorpicker-menu-close-button i.fa:focus,\n  .igv-colorpicker-menu-close-button i.fa:active {\n    cursor: pointer;\n    color: #0f0f0f; }\n\n.igv-generic-container {\n  position: absolute;\n  top: 0;\n  left: 0;\n  border-style: solid;\n  border-width: thin;\n  border-color: #dddddd;\n  z-index: 2048;\n  background-color: white;\n  cursor: pointer;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: flex-start;\n  align-items: center; }\n  .igv-generic-container div:first-child {\n    padding-right: 8px;\n    cursor: move;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-end;\n    align-items: center;\n    height: 24px;\n    width: 100%;\n    background-color: #dddddd; }\n    .igv-generic-container div:first-child i.fa {\n      cursor: pointer;\n      margin-right: 4px;\n      display: block;\n      color: #5f5f5f; }\n    .igv-generic-container div:first-child i.fa:hover,\n    .igv-generic-container div:first-child i.fa:focus,\n    .igv-generic-container div:first-child i.fa:active {\n      cursor: pointer;\n      color: #0f0f0f; }\n\n.igvControlDiv {\n  position: relative; }\n\n.igv-content-header {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: flex-start;\n  align-items: center;\n  margin-top: 10px;\n  height: 16px;\n  width: 100%; }\n  .igv-content-header .igv-ideogram-shim {\n    height: 100%;\n    width: 50px;\n    background-color: white; }\n  .igv-content-header .igv-ideogram-content {\n    height: 100%;\n    background-color: white; }\n  .igv-content-header .igv-ideogram-content-border-right {\n    border-right-color: #292929;\n    border-right-style: solid;\n    border-right-width: 1px; }\n\n.igv-multi-locus-panel-border {\n  position: absolute;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 1px;\n  background-color: green;\n  border-right-color: #ff0000;\n  border-right-style: solid;\n  border-right-width: 1px; }\n\n.igv-navbar {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: space-between;\n  align-items: center;\n  color: #444;\n  font-size: 12px;\n  font-family: \"Open Sans\", sans-serif;\n  font-weight: 400;\n  line-height: 32px;\n  margin-top: 2px;\n  margin-bottom: 4px;\n  position: relative;\n  top: 0;\n  left: 0;\n  height: 32px;\n  width: 100%;\n  border-style: solid;\n  border-radius: 3px;\n  border-width: thin;\n  border-color: #bfbfbf;\n  background-color: #f3f3f3; }\n  .igv-navbar .igv-nav-bar-left-container {\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-between;\n    align-items: center;\n    height: 32px; }\n    .igv-navbar .igv-nav-bar-left-container .igv-logo {\n      width: 34px;\n      height: 32px;\n      margin-left: 8px;\n      margin-right: 32px; }\n    .igv-navbar .igv-nav-bar-left-container .igv-current_genome {\n      height: 32px;\n      margin-right: 16px;\n      user-select: none;\n      text-align: center; }\n    .igv-navbar .igv-nav-bar-left-container .igv-genomic-location {\n      display: flex;\n      flex-flow: row;\n      flex-wrap: nowrap;\n      justify-content: space-between;\n      align-items: center;\n      height: 100%; }\n      .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-chromosome-select-widget-container {\n        height: 100%;\n        width: 100px;\n        margin-right: 4px;\n        display: flex;\n        flex-flow: column;\n        flex-wrap: nowrap;\n        justify-content: space-around;\n        align-items: center; }\n        .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-chromosome-select-widget-container select {\n          display: block;\n          cursor: pointer;\n          width: 100%;\n          height: 75%;\n          outline: none;\n          font-size: 12px;\n          font-family: \"Open Sans\", sans-serif;\n          font-weight: 400; }\n      .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group {\n        display: flex;\n        flex-flow: row;\n        flex-wrap: nowrap;\n        justify-content: space-between;\n        align-items: center;\n        margin-left: 8px;\n        height: 100%; }\n        .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group .igv-search-container {\n          width: 260px;\n          height: 100%;\n          display: flex;\n          flex-flow: row;\n          flex-wrap: nowrap;\n          justify-content: flex-start;\n          align-items: center; }\n          .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group .igv-search-container input {\n            cursor: text;\n            width: 85%;\n            height: 75%;\n            padding-left: 8px;\n            margin-right: 8px;\n            text-align: left;\n            outline: none;\n            font-size: 12px;\n            font-family: \"Open Sans\", sans-serif;\n            font-weight: 400;\n            border-style: solid;\n            border-radius: 3px;\n            border-width: thin;\n            border-color: #bfbfbf;\n            background-color: white; }\n          .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group .igv-search-container div {\n            height: 100%; }\n        .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group .igv-windowsizepanel-content-div {\n          margin-left: 4px;\n          user-select: none; }\n  .igv-navbar .igv-nav-bar-right-container {\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-between;\n    align-items: center;\n    height: 100%; }\n    .igv-navbar .igv-nav-bar-right-container .igv-nav-bar-toggle-button-container {\n      display: flex;\n      flex-flow: row;\n      flex-wrap: nowrap;\n      justify-content: space-between;\n      align-items: center;\n      height: 100%;\n      margin-right: 8px; }\n      .igv-navbar .igv-nav-bar-right-container .igv-nav-bar-toggle-button-container div {\n        margin-left: 0;\n        margin-right: 4px; }\n      .igv-navbar .igv-nav-bar-right-container .igv-nav-bar-toggle-button-container div:last-child {\n        margin-left: 0;\n        margin-right: 0; }\n    .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget {\n      height: 100%;\n      color: #737373;\n      font-size: 18px;\n      user-select: none;\n      margin-left: 16px;\n      margin-right: 8px;\n      margin-top: 12px;\n      display: flex;\n      flex-flow: row;\n      flex-wrap: nowrap;\n      justify-content: space-between;\n      align-items: center; }\n      .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget div {\n        height: 100%;\n        cursor: pointer; }\n      .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget div:first-child {\n        margin-right: 4px; }\n      .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget div:last-child {\n        margin-left: 4px; }\n      .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget input {\n        display: block; }\n      .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget svg {\n        display: block; }\n\n.igv-nav-bar-button {\n  height: 18px;\n  min-width: 96px;\n  text-transform: capitalize;\n  user-select: none;\n  line-height: 18px;\n  text-align: center;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 11px;\n  font-weight: 200;\n  color: #737373;\n  background-color: #f3f3f3;\n  border-color: #737373;\n  border-style: solid;\n  border-width: thin;\n  border-radius: 10px; }\n\n.igv-nav-bar-button-clicked {\n  color: white;\n  background-color: #737373; }\n\n.igv-nav-bar-button:hover {\n  cursor: pointer; }\n\n.igv-logo-nonav {\n  margin-left: 4px;\n  margin-top: 12px;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 34px;\n  height: 16px; }\n\n.igv-search-results {\n  position: absolute;\n  top: 32px;\n  left: 2px;\n  height: 320px;\n  width: 213px;\n  background-color: white;\n  border-color: #7F7F7F;\n  border-style: solid;\n  border-width: thin;\n  overflow-x: hidden;\n  overflow-y: auto;\n  z-index: 9999; }\n  .igv-search-results tr {\n    font-family: \"Open Sans\", sans-serif;\n    font-size: small;\n    font-weight: 400;\n    color: #444; }\n  .igv-search-results tr:hover,\n  .igv-search-results tr:focus,\n  .igv-search-results tr:active {\n    cursor: pointer;\n    font-weight: 700;\n    color: #141414; }\n\n.igv-root-div {\n  position: relative;\n  left: 0;\n  right: 0;\n  height: auto;\n  margin-left: 10px;\n  margin-right: 10px;\n  padding-top: 4px; }\n\n.igv-content-div {\n  position: relative;\n  width: 100%;\n  height: 100%; }\n\n.igv-track-container-div {\n  user-select: none;\n  position: relative;\n  clear: both; }\n\n.igv-track-div {\n  position: relative;\n  width: 100%;\n  margin-top: 2px;\n  margin-bottom: 2px; }\n\n.igv-viewport-container {\n  position: absolute;\n  left: 50px;\n  right: 50px;\n  height: 100%;\n  white-space: nowrap;\n  overflow-x: hidden;\n  overflow-y: hidden; }\n\n.igv-viewport-div {\n  position: relative;\n  display: inline-block;\n  height: 100%;\n  overflow-x: hidden;\n  overflow-y: hidden; }\n\n.igv-viewport-content-div {\n  position: absolute;\n  width: 100%; }\n\n.igv-viewport-message {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  color: rgba(0, 0, 0, 0.15);\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 25px;\n  font-weight: bold;\n  user-select: none; }\n\n.igv-whole-genome-container {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: space-between;\n  width: 100%;\n  height: 100%;\n  background-color: white; }\n  .igv-whole-genome-container div {\n    font-family: \"Open Sans\", sans-serif;\n    font-size: 10px;\n    font-weight: 400;\n    color: #444;\n    height: 100%;\n    text-align: center;\n    border-right-color: #bfbfbf;\n    border-right-style: solid;\n    border-right-width: thin; }\n    .igv-whole-genome-container div span {\n      display: block;\n      padding-top: 6px;\n      text-overflow: ellipsis; }\n  .igv-whole-genome-container div:last-child {\n    border-right-color: transparent; }\n  .igv-whole-genome-container div:hover,\n  .igv-whole-genome-container div:focus,\n  .igv-whole-genome-container div:active {\n    cursor: pointer;\n    background-color: #efefef; }\n\n.igv-viewport-div-border-right {\n  border-right-color: #292929;\n  border-right-style: solid;\n  border-right-width: 1px; }\n\n.igv-viewport-fa-close {\n  position: absolute;\n  top: 4px;\n  right: 4px;\n  font-size: 16px;\n  color: #666666;\n  z-index: 1000; }\n\n.igv-viewport-fa-close:hover {\n  cursor: pointer;\n  color: #434343; }\n\n.igv-viewport-content-ruler-div {\n  position: absolute;\n  left: 50%;\n  top: 25%;\n  transform: translate(-50%, -25%);\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 12px;\n  font-weight: 200;\n  text-align: center;\n  min-width: 16px;\n  z-index: 64;\n  color: #0066ff;\n  background-color: white;\n  padding: 1px; }\n\n.igv-viewport-content-ruler-div:hover,\n.igv-viewport-content-ruler-div:focus,\n.igv-viewport-content-ruler-div:active {\n  cursor: pointer;\n  color: white;\n  background-color: #0066ff; }\n\n.igv-viewport-ruler {\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 10px;\n  font-weight: 200;\n  text-align: center; }\n  .igv-viewport-ruler > div {\n    height: 100%; }\n\n.igv-viewport-sequence {\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 8px;\n  font-weight: 200;\n  text-align: center; }\n\n.igv-viewport-spinner {\n  pointer-events: none;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  z-index: 1024;\n  color: #737373; }\n\n.igv-ruler-sweeper-div {\n  display: none;\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 0;\n  height: 100%;\n  z-index: 99999;\n  background-color: rgba(68, 134, 247, 0.25); }\n\n.igv-right-hand-gutter {\n  position: absolute;\n  right: 0;\n  width: 36px;\n  height: 100%;\n  background: white;\n  text-align: center; }\n  .igv-right-hand-gutter i {\n    position: absolute;\n    top: 0;\n    right: 0;\n    padding-right: 6px;\n    font-size: 20px;\n    cursor: pointer;\n    color: grey; }\n  .igv-right-hand-gutter i:hover,\n  .igv-right-hand-gutter i:focus,\n  .igv-right-hand-gutter i:active {\n    color: #333333; }\n\n.igv-left-hand-gutter {\n  position: absolute;\n  left: 0;\n  width: 50px;\n  height: 100%; }\n  .igv-left-hand-gutter canvas {\n    position: absolute; }\n\n.igv-track-menu-container {\n  background-color: white;\n  border-bottom-left-radius: 4px;\n  border-bottom-right-radius: 4px; }\n  .igv-track-menu-container div {\n    padding-left: 4px;\n    padding-right: 4px;\n    padding-top: 2px;\n    padding-bottom: 2px;\n    background-color: white; }\n    .igv-track-menu-container div i {\n      padding-right: 2px; }\n  .igv-track-menu-container div:hover,\n  .igv-track-menu-container div:focus,\n  .igv-track-menu-container div:active {\n    cursor: pointer;\n    background-color: #efefef; }\n  .igv-track-menu-container a {\n    color: inherit;\n    text-decoration: none; }\n\n.igv-track-menu-border-top {\n  border-top-color: #a2a2a2;\n  border-top-style: solid;\n  border-top-width: thin; }\n\n.igv-track-menu-category {\n  padding-left: 4px;\n  font-weight: 400; }\n\n.igv-track-drag-scrim {\n  position: absolute;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  z-index: 256;\n  background-color: rgba(68, 134, 247, 0.25); }\n\n.igv-track-manipulation-handle {\n  cursor: pointer;\n  position: absolute;\n  right: 36px;\n  width: 12px;\n  margin-left: 2px;\n  height: 100%;\n  box-sizing: border-box;\n  font-size: medium;\n  border-color: #c4c4c4;\n  border-style: solid;\n  border-width: thin;\n  border-top-right-radius: 6px;\n  border-bottom-right-radius: 6px;\n  z-index: 512;\n  background-color: #c4c4c4; }\n\n.igv-track-manipulation-handle:hover,\n.igv-track-manipulation-handle:focus,\n.igv-track-manipulation-handle:active {\n  border-color: #7e7e7e;\n  background-color: #7e7e7e; }\n\n.igv-track-label {\n  position: absolute;\n  left: 8px;\n  top: 4px;\n  width: auto;\n  height: auto;\n  max-width: 200px;\n  padding-left: 4px;\n  padding-right: 4px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: small;\n  font-weight: 400;\n  text-align: center;\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  border-color: #444;\n  border-radius: 2px;\n  border-style: solid;\n  border-width: thin;\n  background-color: white;\n  z-index: 128;\n  cursor: pointer; }\n\n.igv-track-label:hover,\n.igv-track-label:focus,\n.igv-track-label:active {\n  background-color: rgba(0, 0, 0, 0.05); }\n\n.igv-scrollbar-outer-div {\n  position: absolute;\n  top: 0;\n  right: 0;\n  width: 14px;\n  height: 100%;\n  background-color: white; }\n  .igv-scrollbar-outer-div div {\n    position: absolute;\n    top: 0;\n    left: 3px;\n    width: 8px;\n    border-style: solid;\n    border-width: thin;\n    border-color: #c4c4c4;\n    border-top-left-radius: 4px;\n    border-top-right-radius: 4px;\n    border-bottom-left-radius: 4px;\n    border-bottom-right-radius: 4px;\n    background-color: white; }\n  .igv-scrollbar-outer-div div:hover,\n  .igv-scrollbar-outer-div div:focus,\n  .igv-scrollbar-outer-div div:active {\n    cursor: pointer;\n    background-color: #c4c4c4; }\n\n.zoom-in-notice-container {\n  position: absolute;\n  top: 10px;\n  left: 50%; }\n  .zoom-in-notice-container div {\n    position: relative;\n    left: -50%;\n    font-family: \"Open Sans\", sans-serif;\n    font-size: medium;\n    font-weight: 400;\n    color: #3f3f3f;\n    background-color: rgba(255, 255, 255, 0.51);\n    z-index: 64; }\n\n.igv-center-guide {\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 50%;\n  width: 8px;\n  z-index: 8;\n  display: none;\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  border-left-style: dashed;\n  border-left-width: thin;\n  border-right-style: dashed;\n  border-right-width: thin; }\n\n.igv-center-guide-wide {\n  background-color: transparent;\n  border-left-color: rgba(127, 127, 127, 0.51);\n  border-right-color: rgba(127, 127, 127, 0.51); }\n\n.igv-center-guide-thin {\n  left: 50%;\n  width: 1px;\n  background-color: transparent;\n  border-left-color: rgba(127, 127, 127, 0.51);\n  border-right-color: transparent;\n  /*background-color: rgba(127, 127, 127, 0.51);*/\n  /*border-left-color: rgba(0,0,0,0);*/\n  /*border-right-color: rgba(0,0,0,0);*/ }\n\n.igv-cursor-tracking-guide {\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 50%;\n  width: 1px;\n  z-index: 1;\n  border-left-style: dotted;\n  border-left-width: thin;\n  border-left-color: rgba(127, 127, 127, 0.76);\n  display: none;\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none; }\n\n.igv-clickable {\n  cursor: pointer;\n  background-color: white; }\n\n#color-by-tag {\n  color: #444; }\n\n#color-by-tag:hover,\n#color-by-tag:focus,\n#color-by-tag:active {\n  cursor: pointer;\n  padding-left: 2px;\n  padding-right: 2px;\n  color: white;\n  border-color: #444;\n  border-radius: 2px;\n  border-style: solid;\n  border-width: thin;\n  background-color: #7f7f7f; }\n\n.igv-user-feedback {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  width: 36em;\n  height: 27em;\n  margin-top: -9em;\n  /*set to a negative number 1/2 of your height*/\n  margin-left: -15em;\n  /*set to a negative number 1/2 of your width*/\n  background-color: white;\n  border-color: #a2a2a2;\n  border-style: solid;\n  border-width: thin;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: medium;\n  font-weight: 400;\n  color: #444; }\n  .igv-user-feedback div:first-child {\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    width: 100%;\n    height: 32px;\n    border-bottom-color: #a2a2a2;\n    border-bottom-style: solid;\n    border-bottom-width: thin;\n    background-color: white; }\n    .igv-user-feedback div:first-child i {\n      font-size: 20px; }\n    .igv-user-feedback div:first-child i:first-child {\n      position: absolute;\n      top: 0;\n      left: 0;\n      padding: 8px;\n      color: red; }\n    .igv-user-feedback div:first-child i:last-child {\n      position: absolute;\n      top: 0;\n      right: 0;\n      padding: 8px;\n      cursor: pointer;\n      color: grey; }\n    .igv-user-feedback div:first-child i:last-child:hover,\n    .igv-user-feedback div:first-child i:last-child:focus,\n    .igv-user-feedback div:first-child i:last-child:active {\n      color: #333333; }\n  .igv-user-feedback div:last-child {\n    padding-left: 48px;\n    padding-top: 8px;\n    padding-right: 48px;\n    padding-bottom: 8px;\n    position: absolute;\n    top: 33px;\n    left: 0;\n    right: 0;\n    bottom: 0;\n    background-color: white; }\n\n.igv-ellipsis {\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis; }\n\n.igv-generic-dialog-container {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 300px;\n  height: 200px;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: medium;\n  font-weight: 200;\n  border-color: #7F7F7F;\n  border-radius: 4px;\n  border-style: solid;\n  border-width: thin;\n  z-index: 2048;\n  background-color: white;\n  display: flex;\n  flex-flow: column;\n  flex-wrap: nowrap;\n  justify-content: flex-start;\n  align-items: center; }\n  .igv-generic-dialog-container .igv-generic-dialog-header {\n    width: 100%;\n    height: 24px;\n    cursor: move;\n    border-color: #c4c4c4;\n    border-top-left-radius: 4px;\n    border-top-right-radius: 4px;\n    border-style: solid;\n    border-width: thin;\n    background-color: #c4c4c4;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-end;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-header div {\n      height: 24px;\n      width: 16px;\n      margin-right: 6px;\n      text-align: center;\n      line-height: 24px;\n      color: #444;\n      font-size: medium; }\n    .igv-generic-dialog-container .igv-generic-dialog-header div:hover {\n      cursor: pointer; }\n  .igv-generic-dialog-container .igv-generic-dialog-one-liner {\n    margin-top: 8px;\n    width: 95%;\n    color: #373737;\n    line-height: 24px;\n    text-align: left;\n    padding-left: 8px;\n    background-color: white; }\n  .igv-generic-dialog-container .igv-generic-dialog-label-input {\n    margin-top: 8px;\n    width: 95%;\n    height: 24px;\n    color: #373737;\n    line-height: 24px;\n    padding-left: 8px;\n    background-color: white;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-start;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-label-input div {\n      width: 30%;\n      height: 100%;\n      font-size: 16px;\n      text-align: right;\n      padding-right: 8px;\n      background-color: white; }\n    .igv-generic-dialog-container .igv-generic-dialog-label-input input {\n      display: block;\n      height: 100%;\n      width: 100%;\n      padding-left: 4px;\n      font-family: \"Open Sans\", sans-serif;\n      font-weight: 400;\n      color: #373737;\n      text-align: left;\n      outline: none;\n      border-style: solid;\n      border-width: thin;\n      border-color: #7F7F7F;\n      background-color: white; }\n    .igv-generic-dialog-container .igv-generic-dialog-label-input input {\n      width: 50%;\n      font-size: 16px; }\n  .igv-generic-dialog-container .igv-generic-dialog-input {\n    margin-top: 8px;\n    width: calc(100% - 16px);\n    height: 24px;\n    color: #373737;\n    line-height: 24px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-around;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-input input {\n      display: block;\n      height: 100%;\n      width: 100%;\n      padding-left: 4px;\n      font-family: \"Open Sans\", sans-serif;\n      font-weight: 400;\n      color: #373737;\n      text-align: left;\n      outline: none;\n      border-style: solid;\n      border-width: thin;\n      border-color: #7F7F7F;\n      background-color: white; }\n    .igv-generic-dialog-container .igv-generic-dialog-input input {\n      font-size: 16px; }\n  .igv-generic-dialog-container .igv-generic-dialog-ok-cancel {\n    width: 100%;\n    height: 28px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-around;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div {\n      margin-top: 32px;\n      color: white;\n      font-family: \"Open Sans\", sans-serif;\n      font-size: 14px;\n      font-weight: 200;\n      width: 75px;\n      height: 28px;\n      line-height: 28px;\n      text-align: center;\n      border-color: transparent;\n      border-style: solid;\n      border-width: thin;\n      border-radius: 2px; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:first-child {\n      margin-left: 32px;\n      margin-right: 0;\n      background-color: #5ea4e0; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:last-child {\n      margin-left: 0;\n      margin-right: 32px;\n      background-color: #c4c4c4; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:first-child:hover {\n      cursor: pointer;\n      background-color: #3b5c7f; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:last-child:hover {\n      cursor: pointer;\n      background-color: #7f7f7f; }\n  .igv-generic-dialog-container .igv-generic-dialog-ok {\n    width: 100%;\n    height: 36px;\n    margin-top: 32px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-around;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok div {\n      width: 98px;\n      height: 36px;\n      line-height: 36px;\n      text-align: center;\n      color: white;\n      font-family: \"Open Sans\", sans-serif;\n      font-size: medium;\n      font-weight: 200;\n      border-color: white;\n      border-style: solid;\n      border-width: thin;\n      border-radius: 4px;\n      background-color: #2B81AF; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok div:hover {\n      cursor: pointer;\n      background-color: #25597f; }\n\n.igv-popover {\n  position: absolute;\n  top: 0;\n  left: 0;\n  min-width: 128px;\n  z-index: 4096;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: small;\n  font-weight: 400;\n  color: #444;\n  background: white;\n  border-radius: 4px;\n  border-color: #7F7F7F;\n  border-style: solid;\n  border-width: thin;\n  display: none; }\n\n.igv-popover-header {\n  position: relative;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 20px;\n  border-top-left-radius: 4px;\n  border-top-right-radius: 4px;\n  border-bottom-color: #7F7F7F;\n  border-bottom-style: solid;\n  border-bottom-width: thin;\n  background-color: #eee; }\n  .igv-popover-header div {\n    position: absolute;\n    top: 3px;\n    right: 3px;\n    height: 100%;\n    width: 16px;\n    text-align: center;\n    line-height: 100%;\n    cursor: pointer;\n    color: #444;\n    font-size: small; }\n  .igv-popover-header div:hover {\n    color: white; }\n\n.igv-popover-track-popup-content {\n  position: relative;\n  top: 0;\n  left: 0;\n  max-height: 384px;\n  overflow-x: hidden;\n  overflow-y: auto; }\n\n.igv-popover-name-value {\n  cursor: default;\n  text-wrap: none;\n  white-space: nowrap;\n  max-width: 384px; }\n\n.igv-popover-name {\n  font-weight: bold;\n  padding-right: 4px;\n  float: left; }\n\n.igv-popover-value {\n  padding-left: 4px;\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  max-width: 256px;\n  display: inline-block; }\n\n.igv-spinner-container {\n  color: #3f3f3f;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  padding-top: 8px;\n  font-size: 24px;\n  z-index: 512; }\n\n.igv-fa-check-hidden {\n  color: rgba(255, 255, 255, 0); }\n\n.validateTips {\n  border: 1px solid transparent;\n  padding: 0.3em; }\n  .validateTips fieldset {\n    border: 0; }\n\n.igv-spacer-10 {\n  height: 10px;\n  width: 100%;\n  font-size: 0;\n  margin: 0;\n  padding: 0;\n  border: 0;\n  display: block; }\n\n@media (max-width: 1100px) {\n  .igv-navbar {\n    font-size: 10px; }\n    .igv-navbar .igv-nav-bar-left-container .igv-logo {\n      margin-right: 10px; }\n    .igv-navbar .igv-nav-bar-left-container .igv-current_genome {\n      margin-right: 10px; }\n    .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-chromosome-select-widget-container {\n      width: 84px; }\n      .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-chromosome-select-widget-container select {\n        font-size: 10px; }\n    .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group .igv-search-container {\n      width: 150px; }\n      .igv-navbar .igv-nav-bar-left-container .igv-genomic-location .igv-locus-size-group .igv-search-container input {\n        font-size: 10px; }\n    .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget input {\n      width: 72px; }\n\n  .igv-nav-bar-button {\n    min-width: 64px;\n    font-size: 10px; } }\n@media (max-width: 800px) {\n  .igv-navbar .igv-nav-bar-right-container .igv-nav-bar-toggle-button-container {\n    display: none; }\n  .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget {\n    margin-top: 6px;\n    font-size: 24px; }\n    .igv-navbar .igv-nav-bar-right-container .igv-zoom-widget input {\n      display: none; } }\n\n/*# sourceMappingURL=igv.css.map */\n\n/*!\n * Font Awesome Free 5.0.8 by @fontawesome - https://fontawesome.com\n * License - https://fontawesome.com/license (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)\n */\nsvg:not(:root).svg-inline--fa5 {\n  overflow: visible;\n  }\n\n.svg-inline--fa5 {\n  display: inline-block;\n  font-size: inherit;\n  height: 1em;\n  overflow: visible;\n  vertical-align: -.125em; }\n  .svg-inline--fa5.fa5-lg {\n    vertical-align: -.225em; }\n  .svg-inline--fa5.fa5-w-1 {\n    width: 0.0625em; }\n  .svg-inline--fa5.fa5-w-2 {\n    width: 0.125em; }\n  .svg-inline--fa5.fa5-w-3 {\n    width: 0.1875em; }\n  .svg-inline--fa5.fa5-w-4 {\n    width: 0.25em; }\n  .svg-inline--fa5.fa5-w-5 {\n    width: 0.3125em; }\n  .svg-inline--fa5.fa5-w-6 {\n    width: 0.375em; }\n  .svg-inline--fa5.fa5-w-7 {\n    width: 0.4375em; }\n  .svg-inline--fa5.fa5-w-8 {\n    width: 0.5em; }\n  .svg-inline--fa5.fa5-w-9 {\n    width: 0.5625em; }\n  .svg-inline--fa5.fa5-w-10 {\n    width: 0.625em; }\n  .svg-inline--fa5.fa5-w-11 {\n    width: 0.6875em; }\n  .svg-inline--fa5.fa5-w-12 {\n    width: 0.75em; }\n  .svg-inline--fa5.fa5-w-13 {\n    width: 0.8125em; }\n  .svg-inline--fa5.fa5-w-14 {\n    width: 0.875em; }\n  .svg-inline--fa5.fa5-w-15 {\n    width: 0.9375em; }\n  .svg-inline--fa5.fa5-w-16 {\n    /* width: 1em; */\n    }\n  .svg-inline--fa5.fa5-w-17 {\n    width: 1.0625em; }\n  .svg-inline--fa5.fa5-w-18 {\n    width: 1.125em; }\n  .svg-inline--fa5.fa5-w-19 {\n    width: 1.1875em; }\n  .svg-inline--fa5.fa5-w-20 {\n    width: 1.25em; }\n  .svg-inline--fa5.fa5-pull-left {\n    margin-right: .3em;\n    width: auto; }\n  .svg-inline--fa5.fa5-pull-right {\n    margin-left: .3em;\n    width: auto; }\n  .svg-inline--fa5.fa5-border {\n    height: 1.5em; }\n  .svg-inline--fa5.fa5-li {\n    width: 2em; }\n  .svg-inline--fa5.fa5-fw {\n    width: 1.25em; }\n\n.fa5-layers svg.svg-inline--fa5 {\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  position: absolute;\n  right: 0;\n  top: 0; }\n\n.fa5-layers {\n  display: inline-block;\n  height: 1em;\n  position: relative;\n  text-align: center;\n  vertical-align: -.125em;\n  width: 1em; }\n  .fa5-layers svg.svg-inline--fa5 {\n    -webkit-transform-origin: center center;\n            transform-origin: center center; }\n\n.fa5-layers-text, .fa5-layers-counter {\n  display: inline-block;\n  position: absolute;\n  text-align: center; }\n\n.fa5-layers-text {\n  left: 50%;\n  top: 50%;\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n  -webkit-transform-origin: center center;\n          transform-origin: center center; }\n\n.fa5-layers-counter {\n  background-color: #ff253a;\n  border-radius: 1em;\n  color: #fff;\n  height: 1.5em;\n  line-height: 1;\n  max-width: 5em;\n  min-width: 1.5em;\n  overflow: hidden;\n  padding: .25em;\n  right: 0;\n  text-overflow: ellipsis;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top right;\n          transform-origin: top right; }\n\n.fa5-layers-bottom-right {\n  bottom: 0;\n  right: 0;\n  top: auto;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: bottom right;\n          transform-origin: bottom right; }\n\n.fa5-layers-bottom-left {\n  bottom: 0;\n  left: 0;\n  right: auto;\n  top: auto;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: bottom left;\n          transform-origin: bottom left; }\n\n.fa5-layers-top-right {\n  right: 0;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top right;\n          transform-origin: top right; }\n\n.fa5-layers-top-left {\n  left: 0;\n  right: auto;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top left;\n          transform-origin: top left; }\n\n.fa5-lg {\n  font-size: 1.33333em;\n  line-height: 0.75em;\n  vertical-align: -.0667em; }\n\n.fa5-xs {\n  font-size: .75em; }\n\n.fa5-sm {\n  font-size: .875em; }\n\n.fa5-1x {\n  font-size: 1em; }\n\n.fa5-2x {\n  font-size: 2em; }\n\n.fa5-3x {\n  font-size: 3em; }\n\n.fa5-4x {\n  font-size: 4em; }\n\n.fa5-5x {\n  font-size: 5em; }\n\n.fa5-6x {\n  font-size: 6em; }\n\n.fa5-7x {\n  font-size: 7em; }\n\n.fa5-8x {\n  font-size: 8em; }\n\n.fa5-9x {\n  font-size: 9em; }\n\n.fa5-10x {\n  font-size: 10em; }\n\n.fa5-fw {\n  text-align: center;\n  width: 1.25em; }\n\n.fa5-ul {\n  list-style-type: none;\n  margin-left: 2.5em;\n  padding-left: 0; }\n  .fa5-ul > li {\n    position: relative; }\n\n.fa5-li {\n  left: -2em;\n  position: absolute;\n  text-align: center;\n  width: 2em;\n  line-height: inherit; }\n\n.fa5-border {\n  border: solid 0.08em #eee;\n  border-radius: .1em;\n  padding: .2em .25em .15em; }\n\n.fa5-pull-left {\n  float: left; }\n\n.fa5-pull-right {\n  float: right; }\n\n.fa5.fa5-pull-left,\n.fas.fa5-pull-left,\n.far.fa5-pull-left,\n.fal.fa5-pull-left,\n.fab.fa5-pull-left {\n  margin-right: .3em; }\n\n.fa5.fa5-pull-right,\n.fas.fa5-pull-right,\n.far.fa5-pull-right,\n.fal.fa5-pull-right,\n.fab.fa5-pull-right {\n  margin-left: .3em; }\n\n.fa5-spin {\n  -webkit-animation: fa5-spin 2s infinite linear;\n          animation: fa5-spin 2s infinite linear; }\n\n.fa5-pulse {\n  -webkit-animation: fa5-spin 1s infinite steps(8);\n          animation: fa5-spin 1s infinite steps(8); }\n\n@-webkit-keyframes fa5-spin {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg); }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg); } }\n\n@keyframes fa5-spin {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg); }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg); } }\n\n.fa5-rotate-90 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=1)\";\n  -webkit-transform: rotate(90deg);\n          transform: rotate(90deg); }\n\n.fa5-rotate-180 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2)\";\n  -webkit-transform: rotate(180deg);\n          transform: rotate(180deg); }\n\n.fa5-rotate-270 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=3)\";\n  -webkit-transform: rotate(270deg);\n          transform: rotate(270deg); }\n\n.fa5-flip-horizontal {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)\";\n  -webkit-transform: scale(-1, 1);\n          transform: scale(-1, 1); }\n\n.fa5-flip-vertical {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)\";\n  -webkit-transform: scale(1, -1);\n          transform: scale(1, -1); }\n\n.fa5-flip-horizontal.fa5-flip-vertical {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)\";\n  -webkit-transform: scale(-1, -1);\n          transform: scale(-1, -1); }\n\n:root .fa5-rotate-90,\n:root .fa5-rotate-180,\n:root .fa5-rotate-270,\n:root .fa5-flip-horizontal,\n:root .fa5-flip-vertical {\n  -webkit-filter: none;\n          filter: none; }\n\n.fa5-stack {\n  display: inline-block;\n  height: 2em;\n  position: relative;\n  width: 2em; }\n\n.fa5-stack-1x,\n.fa5-stack-2x {\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  position: absolute;\n  right: 0;\n  top: 0; }\n\n.svg-inline--fa5.fa5-stack-1x {\n  height: 1em;\n  width: 1em; }\n\n.svg-inline--fa5.fa5-stack-2x {\n  height: 2em;\n  width: 2em; }\n\n.fa5-inverse {\n  color: #fff; }\n\n.sr-only {\n  border: 0;\n  clip: rect(0, 0, 0, 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px; }\n\n.sr-only-focusable:active, .sr-only-focusable:focus {\n  clip: auto;\n  height: auto;\n  margin: 0;\n  overflow: visible;\n  position: static;\n  width: auto; }\n';
+    var css =  '.igv-color-swatch {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  width: 32px;\n  height: 32px;\n  border-style: solid;\n  border-width: 2px;\n  border-color: white;\n  border-radius: 4px;\n  margin: 1px; }\n\n.igv-colorpicker-menu-close-button {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: flex-end;\n  align-items: center;\n  width: 100%;\n  height: 32px;\n  margin-top: 4px;\n  margin-bottom: 4px;\n  padding-right: 8px; }\n  .igv-colorpicker-menu-close-button i.fa {\n    display: block;\n    margin-left: 4px;\n    margin-right: 4px;\n    color: #5f5f5f; }\n  .igv-colorpicker-menu-close-button i.fa:hover,\n  .igv-colorpicker-menu-close-button i.fa:focus,\n  .igv-colorpicker-menu-close-button i.fa:active {\n    cursor: pointer;\n    color: #0f0f0f; }\n\n.igv-generic-container {\n  position: absolute;\n  top: 0;\n  left: 0;\n  border-style: solid;\n  border-width: thin;\n  border-color: #dddddd;\n  z-index: 2048;\n  background-color: white;\n  cursor: pointer;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: flex-start;\n  align-items: center; }\n  .igv-generic-container div:first-child {\n    padding-right: 8px;\n    cursor: move;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-end;\n    align-items: center;\n    height: 24px;\n    width: 100%;\n    background-color: #dddddd; }\n    .igv-generic-container div:first-child i.fa {\n      cursor: pointer;\n      margin-right: 4px;\n      display: block;\n      color: #5f5f5f; }\n    .igv-generic-container div:first-child i.fa:hover,\n    .igv-generic-container div:first-child i.fa:focus,\n    .igv-generic-container div:first-child i.fa:active {\n      cursor: pointer;\n      color: #0f0f0f; }\n\n.igvControlDiv {\n  position: relative; }\n\n.igv-content-header {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: flex-start;\n  align-items: center;\n  margin-top: 10px;\n  height: 16px;\n  width: 100%; }\n  .igv-content-header .igv-ideogram-shim {\n    height: 100%;\n    width: 50px;\n    background-color: white; }\n  .igv-content-header .igv-ideogram-content {\n    height: 100%;\n    background-color: white; }\n  .igv-content-header .igv-ideogram-content-border-right {\n    border-right-color: #292929;\n    border-right-style: solid;\n    border-right-width: 1px; }\n\n.igv-multi-locus-panel-border {\n  position: absolute;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 1px;\n  background-color: green;\n  border-right-color: #ff0000;\n  border-right-style: solid;\n  border-right-width: 1px; }\n\n.igv-navbar {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: space-between;\n  align-items: center;\n  color: #444;\n  font-size: 12px;\n  font-family: \"Open Sans\", sans-serif;\n  font-weight: 400;\n  line-height: 32px;\n  margin-top: 2px;\n  margin-bottom: 4px;\n  position: relative;\n  top: 0;\n  left: 0;\n  height: 32px;\n  width: 100%;\n  border-style: solid;\n  border-radius: 3px;\n  border-width: thin;\n  border-color: #bfbfbf;\n  background-color: #f3f3f3; }\n\n.igv-nav-bar-left-container {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: space-between;\n  align-items: center;\n  height: 32px; }\n  .igv-nav-bar-left-container .igv-logo {\n    width: 34px;\n    height: 32px;\n    margin-left: 8px;\n    margin-right: 8px; }\n  .igv-nav-bar-left-container .igv-current-genome {\n    height: 32px;\n    margin-right: 8px;\n    user-select: none;\n    text-align: center; }\n\n.igv-nav-bar-genomic-location {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: space-between;\n  align-items: center;\n  height: 100%; }\n\n.igv-chromosome-select-widget-container {\n  height: 100%;\n  width: 100px;\n  margin-right: 4px;\n  display: flex;\n  flex-flow: column;\n  flex-wrap: nowrap;\n  justify-content: space-around;\n  align-items: center; }\n  .igv-chromosome-select-widget-container select {\n    display: block;\n    cursor: pointer;\n    width: 100%;\n    height: 75%;\n    outline: none;\n    font-size: 12px;\n    font-family: \"Open Sans\", sans-serif;\n    font-weight: 400; }\n\n.igv-locus-size-group {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: space-between;\n  align-items: center;\n  margin-left: 8px;\n  height: 100%; }\n  .igv-locus-size-group .igv-search-container {\n    width: 200px;\n    height: 100%;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-start;\n    align-items: center; }\n    .igv-locus-size-group .igv-search-container input {\n      cursor: text;\n      width: 85%;\n      height: 75%;\n      padding-left: 8px;\n      margin-right: 8px;\n      text-align: left;\n      outline: none;\n      font-size: 12px;\n      font-family: \"Open Sans\", sans-serif;\n      font-weight: 400;\n      border-style: solid;\n      border-radius: 3px;\n      border-width: thin;\n      border-color: #bfbfbf;\n      background-color: white; }\n    .igv-locus-size-group .igv-search-container div {\n      height: 100%; }\n  .igv-locus-size-group .igv-windowsizepanel-content-div {\n    margin-left: 4px;\n    user-select: none; }\n\n.igv-nav-bar-right-container {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: space-between;\n  align-items: center;\n  height: 100%; }\n  .igv-nav-bar-right-container .igv-nav-bar-toggle-button-container {\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-between;\n    align-items: center;\n    height: 100%;\n    margin-right: 8px; }\n    .igv-nav-bar-right-container .igv-nav-bar-toggle-button-container div {\n      margin-left: 0;\n      margin-right: 4px; }\n    .igv-nav-bar-right-container .igv-nav-bar-toggle-button-container div:last-child {\n      margin-left: 0;\n      margin-right: 0; }\n  .igv-nav-bar-right-container .igv-nav-bar-toggle-button-container-750 {\n    display: none; }\n  .igv-nav-bar-right-container .igv-zoom-widget {\n    color: #737373;\n    font-size: 18px;\n    user-select: none;\n    margin-left: 16px;\n    margin-right: 8px;\n    width: 180px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-between;\n    align-items: center; }\n    .igv-nav-bar-right-container .igv-zoom-widget div {\n      cursor: pointer; }\n    .igv-nav-bar-right-container .igv-zoom-widget div:first-child {\n      margin-right: 4px; }\n    .igv-nav-bar-right-container .igv-zoom-widget div:last-child {\n      margin-left: 4px; }\n    .igv-nav-bar-right-container .igv-zoom-widget input {\n      width: 100%; }\n    .igv-nav-bar-right-container .igv-zoom-widget svg {\n      display: block; }\n  .igv-nav-bar-right-container .igv-zoom-widget-900 {\n    color: #737373;\n    font-size: 24px;\n    user-select: none;\n    margin-left: 16px;\n    margin-right: 8px;\n    width: unset;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-between;\n    align-items: center; }\n    .igv-nav-bar-right-container .igv-zoom-widget-900 div {\n      cursor: pointer; }\n    .igv-nav-bar-right-container .igv-zoom-widget-900 div:first-child {\n      margin-right: 4px; }\n    .igv-nav-bar-right-container .igv-zoom-widget-900 div:last-child {\n      margin-left: 4px; }\n    .igv-nav-bar-right-container .igv-zoom-widget-900 input {\n      display: none; }\n    .igv-nav-bar-right-container .igv-zoom-widget-900 svg {\n      display: block; }\n  .igv-nav-bar-right-container .igv-zoom-widget-hidden {\n    display: none; }\n\n.igv-nav-bar-button {\n  height: 18px;\n  min-width: 96px;\n  text-transform: capitalize;\n  user-select: none;\n  line-height: 18px;\n  text-align: center;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 11px;\n  font-weight: 200;\n  color: #737373;\n  background-color: #f3f3f3;\n  border-color: #737373;\n  border-style: solid;\n  border-width: thin;\n  border-radius: 10px; }\n\n.igv-nav-bar-button-clicked {\n  color: white;\n  background-color: #737373; }\n\n.igv-nav-bar-button:hover {\n  cursor: pointer; }\n\n.igv-logo-nonav {\n  margin-left: 4px;\n  margin-top: 12px;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 34px;\n  height: 16px; }\n\n.igv-search-results {\n  position: absolute;\n  top: 32px;\n  left: 2px;\n  height: 320px;\n  width: 213px;\n  background-color: white;\n  border-color: #7F7F7F;\n  border-style: solid;\n  border-width: thin;\n  overflow-x: hidden;\n  overflow-y: auto;\n  z-index: 9999; }\n  .igv-search-results tr {\n    font-family: \"Open Sans\", sans-serif;\n    font-size: small;\n    font-weight: 400;\n    color: #444; }\n  .igv-search-results tr:hover,\n  .igv-search-results tr:focus,\n  .igv-search-results tr:active {\n    cursor: pointer;\n    font-weight: 700;\n    color: #141414; }\n\n.igv-root-div {\n  position: relative;\n  left: 0;\n  right: 0;\n  height: auto;\n  margin-left: 10px;\n  margin-right: 10px;\n  padding-top: 4px; }\n\n.igv-content-div {\n  position: relative;\n  width: 100%;\n  height: 100%; }\n\n.igv-track-container-div {\n  user-select: none;\n  position: relative;\n  clear: both; }\n\n.igv-track-div {\n  position: relative;\n  width: 100%;\n  margin-top: 2px;\n  margin-bottom: 2px; }\n\n.igv-viewport-container {\n  position: absolute;\n  left: 50px;\n  right: 50px;\n  height: 100%;\n  white-space: nowrap;\n  overflow-x: hidden;\n  overflow-y: hidden; }\n\n.igv-viewport-div {\n  position: relative;\n  display: inline-block;\n  height: 100%;\n  overflow-x: hidden;\n  overflow-y: hidden; }\n\n.igv-viewport-content-div {\n  position: absolute;\n  width: 100%; }\n\n.igv-viewport-message {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  color: rgba(0, 0, 0, 0.15);\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 25px;\n  font-weight: bold;\n  user-select: none; }\n\n.igv-whole-genome-container {\n  display: flex;\n  flex-flow: row;\n  flex-wrap: nowrap;\n  justify-content: space-between;\n  width: 100%;\n  height: 100%;\n  background-color: white; }\n  .igv-whole-genome-container div {\n    font-family: \"Open Sans\", sans-serif;\n    font-size: 10px;\n    font-weight: 400;\n    color: #444;\n    height: 100%;\n    text-align: center;\n    border-right-color: #bfbfbf;\n    border-right-style: solid;\n    border-right-width: thin; }\n    .igv-whole-genome-container div span {\n      display: block;\n      padding-top: 6px;\n      text-overflow: ellipsis; }\n  .igv-whole-genome-container div:last-child {\n    border-right-color: transparent; }\n  .igv-whole-genome-container div:hover,\n  .igv-whole-genome-container div:focus,\n  .igv-whole-genome-container div:active {\n    cursor: pointer;\n    background-color: #efefef; }\n\n.igv-viewport-div-border-right {\n  border-right-color: #292929;\n  border-right-style: solid;\n  border-right-width: 1px; }\n\n.igv-viewport-fa-close {\n  position: absolute;\n  top: 4px;\n  right: 4px;\n  font-size: 16px;\n  color: #666666;\n  z-index: 1000; }\n\n.igv-viewport-fa-close:hover {\n  cursor: pointer;\n  color: #434343; }\n\n.igv-viewport-content-ruler-div {\n  position: absolute;\n  left: 50%;\n  top: 25%;\n  transform: translate(-50%, -25%);\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 8px;\n  font-weight: 200;\n  text-align: center;\n  min-width: 16px;\n  z-index: 64;\n  color: #0066ff;\n  background-color: white;\n  padding: 1px; }\n\n.igv-viewport-content-ruler-div:hover,\n.igv-viewport-content-ruler-div:focus,\n.igv-viewport-content-ruler-div:active {\n  cursor: pointer;\n  color: white;\n  background-color: #0066ff; }\n\n.igv-viewport-ruler {\n  cursor: pointer;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 10px;\n  font-weight: 200;\n  text-align: center; }\n  .igv-viewport-ruler > div {\n    height: 100%; }\n\n.igv-viewport-sequence {\n  font-family: \"Open Sans\", sans-serif;\n  font-size: 8px;\n  font-weight: 200;\n  text-align: center; }\n\n.igv-viewport-spinner {\n  pointer-events: none;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  z-index: 1024;\n  color: #737373; }\n\n.igv-ruler-sweeper-div {\n  display: none;\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 0;\n  height: 100%;\n  z-index: 99999;\n  background-color: rgba(68, 134, 247, 0.25); }\n\n.igv-right-hand-gutter {\n  position: absolute;\n  right: 0;\n  width: 36px;\n  height: 100%;\n  background: white;\n  text-align: center; }\n  .igv-right-hand-gutter i {\n    position: absolute;\n    top: 0;\n    right: 0;\n    padding-right: 6px;\n    font-size: 20px;\n    cursor: pointer;\n    color: grey; }\n  .igv-right-hand-gutter i:hover,\n  .igv-right-hand-gutter i:focus,\n  .igv-right-hand-gutter i:active {\n    color: #333333; }\n\n.igv-left-hand-gutter {\n  position: absolute;\n  left: 0;\n  width: 50px;\n  height: 100%; }\n  .igv-left-hand-gutter canvas {\n    position: absolute; }\n\n.igv-track-menu-container {\n  background-color: white;\n  border-bottom-left-radius: 4px;\n  border-bottom-right-radius: 4px; }\n  .igv-track-menu-container div {\n    padding-left: 4px;\n    padding-right: 4px;\n    padding-top: 2px;\n    padding-bottom: 2px;\n    background-color: white; }\n    .igv-track-menu-container div i {\n      padding-right: 2px; }\n  .igv-track-menu-container div:hover,\n  .igv-track-menu-container div:focus,\n  .igv-track-menu-container div:active {\n    cursor: pointer;\n    background-color: #efefef; }\n  .igv-track-menu-container a {\n    color: inherit;\n    text-decoration: none; }\n\n.igv-track-menu-border-top {\n  border-top-color: #a2a2a2;\n  border-top-style: solid;\n  border-top-width: thin; }\n\n.igv-track-menu-category {\n  padding-left: 4px;\n  font-weight: 400; }\n\n.igv-track-drag-scrim {\n  position: absolute;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  z-index: 256;\n  background-color: rgba(68, 134, 247, 0.25); }\n\n.igv-track-manipulation-handle {\n  cursor: pointer;\n  position: absolute;\n  right: 36px;\n  width: 12px;\n  margin-left: 2px;\n  height: 100%;\n  box-sizing: border-box;\n  font-size: medium;\n  border-color: #c4c4c4;\n  border-style: solid;\n  border-width: thin;\n  border-top-right-radius: 6px;\n  border-bottom-right-radius: 6px;\n  z-index: 512;\n  background-color: #c4c4c4; }\n\n.igv-track-manipulation-handle:hover,\n.igv-track-manipulation-handle:focus,\n.igv-track-manipulation-handle:active {\n  border-color: #7e7e7e;\n  background-color: #7e7e7e; }\n\n.igv-track-label {\n  position: absolute;\n  left: 8px;\n  top: 4px;\n  width: auto;\n  height: auto;\n  max-width: 200px;\n  padding-left: 4px;\n  padding-right: 4px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: small;\n  font-weight: 400;\n  text-align: center;\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  border-color: #444;\n  border-radius: 2px;\n  border-style: solid;\n  border-width: thin;\n  background-color: white;\n  z-index: 128;\n  cursor: pointer; }\n\n.igv-track-label:hover,\n.igv-track-label:focus,\n.igv-track-label:active {\n  background-color: rgba(0, 0, 0, 0.05); }\n\n.igv-scrollbar-outer-div {\n  position: absolute;\n  top: 0;\n  right: 0;\n  width: 14px;\n  height: 100%;\n  background-color: white; }\n  .igv-scrollbar-outer-div div {\n    position: absolute;\n    top: 0;\n    left: 3px;\n    width: 8px;\n    border-style: solid;\n    border-width: thin;\n    border-color: #c4c4c4;\n    border-top-left-radius: 4px;\n    border-top-right-radius: 4px;\n    border-bottom-left-radius: 4px;\n    border-bottom-right-radius: 4px;\n    background-color: white; }\n  .igv-scrollbar-outer-div div:hover,\n  .igv-scrollbar-outer-div div:focus,\n  .igv-scrollbar-outer-div div:active {\n    cursor: pointer;\n    background-color: #c4c4c4; }\n\n.zoom-in-notice-container {\n  position: absolute;\n  top: 10px;\n  left: 50%; }\n  .zoom-in-notice-container div {\n    position: relative;\n    left: -50%;\n    font-family: \"Open Sans\", sans-serif;\n    font-size: medium;\n    font-weight: 400;\n    color: #3f3f3f;\n    background-color: rgba(255, 255, 255, 0.51);\n    z-index: 64; }\n\n.igv-center-guide {\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 50%;\n  width: 8px;\n  z-index: 8;\n  display: none;\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  border-left-style: dashed;\n  border-left-width: thin;\n  border-right-style: dashed;\n  border-right-width: thin; }\n\n.igv-center-guide-wide {\n  background-color: rgba(0, 0, 0, 0);\n  border-left-color: rgba(127, 127, 127, 0.51);\n  border-right-color: rgba(127, 127, 127, 0.51); }\n\n.igv-center-guide-thin {\n  left: 50%;\n  width: 1px;\n  background-color: rgba(0, 0, 0, 0);\n  border-left-color: rgba(127, 127, 127, 0.51);\n  border-right-color: rgba(0, 0, 0, 0);\n  /*background-color: rgba(127, 127, 127, 0.51);*/\n  /*border-left-color: rgba(0,0,0,0);*/\n  /*border-right-color: rgba(0,0,0,0);*/ }\n\n.igv-cursor-tracking-guide {\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 50%;\n  width: 1px;\n  z-index: 1;\n  border-left-style: dotted;\n  border-left-width: thin;\n  border-left-color: rgba(127, 127, 127, 0.76);\n  display: none;\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none; }\n\n.igv-clickable {\n  cursor: pointer;\n  background-color: white; }\n\n#color-by-tag {\n  color: #444; }\n\n#color-by-tag:hover,\n#color-by-tag:focus,\n#color-by-tag:active {\n  cursor: pointer;\n  padding-left: 2px;\n  padding-right: 2px;\n  color: white;\n  border-color: #444;\n  border-radius: 2px;\n  border-style: solid;\n  border-width: thin;\n  background-color: #7f7f7f; }\n\n.igv-user-feedback {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  width: 36em;\n  height: 27em;\n  margin-top: -9em;\n  /*set to a negative number 1/2 of your height*/\n  margin-left: -15em;\n  /*set to a negative number 1/2 of your width*/\n  background-color: white;\n  border-color: #a2a2a2;\n  border-style: solid;\n  border-width: thin;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: medium;\n  font-weight: 400;\n  color: #444; }\n  .igv-user-feedback div:first-child {\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    width: 100%;\n    height: 32px;\n    border-bottom-color: #a2a2a2;\n    border-bottom-style: solid;\n    border-bottom-width: thin;\n    background-color: white; }\n    .igv-user-feedback div:first-child i {\n      font-size: 20px; }\n    .igv-user-feedback div:first-child i:first-child {\n      position: absolute;\n      top: 0;\n      left: 0;\n      padding: 8px;\n      color: red; }\n    .igv-user-feedback div:first-child i:last-child {\n      position: absolute;\n      top: 0;\n      right: 0;\n      padding: 8px;\n      cursor: pointer;\n      color: grey; }\n    .igv-user-feedback div:first-child i:last-child:hover,\n    .igv-user-feedback div:first-child i:last-child:focus,\n    .igv-user-feedback div:first-child i:last-child:active {\n      color: #333333; }\n  .igv-user-feedback div:last-child {\n    padding-left: 48px;\n    padding-top: 8px;\n    padding-right: 48px;\n    padding-bottom: 8px;\n    position: absolute;\n    top: 33px;\n    left: 0;\n    right: 0;\n    bottom: 0;\n    background-color: white; }\n\n.igv-ellipsis {\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis; }\n\n.igv-generic-dialog-container {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 300px;\n  height: 200px;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: medium;\n  font-weight: 200;\n  border-color: #7F7F7F;\n  border-radius: 4px;\n  border-style: solid;\n  border-width: thin;\n  z-index: 2048;\n  background-color: white;\n  display: flex;\n  flex-flow: column;\n  flex-wrap: nowrap;\n  justify-content: flex-start;\n  align-items: center; }\n  .igv-generic-dialog-container .igv-generic-dialog-header {\n    width: 100%;\n    height: 24px;\n    cursor: move;\n    border-color: #c4c4c4;\n    border-top-left-radius: 4px;\n    border-top-right-radius: 4px;\n    border-style: solid;\n    border-width: thin;\n    background-color: #c4c4c4;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-end;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-header div {\n      height: 24px;\n      width: 16px;\n      margin-right: 6px;\n      text-align: center;\n      line-height: 24px;\n      color: #444;\n      font-size: medium; }\n    .igv-generic-dialog-container .igv-generic-dialog-header div:hover {\n      cursor: pointer; }\n  .igv-generic-dialog-container .igv-generic-dialog-one-liner {\n    margin-top: 8px;\n    width: 95%;\n    color: #373737;\n    line-height: 24px;\n    text-align: left;\n    padding-left: 8px;\n    background-color: white; }\n  .igv-generic-dialog-container .igv-generic-dialog-label-input {\n    margin-top: 8px;\n    width: 95%;\n    height: 24px;\n    color: #373737;\n    line-height: 24px;\n    padding-left: 8px;\n    background-color: white;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: flex-start;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-label-input div {\n      width: 30%;\n      height: 100%;\n      font-size: 16px;\n      text-align: right;\n      padding-right: 8px;\n      background-color: white; }\n    .igv-generic-dialog-container .igv-generic-dialog-label-input input {\n      display: block;\n      height: 100%;\n      width: 100%;\n      padding-left: 4px;\n      font-family: \"Open Sans\", sans-serif;\n      font-weight: 400;\n      color: #373737;\n      text-align: left;\n      outline: none;\n      border-style: solid;\n      border-width: thin;\n      border-color: #7F7F7F;\n      background-color: white; }\n    .igv-generic-dialog-container .igv-generic-dialog-label-input input {\n      width: 50%;\n      font-size: 16px; }\n  .igv-generic-dialog-container .igv-generic-dialog-input {\n    margin-top: 8px;\n    width: calc(100% - 16px);\n    height: 24px;\n    color: #373737;\n    line-height: 24px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-around;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-input input {\n      display: block;\n      height: 100%;\n      width: 100%;\n      padding-left: 4px;\n      font-family: \"Open Sans\", sans-serif;\n      font-weight: 400;\n      color: #373737;\n      text-align: left;\n      outline: none;\n      border-style: solid;\n      border-width: thin;\n      border-color: #7F7F7F;\n      background-color: white; }\n    .igv-generic-dialog-container .igv-generic-dialog-input input {\n      font-size: 16px; }\n  .igv-generic-dialog-container .igv-generic-dialog-ok-cancel {\n    width: 100%;\n    height: 28px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-around;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div {\n      margin-top: 32px;\n      color: white;\n      font-family: \"Open Sans\", sans-serif;\n      font-size: 14px;\n      font-weight: 200;\n      width: 75px;\n      height: 28px;\n      line-height: 28px;\n      text-align: center;\n      border-color: transparent;\n      border-style: solid;\n      border-width: thin;\n      border-radius: 2px; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:first-child {\n      margin-left: 32px;\n      margin-right: 0;\n      background-color: #5ea4e0; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:last-child {\n      margin-left: 0;\n      margin-right: 32px;\n      background-color: #c4c4c4; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:first-child:hover {\n      cursor: pointer;\n      background-color: #3b5c7f; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok-cancel div:last-child:hover {\n      cursor: pointer;\n      background-color: #7f7f7f; }\n  .igv-generic-dialog-container .igv-generic-dialog-ok {\n    width: 100%;\n    height: 36px;\n    margin-top: 32px;\n    display: flex;\n    flex-flow: row;\n    flex-wrap: nowrap;\n    justify-content: space-around;\n    align-items: center; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok div {\n      width: 98px;\n      height: 36px;\n      line-height: 36px;\n      text-align: center;\n      color: white;\n      font-family: \"Open Sans\", sans-serif;\n      font-size: medium;\n      font-weight: 200;\n      border-color: white;\n      border-style: solid;\n      border-width: thin;\n      border-radius: 4px;\n      background-color: #2B81AF; }\n    .igv-generic-dialog-container .igv-generic-dialog-ok div:hover {\n      cursor: pointer;\n      background-color: #25597f; }\n\n.igv-popover {\n  position: absolute;\n  top: 0;\n  left: 0;\n  min-width: 128px;\n  z-index: 4096;\n  font-family: \"Open Sans\", sans-serif;\n  font-size: small;\n  font-weight: 400;\n  color: #444;\n  background: white;\n  border-radius: 4px;\n  border-color: #7F7F7F;\n  border-style: solid;\n  border-width: thin;\n  display: none; }\n\n.igv-popover-header {\n  position: relative;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 20px;\n  border-top-left-radius: 4px;\n  border-top-right-radius: 4px;\n  border-bottom-color: #7F7F7F;\n  border-bottom-style: solid;\n  border-bottom-width: thin;\n  background-color: #eee; }\n  .igv-popover-header div {\n    position: absolute;\n    top: 3px;\n    right: 3px;\n    height: 100%;\n    width: 16px;\n    text-align: center;\n    line-height: 100%;\n    cursor: pointer;\n    color: #444;\n    font-size: small; }\n  .igv-popover-header div:hover {\n    color: white; }\n\n.igv-popover-track-popup-content {\n  position: relative;\n  top: 0;\n  left: 0;\n  max-height: 384px;\n  overflow-x: hidden;\n  overflow-y: auto; }\n\n.igv-popover-name-value {\n  cursor: default;\n  text-wrap: none;\n  white-space: nowrap;\n  max-width: 384px; }\n\n.igv-popover-name {\n  font-weight: bold;\n  padding-right: 4px;\n  float: left; }\n\n.igv-popover-value {\n  padding-left: 4px;\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  max-width: 256px;\n  display: inline-block; }\n\n.igv-spinner-container {\n  color: #3f3f3f;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  padding-top: 8px;\n  font-size: 24px;\n  z-index: 512; }\n\n.igv-fa-check-hidden {\n  color: rgba(255, 255, 255, 0); }\n\n.validateTips {\n  border: 1px solid transparent;\n  padding: 0.3em; }\n  .validateTips fieldset {\n    border: 0; }\n\n.igv-spacer-10 {\n  height: 10px;\n  width: 100%;\n  font-size: 0;\n  margin: 0;\n  padding: 0;\n  border: 0;\n  display: block; }\n\n/*# sourceMappingURL=igv.css.map */\n\n/*!\n * Font Awesome Free 5.0.8 by @fontawesome - https://fontawesome.com\n * License - https://fontawesome.com/license (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)\n */\nsvg:not(:root).svg-inline--fa5 {\n  overflow: visible;\n  }\n\n.svg-inline--fa5 {\n  display: inline-block;\n  font-size: inherit;\n  height: 1em;\n  overflow: visible;\n  vertical-align: -.125em; }\n  .svg-inline--fa5.fa5-lg {\n    vertical-align: -.225em; }\n  .svg-inline--fa5.fa5-w-1 {\n    width: 0.0625em; }\n  .svg-inline--fa5.fa5-w-2 {\n    width: 0.125em; }\n  .svg-inline--fa5.fa5-w-3 {\n    width: 0.1875em; }\n  .svg-inline--fa5.fa5-w-4 {\n    width: 0.25em; }\n  .svg-inline--fa5.fa5-w-5 {\n    width: 0.3125em; }\n  .svg-inline--fa5.fa5-w-6 {\n    width: 0.375em; }\n  .svg-inline--fa5.fa5-w-7 {\n    width: 0.4375em; }\n  .svg-inline--fa5.fa5-w-8 {\n    width: 0.5em; }\n  .svg-inline--fa5.fa5-w-9 {\n    width: 0.5625em; }\n  .svg-inline--fa5.fa5-w-10 {\n    width: 0.625em; }\n  .svg-inline--fa5.fa5-w-11 {\n    width: 0.6875em; }\n  .svg-inline--fa5.fa5-w-12 {\n    width: 0.75em; }\n  .svg-inline--fa5.fa5-w-13 {\n    width: 0.8125em; }\n  .svg-inline--fa5.fa5-w-14 {\n    width: 0.875em; }\n  .svg-inline--fa5.fa5-w-15 {\n    width: 0.9375em; }\n  .svg-inline--fa5.fa5-w-16 {\n    /* width: 1em; */\n    }\n  .svg-inline--fa5.fa5-w-17 {\n    width: 1.0625em; }\n  .svg-inline--fa5.fa5-w-18 {\n    width: 1.125em; }\n  .svg-inline--fa5.fa5-w-19 {\n    width: 1.1875em; }\n  .svg-inline--fa5.fa5-w-20 {\n    width: 1.25em; }\n  .svg-inline--fa5.fa5-pull-left {\n    margin-right: .3em;\n    width: auto; }\n  .svg-inline--fa5.fa5-pull-right {\n    margin-left: .3em;\n    width: auto; }\n  .svg-inline--fa5.fa5-border {\n    height: 1.5em; }\n  .svg-inline--fa5.fa5-li {\n    width: 2em; }\n  .svg-inline--fa5.fa5-fw {\n    width: 1.25em; }\n\n.fa5-layers svg.svg-inline--fa5 {\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  position: absolute;\n  right: 0;\n  top: 0; }\n\n.fa5-layers {\n  display: inline-block;\n  height: 1em;\n  position: relative;\n  text-align: center;\n  vertical-align: -.125em;\n  width: 1em; }\n  .fa5-layers svg.svg-inline--fa5 {\n    -webkit-transform-origin: center center;\n            transform-origin: center center; }\n\n.fa5-layers-text, .fa5-layers-counter {\n  display: inline-block;\n  position: absolute;\n  text-align: center; }\n\n.fa5-layers-text {\n  left: 50%;\n  top: 50%;\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n  -webkit-transform-origin: center center;\n          transform-origin: center center; }\n\n.fa5-layers-counter {\n  background-color: #ff253a;\n  border-radius: 1em;\n  color: #fff;\n  height: 1.5em;\n  line-height: 1;\n  max-width: 5em;\n  min-width: 1.5em;\n  overflow: hidden;\n  padding: .25em;\n  right: 0;\n  text-overflow: ellipsis;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top right;\n          transform-origin: top right; }\n\n.fa5-layers-bottom-right {\n  bottom: 0;\n  right: 0;\n  top: auto;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: bottom right;\n          transform-origin: bottom right; }\n\n.fa5-layers-bottom-left {\n  bottom: 0;\n  left: 0;\n  right: auto;\n  top: auto;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: bottom left;\n          transform-origin: bottom left; }\n\n.fa5-layers-top-right {\n  right: 0;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top right;\n          transform-origin: top right; }\n\n.fa5-layers-top-left {\n  left: 0;\n  right: auto;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top left;\n          transform-origin: top left; }\n\n.fa5-lg {\n  font-size: 1.33333em;\n  line-height: 0.75em;\n  vertical-align: -.0667em; }\n\n.fa5-xs {\n  font-size: .75em; }\n\n.fa5-sm {\n  font-size: .875em; }\n\n.fa5-1x {\n  font-size: 1em; }\n\n.fa5-2x {\n  font-size: 2em; }\n\n.fa5-3x {\n  font-size: 3em; }\n\n.fa5-4x {\n  font-size: 4em; }\n\n.fa5-5x {\n  font-size: 5em; }\n\n.fa5-6x {\n  font-size: 6em; }\n\n.fa5-7x {\n  font-size: 7em; }\n\n.fa5-8x {\n  font-size: 8em; }\n\n.fa5-9x {\n  font-size: 9em; }\n\n.fa5-10x {\n  font-size: 10em; }\n\n.fa5-fw {\n  text-align: center;\n  width: 1.25em; }\n\n.fa5-ul {\n  list-style-type: none;\n  margin-left: 2.5em;\n  padding-left: 0; }\n  .fa5-ul > li {\n    position: relative; }\n\n.fa5-li {\n  left: -2em;\n  position: absolute;\n  text-align: center;\n  width: 2em;\n  line-height: inherit; }\n\n.fa5-border {\n  border: solid 0.08em #eee;\n  border-radius: .1em;\n  padding: .2em .25em .15em; }\n\n.fa5-pull-left {\n  float: left; }\n\n.fa5-pull-right {\n  float: right; }\n\n.fa5.fa5-pull-left,\n.fas.fa5-pull-left,\n.far.fa5-pull-left,\n.fal.fa5-pull-left,\n.fab.fa5-pull-left {\n  margin-right: .3em; }\n\n.fa5.fa5-pull-right,\n.fas.fa5-pull-right,\n.far.fa5-pull-right,\n.fal.fa5-pull-right,\n.fab.fa5-pull-right {\n  margin-left: .3em; }\n\n.fa5-spin {\n  -webkit-animation: fa5-spin 2s infinite linear;\n          animation: fa5-spin 2s infinite linear; }\n\n.fa5-pulse {\n  -webkit-animation: fa5-spin 1s infinite steps(8);\n          animation: fa5-spin 1s infinite steps(8); }\n\n@-webkit-keyframes fa5-spin {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg); }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg); } }\n\n@keyframes fa5-spin {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg); }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg); } }\n\n.fa5-rotate-90 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=1)\";\n  -webkit-transform: rotate(90deg);\n          transform: rotate(90deg); }\n\n.fa5-rotate-180 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2)\";\n  -webkit-transform: rotate(180deg);\n          transform: rotate(180deg); }\n\n.fa5-rotate-270 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=3)\";\n  -webkit-transform: rotate(270deg);\n          transform: rotate(270deg); }\n\n.fa5-flip-horizontal {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)\";\n  -webkit-transform: scale(-1, 1);\n          transform: scale(-1, 1); }\n\n.fa5-flip-vertical {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)\";\n  -webkit-transform: scale(1, -1);\n          transform: scale(1, -1); }\n\n.fa5-flip-horizontal.fa5-flip-vertical {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)\";\n  -webkit-transform: scale(-1, -1);\n          transform: scale(-1, -1); }\n\n:root .fa5-rotate-90,\n:root .fa5-rotate-180,\n:root .fa5-rotate-270,\n:root .fa5-flip-horizontal,\n:root .fa5-flip-vertical {\n  -webkit-filter: none;\n          filter: none; }\n\n.fa5-stack {\n  display: inline-block;\n  height: 2em;\n  position: relative;\n  width: 2em; }\n\n.fa5-stack-1x,\n.fa5-stack-2x {\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  position: absolute;\n  right: 0;\n  top: 0; }\n\n.svg-inline--fa5.fa5-stack-1x {\n  height: 1em;\n  width: 1em; }\n\n.svg-inline--fa5.fa5-stack-2x {\n  height: 2em;\n  width: 2em; }\n\n.fa5-inverse {\n  color: #fff; }\n\n.sr-only {\n  border: 0;\n  clip: rect(0, 0, 0, 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px; }\n\n.sr-only-focusable:active, .sr-only-focusable:focus {\n  clip: auto;\n  height: auto;\n  margin: 0;\n  overflow: visible;\n  position: static;\n  width: auto; }\n';
     
     var style = document.createElement('style');
     style.setAttribute('type', 'text/css');
@@ -20405,7 +20405,7 @@ var igv = function (igv) {
 
         BAMTrack.prototype.paintAxis = function (ctx, pixelWidth, pixelHeight) {
 
-            if (this.browser.isMultiLocus()) {
+            if (this.browser.isMultiLocusMode()) {
                 ctx.clearRect(0, 0, pixelWidth, pixelHeight);
             } else {
                 this.coverageTrack.paintAxis(ctx, pixelWidth, this.coverageTrack.height);
@@ -24090,7 +24090,7 @@ var igv = function (igv) {
         this.trackViews = [];
 
         this.trackLabelsVisible = true;
-        this.centerGuideVisible = false;
+        this.isCenterGuideVisible = false;
         this.cursorGuideVisible = false;
 
         this.featureDB = {}; // Hash of name -> feature, used for search function.
@@ -24153,6 +24153,47 @@ var igv = function (igv) {
         }
     }
 
+    igv.Browser.prototype.isMultiLocusMode = function () {
+        return this.genomicStateList && this.genomicStateList.length > 1;
+    };
+
+    igv.Browser.prototype.isMultiLocusWholeGenomeView = function () {
+
+        if (undefined === this.genomicStateList || 1 === this.genomicStateList.length) {
+            return false;
+        }
+
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+            for (var _iterator = this.genomicStateList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var genomicState = _step.value;
+
+                var chromosomeName = genomicState.referenceFrame.chrName.toLowerCase();
+                if ('all' === chromosomeName) {
+                    return true;
+                }
+            }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+
+        return false;
+    };
+
     igv.isWholeGenomeView = function (referenceFrame) {
         var chromosomeName = referenceFrame.chrName.toLowerCase();
 
@@ -24209,29 +24250,29 @@ var igv = function (igv) {
         }
 
         // tracks -> SVG
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
 
         try {
-            for (var _iterator = this.trackViews[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var trackView = _step.value;
+            for (var _iterator2 = this.trackViews[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                var trackView = _step2.value;
 
                 trackView.renderSVGContext(svgContext, { deltaX: dx, deltaY: ideoPanelBBox.height - trackContainerBBox.y });
             }
 
             // reset height to trim away unneeded svg canvas real estate. Yes, a bit of a hack.
         } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
         } finally {
             try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                    _iterator.return();
+                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                    _iterator2.return();
                 }
             } finally {
-                if (_didIteratorError) {
-                    throw _iteratorError;
+                if (_didIteratorError2) {
+                    throw _iteratorError2;
                 }
             }
         }
@@ -24283,45 +24324,15 @@ var igv = function (igv) {
 
                 var genomicStates = {};
 
-                var _iteratorNormalCompletion2 = true;
-                var _didIteratorError2 = false;
-                var _iteratorError2 = undefined;
-
-                try {
-                    for (var _iterator2 = self.genomicStateList[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                        var gs = _step2.value;
-
-                        genomicStates[gs.locusSearchString] = gs;
-                    }
-                } catch (err) {
-                    _didIteratorError2 = true;
-                    _iteratorError2 = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                            _iterator2.return();
-                        }
-                    } finally {
-                        if (_didIteratorError2) {
-                            throw _iteratorError2;
-                        }
-                    }
-                }
-
                 var _iteratorNormalCompletion3 = true;
                 var _didIteratorError3 = false;
                 var _iteratorError3 = undefined;
 
                 try {
-                    for (var _iterator3 = Object.getOwnPropertyNames(config.gtexSelections)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                        var _s = _step3.value;
+                    for (var _iterator3 = self.genomicStateList[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                        var gs = _step3.value;
 
-                        var _gs = genomicStates[_s];
-                        if (_gs) {
-                            var gene = config.gtexSelections[_s].gene;
-                            var snp = config.gtexSelections[_s].snp;
-                            _gs.selection = new igv.GtexSelection(gene, snp);
-                        }
+                        genomicStates[gs.locusSearchString] = gs;
                     }
                 } catch (err) {
                     _didIteratorError3 = true;
@@ -24334,6 +24345,36 @@ var igv = function (igv) {
                     } finally {
                         if (_didIteratorError3) {
                             throw _iteratorError3;
+                        }
+                    }
+                }
+
+                var _iteratorNormalCompletion4 = true;
+                var _didIteratorError4 = false;
+                var _iteratorError4 = undefined;
+
+                try {
+                    for (var _iterator4 = Object.getOwnPropertyNames(config.gtexSelections)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                        var _s = _step4.value;
+
+                        var _gs = genomicStates[_s];
+                        if (_gs) {
+                            var gene = config.gtexSelections[_s].gene;
+                            var snp = config.gtexSelections[_s].snp;
+                            _gs.selection = new igv.GtexSelection(gene, snp);
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError4 = true;
+                    _iteratorError4 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                            _iterator4.return();
+                        }
+                    } finally {
+                        if (_didIteratorError4) {
+                            throw _iteratorError4;
                         }
                     }
                 }
@@ -24515,29 +24556,18 @@ var igv = function (igv) {
         }
     };
 
-    igv.Browser.prototype.isMultiLocus = function () {
-        return this.genomicStateList && this.genomicStateList.length > 1;
-    };
-
     //
     igv.Browser.prototype.updateUIWithGenomicStateListChange = function (genomicStateList) {
 
-        // multi-locus mode
-        if (genomicStateList.length > 1) {
-            this.centerGuide.disable();
-            this.zoomWidget.hideSlider();
+        var isWGV = this.isMultiLocusWholeGenomeView() || igv.isWholeGenomeView(genomicStateList[0].referenceFrame);
+
+        if (isWGV || this.isMultiLocusMode()) {
+            this.centerGuide.forcedHide();
+        } else {
+            this.centerGuide.forcedShow();
         }
-        // whole-genome
-        else if ('all' === genomicStateList[0].locusSearchString) {
-                this.centerGuide.disable();
-                this.disableZoomWidget();
-            }
-            // single locus
-            else {
-                    this.centerGuide.enable();
-                    this.enableZoomWidget();
-                    this.zoomWidget.showSlider();
-                }
+
+        this.navbarManager.navbarDidResize(this.$navigation.width(), isWGV);
 
         toggleTrackLabels(this.trackViews, this.trackLabelsVisible);
     };
@@ -24561,21 +24591,21 @@ var igv = function (igv) {
     };
 
     function toggleTrackLabels(trackViews, isVisible) {
-        var _iteratorNormalCompletion4 = true;
-        var _didIteratorError4 = false;
-        var _iteratorError4 = undefined;
+        var _iteratorNormalCompletion5 = true;
+        var _didIteratorError5 = false;
+        var _iteratorError5 = undefined;
 
         try {
 
-            for (var _iterator4 = trackViews[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                var trackView = _step4.value;
-                var _iteratorNormalCompletion5 = true;
-                var _didIteratorError5 = false;
-                var _iteratorError5 = undefined;
+            for (var _iterator5 = trackViews[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                var trackView = _step5.value;
+                var _iteratorNormalCompletion6 = true;
+                var _didIteratorError6 = false;
+                var _iteratorError6 = undefined;
 
                 try {
-                    for (var _iterator5 = trackView.viewports[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                        var viewport = _step5.value;
+                    for (var _iterator6 = trackView.viewports[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                        var viewport = _step6.value;
 
                         if (viewport.$trackLabel) {
                             if (0 === trackView.viewports.indexOf(viewport) && true === isVisible) {
@@ -24586,31 +24616,31 @@ var igv = function (igv) {
                         }
                     }
                 } catch (err) {
-                    _didIteratorError5 = true;
-                    _iteratorError5 = err;
+                    _didIteratorError6 = true;
+                    _iteratorError6 = err;
                 } finally {
                     try {
-                        if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                            _iterator5.return();
+                        if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                            _iterator6.return();
                         }
                     } finally {
-                        if (_didIteratorError5) {
-                            throw _iteratorError5;
+                        if (_didIteratorError6) {
+                            throw _iteratorError6;
                         }
                     }
                 }
             }
         } catch (err) {
-            _didIteratorError4 = true;
-            _iteratorError4 = err;
+            _didIteratorError5 = true;
+            _iteratorError5 = err;
         } finally {
             try {
-                if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                    _iterator4.return();
+                if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                    _iterator5.return();
                 }
             } finally {
-                if (_didIteratorError4) {
-                    throw _iteratorError4;
+                if (_didIteratorError5) {
+                    throw _iteratorError5;
                 }
             }
         }
@@ -24622,19 +24652,6 @@ var igv = function (igv) {
         this.cursorGuideVisible = false;
     };
 
-    // // Guide line is bound within track area, and offset by 5 pixels so as not to interfere mouse clicks.
-    // $(this.trackContainerDiv).on('mousemove.cursorTrackingGuide', igv.throttle(function (e) {
-    //     var exe;
-    //
-    //     e.preventDefault();
-    //
-    //     exe = Math.max(50, igv.translateMouseCoordinates(e, self.trackContainerDiv).x);
-    //     exe = Math.min(self.trackContainerDiv.clientWidth - 65, exe);
-    //
-    //     self.$cursorTrackingGuide.css({left: exe + 'px'});
-    // }, 10));
-
-
     igv.Browser.prototype.showCursorGuide = function () {
         this.cursorGuide.$guide.show();
         this.cursorGuideVisible = true;
@@ -24643,21 +24660,13 @@ var igv = function (igv) {
     // center guide
     igv.Browser.prototype.hideCenterGuide = function () {
         this.centerGuide.$container.hide();
-        this.centerGuideVisible = false;
+        this.isCenterGuideVisible = false;
     };
 
     igv.Browser.prototype.showCenterGuide = function () {
         this.centerGuide.$container.show();
         this.centerGuide.resize();
-        this.centerGuideVisible = true;
-    };
-
-    igv.Browser.prototype.disableZoomWidget = function () {
-        this.zoomWidget.hide();
-    };
-
-    igv.Browser.prototype.enableZoomWidget = function () {
-        this.zoomWidget.show();
+        this.isCenterGuideVisible = true;
     };
 
     igv.Browser.prototype.loadTrackList = function (configList) {
@@ -24915,13 +24924,13 @@ var igv = function (igv) {
         var self = this,
             newTrackViews = [];
 
-        var _iteratorNormalCompletion6 = true;
-        var _didIteratorError6 = false;
-        var _iteratorError6 = undefined;
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
 
         try {
-            for (var _iterator6 = this.trackViews[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                var tv = _step6.value;
+            for (var _iterator7 = this.trackViews[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                var tv = _step7.value;
 
 
                 if ((removeSequence || tv.track.id !== 'sequence') && tv.track.id !== 'ruler') {
@@ -24933,16 +24942,16 @@ var igv = function (igv) {
                 }
             }
         } catch (err) {
-            _didIteratorError6 = true;
-            _iteratorError6 = err;
+            _didIteratorError7 = true;
+            _iteratorError7 = err;
         } finally {
             try {
-                if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                    _iterator6.return();
+                if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                    _iterator7.return();
                 }
             } finally {
-                if (_didIteratorError6) {
-                    throw _iteratorError6;
+                if (_didIteratorError7) {
+                    throw _iteratorError7;
                 }
             }
         }
@@ -24992,6 +25001,17 @@ var igv = function (igv) {
         }
 
         if (this.genomicStateList && viewportWidth > 0) {
+
+            var isWGV = this.isMultiLocusWholeGenomeView() || igv.isWholeGenomeView(this.genomicStateList[0].referenceFrame);
+
+            if (isWGV || this.isMultiLocusMode()) {
+                this.centerGuide.forcedHide();
+            } else {
+                this.centerGuide.forcedShow();
+            }
+
+            this.navbarManager.navbarDidResize(this.$navigation.width(), isWGV);
+
             this.genomicStateList.forEach(function (gstate) {
                 var referenceFrame = gstate.referenceFrame;
                 if (!isFinite(referenceFrame.bpPerPixel) && undefined !== referenceFrame.initialEnd) {
@@ -25467,11 +25487,6 @@ var igv = function (igv) {
         this.$contentHeader.empty();
 
         this.trackViews.forEach(function (trackView) {
-
-            if (trackView.track instanceof igv.RulerTrack) {
-                trackView.track.rulerSweepers = [];
-            }
-
             trackView.viewports = [];
             trackView.scrollbar = undefined;
         });
@@ -25524,27 +25539,27 @@ var igv = function (igv) {
                 self.buildViewportsWithGenomicStateList(genomicStateList);
 
                 // assign ids to the state objects
-                var _iteratorNormalCompletion7 = true;
-                var _didIteratorError7 = false;
-                var _iteratorError7 = undefined;
+                var _iteratorNormalCompletion8 = true;
+                var _didIteratorError8 = false;
+                var _iteratorError8 = undefined;
 
                 try {
-                    for (var _iterator7 = genomicStateList[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-                        var gs = _step7.value;
+                    for (var _iterator8 = genomicStateList[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                        var gs = _step8.value;
 
                         gs.id = igv.guid();
                     }
                 } catch (err) {
-                    _didIteratorError7 = true;
-                    _iteratorError7 = err;
+                    _didIteratorError8 = true;
+                    _iteratorError8 = err;
                 } finally {
                     try {
-                        if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                            _iterator7.return();
+                        if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                            _iterator8.return();
                         }
                     } finally {
-                        if (_didIteratorError7) {
-                            throw _iteratorError7;
+                        if (_didIteratorError8) {
+                            throw _iteratorError8;
                         }
                     }
                 }
@@ -26895,8 +26910,6 @@ var C2S;
         group.setAttribute('clip-path', format('url(#{id})', { id: clip_id }));
 
         this.__currentElement = group;
-
-        return group;
     };
 
     /**
@@ -35851,30 +35864,47 @@ var igv = function (igv) {
      */
     Genome.prototype.getChromosomeCoordinate = function (genomeCoordinate) {
 
-        var self = this,
-            lastChr,
-            lastCoord,
-            i,
-            name,
-            cumulativeOffset;
-
-        if (this.cumulativeOffsets === undefined) computeCumulativeOffsets.call(this);
-
-        // Use a for loop, not a forEach, so we can break (return)
-        for (i = 0; i < this.wgChromosomeNames.length; i++) {
-            name = this.wgChromosomeNames[i];
-            cumulativeOffset = self.cumulativeOffsets[name];
-
-            if (cumulativeOffset > genomeCoordinate) {
-                var position = genomeCoordinate - lastCoord;
-                return { chr: lastChr, position: position };
-            }
-            lastChr = name;
-            lastCoord = cumulativeOffset;
+        if (this.cumulativeOffsets === undefined) {
+            this.cumulativeOffsets = computeCumulativeOffsets.call(this);
         }
 
-        // If we get here off the end
-        return { chr: _.last(this.chromosomeNames), position: 0 };
+        var lastChr = undefined;
+        var lastCoord = 0;
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+            for (var _iterator = this.wgChromosomeNames[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var name = _step.value;
+
+
+                var cumulativeOffset = this.cumulativeOffsets[name];
+                if (cumulativeOffset > genomeCoordinate) {
+                    var position = genomeCoordinate - lastCoord;
+                    return { chr: lastChr, position: position };
+                }
+                lastChr = name;
+                lastCoord = cumulativeOffset;
+            }
+
+            // If we get here off the end
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+
+        return { chr: this.chromosomeNames[this.chromosomeNames.length - 1], position: 0 };
     };
 
     /**
@@ -35883,26 +35913,51 @@ var igv = function (igv) {
      */
     Genome.prototype.getCumulativeOffset = function (chr) {
 
-        var self = this,
-            queryChr = this.getChromosomeName(chr);
-
         if (this.cumulativeOffsets === undefined) {
-            computeCumulativeOffsets.call(this);
+            this.cumulativeOffsets = computeCumulativeOffsets.call(this);
         }
+
+        var queryChr = this.getChromosomeName(chr);
         return this.cumulativeOffsets[queryChr];
-
-        function computeCumulativeOffsets() {
-            var cumulativeOffsets = {},
-                offset = 0;
-
-            self.wgChromosomeNames.forEach(function (name) {
-                cumulativeOffsets[name] = Math.floor(offset);
-                var chromosome = self.getChromosome(name);
-                offset += chromosome.bpLength;
-            });
-            self.cumulativeOffsets = cumulativeOffsets;
-        }
     };
+
+    function computeCumulativeOffsets() {
+
+        var self = this;
+        var acc = {};
+        var offset = 0;
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+            for (var _iterator2 = self.wgChromosomeNames[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                var name = _step2.value;
+
+
+                acc[name] = Math.floor(offset);
+
+                var chromosome = self.getChromosome(name);
+
+                offset += chromosome.bpLength;
+            }
+        } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                    _iterator2.return();
+                }
+            } finally {
+                if (_didIteratorError2) {
+                    throw _iteratorError2;
+                }
+            }
+        }
+
+        return acc;
+    }
 
     /**
      * Return the nominal genome length, this is the length of the main chromosomes (no scaffolds, etc).
@@ -38784,48 +38839,38 @@ var igv = function (igv) {
         return browser.loadSession(config.sessionURL, config).then(function (ignore) {
 
             if (false === config.showTrackLabels) {
-
                 browser.hideTrackLabels();
             } else {
-
                 browser.showTrackLabels();
-
                 if (browser.trackLabelControl) {
                     browser.trackLabelControl.setState(browser.trackLabelsVisible);
                 }
             }
 
             if (false === config.showCursorTrackingGuide) {
-
-                browser.hideCursorGuide();
+                browser.cursorGuide.doHide();
             } else {
-
-                browser.showCursorGuide();
-                browser.cursorGuide.setState(browser.cursorGuideVisible);
+                browser.cursorGuide.doShow();
             }
 
             if (false === config.showCenterGuide) {
-
-                browser.hideCenterGuide();
+                browser.centerGuide.doHide();
             } else {
-
-                browser.showCenterGuide();
-                browser.centerGuide.setState(browser.centerGuideVisible);
+                browser.centerGuide.doShow();
             }
 
-            // multi-locus mode
-            if (browser.genomicStateList.length > 1) {
+            var isWGV = browser.isMultiLocusWholeGenomeView() || igv.isWholeGenomeView(browser.genomicStateList[0].referenceFrame);
 
-                // TODO: This is temporary until implement multi-locus center guides
-                browser.centerGuide.disable();
+            // multi-locus mode or isWGV
+            if (browser.isMultiLocusMode() || isWGV) {
+                browser.centerGuide.forcedHide();
+            } else {
+                browser.centerGuide.forcedShow();
             }
-            // whole-genome
-            else if ('all' === browser.genomicStateList[0].locusSearchString) {
-                    browser.centerGuide.disable();
-                    browser.disableZoomWidget();
-                }
 
             igv.xhr.startup();
+
+            browser.navbarManager.navbarDidResize(browser.$navigation.width(), isWGV);
 
             return browser;
         });
@@ -38876,6 +38921,7 @@ var igv = function (igv) {
         $navigation = $('<div>', { class: 'igv-navbar' });
         $controls.append($navigation);
         browser.$navigation = $navigation;
+        browser.navbarManager = new igv.NavbarManager(browser);
 
         $igv_nav_bar_left_container = $('<div>', { class: 'igv-nav-bar-left-container' });
         $navigation.append($igv_nav_bar_left_container);
@@ -38889,12 +38935,12 @@ var igv = function (igv) {
         $igv_nav_bar_left_container.append(logoDiv);
 
         // current genome
-        browser.$current_genome = $('<div>', { class: 'igv-current_genome' });
+        browser.$current_genome = $('<div>', { class: 'igv-current-genome' });
         $igv_nav_bar_left_container.append(browser.$current_genome);
         browser.$current_genome.text('');
 
         //
-        $genomic_location = $('<div>', { class: 'igv-genomic-location' });
+        $genomic_location = $('<div>', { class: 'igv-nav-bar-genomic-location' });
         $igv_nav_bar_left_container.append($genomic_location);
 
         // chromosome select widget
@@ -38953,6 +38999,7 @@ var igv = function (igv) {
 
         $toggle_button_container = $('<div class="igv-nav-bar-toggle-button-container">');
         $igv_nav_bar_right_container.append($toggle_button_container);
+        browser.$toggle_button_container = $toggle_button_container;
 
         // cursor guide
         browser.cursorGuide = new igv.CursorGuide($(browser.trackContainerDiv), $toggle_button_container, config, browser);
@@ -38997,20 +39044,20 @@ var igv = function (igv) {
             config.showCursorTrackingGuideButton = true;
         }
 
-        if (undefined === config.showCursorTrackingGuide) {
-            config.showCursorTrackingGuide = false;
-        }
-
         if (undefined === config.showCenterGuideButton) {
             config.showCenterGuideButton = true;
         }
 
-        if (undefined === config.showCenterGuide) {
-            config.showCenterGuide = false;
-        }
-
         if (undefined === config.showTrackLabelButton) {
             config.showTrackLabelButton = true;
+        }
+
+        if (undefined === config.showCursorTrackingGuide) {
+            config.showCursorTrackingGuide = false;
+        }
+
+        if (undefined === config.showCenterGuide) {
+            config.showCenterGuide = false;
         }
 
         if (undefined === config.showTrackLabels) {
@@ -40641,7 +40688,7 @@ var igv = function (igv) {
      * @param octets
      * @returns {string}
      */
-    decodeUTF8 = function decodeUTF8(octets) {
+    function decodeUTF8(octets) {
         var string = "";
         var i = 0;
         while (i < octets.length) {
@@ -40676,7 +40723,7 @@ var igv = function (igv) {
             i += bytesNeeded + 1;
         }
         return string;
-    };
+    }
 
     return igv;
 }(igv || {});
@@ -41136,6 +41183,86 @@ var igv = function (igv) {
     //            this.hasCorrectMinFields(node.left) &&
     //            this.hasCorrectMinFields(node.right));
     //    }
+
+    return igv;
+}(igv || {});
+
+'use strict';
+
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014 Broad Institute
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+var igv = function (igv) {
+
+    igv.NavbarManager = function (browser) {
+        this.browser = browser;
+    };
+
+    igv.NavbarManager.prototype.navbarDidResize = function (width, isWholeGenomeView) {
+        updateNavbar.call(this, createResponsiveClassSchedule.call(this, width, isWholeGenomeView));
+    };
+
+    function updateNavbar(responsiveClassSchedule) {
+
+        this.browser['$toggle_button_container'].removeClass();
+        this.browser['$toggle_button_container'].addClass(responsiveClassSchedule['$toggle_button_container']);
+
+        this.browser.zoomWidget['$zoomContainer'].removeClass();
+        this.browser.zoomWidget['$zoomContainer'].addClass(responsiveClassSchedule['$zoomContainer']);
+    }
+
+    function createResponsiveClassSchedule(navbarWidth, isWholeGenomeView) {
+
+        var candidates = {};
+
+        if (isWholeGenomeView) {
+            this.browser.windowSizePanel.hide();
+        } else {
+            this.browser.windowSizePanel.show();
+        }
+
+        if (navbarWidth > 990) {
+            candidates['$toggle_button_container'] = 'igv-nav-bar-toggle-button-container';
+            candidates['$zoomContainer'] = 'igv-zoom-widget';
+        } else if (navbarWidth > 860) {
+            candidates['$toggle_button_container'] = 'igv-nav-bar-toggle-button-container';
+            candidates['$zoomContainer'] = 'igv-zoom-widget-900';
+        } else if (navbarWidth > 540) {
+            candidates['$toggle_button_container'] = 'igv-nav-bar-toggle-button-container-750';
+            candidates['$zoomContainer'] = 'igv-zoom-widget-900';
+        } else {
+            candidates['$toggle_button_container'] = 'igv-nav-bar-toggle-button-container-750';
+            candidates['$zoomContainer'] = 'igv-zoom-widget-900';
+            this.browser.windowSizePanel.hide();
+        }
+
+        if (isWholeGenomeView) {
+            candidates['$zoomContainer'] = 'igv-zoom-widget-hidden';
+        }
+
+        return candidates;
+    }
 
     return igv;
 }(igv || {});
@@ -41980,81 +42107,6 @@ var igv = function (igv) {
         this.addMouseHandlers();
     };
 
-    igv.RulerSweeper.prototype.layoutWholeGenome = function () {
-
-        var self = this;
-        var browser = this.browser;
-
-        var nameLast = _.last(this.browser.genome.wgChromosomeNames);
-        var chrLast = this.browser.genome.getChromosome(nameLast);
-        var extent = Math.floor(chrLast.bpLength / 1000) + this.browser.genome.getCumulativeOffset(nameLast);
-        var pixels = this.viewport.$viewport.width();
-
-        var scraps = 0;
-        this.browser.genome.wgChromosomeNames.forEach(function (name) {
-            var chr, w, percentage, shortName;
-
-            chr = browser.genome.getChromosome(name);
-
-            percentage = chr.bpLength / extent;
-
-            if (percentage * pixels < 1.0) {
-                scraps += percentage;
-            } else {
-                var handleClick = function handleClick(e) {
-
-                    var locusString, loci;
-
-                    self.viewport.$wholeGenomeContainer.hide();
-                    $(self.viewport.canvas).hide();
-
-                    if (1 === browser.genomicStateList.length) {
-                        locusString = name;
-                    } else {
-                        loci = _.map(browser.genomicStateList, function (g) {
-                            return g.locusSearchString;
-                        });
-
-                        loci[browser.genomicStateList.indexOf(self.viewport.genomicState)] = name;
-                        locusString = loci.join(' ');
-                    }
-
-                    browser.search(locusString);
-                };
-
-                var $div = $('<div>');
-                self.viewport.$wholeGenomeContainer.append($div);
-
-                w = Math.floor(percentage * pixels);
-                $div.width(w);
-
-                var $e = $('<span>');
-                $div.append($e);
-
-                shortName = name.startsWith("chr") ? name.substring(3) : name;
-                $e.text(shortName);
-
-                $div.on('click', handleClick);
-                $div.on('touchend', handleClick);
-            }
-        });
-
-        scraps *= pixels;
-        scraps = Math.floor(scraps);
-        if (scraps >= 1) {
-
-            var $div = $('<div>');
-            self.viewport.$wholeGenomeContainer.append($div);
-
-            $div.width(scraps);
-
-            var $e = $('<span>');
-            $div.append($e);
-
-            $e.text('-');
-        }
-    };
-
     igv.RulerSweeper.prototype.disableMouseHandlers = function () {
 
         $(document).off(this.namespace);
@@ -42195,7 +42247,6 @@ var igv = function (igv) {
         this.disableButtons = true;
         this.ignoreTrackMenu = true;
         this.order = -Number.MAX_VALUE;
-        this.rulerSweepers = [];
         this.removable = false;
         this.type = 'ruler';
     };
@@ -42232,10 +42283,6 @@ var igv = function (igv) {
         });
     };
 
-    igv.RulerTrack.prototype.removeRulerSweeperWithLocusIndex = function (index) {
-        this.rulerSweepers.splice(index, 1);
-    };
-
     igv.RulerTrack.prototype.getFeatures = function (chr, bpStart, bpEnd) {
 
         return Promise.resolve([]);
@@ -42245,53 +42292,90 @@ var igv = function (igv) {
         return this.height;
     };
 
-    igv.RulerTrack.prototype.getRulerSweeper = function (genomicState) {
-
-        var key = this.browser.genomicStateList.indexOf(genomicState).toString();
-        return this.rulerSweepers[key];
-    };
-
     igv.RulerTrack.prototype.draw = function (options) {
-        var rulerSweeper, pixelWidthBP, tick, shim, tickHeight;
-
-        rulerSweeper = this.getRulerSweeper(options.genomicState);
-        if (!rulerSweeper) {
-            return;
-        }
 
         if (igv.isWholeGenomeView(options.referenceFrame)) {
 
-            $(this.canvas).hide();
-            rulerSweeper.viewport.$wholeGenomeContainer.show();
+            options.viewport.rulerSweeper.disableMouseHandlers();
 
-            createWholeGenomeRectList(rulerSweeper.viewport.$wholeGenomeContainer);
-
-            rulerSweeper.disableMouseHandlers();
+            drawWholeGenome.call(this, options);
         } else {
 
-            rulerSweeper.viewport.$wholeGenomeContainer.hide();
-            $(this.canvas).show();
+            options.viewport.rulerSweeper.addMouseHandlers();
 
-            rulerSweeper.addMouseHandlers();
-
-            tickHeight = 6;
-            shim = 2;
-
-            pixelWidthBP = 1 + Math.floor(options.referenceFrame.toBP(options.pixelWidth));
-            tick = new Tick(pixelWidthBP, options);
+            var tickHeight = 6;
+            var shim = 2;
+            var pixelWidthBP = 1 + Math.floor(options.referenceFrame.toBP(options.pixelWidth));
+            var tick = new Tick(pixelWidthBP, options);
 
             tick.drawTicks(options, tickHeight, shim, this.height);
-
             igv.graphics.strokeLine(options.context, 0, this.height - shim, options.pixelWidth, this.height - shim);
         }
     };
 
-    function createWholeGenomeRectList($wholeGenomeContainer) {
+    function drawWholeGenome(options) {
 
-        $wholeGenomeContainer.find('div').each(function (i) {
-            var element = $(this).get(0);
-            // console.log(i);
-        });
+        options.context.save();
+
+        igv.graphics.fillRect(options.context, 0, 0, options.pixelWidth, options.pixelHeight, { 'fillStyle': 'white' });
+
+        var y = 0;
+        var h = options.pixelHeight;
+
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+            for (var _iterator = this.browser.genome.wgChromosomeNames[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var name = _step.value;
+
+
+                var xBP = this.browser.genome.getCumulativeOffset(name);
+                var wBP = this.browser.genome.getChromosome(name).bpLength;
+
+                var x = Math.round(xBP / options.bpPerPixel);
+                var w = Math.round(wBP / options.bpPerPixel);
+
+                renderChromosomeRect.call(this, options.context, x, y, w, h, name);
+            }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+
+        options.context.restore();
+    }
+
+    function renderChromosomeRect(ctx, x, y, w, h, name) {
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = '12px sans-serif';
+
+        // igv.graphics.fillRect(ctx, x, y, w, h, { 'fillStyle' : toggleColor(this.browser.genome.wgChromosomeNames.indexOf(name)) });
+
+        igv.graphics.strokeLine(ctx, x + w, y, x + w, y + h, { strokeStyle: igv.Color.greyScale(191) });
+
+        var shortName = name.startsWith("chr") ? name.substring(3) : name;
+
+        if (w > ctx.measureText(shortName).width) {
+            igv.graphics.fillText(ctx, shortName, x + w / 2, y + h / 2, { fillStyle: igv.Color.greyScale(68) });
+        }
+    }
+
+    function toggleColor(value) {
+        return 0 === value % 2 ? 'rgb(250,250,250)' : 'rgb(255,255,255)';
     }
 
     igv.RulerTrack.prototype.supportsWholeGenome = function () {
@@ -42299,10 +42383,7 @@ var igv = function (igv) {
     };
 
     igv.RulerTrack.prototype.dispose = function () {
-
-        this.rulerSweepers.forEach(function (sweeper) {
-            sweeper.dispose();
-        });
+        // do stuff
     };
 
     var Tick = function Tick(pixelWidthBP, options) {
@@ -45147,10 +45228,6 @@ var igv = function (igv) {
 
     igv.TrackView.prototype.removeViewportWithLocusIndex = function (index) {
 
-        if (this.track instanceof igv.RulerTrack) {
-            this.track.removeRulerSweeperWithLocusIndex(index);
-        }
-
         this.viewports[index].$viewport.remove();
         this.viewports.splice(index, 1);
 
@@ -45326,6 +45403,7 @@ var igv = function (igv) {
     };
 
     igv.TrackView.prototype.createColorPicker = function () {
+        var _this = this;
 
         var self = this;
 
@@ -45340,9 +45418,9 @@ var igv = function (igv) {
 
         this.colorPicker = new igv.genericContainer(config);
 
-        createColorSwatchSelector.call(this, this.colorPicker.$container, function (rgb) {
-            self.setColor(rgb);
-        });
+        igv.createColorSwatchSelector(this.colorPicker.$container, function (rgb) {
+            return _this.setColor(rgb);
+        }, this.track.color);
 
         self.colorPicker.$container.hide();
     };
@@ -45669,17 +45747,17 @@ var igv = function (igv) {
         this.scrollbar.moveScrollerBy(delta);
     };
 
-    function createColorSwatchSelector($genericContainer, colorHandler) {
+    igv.createColorSwatchSelector = function ($genericContainer, colorHandler, defaultColor) {
 
         var appleColors = Object.values(igv.appleCrayonPalette);
 
-        if (this.track.color) {
+        if (defaultColor) {
 
             // Remove 'snow' color.
             appleColors.splice(11, 1);
 
             // Add default color.
-            appleColors.unshift(igv.Color.rgbToHex(this.track.color));
+            appleColors.unshift(igv.Color.rgbToHex(defaultColor));
         }
 
         var _loop = function _loop(color) {
@@ -45731,7 +45809,7 @@ var igv = function (igv) {
                 }
             }
         }
-    }
+    };
 
     var TrackScrollbar = function TrackScrollbar($viewportContainer, viewports, rootDiv) {
 
@@ -46016,7 +46094,7 @@ var igv = function (igv) {
             this.$centerGuideToggle.text('center line');
 
             this.$centerGuideToggle.on('click', function () {
-                if (true === browser.centerGuideVisible) {
+                if (true === browser.isCenterGuideVisible) {
                     self.doHide();
                 } else {
                     self.doShow();
@@ -46041,11 +46119,11 @@ var igv = function (igv) {
         this.browser.showCenterGuide();
     };
 
-    igv.CenterGuide.prototype.setState = function (centerGuideVisible) {
+    igv.CenterGuide.prototype.setState = function (isCenterGuideVisible) {
 
         if (this.$centerGuideToggle) {
 
-            if (true === centerGuideVisible) {
+            if (true === isCenterGuideVisible) {
                 this.$centerGuideToggle.addClass('igv-nav-bar-button-clicked');
             } else {
                 this.$centerGuideToggle.removeClass('igv-nav-bar-button-clicked');
@@ -46053,14 +46131,25 @@ var igv = function (igv) {
         }
     };
 
-    igv.CenterGuide.prototype.disable = function () {
-        this.doHide();
-        this.$centerGuideToggle.hide();
+    igv.CenterGuide.prototype.forcedHide = function () {
+
+        if (this.$centerGuideToggle) {
+            this.$centerGuideToggle.hide();
+        }
+
+        if (true === this.browser.isCenterGuideVisible) {
+            this.$container.hide();
+        }
     };
 
-    igv.CenterGuide.prototype.enable = function () {
+    igv.CenterGuide.prototype.forcedShow = function () {
+
         if (this.$centerGuideToggle) {
             this.$centerGuideToggle.show();
+        }
+
+        if (true === this.browser.isCenterGuideVisible) {
+            this.$container.show();
         }
     };
 
@@ -48836,17 +48925,11 @@ var igv = function (igv) {
         this.setWidth(width);
 
         if ("sequence" === trackView.track.type) {
+
             this.$viewport.addClass('igv-viewport-sequence');
-        }
+        } else if ('ruler' === trackView.track.type) {
 
-        if ('ruler' === trackView.track.type) {
-
-            this.$wholeGenomeContainer = $('<div>', { class: 'igv-whole-genome-container' });
-            $(this.contentDiv).append(this.$wholeGenomeContainer);
-
-            var rulerSweeper = new igv.RulerSweeper(this);
-            trackView.track.rulerSweepers.push(rulerSweeper);
-            rulerSweeper.layoutWholeGenome();
+            this.rulerSweeper = new igv.RulerSweeper(this);
 
             trackView.track.appendMultiPanelCloseButton(this.$viewport, this.genomicState);
 
@@ -48857,25 +48940,27 @@ var igv = function (igv) {
             });
 
             $(this.contentDiv).append(this.$rulerLabel);
+
+            if (true === igv.isWholeGenomeView(this.genomicState.referenceFrame)) {
+                enableRulerTrackMouseHandlers.call(this);
+            } else {
+                disableRulerTrackMouseHandlers.call(this);
+            }
         } else {
             addMouseHandlers.call(this);
 
-            var dimen = 32;
             var $spinnerContainer = $('<div class="igv-viewport-spinner">');
+            var dimen = 32;
             $spinnerContainer.css({ 'font-size': dimen + 'px' });
 
             this.$spinner = igv.createIcon("spinner");
             $spinnerContainer.append(this.$spinner);
+
             this.$viewport.append($spinnerContainer);
             this.stopSpinner();
-            this.popover = new igv.Popover(self.browser.$content);
-        }
 
-        if ("sequence" === trackView.track.type) {
-            // do nuthin
-        } else if ('ruler' === trackView.track.type) {
-            // do nuthin
-        } else {
+            this.popover = new igv.Popover(self.browser.$content);
+
             self.$zoomInNotice = createZoomInNotice.call(this, $(this.contentDiv));
         }
 
@@ -49066,15 +49151,20 @@ var igv = function (igv) {
             return;
         }
 
+        var isWGV = igv.isWholeGenomeView(this.genomicState.referenceFrame);
+
+        var features = tile.features;
+
         var genomicState = this.genomicState;
         var referenceFrame = genomicState.referenceFrame;
-        var bpPerPixel = tile.bpPerPixel;
-        var features = tile.features;
-        var bpStart = tile.startBP;
-        var bpEnd = tile.endBP;
-        var pixelWidth = Math.ceil((bpEnd - bpStart) / bpPerPixel);
+
+        var bpPerPixel = isWGV ? referenceFrame.initialEnd / this.$viewport.width() : tile.bpPerPixel;
+        var bpStart = isWGV ? 0 : tile.startBP;
+        var bpEnd = isWGV ? referenceFrame.initialEnd : tile.endBP;
+        var pixelWidth = isWGV ? this.$viewport.width() : Math.ceil((bpEnd - bpStart) / bpPerPixel);
+
         var pixelHeight = self.getContentHeight();
-        if (pixelWidth == 0 || pixelHeight === 0) {
+        if (0 === pixelWidth || 0 === pixelHeight) {
             if (self.canvas) {
                 $(self.canvas).remove();
             }
@@ -49094,14 +49184,19 @@ var igv = function (igv) {
 
         var drawConfiguration = {
             features: features,
+
             pixelWidth: pixelWidth,
             pixelHeight: pixelHeight,
+
             bpStart: bpStart,
             bpEnd: bpEnd,
             bpPerPixel: bpPerPixel,
+
             referenceFrame: referenceFrame,
             genomicState: genomicState,
+
             selection: self.selection,
+
             viewport: self,
             viewportWidth: self.$viewport.width(),
             viewportContainerX: referenceFrame.toPixels(referenceFrame.start - bpStart),
@@ -49248,6 +49343,48 @@ var igv = function (igv) {
         return this.browser && this.browser.genomicStateList && this.genomicState.referenceFrame;
     }
 
+    function enableRulerTrackMouseHandlers() {
+
+        var index = this.browser.genomicStateList.indexOf(this.genomicState);
+        var namespace = '.ruler_track_viewport_' + index;
+
+        // console.log(' enable ruler mouse handler ' + index);
+
+        var self = this;
+        this.$viewport.on('click' + namespace, function (e) {
+
+            var pixel = igv.translateMouseCoordinates(e, self.$viewport.get(0)).x;
+            var bp = Math.round(self.genomicState.referenceFrame.start + self.genomicState.referenceFrame.toBP(pixel));
+
+            var searchString = void 0;
+
+            if (1 === self.browser.genomicStateList.length) {
+                searchString = self.browser.genome.getChromosomeCoordinate(bp).chr;
+            } else {
+
+                var loci = self.browser.genomicStateList.map(function (genomicState) {
+                    return genomicState.locusSearchString;
+                });
+
+                loci[self.browser.genomicStateList.indexOf(self.genomicState)] = self.browser.genome.getChromosomeCoordinate(bp).chr;
+
+                searchString = loci.join(' ');
+            }
+
+            self.browser.search(searchString);
+        });
+    }
+
+    function disableRulerTrackMouseHandlers() {
+
+        var index = this.browser.genomicStateList.indexOf(this.genomicState);
+        var namespace = '.ruler_track_viewport_' + index;
+
+        // console.log('disable ruler mouse handler ' + index);
+
+        this.$viewport.off(namespace);
+    }
+
     igv.Viewport.prototype.setContentHeight = function (contentHeight) {
         // Maximum height of a canvas is ~32,000 pixels on Chrome, possibly smaller on other platforms
         contentHeight = Math.min(contentHeight, 32000);
@@ -49299,8 +49436,7 @@ var igv = function (igv) {
         var index = this.browser.genomicStateList.indexOf(this.genomicState);
         var id = str.toLowerCase() + '_genomic_index_' + index;
 
-        // If present, paint axis canvas. Only in first multi-locus panel
-
+        // If present, paint axis canvas. Only in first multi-locus panel.
         if (0 === index && typeof this.trackView.track.paintAxis === 'function') {
 
             var w = $(this.trackView.controlCanvas).width();
@@ -49315,117 +49451,47 @@ var igv = function (igv) {
 
         var dx = offset.deltaX + index * context.multiLocusGap;
         var dy = offset.deltaY + yScrollDelta;
-        var group = context.addTrackGroupWithTranslationAndClipRect(id, dx, dy, viewportBBox.width, viewportBBox.height, -yScrollDelta);
 
-        if ('ruler' === this.trackView.track.type && igv.isWholeGenomeView(this.genomicState.referenceFrame)) {
-            drawWholeGenomeRuler.call(this, context, group);
-        } else {
+        context.addTrackGroupWithTranslationAndClipRect(id, dx, dy, viewportBBox.width, viewportBBox.height, -yScrollDelta);
 
-            var width = this.$viewport.width();
-            var height = this.$viewport.height();
+        var width = this.$viewport.width();
+        var height = this.$viewport.height();
 
-            var referenceFrame = this.genomicState.referenceFrame;
+        var referenceFrame = this.genomicState.referenceFrame;
 
-            context.save();
+        context.save();
 
-            var drawConfig = {
-                context: context,
+        var drawConfig = {
+            context: context,
 
-                viewport: this,
+            viewport: this,
 
-                referenceFrame: referenceFrame,
+            referenceFrame: referenceFrame,
 
-                genomicState: this.genomicState,
+            genomicState: this.genomicState,
 
-                pixelWidth: width,
-                pixelHeight: height,
+            pixelWidth: width,
+            pixelHeight: height,
 
-                viewportWidth: width,
+            viewportWidth: width,
 
-                viewportContainerX: 0,
-                viewportContainerWidth: this.browser.viewportContainerWidth(),
+            viewportContainerX: 0,
+            viewportContainerWidth: this.browser.viewportContainerWidth(),
 
-                bpStart: referenceFrame.start,
-                bpEnd: referenceFrame.start + width * referenceFrame.bpPerPixel,
+            bpStart: referenceFrame.start,
+            bpEnd: referenceFrame.start + width * referenceFrame.bpPerPixel,
 
-                bpPerPixel: referenceFrame.bpPerPixel,
+            bpPerPixel: referenceFrame.bpPerPixel,
 
-                selection: this.selection
-            };
+            selection: this.selection
+        };
 
-            var features = this.tile ? this.tile.features : [];
+        var features = this.tile ? this.tile.features : [];
 
-            draw.call(this, drawConfig, features);
+        draw.call(this, drawConfig, features);
 
-            context.restore();
-        }
+        context.restore();
     };
-
-    function drawWholeGenomeRuler(svgContext, group) {
-
-        var index = this.browser.genomicStateList.indexOf(this.genomicState);
-        var rulerSweeper = this.trackView.track.rulerSweepers[index];
-
-        var dx = void 0;
-        var dy = void 0;
-        var $selection = rulerSweeper.viewport.$wholeGenomeContainer.find('div');
-        $selection.each(function (i) {
-            var domRect = $(this).get(0).getBoundingClientRect();
-
-            if (0 === i) {
-                dx = domRect.x;
-                dy = domRect.y;
-            }
-
-            var x = domRect.x - dx;
-            var y = domRect.y - dy;
-            var w = domRect.width;
-            var h = domRect.height;
-
-            var stroke_dash_array = void 0;
-            if (i === $selection.length - 1) {
-                stroke_dash_array = '0 ' + w + ' 0 ' + h + ' 0 ' + w + ' 0 ' + h;
-            } else {
-                stroke_dash_array = '0 ' + w + ' ' + h + ' ' + w + ' 0 ' + h;
-            }
-
-            var stroke_width = 1;
-            var rect_settings = {
-                x: x,
-                width: w,
-                y: y,
-                height: h,
-
-                // fill: igv.Color.randomRGB(200, 255),
-                fill: 'white',
-
-                'stroke-width': stroke_width,
-                'stroke': 'black',
-                'stroke-dasharray': stroke_dash_array
-            };
-
-            var rect = svgContext.__createElement('rect', rect_settings, true);
-            group.appendChild(rect);
-
-            var text_settings = {
-                "font-family": 'sans-serif',
-                "font-size": '10px',
-                "font-style": 'normal',
-                "font-weight": 'normal',
-                "text-anchor": 'middle',
-                "dominant-baseline": 'middle',
-                x: x + w / 2,
-                y: y + h / 2,
-                fill: 'grey'
-            };
-
-            var text = svgContext.__createElement('text', text_settings, true);
-            group.appendChild(text);
-
-            var str = $(this).find('span').text();
-            text.appendChild(svgContext.__document.createTextNode(str));
-        });
-    }
 
     igv.Viewport.prototype.saveSVG = function () {
         var str = this.$trackLabel ? this.$trackLabel.text() : this.trackView.track.id;
@@ -49835,13 +49901,6 @@ var igv = function (igv) {
     };
 
     igv.WindowSizePanel.prototype.updateWithGenomicState = function (genomicState) {
-
-        if (1 === this.browser.genomicStateList.length && genomicState.locusSearchString && 'all' !== genomicState.locusSearchString.toLowerCase()) {
-            this.show();
-        } else {
-            this.hide();
-        }
-
         this.$content.text(igv.prettyBasePairNumber(Math.round(this.browser.viewportWidth() * genomicState.referenceFrame.bpPerPixel)));
     };
 
