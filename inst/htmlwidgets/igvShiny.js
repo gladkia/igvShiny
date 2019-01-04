@@ -25,8 +25,8 @@ HTMLWidgets.widget({
                 igvWidget = browser;
                 window.igvBrowser = igvWidget;
                 window.chromLocString = options.initialLocus;
-                igvWidget.on('locuschange', function (referenceFrame, chromLocString){
-                    //console.log("locuschange: " + chromLocString)
+                igvWidget.on('locuschange', function (referenceFrame){
+                    var chromLocString = referenceFrame.label
                     window.chromLocString = chromLocString;
                     Shiny.setInputValue("currentGenomicRegion", chromLocString, {priority: "event"});
                     });
