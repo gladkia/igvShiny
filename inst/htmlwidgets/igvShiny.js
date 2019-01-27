@@ -281,6 +281,7 @@ Shiny.addCustomMessageHandler("loadBedTrack",
 
    function(message){
       console.log("=== loadBedTrack");
+      console.log(message)
       var trackName = message.trackName;
       var tbl = message.tbl;
       var color = message.color;
@@ -305,6 +306,7 @@ Shiny.addCustomMessageHandler("loadBedGraphTrack",
 
    function(message){
       console.log("=== loadBedGraphTrack");
+      console.log(message)
       var trackName = message.trackName;
       var tbl = message.tbl;
       var color = message.color;

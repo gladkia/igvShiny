@@ -100,9 +100,11 @@ loadBedTrack <- function(session, trackName, tbl, color="gray", trackHeight=50, 
    stopifnot(is(tbl$chr, "character"))
    stopifnot(is(tbl$start, "numeric"))
    stopifnot(is(tbl$end, "numeric"))
+   new.order <- order(tbl$start, decreasing=FALSE)
+   tbl <- tbl[new.order,]
 
-   message <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl), color=color, trackHeight=trackHeight)
-   session$sendCustomMessage("loadBedTrack", message)
+   msg.to.igv <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl), color=color, trackHeight=trackHeight)
+   session$sendCustomMessage("loadBedTrack", msg.to.igv)
 
 } # loadBedTrack
 #------------------------------------------------------------------------------------------------------------------------
@@ -143,9 +145,13 @@ loadBedGraphTrack <- function(session, trackName, tbl, color="gray", trackHeight
    stopifnot(is(tbl$end, "numeric"))
    stopifnot(is(tbl$value, "numeric"))
 
-   message <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl), color=color, trackHeight=trackHeight,
-                   autoscale=autoscale, min=min, max=max)
-   session$sendCustomMessage("loadBedGraphTrack", message)
+   new.order <- order(tbl$start, decreasing=FALSE)
+   tbl <- tbl[new.order,]
+
+   msg.to.igv <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl), color=color, trackHeight=trackHeight,
+                      autoscale=autoscale, min=min, max=max)
+
+   session$sendCustomMessage("loadBedGraphTrack", msg.to.igv)
 
 } # loadBedGraphTrack
 #------------------------------------------------------------------------------------------------------------------------
