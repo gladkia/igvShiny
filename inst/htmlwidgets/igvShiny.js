@@ -81,54 +81,21 @@ function genomeSpecificOptions(genomeName, initialLocus, displayMode, trackHeigh
 
 
     var hg38_options = {
-     locus: initialLocus,
-     minimumBases: 5,
-     flanking: 1000,
-     showRuler: true,
-
-	reference: {
-	    id: "hg38",
-	    fastaURL: "https://s3.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg38/hg38.fa",
-            cytobandURL: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg38/cytoBandIdeo.txt"
-            },
-     tracks: [
-        {name: 'Gencode v24',
-         url: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg38/genes/gencode.v24.annotation.sorted.gtf.gz",
-         indexURL: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg38/genes/gencode.v24.annotation.sorted.gtf.gz.tbi",
-         format: 'gtf',
-         visibilityWindow: 2000000,
-         displayMode:  displayMode,
-         height: trackHeight
-         },
-        ]
-     }; // hg38_options
+       locus: initialLocus,
+       minimumBases: 5,
+       flanking: 1000,
+       showRuler: true,
+       genome: "hg38"
+       }; // hg38_options
 
 
    var mm10_options = {
-         locus: initialLocus,
-         flanking: 2000,
-	 showKaryo: false,
-         showNavigation: true,
-         minimumBases: 5,
-         showRuler: true,
-         reference: {id: "mm10",
-                     fastaURL: "https://igv-data.systemsbiology.net/static/mm10/GRCm38.primary_assembly.genome.fa",
-                     cytobandURL: "https://igv-data.systemsbiology.net/static/mm10/cytoBand.txt"
-                     },
-         tracks: [
-            {name: 'Gencode vM14',
-             url: "https://igv-data.systemsbiology.net/static/mm10/gencode.vM14.basic.annotation.sorted.gtf.gz",
-             indexURL: "https://igv-data.systemsbiology.net/static/mm10/gencode.vM14.basic.annotation.sorted.gtf.gz.tbi",
-             indexed: true,
-             type: 'annotation',
-             format: 'gtf',
-             visibilityWindow: 2000000,
-             displayMode: displayMode,
-             height: trackHeight,
-             searchable: true
-             },
-            ]
-       }; // mm10_options
+      locus: initialLocus,
+      flanking: 2000,
+      minimumBases: 5,
+      showRuler: true,
+      genome: "mm10"
+      }; // mm10_options
 
    var tair10_options = {
          locus: initialLocus,

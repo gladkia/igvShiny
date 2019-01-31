@@ -36,9 +36,12 @@ server = function(input, output, session) {
    observeEvent(input$addTrackButton, {
       printf("---- addTrack")
       printf("current working directory: %s", getwd())
-      tbl.bed <- data.frame(chr=c("1","1", "1"),
-                            start=c(7432951, 7437000, 7438000),
-                            end=  c(7436000, 7437500, 7440000),
+      starts=c(83573552+10, 83573552+100, 83573552+1000)
+      ends <- starts + 5000
+
+      tbl.bed <- data.frame(chr=c("13","13", "13"),
+                            start=starts,
+                            end=ends,
                             value=c(-0.2239, 3.0, 0.5),
                             sampleID=c("sample1", "sample2", "sample3"),
                             stringsAsFactors=FALSE)
@@ -68,8 +71,8 @@ server = function(input, output, session) {
 
    output$igvShiny.0 <- renderIgvShiny(
      igvShiny(list(
-        genomeName=genomes[i],
-        initialLocus=loci[i],
+        genomeName="mm10",
+        initialLocus=loci[3],
         displayMode="SQUISHED"
         ))
       )
