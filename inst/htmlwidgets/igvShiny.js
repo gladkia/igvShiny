@@ -31,26 +31,24 @@ HTMLWidgets.widget({
                     Shiny.setInputValue("currentGenomicRegion", chromLocString, {priority: "event"});
                     });
                 igvWidget.on('trackclick', function (track, popoverData){
+                   console.log("---- trackclick");
                    var x = popoverData;
-                    if(x.length == 4){
-                      if (x[3].name == "id"){
-                      console.log("--- about to contact Shiny")
-                      var id = x[3].value;
-                      var message = {id: id, date: Date()};
-                      var messageName = "trackClick"
-                      Shiny.onInputChange(messageName, message);
-                      console.log("--- after contacting Shiny")
-                      } // if id in the fourth field
-                    } // length == 4
+                   //if(x.length == 4){
+                   //   if (x[3].name == "id"){
+                   console.log("--- about to contact Shiny")
+                   //var id = x[3].value;
+                   var message = x;
+                   //var message = {id: id, date: Date()};
+                   var messageName = "trackClick"
+                   Shiny.onInputChange(messageName, message);
+                   console.log("--- after contacting Shiny")
+                    //  } // if id in the fourth field
+                    //} // length == 4
                   console.log("click! 810");
                   console.log(x);
                   return undefined;
                   }); // on
-
-             }); // then: promise fulflled
-             // igvWidget = igv.createBrowser(igvDiv, fullOptions);
-
-
+               }); // then: promise fulflled
           },
       resize: function(width, height) {
         // TODO: code to re-render the widget with a new size
