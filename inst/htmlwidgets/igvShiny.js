@@ -18,8 +18,9 @@ HTMLWidgets.widget({
           var igvDiv;
           igvDiv = el; // $("#igvDiv")[0];
           var fullOptions = genomeSpecificOptions(options.genomeName, options.initialLocus,
-                                                  options.displayMode, options.trackHeight)
+                                                  options.displayMode, parseInt(options.trackHeight))
 
+         console.log("about to createBrowser, trackHeight: " + fullOptions.height)
          igv.createBrowser(igvDiv, fullOptions)
              .then(function (browser) {
                 igvWidget = browser;
@@ -31,24 +32,11 @@ HTMLWidgets.widget({
                     Shiny.setInputValue("currentGenomicRegion", chromLocString, {priority: "event"});
                     });
                 igvWidget.on('trackclick', function (track, popoverData){
-                   console.log("---- trackclick");
                    var x = popoverData;
-                   //if(x.length == 4){
-                   //   if (x[3].name == "id"){
-                   console.log("--- about to contact Shiny")
-                   //var id = x[3].value;
-                   var message = x;
-                   //var message = {id: id, date: Date()};
-                   var messageName = "trackClick"
-                   Shiny.onInputChange(messageName, message);
-                   console.log("--- after contacting Shiny")
-                    //  } // if id in the fourth field
-                    //} // length == 4
-                  console.log("click! 810");
-                  console.log(x);
-                  return undefined;
-                  }); // on
-               }); // then: promise fulflled
+                   Shiny.setInputValue("igv-trackClick", x, {priority: "event"})
+                   return false; // undefined causes follow on display of standard popup
+                   }); // on
+                }); // then: promise fulflled
           },
       resize: function(width, height) {
         // TODO: code to re-render the widget with a new size
@@ -80,8 +68,11 @@ function genomeSpecificOptions(genomeName, initialLocus, displayMode, trackHeigh
 
     var hg38_options = {
        locus: initialLocus,
+       height: 200,
+       //autoHeight: true,
        minimumBases: 5,
        flanking: 1000,
+	name: "foo",
        showRuler: true,
        genome: "hg38"
        }; // hg38_options
@@ -151,6 +142,7 @@ function genomeSpecificOptions(genomeName, initialLocus, displayMode, trackHeigh
          igvOptions = hg19_options;
          break;
       case "hg38":
+         console.log("hg38 options, trackHeight: " + hg38_options.height);
          igvOptions = hg38_options;
          break;
        case "mm10":
