@@ -112,7 +112,6 @@ loadBedGraphTrack <- function(session, trackName, tbl, color="gray", trackHeight
                               autoscale, min=NA_real_, max=NA_real_,
                               deleteTracksOfSameName=TRUE, quiet=TRUE)
 {
-
    stopifnot(ncol(tbl) >= 4)
 
    if(!quiet){
