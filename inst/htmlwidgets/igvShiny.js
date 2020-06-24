@@ -33,6 +33,7 @@ HTMLWidgets.widget({
                     });
                 igvWidget.on('trackclick', function (track, popoverData){
                    var x = popoverData;
+                   console.log(x)
                    Shiny.setInputValue("igv-trackClick", x, {priority: "event"})
                    return false; // undefined causes follow on display of standard popup
                    }); // on

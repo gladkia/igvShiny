@@ -2,6 +2,7 @@ library(jsonlite)
 library(shiny)
 library(VariantAnnotation)
 #----------------------------------------------------------------------------------------------------
+printf <- function(...) print(noquote(sprintf(...)))
 state <- new.env(parent=emptyenv())
 state[["userAddedTracks"]] <- list()
 #----------------------------------------------------------------------------------------------------
