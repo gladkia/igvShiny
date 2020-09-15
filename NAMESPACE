@@ -8,6 +8,7 @@ export(
    loadBedGraphTrack,
    loadSegTrack,
    loadVcfTrack,
+   loadGwasTrack,
    removeTracksByName,
    removeUserAddedTracks,
    redrawIgvWidget

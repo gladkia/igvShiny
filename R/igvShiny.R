@@ -1,6 +1,8 @@
 library(jsonlite)
 library(shiny)
 library(VariantAnnotation)
+library(randomcoloR)
+randomColors <- distinctColorPalette(24)
 #----------------------------------------------------------------------------------------------------
 printf <- function(...) print(noquote(sprintf(...)))
 state <- new.env(parent=emptyenv())
@@ -12,6 +14,7 @@ igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL, dis
   stopifnot(all(supportedOptions %in% names(options)))
   supportedGenomes <- c("hg38", "hg19", "mm10", "tair10", "rhos")
   stopifnot(options$genomeName %in% supportedGenomes)
+  state[["requestedHeight"]] <- height
 
   printf("--- ~/github/igvShiny/R/igvShiny ctor");
 
@@ -28,10 +31,15 @@ igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL, dis
 #----------------------------------------------------------------------------------------------------
 igvShinyOutput <- function(outputId, width = '100%', height = '400px')
 {
+    if("requestedHeight" %in% ls(state)){
+      printf("setting height from state")
+      height <- state[["requestedHeight"]]
+      }
+
   htmlwidgets::shinyWidgetOutput(outputId, 'igvShiny', width, height, package = 'igvShiny')
 }
 #----------------------------------------------------------------------------------------------------
-renderIgvShiny <- function(expr, env = parent.frame(), quoted = FALSE)
+renderIgvShiny <- function(expr, env=parent.frame(), quoted = FALSE)
 {
    if (!quoted){
       expr <- substitute(expr)
@@ -47,35 +55,40 @@ redrawIgvWidget <- function(session)
 
 } # redrawIgvWidget
 #----------------------------------------------------------------------------------------------------
-showGenomicRegion <- function(session, region)
+showGenomicRegion <- function(session, id, region)
 {
-   message <- list(region=region)
+   message <- list(region=region, elementID=id)
    session$sendCustomMessage("showGenomicRegion", message)
 
 } # showGenomicRegion
 #------------------------------------------------------------------------------------------------------------------------
-getGenomicRegion <- function(session, region)
+getGenomicRegion <- function(session, id)
 {
+   message <- list(elementID=id)
    session$sendCustomMessage("getGenomicRegion", message)
 
 } # gertGenomicRegion
 #------------------------------------------------------------------------------------------------------------------------
-removeTracksByName <- function(session, trackNames)
+removeTracksByName <- function(session, id, trackNames)
 {
-   message <- list(trackNames=trackNames)
+   message <- list(trackNames=trackNames, elementID=id)
    session$sendCustomMessage("removeTracksByName", message)
 
 } # removeTracksByName
 #------------------------------------------------------------------------------------------------------------------------
-removeUserAddedTracks <- function(session)
+removeUserAddedTracks <- function(session, id)
 {
-   removeTracksByName(session, state[["userAddedTracks"]])
+   removeTracksByName(session, id, state[["userAddedTracks"]])
    state[["userAddedTracks"]] <- list()
 
 } # removeUserAddedTracks
 #------------------------------------------------------------------------------------------------------------------------
-loadBedTrack <- function(session, trackName, tbl, color="gray", trackHeight=50, deleteTracksOfSameName=TRUE, quiet=TRUE)
+loadBedTrack <- function(session, id, trackName, tbl, color="gray", trackHeight=50,
+                         deleteTracksOfSameName=TRUE, quiet=TRUE)
 {
+   if(color == "random")
+      color <- randomColors[sample(seq_len(length(randomColors)), 1)]
+
    if(!quiet){
       printf("--- igvShiny::loadBedTrack");
       print(dim(tbl))
@@ -84,7 +97,7 @@ loadBedTrack <- function(session, trackName, tbl, color="gray", trackHeight=50, 
       }
 
    if(deleteTracksOfSameName){
-      removeTracksByName(session, trackName);
+      removeTracksByName(session, id, trackName);
       }
 
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
@@ -104,16 +117,20 @@ loadBedTrack <- function(session, trackName, tbl, color="gray", trackHeight=50, 
    new.order <- order(tbl$start, decreasing=FALSE)
    tbl <- tbl[new.order,]
 
-   msg.to.igv <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl), color=color, trackHeight=trackHeight)
+   msg.to.igv <- list(elementID=id, trackName=trackName,
+                      tbl=jsonlite::toJSON(tbl), color=color, trackHeight=trackHeight)
    session$sendCustomMessage("loadBedTrack", msg.to.igv)
 
 } # loadBedTrack
 #------------------------------------------------------------------------------------------------------------------------
-loadBedGraphTrack <- function(session, trackName, tbl, color="gray", trackHeight=30,
+loadBedGraphTrack <- function(session, id, trackName, tbl, color="gray", trackHeight=30,
                               autoscale, min=NA_real_, max=NA_real_,
                               deleteTracksOfSameName=TRUE, quiet=TRUE)
 {
    stopifnot(ncol(tbl) >= 4)
+
+   if(color == "random")
+      color <- randomColors[sample(seq_len(length(randomColors)), 1)]
 
    if(!quiet){
       printf("--- igvShiny::loadBedGraphTrack");
@@ -124,7 +141,7 @@ loadBedGraphTrack <- function(session, trackName, tbl, color="gray", trackHeight
       }
 
    if(deleteTracksOfSameName){
-      removeTracksByName(session, trackName);
+      removeTracksByName(session, id, trackName);
       }
 
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
@@ -148,39 +165,57 @@ loadBedGraphTrack <- function(session, trackName, tbl, color="gray", trackHeight
    new.order <- order(tbl$start, decreasing=FALSE)
    tbl <- tbl[new.order,]
 
-   msg.to.igv <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl), color=color, trackHeight=trackHeight,
+   msg.to.igv <- list(elementID=id, trackName=trackName, tbl=jsonlite::toJSON(tbl),
+                      color=color, trackHeight=trackHeight,
                       autoscale=autoscale, min=min, max=max)
 
    session$sendCustomMessage("loadBedGraphTrack", msg.to.igv)
 
 } # loadBedGraphTrack
 #------------------------------------------------------------------------------------------------------------------------
-loadSegTrack <- function(session, trackName, tbl, deleteTracksOfSameName=TRUE)
+loadSegTrack <- function(session, id, trackName, tbl, deleteTracksOfSameName=TRUE)
 {
    if(deleteTracksOfSameName){
-      removeTracksByName(session, trackName);
+      removeTracksByName(session, id, trackName);
       }
 
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
 
-   message <- list(trackName=trackName, tbl=jsonlite::toJSON(tbl))
+   message <- list(elementID=id, trackName=trackName, tbl=jsonlite::toJSON(tbl))
    session$sendCustomMessage("loadSegTrack", message)
 
 } # loadSegTrack
 #------------------------------------------------------------------------------------------------------------------------
-loadVcfTrack <- function(session, trackName, vcfData, deleteTracksOfSameName=TRUE)
+loadVcfTrack <- function(session, id, trackName, vcfData, deleteTracksOfSameName=TRUE)
 {
    if(deleteTracksOfSameName){
-      removeTracksByName(session, trackName);
+      removeTracksByName(session, id, trackName);
       }
 
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
    path <- file.path("tracks", "tmp.vcf")
    writeVcf(vcfData, path)
 
-   message <- list(trackName=trackName, vcfDataFilepath=path)
+   message <- list(elementID=id, trackName=trackName, vcfDataFilepath=path)
    session$sendCustomMessage("loadVcfTrack", message)
 
 } # loadVcfTrack
+#------------------------------------------------------------------------------------------------------------------------
+loadGwasTrack <- function(session, id, trackName, tbl.gwas, deleteTracksOfSameName=TRUE)
+{
+   if(deleteTracksOfSameName){
+      removeTracksByName(session, id, trackName);
+      }
+
+   state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
+
+   temp.file <- tempfile(tmpdir="tracks", fileext=".gwas")
+   write.table(tbl.gwas, sep="\t", row.names=FALSE, quote=FALSE, file=temp.file)
+   message <- list(elementID=id, trackName=trackName, gwasDataFilepath=temp.file,
+                   color="red", trackHeight=200, autoscale=FALSE,
+                   min=0, max=35)
+   session$sendCustomMessage("loadGwasTrack", message)
+
+} # loadGwasTrack
 #------------------------------------------------------------------------------------------------------------------------
 

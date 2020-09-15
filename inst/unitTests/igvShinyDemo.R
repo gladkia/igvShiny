@@ -4,6 +4,11 @@ library(htmlwidgets)
 #----------------------------------------------------------------------------------------------------
 addResourcePath("tracks", "tracks")
 addResourcePath("www", "www")
+f <- system.file(package="igvShiny", "extdata", "gwas.RData")
+stopifnot(file.exists(f))
+tbl.gwas <- get(load(f))
+print(dim(tbl.gwas))
+tbl.gwas <- get(load("~/github/lcApps/gwas/danEvans/incoming/tbl.99.hg38.05.RData"))
 #----------------------------------------------------------------------------------------------------
 ui = shinyUI(fluidPage(
 
@@ -12,6 +17,7 @@ ui = shinyUI(fluidPage(
         textInput("roi", label=""),
         actionButton("searchButton", "Search"),
         actionButton("addTrackButton", "Add Track"),
+        actionButton("addGwasTrackButton", "Add GWAS Track"),
         actionButton("getChromLoc", "Get Region"),
         htmlOutput("chromLocDisplay"),
         hr(),
@@ -47,6 +53,24 @@ server = function(input, output, session) {
       loadSegTrack(session, "seg", tbl.bed)
       })
 
+   observeEvent(input$addGwasTrackButton, {
+      printf("---- addGWASTrack")
+      printf("current working directory: %s", getwd())
+      loadGwasTrack(session, "gwas", tbl.gwas, deleteTracksOfSameName=FALSE)
+      })
+
+   observeEvent(input$trackClick, {
+       printf("--- trackclick event")
+       x <- input$trackClick
+       print(x)
+       })
+
+   observeEvent(input[["igv-trackClick"]], {
+       printf("--- igv-trackClick event")
+       x <- input[["igv-trackClick"]]
+       print(x)
+       })
+
    observeEvent(input$getChromLoc, {
       session$sendCustomMessage(type="getGenomicRegion", message=list())
       output$chromLocDisplay <- renderText({" "})
@@ -64,7 +88,7 @@ server = function(input, output, session) {
 
    genomes <- c("hg38", "hg19", "mm10", "tair10", "rhos")
    loci <- c("chr5:88,466,402-89,135,305", "MEF2C", "Mef2c", "1:7,432,931-7,440,395", "NC_007494.2:370,757-378,078")
-   i <- 4
+   i <- 1
 
    output$igvShiny.0 <- renderIgvShiny(
      igvShiny(list(
@@ -83,4 +107,5 @@ server = function(input, output, session) {
 
 } # server
 #----------------------------------------------------------------------------------------------------
-runApp(shinyApp(ui = ui, server = server))
+runApp(shinyApp(ui = ui, server = server), port=9876)
+#shinyApp(ui = ui, server = server)
