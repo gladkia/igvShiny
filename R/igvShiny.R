@@ -175,6 +175,8 @@ loadBedGraphTrack <- function(session, id, trackName, tbl, color="gray", trackHe
 #------------------------------------------------------------------------------------------------------------------------
 loadSegTrack <- function(session, id, trackName, tbl, deleteTracksOfSameName=TRUE)
 {
+   printf("--- entering loadSegTrack %s with %d rows", trackName, nrow(tbl))
+
    if(deleteTracksOfSameName){
       removeTracksByName(session, id, trackName);
       }
@@ -182,6 +184,7 @@ loadSegTrack <- function(session, id, trackName, tbl, deleteTracksOfSameName=TRU
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
 
    message <- list(elementID=id, trackName=trackName, tbl=jsonlite::toJSON(tbl))
+   printf("about to send loadSegTrack message")
    session$sendCustomMessage("loadSegTrack", message)
 
 } # loadSegTrack
@@ -203,6 +206,8 @@ loadVcfTrack <- function(session, id, trackName, vcfData, deleteTracksOfSameName
 #------------------------------------------------------------------------------------------------------------------------
 loadGwasTrack <- function(session, id, trackName, tbl.gwas, deleteTracksOfSameName=TRUE)
 {
+   printf("======== entering igvShiny::loadGwasTrack")
+
    if(deleteTracksOfSameName){
       removeTracksByName(session, id, trackName);
       }
@@ -211,6 +216,9 @@ loadGwasTrack <- function(session, id, trackName, tbl.gwas, deleteTracksOfSameNa
 
    temp.file <- tempfile(tmpdir="tracks", fileext=".gwas")
    write.table(tbl.gwas, sep="\t", row.names=FALSE, quote=FALSE, file=temp.file)
+   printf("--- igvShiny.R, loadGwasTrack wrote %d,%d to %s", nrow(tbl.gwas), ncol(tbl.gwas),
+          temp.file)
+   printf("exists? %s", file.exists(temp.file))
    message <- list(elementID=id, trackName=trackName, gwasDataFilepath=temp.file,
                    color="red", trackHeight=200, autoscale=FALSE,
                    min=0, max=35)
