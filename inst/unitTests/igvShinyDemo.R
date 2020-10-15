@@ -1,14 +1,18 @@
 library(shiny)
 library(igvShiny)
-library(htmlwidgets)
 #----------------------------------------------------------------------------------------------------
+# we need a local directory to write files - for instance, a vcf file representing a genomic
+# region of interest.  we then tell shiny about that directory, so that shiny's built-in http server
+# can serve up files we write there, ultimately consumed by igv.js
+if(!dir.exists("tracks"))
+  dir.create("tracks")
 addResourcePath("tracks", "tracks")
-addResourcePath("www", "www")
+#----------------------------------------------------------------------------------------------------
 f <- system.file(package="igvShiny", "extdata", "gwas.RData")
 stopifnot(file.exists(f))
 tbl.gwas <- get(load(f))
 print(dim(tbl.gwas))
-tbl.gwas <- get(load("~/github/lcApps/gwas/danEvans/incoming/tbl.99.hg38.05.RData"))
+printf <- function(...) print(noquote(sprintf(...)))
 #----------------------------------------------------------------------------------------------------
 ui = shinyUI(fluidPage(
 
@@ -34,9 +38,10 @@ ui = shinyUI(fluidPage(
 server = function(input, output, session) {
 
    observeEvent(input$searchButton, {
-      printf("---- input$roi")
+      printf("--- search")
       searchString = isolate(input$roi)
-      session$sendCustomMessage(type="showGenomicRegion", message=list(roi=searchString))
+      if(nchar(searchString) > 0)
+        showGenomicRegion(session, id="igvShiny.0", searchString)
       })
 
    observeEvent(input$addTrackButton, {
