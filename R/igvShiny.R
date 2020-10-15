@@ -191,13 +191,17 @@ loadSegTrack <- function(session, id, trackName, tbl, deleteTracksOfSameName=TRU
 #------------------------------------------------------------------------------------------------------------------------
 loadVcfTrack <- function(session, id, trackName, vcfData, deleteTracksOfSameName=TRUE)
 {
+
+   printf("======== igvShiny.R, loadVcfTrack")
    if(deleteTracksOfSameName){
       removeTracksByName(session, id, trackName);
       }
 
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
    path <- file.path("tracks", "tmp.vcf")
+   printf("igvShiny::loadVcfTrac, about to write to file '%s'", path)
    writeVcf(vcfData, path)
+   printf("igvShiny::loadVcfTrac, file.exists(%s)? %s", path, file.exists(path))
 
    message <- list(elementID=id, trackName=trackName, vcfDataFilepath=path)
    session$sendCustomMessage("loadVcfTrack", message)

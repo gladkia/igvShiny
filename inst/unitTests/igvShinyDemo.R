@@ -16,7 +16,7 @@ ui = shinyUI(fluidPage(
      sidebarPanel(
         textInput("roi", label=""),
         actionButton("searchButton", "Search"),
-        actionButton("addTrackButton", "Add Track"),
+        actionButton("addTrackButton", "Add Tracks"),
         actionButton("addGwasTrackButton", "Add GWAS Track"),
         actionButton("getChromLoc", "Get Region"),
         htmlOutput("chromLocDisplay"),
@@ -42,21 +42,23 @@ server = function(input, output, session) {
    observeEvent(input$addTrackButton, {
       printf("---- addTrack")
       printf("current working directory: %s", getwd())
+      showGenomicRegion(session, id="igvShiny.0", "chr1:7,426,231-7,453,241")
       tbl.bed <- data.frame(chr=c("1","1", "1"),
                             start=c(7432951, 7437000, 7438000),
                             end=  c(7436000, 7437500, 7440000),
                             value=c(-0.2239, 3.0, 0.5),
                             sampleID=c("sample1", "sample2", "sample3"),
                             stringsAsFactors=FALSE)
-      loadBedTrack(session, "bed", tbl.bed, color="green");
-      loadBedGraphTrack(session, "wig", tbl.bed, color="blue", autoscale=TRUE)
-      loadSegTrack(session, "seg", tbl.bed)
+      loadBedTrack(session, id="igvShiny.0", trackName="bed", tbl=tbl.bed, color="green");
+      loadBedGraphTrack(session, id="igvShiny.0", trackName="wig", tbl=tbl.bed, color="blue", autoscale=TRUE)
+      loadSegTrack(session, id="igvShiny.0", trackName="seg", tbl=tbl.bed)
       })
 
    observeEvent(input$addGwasTrackButton, {
       printf("---- addGWASTrack")
       printf("current working directory: %s", getwd())
-      loadGwasTrack(session, "gwas", tbl.gwas, deleteTracksOfSameName=FALSE)
+      showGenomicRegion(session, id="igvShiny.0", "chr5:173,693,980-174,644,498")
+      loadGwasTrack(session, id="igvShiny.0", trackName="gwas", tbl=tbl.gwas, deleteTracksOfSameName=FALSE)
       })
 
    observeEvent(input$trackClick, {
@@ -72,19 +74,18 @@ server = function(input, output, session) {
        })
 
    observeEvent(input$getChromLoc, {
-      session$sendCustomMessage(type="getGenomicRegion", message=list())
+      printf("--- getChromLoc event")
       output$chromLocDisplay <- renderText({" "})
-      getGenomicRegion(session)
+      getGenomicRegion(session, id="igvShiny.0")
       })
 
    observeEvent(input$currentGenomicRegion, {
+      printf("--- currentGenomicRegion event")
       chromLocRegion <- input$currentGenomicRegion
       output$chromLocDisplay <- renderText({
          chromLocRegion
          })
        })
-
-   output$value <- renderPrint({ input$action })
 
    genomes <- c("hg38", "hg19", "mm10", "tair10", "rhos")
    loci <- c("chr5:88,466,402-89,135,305", "MEF2C", "Mef2c", "1:7,432,931-7,440,395", "NC_007494.2:370,757-378,078")
