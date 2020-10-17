@@ -399,9 +399,7 @@ Shiny.addCustomMessageHandler("loadGwasTrack",
                     type: "gwas",
                     name: trackName,
                     order: Number.MAX_VALUE,
-                    //features: tbl,
 		    url: dataURL,
-		    // url: "https://igv-data.systemsbiology.net/static/tmp/dan.gwas",
                     indexed: false,
                     displayMode: "EXPANDED",
                     height: trackHeight,
@@ -429,13 +427,8 @@ Shiny.addCustomMessageHandler("loadBamTrackFromURL",
                     name: trackName,
                     url: bamFile,
                     indexURL: baiFile,
-                    type: "alignment"
-                    /*order: Number.MAX_VALUE,
-                    features: tbl,
-                    indexed: false,
-                    displayMode: "EXPANDED",
-                    color: color,
-                    height: trackHeight*/
+                    type: "alignment",
+		    order: Number.MAX_VALUE
                     };
       igvBrowser.loadTrack(config);
       }
@@ -455,13 +448,8 @@ Shiny.addCustomMessageHandler("loadBamTrackFromLocalData",
       var config = {format: "bam",
                     name: trackName,
                     url: dataURL,
-                    type: "alignment"
-                    /*order: Number.MAX_VALUE,
-                    features: tbl,
-                    indexed: false,
-                    displayMode: "EXPANDED",
-                    color: color,
-                    height: trackHeight*/
+                    type: "alignment",
+  		    order: Number.MAX_VALUE
                     };
       igvBrowser.loadTrack(config);
       }
@@ -484,13 +472,8 @@ Shiny.addCustomMessageHandler("loadCramTrackFromURL",
                     name: trackName,
                     url: cram,
                     indexURL: index,
-                    type: "alignment"
-                    /*order: Number.MAX_VALUE,
-                    features: tbl,
-                    indexed: false,
-                    displayMode: "EXPANDED",
-                    color: color,
-                    height: trackHeight*/
+                    type: "alignment",
+		    order: Number.MAX_VALUE
                     };
       igvBrowser.loadTrack(config);
       }

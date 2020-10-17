@@ -477,7 +477,6 @@ loadBamTrackFromURL <- function(session, id, trackName, bamURL, indexURL, delete
       }
 
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
-
    message <- list(elementID=id,trackName=trackName, bam=bamURL, index=indexURL)
    printf("--- about to send message, loadBamTrack")
    session$sendCustomMessage("loadBamTrackFromURL", message)
@@ -503,12 +502,19 @@ loadBamTrackFromURL <- function(session, id, trackName, bamURL, indexURL, delete
 
 loadBamTrackFromLocalData <- function(session, id, trackName, data, deleteTracksOfSameName=TRUE)
 {
+   if(deleteTracksOfSameName){
+      removeTracksByName(session, id, trackName);
+      }
+
    directory.name <- "tracks"   # need this as directory within the current working directory
    if(!dir.exists(directory.name)) dir.create(directory.name)
    file.path <- tempfile(tmpdir=directory.name, fileext=".bam")
 
    printf("igvShiny::load bam from local data, about to write to file '%s'", file.path)
    export(data, file.path, format="BAM")
+
+   state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
+
    message <- list(elementID=id, trackName=trackName, bamDataFilepath=file.path)
    session$sendCustomMessage("loadBamTrackFromLocalData", message)
 
