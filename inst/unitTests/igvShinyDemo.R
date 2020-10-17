@@ -1,5 +1,6 @@
 library(shiny)
 library(igvShiny)
+library(GenomicAlignments)
 #----------------------------------------------------------------------------------------------------
 # we need a local directory to write files - for instance, a vcf file representing a genomic
 # region of interest.  we then tell shiny about that directory, so that shiny's built-in http server
@@ -22,6 +23,8 @@ ui = shinyUI(fluidPage(
         actionButton("searchButton", "Search"),
         actionButton("addTrackButton", "Add Tracks"),
         actionButton("addGwasTrackButton", "Add GWAS Track"),
+        actionButton("addBamViaHttpButton", "BAM from URL"),
+        actionButton("addBamLocalFileButton", "BAM local local data"),
         actionButton("getChromLoc", "Get Region"),
         htmlOutput("chromLocDisplay"),
         hr(),
@@ -64,6 +67,23 @@ server = function(input, output, session) {
       printf("current working directory: %s", getwd())
       showGenomicRegion(session, id="igvShiny.0", "chr5:173,693,980-174,644,498")
       loadGwasTrack(session, id="igvShiny.0", trackName="gwas", tbl=tbl.gwas, deleteTracksOfSameName=FALSE)
+      })
+
+   observeEvent(input$addBamViaHttpButton, {
+      printf("---- addBamViaHttpTrack")
+      showGenomicRegion(session, id="igvShiny.0", "chr5:88,733,959-88,761,606")
+      base.url <- "https://1000genomes.s3.amazonaws.com/phase3/data/HG02450/alignment"
+      url <- sprintf("%s/%s", base.url, "HG02450.mapped.ILLUMINA.bwa.ACB.low_coverage.20120522.bam")
+      indexURL <- sprintf("%s/%s", base.url, "HG02450.mapped.ILLUMINA.bwa.ACB.low_coverage.20120522.bam.bai")
+      loadBamTrackFromURL(session, id="igvShiny.0",trackName="1kg.bam", bamURL=url, indexURL=indexURL)
+      })
+
+   observeEvent(input$addBamLocalFileButton, {
+      printf("---- addBamLocalFileButton")
+      showGenomicRegion(session, id="igvShiny.0", "chr21:10,397,614-10,423,341")
+      bamFile <- system.file(package="igvShiny", "extdata", "tumor.bam")
+      x <- readGAlignments(bamFile)
+      loadBamTrackFromLocalData(session, id="igvShiny.0", trackName="tumor.bam", data=x)
       })
 
    observeEvent(input$trackClick, {
@@ -113,5 +133,6 @@ server = function(input, output, session) {
 
 } # server
 #----------------------------------------------------------------------------------------------------
+print(sessionInfo())
 runApp(shinyApp(ui = ui, server = server), port=9876)
 #shinyApp(ui = ui, server = server)

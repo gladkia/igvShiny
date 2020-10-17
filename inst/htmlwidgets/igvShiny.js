@@ -193,7 +193,7 @@ Shiny.addCustomMessageHandler("showGenomicRegion",
 Shiny.addCustomMessageHandler("getGenomicRegion",
 
     function(message) {
-       console.log("--  about to return current genomic region");
+       console.log("--  about to return current genomic region, fubar!");
        var elementID = message.elementID;
        currentValue = document.getElementById(elementID).chromLocString;
        console.log("current chromLocString: " + currentValue)
@@ -413,4 +413,87 @@ Shiny.addCustomMessageHandler("loadGwasTrack",
       }
 
 ); // loadGwasTrack
+//------------------------------------------------------------------------------------------------------------------------
+Shiny.addCustomMessageHandler("loadBamTrackFromURL",
+
+   function(message){
+      console.log("=== loadBamTrack");
+      console.log(message)
+      var elementID = message.elementID;
+      var igvBrowser = document.getElementById(elementID).igvBrowser;
+      var trackName = message.trackName;
+      var bamFile = message.bamFilePath;
+      var baiFile = message.baiFilePath;
+
+      var config = {format: "bam",
+                    name: trackName,
+                    url: bamFile,
+                    indexURL: baiFile,
+                    type: "alignment"
+                    /*order: Number.MAX_VALUE,
+                    features: tbl,
+                    indexed: false,
+                    displayMode: "EXPANDED",
+                    color: color,
+                    height: trackHeight*/
+                    };
+      igvBrowser.loadTrack(config);
+      }
+
+);
+//------------------------------------------------------------------------------------------------------------------------
+Shiny.addCustomMessageHandler("loadBamTrackFromLocalData",
+
+   function(message){
+      console.log("=== loadBamTrackFromLocalData");
+      console.log(message)
+      var elementID = message.elementID;
+      var igvBrowser = document.getElementById(elementID).igvBrowser;
+      var dataURL = window.location.href + message.bamDataFilepath;
+      var trackName = message.trackName;
+
+      var config = {format: "bam",
+                    name: trackName,
+                    url: dataURL,
+                    type: "alignment"
+                    /*order: Number.MAX_VALUE,
+                    features: tbl,
+                    indexed: false,
+                    displayMode: "EXPANDED",
+                    color: color,
+                    height: trackHeight*/
+                    };
+      igvBrowser.loadTrack(config);
+      }
+
+
+);
+//------------------------------------------------------------------------------------------------------------------------
+Shiny.addCustomMessageHandler("loadCramTrack",
+
+   function(message){
+      console.log("=== loadCramTrack");
+      console.log(message)
+      var elementID = message.elementID;
+      var igvBrowser = document.getElementById(elementID).igvBrowser;
+      var trackName = message.trackName;
+      var bamFile = message.cramFilePath;
+      var baiFile = message.craiFilePath;
+
+      var config = {format: "bam",
+                    name: trackName,
+                    url: cramFile,
+                    indexURL: craiFile,
+                    type: "alignment"
+                    /*order: Number.MAX_VALUE,
+                    features: tbl,
+                    indexed: false,
+                    displayMode: "EXPANDED",
+                    color: color,
+                    height: trackHeight*/
+                    };
+      igvBrowser.loadTrack(config);
+      }
+
+);
 //------------------------------------------------------------------------------------------------------------------------

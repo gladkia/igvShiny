@@ -1,6 +1,6 @@
 dependencies:
   - name: igv
-    version: 1.2.0
+    version: 1.2.3
     src: htmlwidgets
     script: ./lib/igv-268.min.js
 
