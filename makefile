@@ -7,7 +7,7 @@ roxy:
 	R -e "devtools::document()"
 
 install:
-	R CMD INSTALL .
+	R CMD INSTALL .  --no-test-load
 
 demo:
 	(cd inst/unitTests; R -f igvShinyDemo.R)

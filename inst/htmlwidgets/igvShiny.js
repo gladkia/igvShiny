@@ -422,8 +422,8 @@ Shiny.addCustomMessageHandler("loadBamTrackFromURL",
       var elementID = message.elementID;
       var igvBrowser = document.getElementById(elementID).igvBrowser;
       var trackName = message.trackName;
-      var bamFile = message.bamFilePath;
-      var baiFile = message.baiFilePath;
+      var bamFile = message.bam;
+      var baiFile = message.index;
 
       var config = {format: "bam",
                     name: trackName,
@@ -469,21 +469,21 @@ Shiny.addCustomMessageHandler("loadBamTrackFromLocalData",
 
 );
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("loadCramTrack",
+Shiny.addCustomMessageHandler("loadCramTrackFromURL",
 
    function(message){
-      console.log("=== loadCramTrack");
+      console.log("=== loadCramTrackFromURL");
       console.log(message)
       var elementID = message.elementID;
       var igvBrowser = document.getElementById(elementID).igvBrowser;
       var trackName = message.trackName;
-      var bamFile = message.cramFilePath;
-      var baiFile = message.craiFilePath;
+      var cram = message.cram;
+      var index = message.index
 
-      var config = {format: "bam",
+      var config = {format: "cram",
                     name: trackName,
-                    url: cramFile,
-                    indexURL: craiFile,
+                    url: cram,
+                    indexURL: index,
                     type: "alignment"
                     /*order: Number.MAX_VALUE,
                     features: tbl,

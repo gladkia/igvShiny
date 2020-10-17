@@ -24,7 +24,8 @@ ui = shinyUI(fluidPage(
         actionButton("addTrackButton", "Add Tracks"),
         actionButton("addGwasTrackButton", "Add GWAS Track"),
         actionButton("addBamViaHttpButton", "BAM from URL"),
-        actionButton("addBamLocalFileButton", "BAM local local data"),
+        actionButton("addBamLocalFileButton", "BAM local data"),
+        actionButton("addCramViaHttpButton", "CRAM from URL"),
         actionButton("getChromLoc", "Get Region"),
         htmlOutput("chromLocDisplay"),
         hr(),
@@ -85,6 +86,18 @@ server = function(input, output, session) {
       x <- readGAlignments(bamFile)
       loadBamTrackFromLocalData(session, id="igvShiny.0", trackName="tumor.bam", data=x)
       })
+
+   observeEvent(input$addCramViaHttpButton, {
+      printf("---- addCramViaHttpTrack")
+      showGenomicRegion(session, id="igvShiny.0", "chr5:88,733,959-88,761,606")
+      base.url <- "https://s3.amazonaws.com/1000genomes/phase3/data/HG00096/exome_alignment"
+      url <- sprintf("%s/%s", base.url, "HG00096.mapped.ILLUMINA.bwa.GBR.exome.20120522.bam.cram")
+      https://s3.amazonaws.com/1000genomes/phase3/data/HG00096/exome_alignment/HG00096.mapped.ILLUMINA.bwa.GBR.exome.20120522.bam.cram',
+      indexURL <- sprintf("%s/%s", base.url, "HG00096.mapped.ILLUMINA.bwa.GBR.exome.20120522.bam.cram.crai")
+      https://s3.amazonaws.com/1000genomes/phase3/data/HG00096/exome_alignment/HG00096.mapped.ILLUMINA.bwa.GBR.exome.20120522.bam.cram.crai',
+      loadCramTrackFromURL(session, id="igvShiny.0",trackName="CRAM", cramURL=url, indexURL=indexURL)
+      })
+
 
    observeEvent(input$trackClick, {
        printf("--- trackclick event")

@@ -478,7 +478,7 @@ loadBamTrackFromURL <- function(session, id, trackName, bamURL, indexURL, delete
 
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
 
-   message <- list(elementID=id,trackName=trackName, bamFilePath=bamURL, baiFilePath=indexURL)
+   message <- list(elementID=id,trackName=trackName, bam=bamURL, index=indexURL)
    printf("--- about to send message, loadBamTrack")
    session$sendCustomMessage("loadBamTrackFromURL", message)
 
@@ -518,8 +518,8 @@ loadBamTrackFromLocalData <- function(session, id, trackName, data, deleteTracks
 #'
 #' @description
 #'
-#' @rdname loadCramTrackToHTTP
-#' @aliases loadCramTrackToHTTP
+#' @rdname loadCramTrackFromURL
+#' @aliases loadCramTrackFromURL
 #'
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
@@ -533,17 +533,16 @@ loadBamTrackFromLocalData <- function(session, id, trackName, data, deleteTracks
 #'
 #' @export
 
-loadCramTrack <- function(session, id, trackName, cramURL, craiURL, deleteTracksOfSameName=TRUE)
+loadCramTrackFromURL <- function(session, id, trackName, cramURL, indexURL, deleteTracksOfSameName=TRUE)
 {
    if(deleteTracksOfSameName){
       removeTracksByName(session, id, trackName);
-   }
+      }
 
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
 
-
-   message <- list(elementID=id,trackName=trackName, cramFilePath=cramURL, craiFilePath=craiURL)
-   session$sendCustomMessage("loadCramTrack", message)
+   message <- list(elementID=id,trackName=trackName, cram=cramURL, index=indexURL)
+   session$sendCustomMessage("loadCramTrackFromURL", message)
 
 } # loadCramTrack
 #------------------------------------------------------------------------------------------------------------------------
