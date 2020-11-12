@@ -12,4 +12,7 @@ install:
 demo:
 	(cd inst/unitTests; R -f igvShinyDemo.R)
 
+demo2:
+	(cd inst/unitTests; R -f igvShinyDemo-twoInstances.R)
+
 
