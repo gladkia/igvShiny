@@ -32,6 +32,14 @@ HTMLWidgets.widget({
                 console.log("about to save igv browser");
                 document.getElementById(htmlContainerID).igvBrowser = browser;
                 document.getElementById(htmlContainerID).chromLocString = options.initialLocus;
+                jqueryTag = "#" + htmlContainerID + " .igv-root";
+                console.log("jqueryTag: " + jqueryTag);
+                igvRoots = $(jqueryTag);
+                if(igvRoots.length > 1){
+                   igvRoots[0].remove()
+                   }
+                console.log(" count: " + igvRoots.length);
+                //debugger;
                 igvWidget.on('locuschange', function (referenceFrame){
                     var chromLocString = referenceFrame.label
                     document.getElementById(htmlContainerID).chromLocString = chromLocString;

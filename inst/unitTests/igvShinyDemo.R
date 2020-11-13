@@ -44,8 +44,8 @@ ui = shinyUI(fluidPage(
         width=2
         ),
      mainPanel(
-        igvShinyOutput('igvShiny.0'),
-        # igvShinyOutput('igvShiny.1'),
+        igvShinyOutput('igvShiny_0'),
+        # igvShinyOutput('igvShiny_1'),
         width=10
         )
      ) # sidebarLayout
@@ -57,60 +57,60 @@ server = function(input, output, session) {
       printf("--- search")
       searchString = isolate(input$roi)
       if(nchar(searchString) > 0)
-        showGenomicRegion(session, id="igvShiny.0", searchString)
+        showGenomicRegion(session, id="igvShiny_0", searchString)
       })
 
    observeEvent(input$addBedTrackButton, {
-      showGenomicRegion(session, id="igvShiny.0", "chr1:7,426,231-7,453,241")
-      loadBedTrack(session, id="igvShiny.0", trackName="bed", tbl=tbl.bed, color="green");
+      showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
+      loadBedTrack(session, id="igvShiny_0", trackName="bed", tbl=tbl.bed, color="green");
       })
 
    observeEvent(input$addBedGraphTrackButton, {
-      showGenomicRegion(session, id="igvShiny.0", "chr1:7,426,231-7,453,241")
-      loadBedGraphTrack(session, id="igvShiny.0", trackName="wig", tbl=tbl.bed, color="blue", autoscale=TRUE)
+      showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
+      loadBedGraphTrack(session, id="igvShiny_0", trackName="wig", tbl=tbl.bed, color="blue", autoscale=TRUE)
       })
 
    observeEvent(input$addSegTrackButton, {
-      showGenomicRegion(session, id="igvShiny.0", "chr1:7,426,231-7,453,241")
-      loadSegTrack(session, id="igvShiny.0", trackName="seg", tbl=tbl.bed)
+      showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
+      loadSegTrack(session, id="igvShiny_0", trackName="seg", tbl=tbl.bed)
       })
 
    observeEvent(input$addGwasTrackButton, {
       printf("---- addGWASTrack")
       printf("current working directory: %s", getwd())
-      showGenomicRegion(session, id="igvShiny.0", "chr19:45,248,108-45,564,645")
-      loadGwasTrack(session, id="igvShiny.0", trackName="gwas", tbl=tbl.gwas, deleteTracksOfSameName=FALSE)
+      showGenomicRegion(session, id="igvShiny_0", "chr19:45,248,108-45,564,645")
+      loadGwasTrack(session, id="igvShiny_0", trackName="gwas", tbl=tbl.gwas, deleteTracksOfSameName=FALSE)
       })
 
    observeEvent(input$addBamViaHttpButton, {
       printf("---- addBamViaHttpTrack")
-      showGenomicRegion(session, id="igvShiny.0", "chr5:88,733,959-88,761,606")
+      showGenomicRegion(session, id="igvShiny_0", "chr5:88,733,959-88,761,606")
       base.url <- "https://1000genomes.s3.amazonaws.com/phase3/data/HG02450/alignment"
       url <- sprintf("%s/%s", base.url, "HG02450.mapped.ILLUMINA.bwa.ACB.low_coverage.20120522.bam")
       indexURL <- sprintf("%s/%s", base.url, "HG02450.mapped.ILLUMINA.bwa.ACB.low_coverage.20120522.bam.bai")
-      loadBamTrackFromURL(session, id="igvShiny.0",trackName="1kg.bam", bamURL=url, indexURL=indexURL)
+      loadBamTrackFromURL(session, id="igvShiny_0",trackName="1kg.bam", bamURL=url, indexURL=indexURL)
       })
 
    observeEvent(input$addBamLocalFileButton, {
       printf("---- addBamLocalFileButton")
-      showGenomicRegion(session, id="igvShiny.0", "chr21:10,397,614-10,423,341")
+      showGenomicRegion(session, id="igvShiny_0", "chr21:10,397,614-10,423,341")
       bamFile <- system.file(package="igvShiny", "extdata", "tumor.bam")
       x <- readGAlignments(bamFile)
-      loadBamTrackFromLocalData(session, id="igvShiny.0", trackName="tumor.bam", data=x)
+      loadBamTrackFromLocalData(session, id="igvShiny_0", trackName="tumor.bam", data=x)
       })
 
    observeEvent(input$addCramViaHttpButton, {
       printf("---- addCramViaHttpTrack")
-      showGenomicRegion(session, id="igvShiny.0", "chr5:88,733,959-88,761,606")
+      showGenomicRegion(session, id="igvShiny_0", "chr5:88,733,959-88,761,606")
       base.url <- "https://s3.amazonaws.com/1000genomes/phase3/data/HG00096/exome_alignment"
       url <- sprintf("%s/%s", base.url, "HG00096.mapped.ILLUMINA.bwa.GBR.exome.20120522.bam.cram")
       indexURL <- sprintf("%s/%s", base.url, "HG00096.mapped.ILLUMINA.bwa.GBR.exome.20120522.bam.cram.crai")
-      loadCramTrackFromURL(session, id="igvShiny.0",trackName="CRAM", cramURL=url, indexURL=indexURL)
+      loadCramTrackFromURL(session, id="igvShiny_0",trackName="CRAM", cramURL=url, indexURL=indexURL)
       })
 
    observeEvent(input$removeUserTracksButton, {
       printf("---- removeUserTracks")
-      removeUserAddedTracks(session, id="igvShiny.0")
+      removeUserAddedTracks(session, id="igvShiny_0")
       })
 
 
@@ -129,7 +129,7 @@ server = function(input, output, session) {
    observeEvent(input$getChromLoc, {
       printf("--- getChromLoc event")
       output$chromLocDisplay <- renderText({" "})
-      getGenomicRegion(session, id="igvShiny.0")
+      getGenomicRegion(session, id="igvShiny_0")
       })
 
    observeEvent(input$currentGenomicRegion, {
@@ -144,7 +144,7 @@ server = function(input, output, session) {
    loci <- c("chr5:88,466,402-89,135,305", "MEF2C", "Mef2c", "1:7,432,931-7,440,395", "NC_007494.2:370,757-378,078")
    i <- 2
 
-   output$igvShiny.0 <- renderIgvShiny(
+   output$igvShiny_0 <- renderIgvShiny(
      igvShiny(list(
         genomeName=genomes[i],
         initialLocus=loci[i],
