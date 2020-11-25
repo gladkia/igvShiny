@@ -15,7 +15,7 @@ igvShiny(
 \arguments{
 \item{options}{a list, with required elements 'genomeName' and 'initialLocus'}
 
-\item{width}{a character string, standard css notations, either e.g., "1000px" or "95%"}
+\item{width}{a character string, standard css notations, either e.g., "1000px" or "95\%"}
 
 \item{height}{a character string, needs to be an explicit pixel measure, e.g., "800px"}
 
