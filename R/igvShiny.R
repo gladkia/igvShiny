@@ -25,7 +25,7 @@ state[["userAddedTracks"]] <- list()
 #' @aliases igvShiny
 #'
 #' @param options a list, with required elements 'genomeName' and 'initialLocus'
-#' @param width a character string, standard css notations, either e.g., "1000px" or "95%"
+#' @param width a character string, standard css notations, either e.g., "1000px" or "95\%"
 #' @param height a character string, needs to be an explicit pixel measure, e.g., "800px"
 #' @param elementId a character string, the html element id within which igv is created
 #' @param displayMode a character string, default "SQUISHED".
@@ -63,7 +63,7 @@ igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL, dis
 #' @aliases igvShinyOutput
 #'
 #' @param outputId a character string, specifies the html element id
-#' @param width a character string, standard css notations, either e.g., "1000px" or "95%", "100%" by default
+#' @param width a character string, standard css notations, either e.g., "1000px" or "95\%", "100\%" by default
 #' @param height a character string, needs to be an explicit pixel measure, e.g., "800px", "400px" by default
 #'
 #' @return the created widget's html
