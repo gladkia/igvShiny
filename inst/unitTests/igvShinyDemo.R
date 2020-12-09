@@ -38,8 +38,11 @@ ui = shinyUI(fluidPage(
         actionButton("addBamLocalFileButton", "BAM local data"),
         actionButton("addCramViaHttpButton", "CRAM from URL"),
         actionButton("removeUserTracksButton", "Remove User Tracks"),
-        actionButton("getChromLoc", "Get Region"),
-        htmlOutput("chromLocDisplay"),
+        actionButton("getChromLocButton", "Get Region"),
+        actionButton("clearChromLocButton", "Clear Region"),
+        div(style="background-color: white; width: 200px; height:30px; padding-left: 5px;
+                   margin-top: 10px; border: 1px solid blue;",
+            htmlOutput("chromLocDisplay")),
         hr(),
         width=2
         ),
@@ -126,19 +129,22 @@ server = function(input, output, session) {
        print(x)
        })
 
-   observeEvent(input$getChromLoc, {
-      printf("--- getChromLoc event")
-      output$chromLocDisplay <- renderText({" "})
+   observeEvent(input$getChromLocButton, {
+      # printf("--- getChromLoc event")
+      # sends message to igv.js in browser; currentGenomicRegion.<id> event sent back
+      # see below for how that can be captured and displayed
       getGenomicRegion(session, id="igvShiny_0")
       })
 
-   observeEvent(input$currentGenomicRegion, {
-      printf("--- currentGenomicRegion event")
-      chromLocRegion <- input$currentGenomicRegion
-      output$chromLocDisplay <- renderText({
-         chromLocRegion
-         })
-       })
+   observeEvent(input$clearChromLocButton, {
+      output$chromLocDisplay <- renderText({" "})
+      })
+
+   observeEvent(input[[sprintf("currentGenomicRegion.%s", "igvShiny_0")]], {
+      newLoc <- input[[sprintf("currentGenomicRegion.%s", "igvShiny_0")]]
+      #printf("new chromLocString: %s", newLoc)
+      output$chromLocDisplay <- renderText({newLoc})
+      })
 
    genomes <- c("hg38", "hg19", "mm10", "tair10", "rhos")
    loci <- c("chr5:88,466,402-89,135,305", "MEF2C", "Mef2c", "1:7,432,931-7,440,395", "NC_007494.2:370,757-378,078")

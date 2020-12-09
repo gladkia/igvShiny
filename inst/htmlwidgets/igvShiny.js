@@ -1,3 +1,23 @@
+//----------------------------------------------------------------------------------------------------
+// Returns a function, that, as long as it continues to be invoked, will not
+// be triggered. The function will be called after it stops being called for
+// N milliseconds. If `immediate` is passed, trigger the function on the
+// leading edge, instead of the trailing.
+// from david nemes: https://gist.github.com/nmsdvid/8807205
+// used below in the locuschange handler
+function debounce(func, wait, immediate) {
+   var timeout;
+   return function() {
+     var context = this, args = arguments;
+       clearTimeout(timeout);
+       timeout = setTimeout(function() {
+	   timeout = null;
+	   if (!immediate) func.apply(context, args);
+       }, wait);
+       if (immediate && !timeout) func.apply(context, args);
+   };
+} // debounce
+//----------------------------------------------------------------------------------------------------
 HTMLWidgets.widget({
 
   name: 'igvShiny',
@@ -39,13 +59,17 @@ HTMLWidgets.widget({
                    igvRoots[0].remove()
                    }
                 console.log(" count: " + igvRoots.length);
-                //debugger;
-                igvWidget.on('locuschange', function (referenceFrame){
+                 igvWidget.on('locuschange', debounce(function (referenceFrame){
+                    console.log("---- locuschange, referenceFrame: ")
+                    console.log(referenceFrame);
                     var chromLocString = referenceFrame.label
                     document.getElementById(htmlContainerID).chromLocString = chromLocString;
                     eventName = "currentGenomicRegion." + htmlContainerID
+                    console.log("--- calling Shiny.setInputValue:");
+		    console.log("eventName: " + eventName);
+		    console.log("chromLocString: " + chromLocString);
                     Shiny.setInputValue(eventName, chromLocString, {priority: "event"});
-                    });
+                 }, 250, false));
                 igvWidget.on('trackclick', function (track, popoverData){
                    var x = popoverData;
                    console.log(x)
@@ -201,11 +225,14 @@ Shiny.addCustomMessageHandler("showGenomicRegion",
 Shiny.addCustomMessageHandler("getGenomicRegion",
 
     function(message) {
-       console.log("--  about to return current genomic region, fubar!");
        var elementID = message.elementID;
-       currentValue = document.getElementById(elementID).chromLocString;
+       var currentValue = document.getElementById(elementID).chromLocString;
        console.log("current chromLocString: " + currentValue)
-       Shiny.setInputValue("currentGenomicRegion", currentValue, {priority: "event"});
+       var eventName = "currentGenomicRegion." + elementID;
+       //console.log("--- calling Shiny.setInputValue:");
+       //console.log("eventName: " + eventName);
+       //console.log("chromLocString: " + currentValue)
+       Shiny.setInputValue(eventName, currentValue, {priority: "event"});
        })
 
 //------------------------------------------------------------------------------------------------------------------------
