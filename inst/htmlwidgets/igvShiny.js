@@ -69,7 +69,7 @@ HTMLWidgets.widget({
    		   console.log("eventName: " + eventName);
                    console.log("chromLocString: " + chromLocString);
                    Shiny.setInputValue(eventName, chromLocString, {priority: "event"});
-                   var moduleEventName = "igv-currentGenomicRegion." + htmlContainerID.replace("igv-", "");
+                   var moduleEventName = "germline-germline_gwas-module-currentGenomicRegion." + htmlContainerID.replace("germline-germline_gwas-module-", "");
    		   console.log("moduleEventName: " + moduleEventName);
                    Shiny.setInputValue(moduleEventName, chromLocString, {priority: "event"});
                  }, 250, false));
@@ -236,7 +236,7 @@ Shiny.addCustomMessageHandler("getGenomicRegion",
        //console.log("eventName: " + eventName);
        //console.log("chromLocString: " + currentValue)
        Shiny.setInputValue(eventName, currentValue, {priority: "event"});
-       var moduleEventName = "igv-currentGenomicRegion." + elementID.replace("igv-", "");
+       var moduleEventName = "germline-germline_gwas-module-currentGenomicRegion." + elementID.replace("germline-germline_gwas-module-", "");
        console.log("moduleEventName: " + moduleEventName);
        Shiny.setInputValue(moduleEventName, currentValue, {priority: "event"});
        })
