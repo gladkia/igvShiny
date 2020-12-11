@@ -59,16 +59,19 @@ HTMLWidgets.widget({
                    igvRoots[0].remove()
                    }
                 console.log(" count: " + igvRoots.length);
-                 igvWidget.on('locuschange', debounce(function (referenceFrame){
-                    console.log("---- locuschange, referenceFrame: ")
-                    console.log(referenceFrame);
-                    var chromLocString = referenceFrame.label
-                    document.getElementById(htmlContainerID).chromLocString = chromLocString;
-                    eventName = "currentGenomicRegion." + htmlContainerID
-                    console.log("--- calling Shiny.setInputValue:");
-		    console.log("eventName: " + eventName);
-		    console.log("chromLocString: " + chromLocString);
-                    Shiny.setInputValue(eventName, chromLocString, {priority: "event"});
+                igvWidget.on('locuschange', debounce(function (referenceFrame){
+                   console.log("---- locuschange, referenceFrame: ")
+                   console.log(referenceFrame);
+                   var chromLocString = referenceFrame.label
+                   document.getElementById(htmlContainerID).chromLocString = chromLocString;
+                   var eventName = "currentGenomicRegion." + htmlContainerID
+                   console.log("--- calling Shiny.setInputValue:");
+   		   console.log("eventName: " + eventName);
+                   console.log("chromLocString: " + chromLocString);
+                   Shiny.setInputValue(eventName, chromLocString, {priority: "event"});
+                   var moduleEventName = "igv-currentGenomicRegion." + htmlContainerID.replace("igv-", "");
+   		   console.log("moduleEventName: " + moduleEventName);
+                   Shiny.setInputValue(moduleEventName, chromLocString, {priority: "event"});
                  }, 250, false));
                 igvWidget.on('trackclick', function (track, popoverData){
                    var x = popoverData;
@@ -233,6 +236,9 @@ Shiny.addCustomMessageHandler("getGenomicRegion",
        //console.log("eventName: " + eventName);
        //console.log("chromLocString: " + currentValue)
        Shiny.setInputValue(eventName, currentValue, {priority: "event"});
+       var moduleEventName = "igv-currentGenomicRegion." + elementID.replace("igv-", "");
+       console.log("moduleEventName: " + moduleEventName);
+       Shiny.setInputValue(moduleEventName, currentValue, {priority: "event"});
        })
 
 //------------------------------------------------------------------------------------------------------------------------
