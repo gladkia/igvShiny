@@ -5,7 +5,7 @@ Date: 2020-12-10
 Author: Paul Shannon
 Maintainer: Paul Shannon <pshannon@systemsbiology.org>
 Description: igv.js as a shiny widget
-Depends: R (>= 3.5.0), GenomicRanges, VariantAnnotation
+Depends: R (>= 3.5.0), shiny, GenomicRanges, VariantAnnotation, MotifDb
 Imports: randomcoloR, VariantAnnotation
 License: MIT
 Encoding: UTF-8
