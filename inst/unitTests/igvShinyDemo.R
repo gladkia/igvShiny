@@ -1,6 +1,7 @@
 library(shiny)
 library(igvShiny)
 library(GenomicAlignments)
+library(htmlwidgets)
 #----------------------------------------------------------------------------------------------------
 # we need a local directory to write files - for instance, a vcf file representing a genomic
 # region of interest.  we then tell shiny about that directory, so that shiny's built-in http server
@@ -12,7 +13,7 @@ addResourcePath("tracks", "tracks")
 f <- system.file(package="igvShiny", "extdata", "gwas.RData")
 stopifnot(file.exists(f))
 tbl.gwas <- get(load(f))
-print(dim(tbl.gwas))
+# print(dim(tbl.gwas))
 printf <- function(...) print(noquote(sprintf(...)))
 #----------------------------------------------------------------------------------------------------
 tbl.bed <- data.frame(chr=c("1","1", "1"),
@@ -167,6 +168,30 @@ server = function(input, output, session) {
 
 } # server
 #----------------------------------------------------------------------------------------------------
-print(sessionInfo())
-runApp(shinyApp(ui = ui, server = server), port=9832)
-#shinyApp(ui = ui, server = server)
+deploy <-function()
+{
+   require(rsconnect)
+   #rsconnect::setAccountInfo(name='hoodlab',
+   #                          token='41E779ABC50F6A98036C95AEEA1A92F7',
+   #                          secret='')
+   setRepositories(addURLs=c(BioCsoft="https://bioconductor.org/packages/3.12/bioc",
+                             BioCann="https://bioconductor.org/packages/3.12/data/annotation",
+                             BioCexp="https://bioconductor.org/packages/3.12/data/experiment",
+                             BioC="https://bioconductor.org/packages/3.12/bioc",
+                             CRAN="https://cran.microsoft.com"),
+                   graphics=FALSE)
+
+   deployApp(account="paulshannon",
+              appName="igvShinyDemo",
+              appTitle="igvShiny Demo",
+              appFiles=c("igvShinyDemo.R", "tracks/file4b764ed3abae.bam"),
+              appPrimaryDoc="igvShinyDemo.R"
+              )
+
+} # deploy
+#------------------------------------------------------------------------------------------------------------------------
+if(grepl("hagfish", Sys.info()[["nodename"]]) & !interactive()){
+   runApp(shinyApp(ui, server))
+   } else {
+   shinyApp(ui, server)
+   }
