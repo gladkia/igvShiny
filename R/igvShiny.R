@@ -1,10 +1,8 @@
 #' @import BiocGenerics
 #' @import GenomicRanges
 #' @import rtracklayer
-#' @import VariantAnnotation
 #' @import shiny
 #' @import jsonlite
-#' @import MotifDb
 #' @import randomcoloR
 #'
 #' @name igvShiny
