@@ -1,5 +1,6 @@
 #' @import BiocGenerics
 #' @import GenomicRanges
+#' @import GenomeInfoDbData
 #' @import rtracklayer
 #' @import shiny
 #' @import jsonlite
