@@ -1,11 +1,11 @@
 Package: igvShiny
 Title: igvShiny
-Version: 1.2.12
+Version: 1.2.13
 Date: 2021-01-26
 Author: Paul Shannon
 Maintainer: Paul Shannon <pshannon@systemsbiology.org>
 Description: igv.js as a shiny widget
-Depends: R (>= 3.5.0), shiny, GenomicRanges, GenomeInfoDbData
+Depends: R (>= 3.5.0), shiny, GenomicRanges, GenomeInfoDbData, rtracklayer
 Imports: randomcoloR
 License: MIT
 Encoding: UTF-8
