@@ -29,14 +29,13 @@ ui = shinyUI(fluidPage(
 
   sidebarLayout(
      sidebarPanel(
-        actionButton("searchButton", "Search"),
         textInput("roi", label=""),
-        h5("One simple data.frame, three igv formats:"),
+        actionButton("searchButton", "Search"),
         actionButton("addLocalVCFTrackButton", "Add 1kg VCF (local file)"),
         actionButton("addRemoteVCFTrackButton", "Add 1kg VCF (AWS)"),
         actionButton("removeUserTracksButton", "Remove User Tracks"),
         actionButton("getChromLocButton", "Get Region"),
-        actionButton("clearChromLocButton", "Clear Region"),
+        actionButton("clearChromLocButton", "Clear Region Readout"),
         div(style="background-color: white; width: 200px; height:30px; padding-left: 5px;
                    margin-top: 10px; border: 1px solid blue;",
             htmlOutput("chromLocDisplay")),
@@ -54,8 +53,8 @@ ui = shinyUI(fluidPage(
 server = function(input, output, session) {
 
    observeEvent(input$searchButton, {
-      printf("--- search")
       searchString = isolate(input$roi)
+      printf("--- search: %s", searchString)
       if(nchar(searchString) > 0)
         showGenomicRegion(session, id="igvShiny_0", searchString)
       })
