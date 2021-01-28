@@ -1,6 +1,10 @@
 # History files
 .Rhistory
 .Rapp.history
+*.vcf
+*.bam
+*.bai
+*.gwas
 
 # Session Data files
 .RData
