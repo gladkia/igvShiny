@@ -10,9 +10,9 @@ install:
 	R CMD INSTALL .  --no-test-load
 
 demo:
-	(cd inst/unitTests; R -f igvShinyDemo.R)
+	(cd inst/demos; R -f igvShinyDemo.R)
 
 demo2:
-	(cd inst/unitTests; R -f igvShinyDemo-twoInstances.R)
+	(cd inst/demos; R -f igvShinyDemo-twoInstances.R)
 
 

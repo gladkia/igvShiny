@@ -1,0 +1,10 @@
+name: igvShinyDemo
+title: igvShiny Demo
+username:
+account: paulshannon
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3466312
+bundleId: 4087998
+url: https://paulshannon.shinyapps.io/igvShinyDemo/
+when: 1610483394.04702

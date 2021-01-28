@@ -2,6 +2,8 @@ library(shiny)
 library(igvShiny)
 library(GenomicAlignments)
 library(htmlwidgets)
+library(VariantAnnotation)
+library(biomaRt)
 #----------------------------------------------------------------------------------------------------
 # we need a local directory to write files - for instance, a vcf file representing a genomic
 # region of interest.  we then tell shiny about that directory, so that shiny's built-in http server
@@ -30,6 +32,7 @@ ui = shinyUI(fluidPage(
         actionButton("searchButton", "Search"),
         textInput("roi", label=""),
         h5("One simple data.frame, three igv formats:"),
+        actionButton("addVCFTrackButton", "Add VCF"),
         actionButton("addBedTrackButton", "Add as Bed"),
         actionButton("addBedGraphTrackButton", "Add as BedGraph"),
         actionButton("addSegTrackButton", "Add as SEG"),
@@ -63,6 +66,19 @@ server = function(input, output, session) {
       if(nchar(searchString) > 0)
         showGenomicRegion(session, id="igvShiny_0", searchString)
       })
+
+    observeEvent(input$addVCFTrackButton, {
+       f <- system.file("extdata", "chr22.vcf.gz", package="VariantAnnotation")
+       file.exists(f) # [1] TRUE
+       vcf <- readVcf(f, "hg19")
+         # get oriented around the contents of this vcf
+       start <- 50586118
+       end   <- 50633733
+       rng <- GRanges(seqnames="22", ranges=IRanges(start=start, end=end))
+       vcf.sub <- readVcf(f, "hg19", param=rng)
+       showGenomicRegion(session, id="igvShiny_0", sprintf("chr22:%d-%d", start-1000, end+1000))
+       loadVcfTrack(session, id="igvShiny_0", trackName="vcf", vcf.sub)
+       })
 
    observeEvent(input$addBedTrackButton, {
       showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
@@ -118,16 +134,25 @@ server = function(input, output, session) {
       })
 
 
-   observeEvent(input$trackClick, {
-       printf("--- trackclick event")
-       x <- input$trackClick
-       print(x)
-       })
+  # observeEvent(input$trackClick, {
+  #     printf("--- trackclick event")
+  #     x <- input$trackClick
+  #     print(x)
+  #     })
 
    observeEvent(input[["igv-trackClick"]], {
        printf("--- igv-trackClick event")
        x <- input[["igv-trackClick"]]
-       print(x)
+       attribute.name.positions <- grep("name", names(x))
+       attribute.value.positions <- grep("value", names(x))
+       attribute.names <- as.character(x)[attribute.name.positions]
+       attribute.values <- as.character(x)[attribute.value.positions]
+       tbl <- data.frame(name=attribute.names,
+                         value=attribute.values,
+                         stringsAsFactors=FALSE)
+       dialogContent <- renderTable(tbl)
+       html <- HTML(dialogContent())
+       showModal(modalDialog(html, easyClose=TRUE))
        })
 
    observeEvent(input$getChromLocButton, {
@@ -181,7 +206,7 @@ deploy <-function()
                              CRAN="https://cran.microsoft.com"),
                    graphics=FALSE)
 
-   deployApp(account="paulshannon",
+   deployApp(account="hoodlab",
               appName="igvShinyDemo",
               appTitle="igvShiny Demo",
               appFiles=c("igvShinyDemo.R", "tracks/file4b764ed3abae.bam"),
@@ -191,7 +216,7 @@ deploy <-function()
 } # deploy
 #------------------------------------------------------------------------------------------------------------------------
 if(grepl("hagfish", Sys.info()[["nodename"]]) & !interactive()){
-   runApp(shinyApp(ui, server))
+   runApp(shinyApp(ui, server), port=6867)
    } else {
    shinyApp(ui, server)
    }

@@ -1,7 +1,6 @@
 library(shiny)
 library(igvShiny)
 library(GenomicAlignments)
-library(htmlwidgets)
 #----------------------------------------------------------------------------------------------------
 # we need a local directory to write files - for instance, a vcf file representing a genomic
 # region of interest.  we then tell shiny about that directory, so that shiny's built-in http server
@@ -13,7 +12,7 @@ addResourcePath("tracks", "tracks")
 f <- system.file(package="igvShiny", "extdata", "gwas.RData")
 stopifnot(file.exists(f))
 tbl.gwas <- get(load(f))
-# print(dim(tbl.gwas))
+print(dim(tbl.gwas))
 printf <- function(...) print(noquote(sprintf(...)))
 #----------------------------------------------------------------------------------------------------
 tbl.bed <- data.frame(chr=c("1","1", "1"),
@@ -39,17 +38,14 @@ ui = shinyUI(fluidPage(
         actionButton("addBamLocalFileButton", "BAM local data"),
         actionButton("addCramViaHttpButton", "CRAM from URL"),
         actionButton("removeUserTracksButton", "Remove User Tracks"),
-        actionButton("getChromLocButton", "Get Region"),
-        actionButton("clearChromLocButton", "Clear Region"),
-        div(style="background-color: white; width: 200px; height:30px; padding-left: 5px;
-                   margin-top: 10px; border: 1px solid blue;",
-            htmlOutput("chromLocDisplay")),
+        actionButton("getChromLoc", "Get Region"),
+        htmlOutput("chromLocDisplay"),
         hr(),
         width=2
         ),
      mainPanel(
         igvShinyOutput('igvShiny_0'),
-        # igvShinyOutput('igvShiny_1'),
+        igvShinyOutput('igvShiny_1'),
         width=10
         )
      ) # sidebarLayout
@@ -130,22 +126,19 @@ server = function(input, output, session) {
        print(x)
        })
 
-   observeEvent(input$getChromLocButton, {
-      # printf("--- getChromLoc event")
-      # sends message to igv.js in browser; currentGenomicRegion.<id> event sent back
-      # see below for how that can be captured and displayed
+   observeEvent(input$getChromLoc, {
+      printf("--- getChromLoc event")
+      output$chromLocDisplay <- renderText({" "})
       getGenomicRegion(session, id="igvShiny_0")
       })
 
-   observeEvent(input$clearChromLocButton, {
-      output$chromLocDisplay <- renderText({" "})
-      })
-
-   observeEvent(input[[sprintf("currentGenomicRegion.%s", "igvShiny_0")]], {
-      newLoc <- input[[sprintf("currentGenomicRegion.%s", "igvShiny_0")]]
-      #printf("new chromLocString: %s", newLoc)
-      output$chromLocDisplay <- renderText({newLoc})
-      })
+   observeEvent(input$currentGenomicRegion, {
+      printf("--- currentGenomicRegion event")
+      chromLocRegion <- input$currentGenomicRegion
+      output$chromLocDisplay <- renderText({
+         chromLocRegion
+         })
+       })
 
    genomes <- c("hg38", "hg19", "mm10", "tair10", "rhos")
    loci <- c("chr5:88,466,402-89,135,305", "MEF2C", "Mef2c", "1:7,432,931-7,440,395", "NC_007494.2:370,757-378,078")
@@ -159,39 +152,15 @@ server = function(input, output, session) {
         ))
       )
 
-   #output$igvShiny.1 <- renderIgvShiny(
-   #  igvShiny(list(
-   #     genomeName="hg38",
-   #     initialLocus="chr2:232,983,999-233,283,872"
-   #     ))
-   #)
+   output$igvShiny_1 <- renderIgvShiny(
+     igvShiny(list(
+        genomeName="hg38",
+        initialLocus="chr2:232,983,999-233,283,872"
+        ))
+   )
 
 } # server
 #----------------------------------------------------------------------------------------------------
-deploy <-function()
-{
-   require(rsconnect)
-   #rsconnect::setAccountInfo(name='hoodlab',
-   #                          token='41E779ABC50F6A98036C95AEEA1A92F7',
-   #                          secret='')
-   setRepositories(addURLs=c(BioCsoft="https://bioconductor.org/packages/3.12/bioc",
-                             BioCann="https://bioconductor.org/packages/3.12/data/annotation",
-                             BioCexp="https://bioconductor.org/packages/3.12/data/experiment",
-                             BioC="https://bioconductor.org/packages/3.12/bioc",
-                             CRAN="https://cran.microsoft.com"),
-                   graphics=FALSE)
-
-   deployApp(account="paulshannon",
-              appName="igvShinyDemo",
-              appTitle="igvShiny Demo",
-              appFiles=c("igvShinyDemo.R", "tracks/file4b764ed3abae.bam"),
-              appPrimaryDoc="igvShinyDemo.R"
-              )
-
-} # deploy
-#------------------------------------------------------------------------------------------------------------------------
-if(grepl("hagfish", Sys.info()[["nodename"]]) & !interactive()){
-   runApp(shinyApp(ui, server))
-   } else {
-   shinyApp(ui, server)
-   }
+print(sessionInfo())
+runApp(shinyApp(ui = ui, server = server), port=9832)
+#shinyApp(ui = ui, server = server)

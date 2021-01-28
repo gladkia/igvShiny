@@ -1,0 +1,10 @@
+name: igvShinyDemo
+title: igvShiny Demo
+username:
+account: hoodlab
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3529621
+bundleId: 4147521
+url: https://hoodlab.shinyapps.io/igvShinyDemo/
+when: 1611714400.66151

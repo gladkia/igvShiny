@@ -181,7 +181,7 @@ deploy <-function()
                              CRAN="https://cran.microsoft.com"),
                    graphics=FALSE)
 
-   deployApp(account="paulshannon",
+   deployApp(account="hoodlab",
               appName="igvShinyDemo",
               appTitle="igvShiny Demo",
               appFiles=c("igvShinyDemo.R", "tracks/file4b764ed3abae.bam"),
@@ -191,7 +191,7 @@ deploy <-function()
 } # deploy
 #------------------------------------------------------------------------------------------------------------------------
 if(grepl("hagfish", Sys.info()[["nodename"]]) & !interactive()){
-   runApp(shinyApp(ui, server))
+   runApp(shinyApp(ui, server), port=6867)
    } else {
    shinyApp(ui, server)
    }

@@ -1,7 +1,6 @@
 library(shiny)
 library(igvShiny)
 library(GenomicAlignments)
-library(htmlwidgets)
 #----------------------------------------------------------------------------------------------------
 # we need a local directory to write files - for instance, a vcf file representing a genomic
 # region of interest.  we then tell shiny about that directory, so that shiny's built-in http server
@@ -13,8 +12,9 @@ addResourcePath("tracks", "tracks")
 f <- system.file(package="igvShiny", "extdata", "gwas.RData")
 stopifnot(file.exists(f))
 tbl.gwas <- get(load(f))
-# print(dim(tbl.gwas))
+print(dim(tbl.gwas))
 printf <- function(...) print(noquote(sprintf(...)))
+ns.sep <- "."
 #----------------------------------------------------------------------------------------------------
 tbl.bed <- data.frame(chr=c("1","1", "1"),
                       start=c(7432951, 7437000, 7438000),
@@ -23,39 +23,47 @@ tbl.bed <- data.frame(chr=c("1","1", "1"),
                       sampleID=c("sample1", "sample2", "sample3"),
                       stringsAsFactors=FALSE)
 #----------------------------------------------------------------------------------------------------
-ui = shinyUI(fluidPage(
+igv_ui = function(id){
 
-  sidebarLayout(
-     sidebarPanel(
-        actionButton("searchButton", "Search"),
-        textInput("roi", label=""),
+  ns <- NS(id)
+  printf("namespace: '%s'", ns("foo"))
+
+  shinyUI(fluidPage(
+
+    sidebarLayout(
+      sidebarPanel(
+        actionButton(ns("searchButton"), "Search"),
+        textInput(ns("roi"), label=""),
         h5("One simple data.frame, three igv formats:"),
-        actionButton("addBedTrackButton", "Add as Bed"),
-        actionButton("addBedGraphTrackButton", "Add as BedGraph"),
-        actionButton("addSegTrackButton", "Add as SEG"),
+        actionButton(ns("addBedTrackButton"), "Add as Bed"),
+        actionButton(ns("addBedGraphTrackButton"), "Add as BedGraph"),
+        actionButton(ns("addSegTrackButton"), "Add as SEG"),
         br(),
-        actionButton("addGwasTrackButton", "Add GWAS Track"),
-        actionButton("addBamViaHttpButton", "BAM from URL"),
-        actionButton("addBamLocalFileButton", "BAM local data"),
-        actionButton("addCramViaHttpButton", "CRAM from URL"),
-        actionButton("removeUserTracksButton", "Remove User Tracks"),
-        actionButton("getChromLocButton", "Get Region"),
-        actionButton("clearChromLocButton", "Clear Region"),
+        actionButton(ns("addGwasTrackButton"), "Add GWAS Track"),
+        actionButton(ns("addBamViaHttpButton"), "BAM from URL"),
+        actionButton(ns("addBamLocalFileButton"), "BAM local data"),
+        actionButton(ns("addCramViaHttpButton"), "CRAM from URL"),
+        actionButton(ns("removeUserTracksButton"), "Remove User Tracks"),
+        actionButton(ns("getChromLocButton"), "Get Region"),
+        actionButton(ns("clearChromLocButton"), "Clear Region"),
         div(style="background-color: white; width: 200px; height:30px; padding-left: 5px;
                    margin-top: 10px; border: 1px solid blue;",
-            htmlOutput("chromLocDisplay")),
+            htmlOutput(ns("chromLocDisplay"))),
         hr(),
         width=2
-        ),
-     mainPanel(
-        igvShinyOutput('igvShiny_0'),
+      ),
+      mainPanel(
+        igvShinyOutput(ns('igvShiny_0')),
         # igvShinyOutput('igvShiny_1'),
         width=10
-        )
-     ) # sidebarLayout
-))
+      )
+    ) # sidebarLayout
+  ))
+}
 #----------------------------------------------------------------------------------------------------
-server = function(input, output, session) {
+igv_server <-  function(input, output, session) {
+
+   ns <- session$ns
 
    observeEvent(input$searchButton, {
       printf("--- search")
@@ -134,16 +142,22 @@ server = function(input, output, session) {
       # printf("--- getChromLoc event")
       # sends message to igv.js in browser; currentGenomicRegion.<id> event sent back
       # see below for how that can be captured and displayed
-      getGenomicRegion(session, id="igvShiny_0")
+      getGenomicRegion(session, id="igv-igvShiny_0")
+      print(sprintf("getChromLocButton, currentGenomicRegion.%s", ns("igvShiny_0")))
       })
 
    observeEvent(input$clearChromLocButton, {
+       printf("clearing chromLocDisplay after clearChromLocButton click")
+       printf("---- names(input)")
+       print(names(input))
       output$chromLocDisplay <- renderText({" "})
       })
 
    observeEvent(input[[sprintf("currentGenomicRegion.%s", "igvShiny_0")]], {
       newLoc <- input[[sprintf("currentGenomicRegion.%s", "igvShiny_0")]]
-      #printf("new chromLocString: %s", newLoc)
+      #observeEvent(input$genomicRegionChanged, {
+      #newLoc <- input$genomicRegionChanged
+      printf("new chromLocString: %s", newLoc)
       output$chromLocDisplay <- renderText({newLoc})
       })
 
@@ -168,30 +182,15 @@ server = function(input, output, session) {
 
 } # server
 #----------------------------------------------------------------------------------------------------
-deploy <-function()
-{
-   require(rsconnect)
-   #rsconnect::setAccountInfo(name='hoodlab',
-   #                          token='41E779ABC50F6A98036C95AEEA1A92F7',
-   #                          secret='')
-   setRepositories(addURLs=c(BioCsoft="https://bioconductor.org/packages/3.12/bioc",
-                             BioCann="https://bioconductor.org/packages/3.12/data/annotation",
-                             BioCexp="https://bioconductor.org/packages/3.12/data/experiment",
-                             BioC="https://bioconductor.org/packages/3.12/bioc",
-                             CRAN="https://cran.microsoft.com"),
-                   graphics=FALSE)
+print(sessionInfo())
 
-   deployApp(account="paulshannon",
-              appName="igvShinyDemo",
-              appTitle="igvShiny Demo",
-              appFiles=c("igvShinyDemo.R", "tracks/file4b764ed3abae.bam"),
-              appPrimaryDoc="igvShinyDemo.R"
-              )
+server <- function(input, output, session){
+  callModule(igv_server, "igv")
+}
 
-} # deploy
-#------------------------------------------------------------------------------------------------------------------------
-if(grepl("hagfish", Sys.info()[["nodename"]]) & !interactive()){
-   runApp(shinyApp(ui, server))
-   } else {
-   shinyApp(ui, server)
-   }
+ui <- fluidPage(
+  igv_ui(id="igv")
+)
+
+runApp(shinyApp(ui = ui, server = server), port=9833)
+#shinyApp(ui = ui, server = server)
