@@ -69,7 +69,7 @@ HTMLWidgets.widget({
    		   console.log("eventName: " + eventName);
                    console.log("chromLocString: " + chromLocString);
                    Shiny.setInputValue(eventName, chromLocString, {priority: "event"});
-                   var moduleEventName = "germline-germline_gwas-module-currentGenomicRegion." + htmlContainerID.replace("germline-germline_gwas-module-", "");
+                   var moduleEventName = "igv-currentGenomicRegion." + htmlContainerID.replace("igv-", "");
    		   console.log("moduleEventName: " + moduleEventName);
                    Shiny.setInputValue(moduleEventName, chromLocString, {priority: "event"});
                  }, 250, false));
@@ -77,7 +77,7 @@ HTMLWidgets.widget({
                    var x = popoverData;
                    console.log(x)
                        // prepend "igv-" to support the github/shinyModules/igvModule.R
-                   Shiny.setInputValue("germline-germline_gwas-module-trackClick", x, {priority: "event"})
+                   Shiny.setInputValue("igv-trackClick", x, {priority: "event"})
                        // for use outside of the ShinyModule idiom
                    Shiny.setInputValue("trackClick", x, {priority: "event"})
                    return false; // undefined causes follow on display of standard popup
@@ -236,7 +236,7 @@ Shiny.addCustomMessageHandler("getGenomicRegion",
        //console.log("eventName: " + eventName);
        //console.log("chromLocString: " + currentValue)
        Shiny.setInputValue(eventName, currentValue, {priority: "event"});
-       var moduleEventName = "germline-germline_gwas-module-currentGenomicRegion." + elementID.replace("germline-germline_gwas-module-", "");
+       var moduleEventName = "igv-currentGenomicRegion." + elementID.replace("igv-", "");
        console.log("moduleEventName: " + moduleEventName);
        Shiny.setInputValue(moduleEventName, currentValue, {priority: "event"});
        })
