@@ -29,21 +29,13 @@ ui = shinyUI(fluidPage(
 
   sidebarLayout(
      sidebarPanel(
-        actionButton("searchButton", "Search"),
         textInput("roi", label=""),
-        h5("One simple data.frame, three igv formats:"),
-        actionButton("addVCFTrackButton", "Add VCF"),
-        actionButton("addBedTrackButton", "Add as Bed"),
-        actionButton("addBedGraphTrackButton", "Add as BedGraph"),
-        actionButton("addSegTrackButton", "Add as SEG"),
-        br(),
-        actionButton("addGwasTrackButton", "Add GWAS Track"),
-        actionButton("addBamViaHttpButton", "BAM from URL"),
-        actionButton("addBamLocalFileButton", "BAM local data"),
-        actionButton("addCramViaHttpButton", "CRAM from URL"),
+        actionButton("searchButton", "Search"),
+        actionButton("addLocalVCFTrackButton", "Add 1kg VCF (local file)"),
+        actionButton("addRemoteVCFTrackButton", "Add 1kg VCF (AWS)"),
         actionButton("removeUserTracksButton", "Remove User Tracks"),
         actionButton("getChromLocButton", "Get Region"),
-        actionButton("clearChromLocButton", "Clear Region"),
+        actionButton("clearChromLocButton", "Clear Region Readout"),
         div(style="background-color: white; width: 200px; height:30px; padding-left: 5px;
                    margin-top: 10px; border: 1px solid blue;",
             htmlOutput("chromLocDisplay")),
@@ -61,72 +53,29 @@ ui = shinyUI(fluidPage(
 server = function(input, output, session) {
 
    observeEvent(input$searchButton, {
-      printf("--- search")
       searchString = isolate(input$roi)
+      printf("--- search: %s", searchString)
       if(nchar(searchString) > 0)
         showGenomicRegion(session, id="igvShiny_0", searchString)
       })
 
-    observeEvent(input$addVCFTrackButton, {
-       f <- system.file("extdata", "chr22.vcf.gz", package="VariantAnnotation")
+    observeEvent(input$addLocalVCFTrackButton, {
+       f <- system.file(package="igvShiny", "extdata", "chr19-cebpaRegion.vcf.gz")
        file.exists(f) # [1] TRUE
-       vcf <- readVcf(f, "hg19")
-         # get oriented around the contents of this vcf
-       start <- 50586118
-       end   <- 50633733
-       rng <- GRanges(seqnames="22", ranges=IRanges(start=start, end=end))
-       vcf.sub <- readVcf(f, "hg19", param=rng)
-       showGenomicRegion(session, id="igvShiny_0", sprintf("chr22:%d-%d", start-1000, end+1000))
-       loadVcfTrack(session, id="igvShiny_0", trackName="vcf", vcf.sub)
+       vcf <- readVcf(f, "hg38")
+       showGenomicRegion(session, id="igvShiny_0", sprintf("chr19:%d-%d", 33299144-1000, 33300107+1000))
+       loadVcfTrack(session, id="igvShiny_0", trackName="vcf", vcf)
        })
 
-   observeEvent(input$addBedTrackButton, {
-      showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
-      loadBedTrack(session, id="igvShiny_0", trackName="bed", tbl=tbl.bed, color="green");
-      })
+    observeEvent(input$addRemoteVCFTrackButton, {
+       rng <- GRanges(seqnames="22", ranges=IRanges(start=33298112+1000, end=33298112+2000))
+         # tabix index file must also be there
+       showGenomicRegion(session, id="igvShiny_0", sprintf("chr22:%d-%d", 33298112+1000, end=33298112+2000))
+       url <-  "https://s3.amazonaws.com/1000genomes/release/20130502/ALL.chr22.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz";
+       vcf <- readVcf(url, "hg38", rng)
+       loadVcfTrack(session, id="igvShiny_0", trackName="vcf", vcf)
+       })
 
-   observeEvent(input$addBedGraphTrackButton, {
-      showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
-      loadBedGraphTrack(session, id="igvShiny_0", trackName="wig", tbl=tbl.bed, color="blue", autoscale=TRUE)
-      })
-
-   observeEvent(input$addSegTrackButton, {
-      showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
-      loadSegTrack(session, id="igvShiny_0", trackName="seg", tbl=tbl.bed)
-      })
-
-   observeEvent(input$addGwasTrackButton, {
-      printf("---- addGWASTrack")
-      printf("current working directory: %s", getwd())
-      showGenomicRegion(session, id="igvShiny_0", "chr19:45,248,108-45,564,645")
-      loadGwasTrack(session, id="igvShiny_0", trackName="gwas", tbl=tbl.gwas, deleteTracksOfSameName=FALSE)
-      })
-
-   observeEvent(input$addBamViaHttpButton, {
-      printf("---- addBamViaHttpTrack")
-      showGenomicRegion(session, id="igvShiny_0", "chr5:88,733,959-88,761,606")
-      base.url <- "https://1000genomes.s3.amazonaws.com/phase3/data/HG02450/alignment"
-      url <- sprintf("%s/%s", base.url, "HG02450.mapped.ILLUMINA.bwa.ACB.low_coverage.20120522.bam")
-      indexURL <- sprintf("%s/%s", base.url, "HG02450.mapped.ILLUMINA.bwa.ACB.low_coverage.20120522.bam.bai")
-      loadBamTrackFromURL(session, id="igvShiny_0",trackName="1kg.bam", bamURL=url, indexURL=indexURL)
-      })
-
-   observeEvent(input$addBamLocalFileButton, {
-      printf("---- addBamLocalFileButton")
-      showGenomicRegion(session, id="igvShiny_0", "chr21:10,397,614-10,423,341")
-      bamFile <- system.file(package="igvShiny", "extdata", "tumor.bam")
-      x <- readGAlignments(bamFile)
-      loadBamTrackFromLocalData(session, id="igvShiny_0", trackName="tumor.bam", data=x)
-      })
-
-   observeEvent(input$addCramViaHttpButton, {
-      printf("---- addCramViaHttpTrack")
-      showGenomicRegion(session, id="igvShiny_0", "chr5:88,733,959-88,761,606")
-      base.url <- "https://s3.amazonaws.com/1000genomes/phase3/data/HG00096/exome_alignment"
-      url <- sprintf("%s/%s", base.url, "HG00096.mapped.ILLUMINA.bwa.GBR.exome.20120522.bam.cram")
-      indexURL <- sprintf("%s/%s", base.url, "HG00096.mapped.ILLUMINA.bwa.GBR.exome.20120522.bam.cram.crai")
-      loadCramTrackFromURL(session, id="igvShiny_0",trackName="CRAM", cramURL=url, indexURL=indexURL)
-      })
 
    observeEvent(input$removeUserTracksButton, {
       printf("---- removeUserTracks")
@@ -178,18 +127,11 @@ server = function(input, output, session) {
 
    output$igvShiny_0 <- renderIgvShiny(
      igvShiny(list(
-        genomeName=genomes[i],
+        genomeName="hg38",
         initialLocus=loci[i],
         displayMode="SQUISHED"
         ))
       )
-
-   #output$igvShiny.1 <- renderIgvShiny(
-   #  igvShiny(list(
-   #     genomeName="hg38",
-   #     initialLocus="chr2:232,983,999-233,283,872"
-   #     ))
-   #)
 
 } # server
 #----------------------------------------------------------------------------------------------------
@@ -207,10 +149,10 @@ deploy <-function()
                    graphics=FALSE)
 
    deployApp(account="hoodlab",
-              appName="igvShinyDemo",
-              appTitle="igvShiny Demo",
-              appFiles=c("igvShinyDemo.R", "tracks/file4b764ed3abae.bam"),
-              appPrimaryDoc="igvShinyDemo.R"
+              appName="igvShinyDemo-VCF",
+              appTitle="igvShiny Demo VCF",
+              appFiles=c("igvShinyDemo-withVCF.R", "tracks/placeholder"),
+              appPrimaryDoc="igvShinyDemo-withVCF.R"
               )
 
 } # deploy
