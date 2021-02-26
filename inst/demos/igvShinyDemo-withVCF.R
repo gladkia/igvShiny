@@ -29,11 +29,14 @@ ui = shinyUI(fluidPage(
 
   sidebarLayout(
      sidebarPanel(
-        textInput("roi", label=""),
+        textInput("roi", label="", placeholder="gene or chrN:start-end"),
         actionButton("searchButton", "Search"),
+        br(), br(), br(),
         actionButton("addLocalVCFTrackButton", "Add 1kg VCF (local file)"),
         actionButton("addRemoteVCFTrackButton", "Add 1kg VCF (AWS)"),
+        br(), br(),  br(),
         actionButton("removeUserTracksButton", "Remove User Tracks"),
+        br(), br(),
         actionButton("getChromLocButton", "Get Region"),
         actionButton("clearChromLocButton", "Clear Region Readout"),
         div(style="background-color: white; width: 200px; height:30px; padding-left: 5px;

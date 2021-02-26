@@ -128,6 +128,16 @@ server = function(input, output, session) {
        printf("--- igv-trackClick event")
        x <- input[["igv-trackClick"]]
        print(x)
+       attribute.name.positions <- grep("name", names(x))
+       attribute.value.positions <- grep("value", names(x))
+       attribute.names <- as.character(x)[attribute.name.positions]
+       attribute.values <- as.character(x)[attribute.value.positions]
+       tbl <- data.frame(name=attribute.names,
+                         value=attribute.values,
+                         stringsAsFactors=FALSE)
+       dialogContent <- renderTable(tbl)
+       html <- HTML(dialogContent())
+       showModal(modalDialog(html, easyClose=TRUE))
        })
 
    observeEvent(input$getChromLocButton, {
