@@ -428,7 +428,7 @@ loadVcfTrack <- function(session, id, trackName, vcfData, deleteTracksOfSameName
 #' nothing
 #'
 #' @export
-loadGwasTrack <- function(session, id, trackName, tbl.gwas, deleteTracksOfSameName=TRUE)
+loadGwasTrack <- function(session, id, trackName, tbl.gwas, ymin = 0, ymax = 35, deleteTracksOfSameName=TRUE)
 {
    printf("======== entering igvShiny::loadGwasTrack")
 
@@ -445,7 +445,7 @@ loadGwasTrack <- function(session, id, trackName, tbl.gwas, deleteTracksOfSameNa
    printf("exists? %s", file.exists(temp.file))
    message <- list(elementID=id, trackName=trackName, gwasDataFilepath=temp.file,
                    color="red", trackHeight=200, autoscale=FALSE,
-                   min=0, max=35)
+                   min=ymin, max=ymax)
    session$sendCustomMessage("loadGwasTrack", message)
 
 } # loadGwasTrack
