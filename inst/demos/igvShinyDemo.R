@@ -170,7 +170,7 @@ server = function(input, output, session) {
 
    output$igvShiny_0 <- renderIgvShiny({
      cat("--- starting renderIgvShiny\n");
-     x <- igvShiny(list(genomeName=genomes[1],
+     x <- igvShiny(list(genomeName=genomes[2],
                         initialLocus=loci[7],
                         displayMode="SQUISHED",
                         tracks=list()

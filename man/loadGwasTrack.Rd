@@ -4,7 +4,15 @@
 \alias{loadGwasTrack}
 \title{load a GWAS (genome-wide association study)  track provided as a data.frame}
 \usage{
-loadGwasTrack(session, id, trackName, tbl.gwas, deleteTracksOfSameName = TRUE)
+loadGwasTrack(
+  session,
+  id,
+  trackName,
+  tbl.gwas,
+  ymin = 0,
+  ymax = 35,
+  deleteTracksOfSameName = TRUE
+)
 }
 \arguments{
 \item{session}{an environment or list, provided and managed by shiny}
