@@ -82,6 +82,8 @@ HTMLWidgets.widget({
                    Shiny.setInputValue("trackClick", x, {priority: "event"})
                    return false; // undefined causes follow on display of standard popup
                    }); // on
+                Shiny.setInputValue("igvReady", htmlContainerID, {priority: "event"});
+                Shiny.setInputValue("igv-igvReady", htmlContainerID, {priority: "event"});
                 }); // then: promise fulflled
           },
       resize: function(width, height) {

@@ -9,7 +9,8 @@ igvShiny(
   width = NULL,
   height = NULL,
   elementId = NULL,
-  displayMode = "squished"
+  displayMode = "squished",
+  tracks = list()
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ igvShiny(
 \item{elementId}{a character string, the html element id within which igv is created}
 
 \item{displayMode}{a character string, default "SQUISHED".}
+
+\item{tracks}{a list of track specifications to be created and displayed at startup}
 }
 \value{
 the created widget

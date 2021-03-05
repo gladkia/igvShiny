@@ -28,12 +28,14 @@ state[["userAddedTracks"]] <- list()
 #' @param height a character string, needs to be an explicit pixel measure, e.g., "800px"
 #' @param elementId a character string, the html element id within which igv is created
 #' @param displayMode a character string, default "SQUISHED".
+#' @param tracks a list of track specifications to be created and displayed at startup
 #'
 #' @return the created widget
 #'
 #' @export
 #'
-igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL, displayMode="squished")
+igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL,
+                     displayMode="squished", tracks=list())
 {
   supportedOptions <- c("genomeName", "initialLocus")
   stopifnot(all(supportedOptions %in% names(options)))
@@ -42,6 +44,7 @@ igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL, dis
   state[["requestedHeight"]] <- height
 
   printf("--- ~/github/igvShiny/R/igvShiny ctor");
+  printf("  initial track count: %d", length(tracks))
 
   htmlwidgets::createWidget(
     name = 'igvShiny',
@@ -51,6 +54,9 @@ igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL, dis
     package = 'igvShiny',
     elementId = elementId
     )
+
+
+
 
 } # igvShiny constructor
 #----------------------------------------------------------------------------------------------------
@@ -97,7 +103,9 @@ renderIgvShiny <- function(expr, env=parent.frame(), quoted = FALSE)
       expr <- substitute(expr)
       } # force quoted
 
-  htmlwidgets::shinyRenderWidget(expr, igvShinyOutput, env, quoted = TRUE)
+   x <- htmlwidgets::shinyRenderWidget(expr, igvShinyOutput, env, quoted = TRUE)
+   printf("--- leaving igvShiny.R, renderIgvShiny")
+   return(x)
 
 }
 #----------------------------------------------------------------------------------------------------

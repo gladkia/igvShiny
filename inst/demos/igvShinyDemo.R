@@ -1,7 +1,7 @@
 library(shiny)
 library(igvShiny)
 library(GenomicAlignments)
-library(htmlwidgets)
+library(later)
 #----------------------------------------------------------------------------------------------------
 # we need a local directory to write files - for instance, a vcf file representing a genomic
 # region of interest.  we then tell shiny about that directory, so that shiny's built-in http server
@@ -117,6 +117,12 @@ server = function(input, output, session) {
       removeUserAddedTracks(session, id="igvShiny_0")
       })
 
+    observeEvent(input$igvReady, {
+        printf("--- igvReady")
+        containerID <- input$igvReady
+        printf("igv ready, %s", containerID)
+        loadBedTrack(session, id=containerID, trackName="bed.ready", tbl=tbl.bed, color="red");
+        })
 
    observeEvent(input$trackClick, {
        printf("--- trackclick event")
@@ -158,16 +164,23 @@ server = function(input, output, session) {
       })
 
    genomes <- c("hg38", "hg19", "mm10", "tair10", "rhos")
-   loci <- c("chr5:88,466,402-89,135,305", "MEF2C", "Mef2c", "1:7,432,931-7,440,395", "NC_007494.2:370,757-378,078")
-   i <- 2
+   loci <- c("chr5:88,466,402-89,135,305",  "chr1:7,426,231-7,453,241", "MEF2C", "Mef2c",
+             "1:7,432,931-7,440,395", "NC_007494.2:370,757-378,078",
+             "chr1:6,575,383-8,304,088")
 
-   output$igvShiny_0 <- renderIgvShiny(
-     igvShiny(list(
-        genomeName=genomes[i],
-        initialLocus=loci[i],
-        displayMode="SQUISHED"
-        ))
-      )
+   output$igvShiny_0 <- renderIgvShiny({
+     cat("--- starting renderIgvShiny\n");
+     x <- igvShiny(list(genomeName=genomes[1],
+                        initialLocus=loci[7],
+                        displayMode="SQUISHED",
+                        tracks=list()
+                        ))
+     cat("--- ending renderIgvShiny\n");
+     #later(function() {
+     #    loadBedTrack(session, id="igvShiny_0", trackName="bed.start", tbl=tbl.bed, color="red");
+     #    }, 8)
+     return(x)
+     })
 
    #output$igvShiny.1 <- renderIgvShiny(
    #  igvShiny(list(
