@@ -79,7 +79,7 @@ igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL,
 #'
 #' @export
 #'
-igvShinyOutput <- function(outputId, width = '100%', height = '400px')
+igvShinyOutput <- function(outputId, width = '100%', height = NULL)
 {
     if("requestedHeight" %in% ls(state)){
       printf("setting height from state")
