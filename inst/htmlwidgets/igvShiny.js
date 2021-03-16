@@ -42,7 +42,8 @@ HTMLWidgets.widget({
          console.log(el.id)
          var htmlContainerID = el.id;
          var fullOptions = genomeSpecificOptions(options.genomeName, options.initialLocus,
-                                                 options.displayMode, parseInt(options.trackHeight))
+                                                 options.displayMode, parseInt(options.trackHeight),
+                                                 options.moduleNS)
 
          console.log("about to createBrowser, trackHeight: " + fullOptions.height)
          igv.createBrowser(igvDiv, fullOptions)
@@ -69,21 +70,22 @@ HTMLWidgets.widget({
    		   console.log("eventName: " + eventName);
                    console.log("chromLocString: " + chromLocString);
                    Shiny.setInputValue(eventName, chromLocString, {priority: "event"});
-                   var moduleEventName = "igv-currentGenomicRegion." + htmlContainerID.replace("igv-", "");
+//                   var moduleEventName = "igv-currentGenomicRegion." + htmlContainerID.replace("igv-", "");
+                    var moduleEventName = moduleNamespace(options.moduleNS, "currentGenomicRegion.") + htmlContainerID.replace(options.moduleNS, "");
    		   console.log("moduleEventName: " + moduleEventName);
                    Shiny.setInputValue(moduleEventName, chromLocString, {priority: "event"});
                  }, 250, false));
                 igvWidget.on('trackclick', function (track, popoverData){
                    var x = popoverData;
                    console.log(x)
-                       // prepend "igv-" to support the github/shinyModules/igvModule.R
-                   Shiny.setInputValue("igv-trackClick", x, {priority: "event"})
+                       // prepend module namespace to support the github/shinyModules/igvModule.R
+                   Shiny.setInputValue(moduleNamespace(options.moduleNS, "trackClick", x, {priority: "event"})
                        // for use outside of the ShinyModule idiom
                    Shiny.setInputValue("trackClick", x, {priority: "event"})
                    return false; // undefined causes follow on display of standard popup
                    }); // on
                 Shiny.setInputValue("igvReady", htmlContainerID, {priority: "event"});
-                Shiny.setInputValue("igv-igvReady", htmlContainerID, {priority: "event"});
+                Shiny.setInputValue(moduleNamespace(options.moduleNS, "igvReady", htmlContainerID, {priority: "event"});
                 }); // then: promise fulflled
           },
       resize: function(width, height) {
@@ -94,6 +96,11 @@ HTMLWidgets.widget({
   }  // factory
 });  // widget
 //------------------------------------------------------------------------------------------------------------------------
+function moduleNamespace(ns, nameEvent)
+{
+  return(ns + nameEvent)
+} 
+//----------------------------------------------------------------------------------------------------
 function genomeSpecificOptions(genomeName, initialLocus, displayMode, trackHeight)
 {
     var hg19_options = {

@@ -45,6 +45,10 @@ igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL,
 
   printf("--- ~/github/igvShiny/R/igvShiny ctor");
   printf("  initial track count: %d", length(tracks))
+  
+  #send namespace info in case widget is being called from a module
+  session <- shiny::getDefaultReactiveDomain()
+  options$moduleNS <- session$ns("")
 
   htmlwidgets::createWidget(
     name = 'igvShiny',
