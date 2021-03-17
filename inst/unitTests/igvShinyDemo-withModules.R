@@ -192,5 +192,4 @@ ui <- fluidPage(
   igv_ui(id="igv")
 )
 
-runApp(shinyApp(ui = ui, server = server), port=9833)
-#shinyApp(ui = ui, server = server)
+runApp(shinyApp(ui = ui, server = server), port=9834)

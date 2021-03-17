@@ -4,7 +4,7 @@
 \alias{igvShinyOutput}
 \title{create the UI for the widget}
 \usage{
-igvShinyOutput(outputId, width = "100\%", height = "400px")
+igvShinyOutput(outputId, width = "100\%", height = NULL)
 }
 \arguments{
 \item{outputId}{a character string, specifies the html element id}

@@ -73,8 +73,8 @@ igv_server <-  function(input, output, session) {
       })
 
    observeEvent(input$addBedTrackButton, {
-      showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
-      loadBedTrack(session, id="igvShiny_0", trackName="bed", tbl=tbl.bed, color="green");
+      showGenomicRegion(session, id=ns("igvShiny_0"), "chr1:7,426,231-7,453,241")
+      loadBedTrack(session, id=ns("igvShiny_0"), trackName="bed", tbl=tbl.bed, color="green");
       })
 
    observeEvent(input$addBedGraphTrackButton, {
@@ -130,7 +130,7 @@ igv_server <-  function(input, output, session) {
        printf("--- trackclick event")
        x <- input$trackClick
        print(x)
-       })
+   })
 
    observeEvent(input[["igv-trackClick"]], {
        printf("--- igv-trackClick event")
@@ -192,5 +192,4 @@ ui <- fluidPage(
   igv_ui(id="igv")
 )
 
-runApp(shinyApp(ui = ui, server = server), port=9833)
-#shinyApp(ui = ui, server = server)
+runApp(shinyApp(ui = ui, server = server), port=9834)

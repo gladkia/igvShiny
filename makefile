@@ -15,4 +15,5 @@ demo:
 demo2:
 	(cd inst/demos; R -f igvShinyDemo-twoInstances.R)
 
-
+moduleDemo:
+	(cd inst/demos; R -f igvShinyDemo-withModules.R)

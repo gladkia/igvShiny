@@ -79,13 +79,13 @@ HTMLWidgets.widget({
                    var x = popoverData;
                    console.log(x)
                        // prepend module namespace to support the github/shinyModules/igvModule.R
-                   Shiny.setInputValue(moduleNamespace(options.moduleNS, "trackClick", x, {priority: "event"})
+                   Shiny.setInputValue(moduleNamespace(options.moduleNS, "trackClick", x, {priority: "event"}))
                        // for use outside of the ShinyModule idiom
                    Shiny.setInputValue("trackClick", x, {priority: "event"})
                    return false; // undefined causes follow on display of standard popup
                    }); // on
                 Shiny.setInputValue("igvReady", htmlContainerID, {priority: "event"});
-                Shiny.setInputValue(moduleNamespace(options.moduleNS, "igvReady", htmlContainerID, {priority: "event"});
+                Shiny.setInputValue(moduleNamespace(options.moduleNS, "igvReady", htmlContainerID, {priority: "event"}));
                 }); // then: promise fulflled
           },
       resize: function(width, height) {
@@ -443,7 +443,6 @@ Shiny.addCustomMessageHandler("loadGwasTrack",
       var gwasFile = message.gwasDataFilepath;
       var dataURL = window.location.href + gwasFile;
       console.log("dataURL: " + dataURL);
-      // debugger;
 
       var config = {format: "gwas",
                     type: "gwas",
