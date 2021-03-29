@@ -42,14 +42,14 @@ igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL,
   supportedGenomes <- c("hg38", "hg19", "mm10", "tair10", "rhos")
   stopifnot(options$genomeName %in% supportedGenomes)
   state[["requestedHeight"]] <- height
-
+  
   printf("--- ~/github/igvShiny/R/igvShiny ctor");
   printf("  initial track count: %d", length(tracks))
   
   #send namespace info in case widget is being called from a module
   session <- shiny::getDefaultReactiveDomain()
   options$moduleNS <- session$ns("")
-
+  
   htmlwidgets::createWidget(
     name = 'igvShiny',
     options,
@@ -57,11 +57,11 @@ igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL,
     height = height,
     package = 'igvShiny',
     elementId = elementId
-    )
-
-
-
-
+  )
+  
+  
+  
+  
 } # igvShiny constructor
 #----------------------------------------------------------------------------------------------------
 #' create the UI for the widget
