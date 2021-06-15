@@ -122,9 +122,4 @@ server = function(input, output, session) {
 } # server
 
 #------------------------------------------------------------------------------------------------------------------------
-if(grepl("hagfish", Sys.info()[["nodename"]]) & !interactive()){
-   runApp(shinyApp(ui, server), port=6867)
-   } else {
-   shinyApp(ui, server)
-   }
 runApp(shinyApp(ui, server), port=6867)
