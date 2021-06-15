@@ -22,11 +22,8 @@ ui = shinyUI(fluidPage(
 
   sidebarLayout(
      sidebarPanel(
-        actionButton("searchButton", "Search"),
-        textInput("roi", label=""),
         shiny::uiOutput("features"),
-        shiny::radioButtons("feature_action", "Select or Exclude?", choices = c("Select", "Exclude"), selected = "Exclude"),
-        shiny::uiOutput("search_snp"),
+        shiny::radioButtons("feature_action", "Select or Exclude from Manhattan plot?", choices = c("Select", "Exclude"), selected = "Exclude"),
         actionButton("addGwasTrackButton", "Add GWAS Track"),
         div(style="background-color: white; width: 200px; height:30px; padding-left: 5px;
             margin-top: 10px; border: 1px solid blue;",
@@ -36,7 +33,6 @@ ui = shinyUI(fluidPage(
         ),
      mainPanel(
         igvShinyOutput('igvShiny_0'),
-        # igvShinyOutput('igvShiny_1'),
         width=10
         )
      ) # sidebarLayout
@@ -51,30 +47,30 @@ server = function(input, output, session) {
    })
    
    #generating list of features
-   immune_feat <- reactive({
+   phenotype <- reactive({
       tbl.gwas.phenotype()$feature_display
    })
    
    output$features <- renderUI({
-      shiny::selectizeInput('immunefeature', "Select phenotype of interest",
-                            choices = immune_feat(),
+      shiny::selectizeInput('feature', "Select phenotype of interest",
+                            choices = phenotype(),
                             selected =c("A", "T"),
                             multiple = TRUE)
    })
    
    #updating GWAS table with selections or exclusion of features
    gwas_df <- reactive({
-      req(input$immunefeature)
-      if(input$feature_action == "Exclude") tbl.gwas.phenotype() %>% dplyr::filter(!(feature_display %in% input$immunefeature))
-      else tbl.gwas.phenotype() %>% dplyr::filter(feature_display %in% input$immunefeature) 
+      shiny::req(input$feature)
+      if(input$feature_action == "Exclude") tbl.gwas.phenotype() %>% dplyr::filter(!(feature_display %in% input$feature))
+      else tbl.gwas.phenotype() %>% dplyr::filter(feature_display %in% input$feature) 
    })
    
-   #generating the SNP id list
-   output$search_snp <- renderUI({
+   trackname <- shiny::reactive({
       shiny::req(gwas_df())
-      snp_options <- (gwas_df() %>% dplyr::filter(!is.na(SNPS)))$SNPS
-      shiny::selectInput("snp_int", "Click on the plot or search for a SNP id:",
-                         choices = c("", snp_options))
+      if(is.null(input$feature)) "GWAS"
+      else paste("GWAS -",
+                 input$feature_action,
+                 paste(input$feature, collapse = ", "))
    })
    
    observeEvent(input$searchButton, {
@@ -89,43 +85,38 @@ server = function(input, output, session) {
       print(x)
    })
    
-   observeEvent(input$trackClick, {
+   observeEvent(input$trackClick, { #add popup window when a SNP is clicked
       printf("--- igv-trackClick popup")
       x <- input$trackClick
-      
-      attribute.name.positions <- grep("name", names(x))
-      attribute.value.positions <- grep("value", names(x))
-      attribute.names <- as.character(x)[attribute.name.positions]
-      attribute.values <- as.character(x)[attribute.value.positions]
-      tbl <- data.frame(name=attribute.names,
-                        value=attribute.values,
-                        stringsAsFactors=FALSE)
-      dialogContent <- renderTable(tbl)
-      html <- HTML(dialogContent())
-      showModal(modalDialog(html, easyClose=TRUE))
-   })
-   
-   shiny::observeEvent(input$igvReady, {
-      loadGwasTrack(session, id="igvShiny_0", trackName="GWAS", tbl=gwas_df(), deleteTracksOfSameName=FALSE)
+      if(x[1] == "SNP"){ #checking that the click was on a SNP
+         attribute.name.positions <- grep("name", names(x))
+         attribute.value.positions <- grep("value", names(x))
+         attribute.names <- as.character(x)[attribute.name.positions][1:12] #if different SNPs points overlap, one click will list several of them
+         attribute.values <- as.character(x)[attribute.value.positions][1:12]
+         tbl <- data.frame(name=attribute.names,
+                           value=attribute.values,
+                           stringsAsFactors=FALSE)
+         dialogContent <- renderTable(tbl)
+         html <- HTML(dialogContent())
+         showModal(modalDialog(html, easyClose=TRUE))
+      }
    })
    
    observeEvent(input$addGwasTrackButton, {
-      loadGwasTrack(session, id="igvShiny_0", trackName="GWAS", tbl=gwas_df(), ymax = 1+max(-log10(gwas_df()$P.VALUE)), deleteTracksOfSameName=FALSE)
-   })
-   observeEvent(input[[sprintf("currentGenomicRegion.%s", "igvShiny_0")]], {
-      newLoc <- input[[sprintf("currentGenomicRegion.%s", "igvShiny_0")]]
-      #observeEvent(input$genomicRegionChanged, {
-      #newLoc <- input$genomicRegionChanged
-      printf("new chromLocString: %s", newLoc)
-      output$chromLocDisplay <- renderText({newLoc})
+      loadGwasTrack(session, id="igvShiny_0", trackName=trackname(), tbl=gwas_df(), deleteTracksOfSameName=FALSE)
    })
    
    output$igvShiny_0 <- renderIgvShiny({
       igvShiny(list(
          genomeName="hg19",
-         initialLocus="all",
-         displayMode="SQUISHED"
+         initialLocus="all"
       ))
+   })
+   
+   shiny::observeEvent(input$igvReady, {
+      shiny::req(gwas_df())
+      containerID <- input$igvReady
+      loadGwasTrack(session, id="igvShiny_0", trackName = trackname(), tbl=gwas_df(), deleteTracksOfSameName=TRUE)
    })
 
 } # server
