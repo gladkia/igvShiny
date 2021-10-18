@@ -23,13 +23,15 @@ state[["userAddedTracks"]] <- list()
 #' @rdname igvShiny
 #' @aliases igvShiny
 #'
-#' @param options a list, with required elements 'genomeName' and 'initialLocus'
+#' @param options a list, with required elements 'genomeName' and 'initialLocus'.
+#'   Local or remote custom genomes can be used by setting 'genomeName' to 'local' or
+#'   'remote'. The necessary fasta and index files are provided via 'fasta' and 'index'
+#'   arguments, either as path on disc or as URL.
 #' @param width a character string, standard css notations, either e.g., "1000px" or "95\%"
 #' @param height a character string, needs to be an explicit pixel measure, e.g., "800px"
 #' @param elementId a character string, the html element id within which igv is created
 #' @param displayMode a character string, default "SQUISHED".
 #' @param tracks a list of track specifications to be created and displayed at startup
-#'
 #' @return the created widget
 #'
 #' @export
@@ -37,19 +39,50 @@ state[["userAddedTracks"]] <- list()
 igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL,
                      displayMode="squished", tracks=list())
 {
-  supportedOptions <- c("genomeName", "initialLocus")
-  stopifnot(all(supportedOptions %in% names(options)))
-  supportedGenomes <- c("hg38", "hg19", "mm10", "tair10", "rhos")
-  stopifnot(options$genomeName %in% supportedGenomes)
+  mandatoryOptions <- c("genomeName", "initialLocus")
+  stopifnot(all(mandatoryOptions %in% names(options)))
+  supportedGenomeNames <- c("hg38", "hg19", "mm10", "tair10", "rhos", "local", "remote")
+  stopifnot(options$genomeName %in% supportedGenomeNames)
+  if (options$genomeName == "remote") {
+    printf("Provided remote fasta url: %s", options$fasta)
+    # assert that the fasta and index are accessible
+    stopifnot("fasta" %in% names(options))
+    stopifnot(httr::http_status(httr::HEAD(options$fasta))$category == "Success")
+    if (is.null(options$index))
+      options$index <- paste(options$fasta, "fai", sep = ".")
+    printf("Remote fasta index url: %s", options$index)
+    stopifnot(httr::http_status(httr::HEAD(options$index))$category == "Success")
+  }
+  if (options$genomeName == "local") {
+    # assert that the fasta and index exists
+    stopifnot("fasta" %in% names(options))
+    stopifnot(file.exists(options$fasta))
+    printf("Provided local fasta file: %s", options$fasta)
+    if (is.null(options$index))
+      options$index <- paste(options$fasta, "fai", sep = ".")
+    stopifnot(file.exists(options$index))
+    printf("Local fasta index file: %s", options$index)
+
+    # copy fasta file to tracks directory
+    directory.name <- "tracks"   # need this as directory within the current working directory
+    if (!dir.exists(directory.name)) dir.create(directory.name)
+    filename <- file.path(directory.name, basename(options$fasta))
+    file.copy(options$fasta, filename, overwrite = TRUE)
+    options$fasta <- filename
+    filename <- file.path(directory.name, basename(options$index))
+    file.copy(options$index, filename, overwrite = TRUE)
+    options$index <- filename
+  }
+
   state[["requestedHeight"]] <- height
-  
+
   printf("--- ~/github/igvShiny/R/igvShiny ctor");
   printf("  initial track count: %d", length(tracks))
-  
+
   #send namespace info in case widget is being called from a module
   session <- shiny::getDefaultReactiveDomain()
   options$moduleNS <- session$ns("")
-  
+
   htmlwidgets::createWidget(
     name = 'igvShiny',
     options,
@@ -58,10 +91,10 @@ igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL,
     package = 'igvShiny',
     elementId = elementId
   )
-  
-  
-  
-  
+
+
+
+
 } # igvShiny constructor
 #----------------------------------------------------------------------------------------------------
 #' create the UI for the widget
@@ -475,20 +508,25 @@ loadGwasTrack <- function(session, id, trackName, tbl.gwas, ymin = 0, ymax = 35,
 #' @param bamURL character string http url for the bam file, typically very large
 #' @param indexURL character string http url for the bam file index, typically small
 #' @param deleteTracksOfSameName logical, default TRUE
+#' @param displayMode character string, possible values are "EXPANDED" (default),
+#'   "SQUISHED" or "COLLAPSED"
+#' @param showAllBases logical, show all bases in the alignment, default FALSE
 #'
 #' @return
 #' nothing
 #'
 #' @export
 
-loadBamTrackFromURL <- function(session, id, trackName, bamURL, indexURL, deleteTracksOfSameName=TRUE)
+loadBamTrackFromURL <- function(session, id, trackName, bamURL, indexURL, deleteTracksOfSameName=TRUE,
+                                displayMode = "EXPANDED", showAllBases = FALSE)
 {
    if(deleteTracksOfSameName){
       removeTracksByName(session, id, trackName);
       }
 
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
-   message <- list(elementID=id,trackName=trackName, bam=bamURL, index=indexURL)
+   message <- list(elementID=id,trackName=trackName, bam=bamURL, index=indexURL,
+                   displayMode = displayMode, showAllBases = showAllBases)
    printf("--- about to send message, loadBamTrack")
    session$sendCustomMessage("loadBamTrackFromURL", message)
 
@@ -505,13 +543,16 @@ loadBamTrackFromURL <- function(session, id, trackName, bamURL, indexURL, delete
 #' @param trackName character string
 #' @param data  GenomicAlignments object
 #' @param deleteTracksOfSameName logical, default TRUE
+#' @param displayMode character string, possible values are "EXPANDED" (default),
+#'   "SQUISHED" or "COLLAPSED"
 #'
 #' @return
 #' nothing
 #'
 #' @export
 
-loadBamTrackFromLocalData <- function(session, id, trackName, data, deleteTracksOfSameName=TRUE)
+loadBamTrackFromLocalData <- function(session, id, trackName, data, deleteTracksOfSameName=TRUE,
+                                      displayMode = "EXPANDED")
 {
    if(deleteTracksOfSameName){
       removeTracksByName(session, id, trackName);
@@ -526,7 +567,8 @@ loadBamTrackFromLocalData <- function(session, id, trackName, data, deleteTracks
 
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
 
-   message <- list(elementID=id, trackName=trackName, bamDataFilepath=file.path)
+   message <- list(elementID=id, trackName=trackName, bamDataFilepath=file.path,
+                   displayMode = displayMode)
    session$sendCustomMessage("loadBamTrackFromLocalData", message)
 
 } # loadBanTrackFromLocalData

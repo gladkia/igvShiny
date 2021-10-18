@@ -9,7 +9,8 @@ loadBamTrackFromLocalData(
   id,
   trackName,
   data,
-  deleteTracksOfSameName = TRUE
+  deleteTracksOfSameName = TRUE,
+  displayMode = "EXPANDED"
 )
 }
 \arguments{
@@ -22,6 +23,9 @@ loadBamTrackFromLocalData(
 \item{data}{GenomicAlignments object}
 
 \item{deleteTracksOfSameName}{logical, default TRUE}
+
+\item{displayMode}{character string, possible values are "EXPANDED" (default),
+"SQUISHED" or "COLLAPSED"}
 }
 \value{
 nothing
