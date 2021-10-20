@@ -10,7 +10,9 @@ loadBamTrackFromURL(
   trackName,
   bamURL,
   indexURL,
-  deleteTracksOfSameName = TRUE
+  deleteTracksOfSameName = TRUE,
+  displayMode = "EXPANDED",
+  showAllBases = FALSE
 )
 }
 \arguments{
@@ -25,6 +27,11 @@ loadBamTrackFromURL(
 \item{indexURL}{character string http url for the bam file index, typically small}
 
 \item{deleteTracksOfSameName}{logical, default TRUE}
+
+\item{displayMode}{character string, possible values are "EXPANDED" (default),
+"SQUISHED" or "COLLAPSED"}
+
+\item{showAllBases}{logical, show all bases in the alignment, default FALSE}
 }
 \value{
 nothing

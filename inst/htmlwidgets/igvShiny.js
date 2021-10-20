@@ -41,9 +41,11 @@ HTMLWidgets.widget({
          console.log(el);
          console.log(el.id)
          var htmlContainerID = el.id;
+         console.log("fasta: " + options.fasta)
+         console.log("index: " + options.index)
          var fullOptions = genomeSpecificOptions(options.genomeName, options.initialLocus,
-                                                 options.displayMode, parseInt(options.trackHeight),
-                                                 options.moduleNS)
+                                                 options.displayMode, parseInt(options.trackHeight), options.fasta,
+                                                 options.index, options.moduleNS)
 
          console.log("about to createBrowser, trackHeight: " + fullOptions.height)
          igv.createBrowser(igvDiv, fullOptions)
@@ -99,10 +101,34 @@ HTMLWidgets.widget({
 function moduleNamespace(ns, nameEvent)
 {
   return(ns + nameEvent)
-} 
+}
 //----------------------------------------------------------------------------------------------------
-function genomeSpecificOptions(genomeName, initialLocus, displayMode, trackHeight)
+function genomeSpecificOptions(genomeName, initialLocus, displayMode, trackHeight, fasta, index)
 {
+    var local_options = {
+    locus: initialLocus,
+    flanking: 1000,
+    showRuler: true,
+    minimumBases: 5,
+
+     reference: {
+       id: genomeName,
+       fastaURL:window.location.href +  fasta,
+       indexURL:window.location.href +  index
+       }
+     }; // local_options
+    var remote_options = {
+    locus: initialLocus,
+    flanking: 1000,
+    showRuler: true,
+    minimumBases: 5,
+
+     reference: {
+       id: genomeName,
+       fastaURL: fasta,
+       indexURL: index
+       }
+     }; // remote_options
     var hg19_options = {
     locus: initialLocus,
     flanking: 1000,
@@ -208,6 +234,12 @@ function genomeSpecificOptions(genomeName, initialLocus, displayMode, trackHeigh
          break;
        case "rhos":
          igvOptions = rhos_options;
+         break;
+       case "remote":
+         igvOptions = remote_options;
+         break;
+       case "local":
+         igvOptions = local_options;
          break;
          } // switch on genomeName
 
@@ -471,9 +503,13 @@ Shiny.addCustomMessageHandler("loadBamTrackFromURL",
       var trackName = message.trackName;
       var bamFile = message.bam;
       var baiFile = message.index;
+      var displayMode = message.displayMode;
+      var showAllBases = message.showAllBases;
 
       var config = {format: "bam",
                     name: trackName,
+                    displayMode: displayMode,
+                    showAllBases: showAllBases,
                     url: bamFile,
                     indexURL: baiFile,
                     type: "alignment",
@@ -493,9 +529,11 @@ Shiny.addCustomMessageHandler("loadBamTrackFromLocalData",
       var igvBrowser = document.getElementById(elementID).igvBrowser;
       var dataURL = window.location.href + message.bamDataFilepath;
       var trackName = message.trackName;
+      var displayMode = message.displayMode;
 
       var config = {format: "bam",
                     name: trackName,
+                    displayMode: displayMode,
                     url: dataURL,
                     type: "alignment",
   		    order: Number.MAX_VALUE
