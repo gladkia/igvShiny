@@ -105,4 +105,4 @@ server = function(input, output, session) {
 
 } # server
 #------------------------------------------------------------------------------------------------------------------------
-shinyApp(ui, server)
+runApp(shinyApp(ui, server), port=6868)

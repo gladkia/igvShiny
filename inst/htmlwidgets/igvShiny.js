@@ -65,15 +65,17 @@ HTMLWidgets.widget({
                 igvWidget.on('locuschange', debounce(function (referenceFrame){
                    console.log("---- locuschange, referenceFrame: ")
                    console.log(referenceFrame);
-                   var chromLocString = referenceFrame.label
+                   var chrom = referenceFrame[0].chr
+                   var start = Math.round(referenceFrame[0].start)
+		   var end = Math.round(referenceFrame[0].end)
+                   var chromLocString = chrom + ":" + start + "-" + end;
                    document.getElementById(htmlContainerID).chromLocString = chromLocString;
                    var eventName = "currentGenomicRegion." + htmlContainerID
                    console.log("--- calling Shiny.setInputValue:");
    		   console.log("eventName: " + eventName);
                    console.log("chromLocString: " + chromLocString);
                    Shiny.setInputValue(eventName, chromLocString, {priority: "event"});
-       //            var moduleEventName = "igv-currentGenomicRegion." + htmlContainerID.replace("igv-", "");
-                  var moduleEventName = moduleNamespace(options.moduleNS, "currentGenomicRegion.") + htmlContainerID.replace(options.moduleNS, "");
+                   var moduleEventName = moduleNamespace(options.moduleNS, "currentGenomicRegion.") + htmlContainerID.replace(options.moduleNS, "");
    		   console.log("moduleEventName: " + moduleEventName);
                    Shiny.setInputValue(moduleEventName, chromLocString, {priority: "event"});
                  }, 250, false));
@@ -405,15 +407,14 @@ Shiny.addCustomMessageHandler("loadSegTrack",
       var bedFeatures = message.tbl;
       console.log("--- about to assign seg config")
 
-      var config = {format: "seg",
+      var config = {type: "seg",
+		    format: "seg",
                     name: trackName,
-                    type: "seg",
                     order: Number.MAX_VALUE,
                     features: bedFeatures,
                     indexed: false,
                     displayMode: "EXPANDED",
                     //sourceType: "file",
-                    color: "red",
                     height: 50
                     };
       console.log("--- about to  loadTrack seg")
