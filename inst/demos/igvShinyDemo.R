@@ -2,6 +2,7 @@ library(shiny)
 library(igvShiny)
 library(GenomicAlignments)
 library(later)
+library(htmlwidgets)
 #----------------------------------------------------------------------------------------------------
 # we need a local directory to write files - for instance, a vcf file representing a genomic
 # region of interest.  we then tell shiny about that directory, so that shiny's built-in http server
@@ -196,8 +197,8 @@ deploy <-function()
 {
    repos <- options("repos")[[1]]
    stopifnot(sort(names(repos)) == c("BioCann", "BioCsoft", "CRAN"))
-   stopifnot(repos$BioCann=="https://bioconductor.org/packages/3.12/data/annotation")
-   stopifnot(repos$BioCsoft=="https://bioconductor.org/packages/3.12/bioc")
+   stopifnot(repos$BioCann=="https://bioconductor.org/packages/3.13/data/annotation")
+   stopifnot(repos$BioCsoft=="https://bioconductor.org/packages/3.13/bioc")
    stopifnot(repos$CRAN=="https://cran.microsoft.com")
    require(devtools)
 
@@ -214,14 +215,15 @@ deploy <-function()
    deployApp(account="hoodlab",
               appName="igvShinyDemo",
               appTitle="igvShiny Demo",
-              appFiles=c("igvShinyDemo.R", "tracks/file4b764ed3abae.bam"),
+              appFiles=c("igvShinyDemo.R", "tracks/file14c6569b08f1.bam"),
               appPrimaryDoc="igvShinyDemo.R"
               )
 
 } # deploy
 #------------------------------------------------------------------------------------------------------------------------
-if(grepl("hagfish", Sys.info()[["nodename"]]) & !interactive()){
-   runApp(shinyApp(ui, server), port=6867)
-   } else {
-   shinyApp(ui, server)
-   }
+shinyApp(ui = ui, server = server)
+#if(grepl("hagfish", Sys.info()[["nodename"]]) & !interactive()){
+#   runApp(shinyApp(ui, server), port=6867)
+#   } else {
+#   shinyApp(ui, server)
+#   }
