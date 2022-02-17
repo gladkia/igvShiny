@@ -5,6 +5,7 @@ account: hoodlab
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3529621
-bundleId: 4360201
+bundleId: 5215227
 url: https://hoodlab.shinyapps.io/igvShinyDemo/
-when: 1616011621.78974
+when: 1636074689.29483
+lastSyncTime: 1636074689.29484

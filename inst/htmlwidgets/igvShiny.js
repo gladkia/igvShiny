@@ -375,8 +375,10 @@ Shiny.addCustomMessageHandler("loadBedGraphTrack",
       var color = message.color;
       var trackHeight = message.trackHeight;
       var autoscale = message.autoscale;
+      var autoscaleGroup = message.autoscaleGroup;
       var min = message.min;
       var max = message.max;
+            
 
       var config = {format: "bedgraph",
                     name: trackName,
@@ -391,6 +393,8 @@ Shiny.addCustomMessageHandler("loadBedGraphTrack",
                     min: min,
                     max: max
                     };
+      if(autoscaleGroup >= 0)
+          config['autoscaleGroup'] = autoscaleGroup;
       igvBrowser.loadTrack(config);
       }
 

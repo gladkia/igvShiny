@@ -14,7 +14,6 @@ addResourcePath("tracks", "tracks")
 f <- system.file(package="igvShiny", "extdata", "gwas.RData")
 stopifnot(file.exists(f))
 tbl.gwas <- get(load(f))
-# print(dim(tbl.gwas))
 printf <- function(...) print(noquote(sprintf(...)))
 #----------------------------------------------------------------------------------------------------
 tbl.bed <- data.frame(chr=c("1","1", "1"),
@@ -22,6 +21,15 @@ tbl.bed <- data.frame(chr=c("1","1", "1"),
                       end=  c(7436000, 7437500, 7440000),
                       value=c(-2.239, 3.0, 0.5),
                       sampleID=c("sample1", "sample2", "sample3"),
+                      stringsAsFactors=FALSE)
+wig.size <- 100
+values.100 <- runif(n=wig.size, min=-1, max=1)
+starts.100 <- seq(from=7432951, to=7432951+(wig.size-1))
+ends.100   <- starts.100 + 1
+tbl.wig <- data.frame(chr=rep("1", wig.size),
+                      start=starts.100,
+                      end=ends.100,
+                      value=values.100,
                       stringsAsFactors=FALSE)
 #----------------------------------------------------------------------------------------------------
 ui = shinyUI(fluidPage(
@@ -33,6 +41,7 @@ ui = shinyUI(fluidPage(
         h5("One simple data.frame, three igv formats:"),
         actionButton("addBedTrackButton", "Add as Bed"),
         actionButton("addBedGraphTrackButton", "Add as BedGraph"),
+        actionButton("addAutoscaledGroupBedGraphTrackButton", "Add Autoscaled Group BedGraphs"),
         # data immediate seg track apparently abandoned with igv.js 2.10.4 or before
         #actionButton("addSegTrackButton", "Add as SEG"),
         br(),
@@ -74,6 +83,16 @@ server = function(input, output, session) {
    observeEvent(input$addBedGraphTrackButton, {
       showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
       loadBedGraphTrack(session, id="igvShiny_0", trackName="wig", tbl=tbl.bed, color="blue", autoscale=TRUE)
+      })
+
+   observeEvent(input$addAutoscaledGroupBedGraphTrackButton, {
+      showGenomicRegion(session, id="igvShiny_0", "chr1:7,432,868-7,433,167")
+      loadBedGraphTrack(session, id="igvShiny_0", trackName="wig1a", tbl=tbl.wig, color="blue",
+                        autoscale=TRUE, autoscaleGroup=1)
+      tbl.wig1b <- tbl.wig
+      tbl.wig1b$value <-tbl.wig1b$value * 10
+      loadBedGraphTrack(session, id="igvShiny_0", trackName="wig1b", tbl=tbl.wig1b, color="brown",
+                        autoscale=TRUE, autoscaleGroup=1)
       })
 
    observeEvent(input$addSegTrackButton, {
@@ -221,9 +240,9 @@ deploy <-function()
 
 } # deploy
 #------------------------------------------------------------------------------------------------------------------------
-shinyApp(ui = ui, server = server)
-#if(grepl("hagfish", Sys.info()[["nodename"]]) & !interactive()){
-#   runApp(shinyApp(ui, server), port=6867)
-#   } else {
-#   shinyApp(ui, server)
-#   }
+# shinyApp(ui = ui, server = server)
+if(grepl("hagfish", Sys.info()[["nodename"]]) & !interactive()){
+   runApp(shinyApp(ui, server), port=6867)
+   } else {
+   shinyApp(ui, server)
+   }

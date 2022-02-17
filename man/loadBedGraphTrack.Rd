@@ -12,6 +12,7 @@ loadBedGraphTrack(
   color = "gray",
   trackHeight = 30,
   autoscale,
+  autoscaleGroup = -1,
   min = NA_real_,
   max = NA_real_,
   deleteTracksOfSameName = TRUE,

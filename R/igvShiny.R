@@ -335,7 +335,8 @@ loadBedTrack <- function(session, id, trackName, tbl, color="gray", trackHeight=
 #' @export
 
 loadBedGraphTrack <- function(session, id, trackName, tbl, color="gray", trackHeight=30,
-                              autoscale, min=NA_real_, max=NA_real_,
+                              autoscale, autoscaleGroup=-1,
+                              min=NA_real_, max=NA_real_,
                               deleteTracksOfSameName=TRUE, quiet=TRUE)
 {
    stopifnot(ncol(tbl) >= 4)
@@ -378,7 +379,8 @@ loadBedGraphTrack <- function(session, id, trackName, tbl, color="gray", trackHe
 
    msg.to.igv <- list(elementID=id, trackName=trackName, tbl=jsonlite::toJSON(tbl),
                       color=color, trackHeight=trackHeight,
-                      autoscale=autoscale, min=min, max=max)
+                      autoscale=autoscale, min=min, max=max,
+                      autoscaleGroup=autoscaleGroup)  # -1 means no grouping
 
    session$sendCustomMessage("loadBedGraphTrack", msg.to.igv)
 
