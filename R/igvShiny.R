@@ -12,7 +12,9 @@
 library(randomcoloR)
 randomColors <- distinctColorPalette(24)
 #----------------------------------------------------------------------------------------------------
-printf <- function(...) print(noquote(sprintf(...)))
+verbose <- FALSE
+log <- function(...)if(verbose) print(noquote(sprintf(...)))
+#----------------------------------------------------------------------------------------------------
 state <- new.env(parent=emptyenv())
 state[["userAddedTracks"]] <- list()
 #----------------------------------------------------------------------------------------------------
@@ -44,24 +46,24 @@ igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL,
   supportedGenomeNames <- c("hg38", "hg19", "mm10", "tair10", "rhos", "local", "remote")
   stopifnot(options$genomeName %in% supportedGenomeNames)
   if (options$genomeName == "remote") {
-    printf("Provided remote fasta url: %s", options$fasta)
+    log("Provided remote fasta url: %s", options$fasta)
     # assert that the fasta and index are accessible
     stopifnot("fasta" %in% names(options))
     stopifnot(httr::http_status(httr::HEAD(options$fasta))$category == "Success")
     if (is.null(options$index))
       options$index <- paste(options$fasta, "fai", sep = ".")
-    printf("Remote fasta index url: %s", options$index)
+    log("Remote fasta index url: %s", options$index)
     stopifnot(httr::http_status(httr::HEAD(options$index))$category == "Success")
   }
   if (options$genomeName == "local") {
     # assert that the fasta and index exists
     stopifnot("fasta" %in% names(options))
     stopifnot(file.exists(options$fasta))
-    printf("Provided local fasta file: %s", options$fasta)
+    log("Provided local fasta file: %s", options$fasta)
     if (is.null(options$index))
       options$index <- paste(options$fasta, "fai", sep = ".")
     stopifnot(file.exists(options$index))
-    printf("Local fasta index file: %s", options$index)
+    log("Local fasta index file: %s", options$index)
 
     # copy fasta file to tracks directory
     directory.name <- "tracks"   # need this as directory within the current working directory
@@ -76,8 +78,8 @@ igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL,
 
   state[["requestedHeight"]] <- height
 
-  printf("--- ~/github/igvShiny/R/igvShiny ctor");
-  printf("  initial track count: %d", length(tracks))
+  log("--- ~/github/igvShiny/R/igvShiny ctor");
+  log("  initial track count: %d", length(tracks))
 
   #send namespace info in case widget is being called from a module
   session <- shiny::getDefaultReactiveDomain()
@@ -115,7 +117,7 @@ igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL,
 igvShinyOutput <- function(outputId, width = '100%', height = NULL)
 {
     if("requestedHeight" %in% ls(state)){
-      printf("setting height from state")
+      log("setting height from state")
       height <- state[["requestedHeight"]]
       }
 
@@ -141,7 +143,7 @@ renderIgvShiny <- function(expr, env=parent.frame(), quoted = FALSE)
       } # force quoted
 
    x <- htmlwidgets::shinyRenderWidget(expr, igvShinyOutput, env, quoted = TRUE)
-   printf("--- leaving igvShiny.R, renderIgvShiny")
+   log("--- leaving igvShiny.R, renderIgvShiny")
    return(x)
 
 }
@@ -222,6 +224,7 @@ getGenomicRegion <- function(session, id)
 removeTracksByName <- function(session, id, trackNames)
 {
    message <- list(trackNames=trackNames, elementID=id)
+   log("--- igvShiny sending message to js, removeTracksByName, %s", paste(trackNames, sep=","))
    session$sendCustomMessage("removeTracksByName", message)
 
 } # removeTracksByName
@@ -277,10 +280,8 @@ loadBedTrack <- function(session, id, trackName, tbl, color="gray", trackHeight=
       color <- randomColors[sample(seq_len(length(randomColors)), 1)]
 
    if(!quiet){
-      printf("--- igvShiny::loadBedTrack");
-      print(dim(tbl))
-      print(head(tbl))
-      print(unlist(lapply(tbl, class)))
+      log("--- igvShiny::loadBedTrack");
+      log("rows: %d  cols: %d", nrow(tbl), ncol(tbl))
       }
 
    if(deleteTracksOfSameName){
@@ -293,8 +294,8 @@ loadBedTrack <- function(session, id, trackName, tbl, color="gray", trackHeight=
       colnames(tbl)[1] <- "chr"
 
    if(all(colnames(tbl)[1:3] != c("chr", "start", "end"))){
-      printf("found these colnames: %s", paste(colnames(tbl), collapse=", "))
-      printf("            required: %s", paste(c("chr", "start", "end"), collapse=", "))
+      log("found these colnames: %s", paste(colnames(tbl), collapse=", "))
+      log("            required: %s", paste(c("chr", "start", "end"), collapse=", "))
       stop("improper columns in bed track data.frame")
       }
 
@@ -345,14 +346,14 @@ loadBedGraphTrack <- function(session, id, trackName, tbl, color="gray", trackHe
       color <- randomColors[sample(seq_len(length(randomColors)), 1)]
 
    if(!quiet){
-      printf("--- igvShiny::loadBedGraphTrack");
-      printf("    %d rows, %d columns", nrow(tbl), ncol(tbl))
-      printf("    colnames: %s", paste(colnames(tbl), collapse=", "))
-      printf("    col classes: %s", paste(unlist(lapply(tbl, class)), collapse=", "))
-      print(fivenum(tbl[, 4]))
+      log("--- igvShiny::loadBedGraphTrack: %s", trackName);
+      log("    %d rows, %d columns", nrow(tbl), ncol(tbl))
+      #log("    colnames: %s", paste(colnames(tbl), collapse=", "))
+      #log("    col classes: %s", paste(unlist(lapply(tbl, class)), collapse=", "))
       }
 
    if(deleteTracksOfSameName){
+      log("--- igvShiny.R loadBedGraphTrack, calling removeTracksByName: %s, %s", id, trackName)
       removeTracksByName(session, id, trackName);
       }
 
@@ -364,8 +365,8 @@ loadBedGraphTrack <- function(session, id, trackName, tbl, color="gray", trackHe
    colnames(tbl)[4] <- "value"
 
    if(all(colnames(tbl)[1:3] != c("chr", "start", "end"))){
-      printf("found these colnames: %s", paste(colnames(tbl)[1:3], collapse=", "))
-      printf("            required: %s", paste(c("chr", "start", "end"), collapse=", "))
+      log("found these colnames: %s", paste(colnames(tbl)[1:3], collapse=", "))
+      log("            required: %s", paste(c("chr", "start", "end"), collapse=", "))
       stop("improper columns in bed track data.frame")
       }
 
@@ -407,7 +408,7 @@ loadBedGraphTrack <- function(session, id, trackName, tbl, color="gray", trackHe
 #' @export
 loadSegTrack <- function(session, id, trackName, tbl, deleteTracksOfSameName=TRUE)
 {
-   printf("--- entering loadSegTrack %s with %d rows", trackName, nrow(tbl))
+   log("--- entering loadSegTrack %s with %d rows", trackName, nrow(tbl))
 
    if(deleteTracksOfSameName){
       removeTracksByName(session, id, trackName);
@@ -416,7 +417,7 @@ loadSegTrack <- function(session, id, trackName, tbl, deleteTracksOfSameName=TRU
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
 
    message <- list(elementID=id, trackName=trackName, tbl=jsonlite::toJSON(tbl))
-   printf("about to send loadSegTrack message")
+   log("about to send loadSegTrack message")
    session$sendCustomMessage("loadSegTrack", message)
 
 } # loadSegTrack
@@ -442,16 +443,16 @@ loadSegTrack <- function(session, id, trackName, tbl, deleteTracksOfSameName=TRU
 loadVcfTrack <- function(session, id, trackName, vcfData, deleteTracksOfSameName=TRUE)
 {
 
-   printf("======== igvShiny.R, loadVcfTrack")
+   log("======== igvShiny.R, loadVcfTrack")
    if(deleteTracksOfSameName){
       removeTracksByName(session, id, trackName);
       }
 
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
    path <- file.path("tracks", "tmp.vcf")
-   printf("igvShiny::loadVcfTrac, about to write to file '%s'", path)
+   log("igvShiny::loadVcfTrac, about to write to file '%s'", path)
    writeVcf(vcfData, path)
-   printf("igvShiny::loadVcfTrac, file.exists(%s)? %s", path, file.exists(path))
+   log("igvShiny::loadVcfTrac, file.exists(%s)? %s", path, file.exists(path))
 
    message <- list(elementID=id, trackName=trackName, vcfDataFilepath=path)
    session$sendCustomMessage("loadVcfTrack", message)
@@ -477,7 +478,7 @@ loadVcfTrack <- function(session, id, trackName, vcfData, deleteTracksOfSameName
 #' @export
 loadGwasTrack <- function(session, id, trackName, tbl.gwas, ymin = 0, ymax = 35, deleteTracksOfSameName=TRUE)
 {
-   printf("======== entering igvShiny::loadGwasTrack")
+   log("======== entering igvShiny::loadGwasTrack")
 
    if(deleteTracksOfSameName){
       removeTracksByName(session, id, trackName);
@@ -487,9 +488,9 @@ loadGwasTrack <- function(session, id, trackName, tbl.gwas, ymin = 0, ymax = 35,
 
    temp.file <- tempfile(tmpdir="tracks", fileext=".gwas")
    write.table(tbl.gwas, sep="\t", row.names=FALSE, quote=FALSE, file=temp.file)
-   printf("--- igvShiny.R, loadGwasTrack wrote %d,%d to %s", nrow(tbl.gwas), ncol(tbl.gwas),
+   log("--- igvShiny.R, loadGwasTrack wrote %d,%d to %s", nrow(tbl.gwas), ncol(tbl.gwas),
           temp.file)
-   printf("exists? %s", file.exists(temp.file))
+   log("exists? %s", file.exists(temp.file))
    message <- list(elementID=id, trackName=trackName, gwasDataFilepath=temp.file,
                    color="red", trackHeight=200, autoscale=FALSE,
                    min=ymin, max=ymax)
@@ -529,7 +530,7 @@ loadBamTrackFromURL <- function(session, id, trackName, bamURL, indexURL, delete
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
    message <- list(elementID=id,trackName=trackName, bam=bamURL, index=indexURL,
                    displayMode = displayMode, showAllBases = showAllBases)
-   printf("--- about to send message, loadBamTrack")
+   log("--- about to send message, loadBamTrack")
    session$sendCustomMessage("loadBamTrackFromURL", message)
 
 } # loadBamTrackFromURL
@@ -564,7 +565,7 @@ loadBamTrackFromLocalData <- function(session, id, trackName, data, deleteTracks
    if(!dir.exists(directory.name)) dir.create(directory.name)
    file.path <- tempfile(tmpdir=directory.name, fileext=".bam")
 
-   printf("igvShiny::load bam from local data, about to write to file '%s'", file.path)
+   log("igvShiny::load bam from local data, about to write to file '%s'", file.path)
    export(data, file.path, format="BAM")
 
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))

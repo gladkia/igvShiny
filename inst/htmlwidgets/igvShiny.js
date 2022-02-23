@@ -83,15 +83,19 @@ HTMLWidgets.widget({
                    var eventName = "currentGenomicRegion." + htmlContainerID
                    log("--- calling Shiny.setInputValue:");
    		   log("eventName: " + eventName);
-                   log("chromLocString: " + chromLocString);
-                   log("window.chromLocString: " + window.chromLocString)
-                   if(chromLocString != window.chromLocString){
+                   log("chromLocString:        " + chromLocString);
+                   log("window.chromLocString: " + window.chromLocString);
+                   var newRegion = chromLocString != window.chromLocString;
+                   log("--- new.loc? " + newRegion);
+                   if(newRegion){
                       log("--- generating currentGenomicRegion event: " + chromLocString)
                       Shiny.setInputValue(eventName, chromLocString, {priority: "event"});
                       var moduleEventName = moduleNamespace(options.moduleNS, "currentGenomicRegion.") + htmlContainerID.replace(options.moduleNS, "");
-                      log("moduleEventName: " + moduleEventName);
-                      Shiny.setInputValue(moduleEventName, chromLocString, {priority: "event"});
-                      window.chromLocString = chromLocString;
+                      if(moduleEventName != eventName){
+                         log("moduleEventName: " + moduleEventName);
+                         Shiny.setInputValue(moduleEventName, chromLocString, {priority: "event"});
+                         }
+                   window.chromLocString = chromLocString;
                       } // if new chromLocString
                  }, 250, false));
                 igvWidget.on('trackclick', function (track, popoverData){
@@ -290,9 +294,9 @@ Shiny.addCustomMessageHandler("getGenomicRegion",
        var currentValue = document.getElementById(elementID).chromLocString;
        log("current chromLocString: " + currentValue)
        var eventName = "currentGenomicRegion." + elementID;
-       //log("--- calling Shiny.setInputValue:");
-       //log("eventName: " + eventName);
-       //log("chromLocString: " + currentValue)
+       log("--- calling Shiny.setInputValue:");
+       log("eventName: " + eventName);
+       log("chromLocString: " + currentValue)
        Shiny.setInputValue(eventName, currentValue, {priority: "event"});
        var moduleEventName = "igv-currentGenomicRegion." + elementID.replace("igv-", "");
        log("moduleEventName: " + moduleEventName);
@@ -381,8 +385,8 @@ Shiny.addCustomMessageHandler("loadBedTrack",
 Shiny.addCustomMessageHandler("loadBedGraphTrack",
 
    function(message){
-      //log("=== loadBedGraphTrack");
-      //log(message)
+      log("=== loadBedGraphTrack");
+      log(message)
       var elementID = message.elementID;
       var igvBrowser = document.getElementById(elementID).igvBrowser;
       var trackName = message.trackName;
