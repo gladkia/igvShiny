@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------------------------
-//var executionMode = "devel";
-executionMode = "production";
+var executionMode = "devel";
+//executionMode = "production";
 const log = function(msg)
 {
   if(executionMode == "devel")
@@ -354,6 +354,32 @@ Shiny.addCustomMessageHandler("loadBedTrackFromFile",
 
 );
 //------------------------------------------------------------------------------------------------------------------------
+Shiny.addCustomMessageHandler("loadGenomeAnnotationTrackFromFile",
+
+   function(message){
+       log("=== loadGenomeAnnotationTrackFromFile");
+       log(message);
+       var elementID = message.elementID;
+       var igvBrowser = document.getElementById(elementID).igvBrowser;
+
+       var uri = window.location.href + "tracks/" + message.filename;
+       var config = {format: "gff3",
+                     name: "gff3 track",
+                     url: uri,
+                     type: "annotation",
+                     order: Number.MAX_VALUE,
+                     indexed: false,
+                     displayMode: "EXPANDED",
+                     sourceType: "file",
+                     color: "lightGreen",
+		     height: 50
+                     };
+      igvBrowser.loadTrack(config);
+      }
+
+
+);
+//------------------------------------------------------------------------------------------------------------------------
 Shiny.addCustomMessageHandler("loadBedTrack",
 
    function(message){
@@ -591,3 +617,70 @@ Shiny.addCustomMessageHandler("loadCramTrackFromURL",
 
 );
 //------------------------------------------------------------------------------------------------------------------------
+Shiny.addCustomMessageHandler("loadGFF3TrackFromURL",
+
+   function(message){
+      log("=== loadGFF3TrackFromURL");
+      log(message)
+      var elementID = message.elementID;
+      var igvBrowser = document.getElementById(elementID).igvBrowser;
+
+      var indexedData = message.indexURL.length > 0;
+       
+      var config = {format: "gff3",
+                    name: message.name,
+                    url: message.dataURL,
+                    indexURL: message.indexURL,
+                    indexed: indexedData,
+                    displayMode: message.displayMode,
+                    visibilityWindow: message.visibilityWindow,
+                    order: Number.MAX_VALUE,
+                    height: message.trackHeight};
+       
+      if(Object.keys(message.colorTable).length > 0 && message.colorByAttribute.length > 0){
+         config.colorTable = message.colorTable;
+         config.colorBy = message.colorByAttribute;
+         }
+      else{
+         config.color=message.color;
+         }
+       
+       igvBrowser.loadTrack(config)
+       log("=== after loadTrack, loadGFF3TrackFromURL")
+     } // function
+
+); // loadGFF3TrackFromURL
+//----------------------------------------------------------------------------------------------------
+Shiny.addCustomMessageHandler("loadGFF3TrackFromLocalData",
+
+   function(message){
+      log("=== loadGFF3TrackFromLocalData");
+      log(message)
+
+      var elementID = message.elementID;
+      var igvBrowser = document.getElementById(elementID).igvBrowser;
+      var dataURL = window.location.href + message.filePath;
+
+      var config = {format: "gff3",
+                    name: message.trackName,
+                    url: dataURL,
+                    indexed: false,
+                    displayMode: message.displayMode,
+                    visibilityWindow: message.visibilityWindow,
+                    order: Number.MAX_VALUE,
+                    height: message.trackHeight};
+       
+      if(Object.keys(message.colorTable).length > 0 && message.colorByAttribute.length > 0){
+         config.colorTable = message.colorTable;
+         config.colorBy = message.colorByAttribute;
+         }
+      else{
+         config.color=message.color;
+         }
+
+      igvBrowser.loadTrack(config);
+      } // function
+
+);  // loadGFF3TrackFromLocalData
+//------------------------------------------------------------------------------------------------------------------------
+

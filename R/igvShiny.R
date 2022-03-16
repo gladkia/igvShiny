@@ -12,7 +12,7 @@
 library(randomcoloR)
 randomColors <- distinctColorPalette(24)
 #----------------------------------------------------------------------------------------------------
-verbose <- FALSE
+verbose <- TRUE
 log <- function(...)if(verbose) print(noquote(sprintf(...)))
 #----------------------------------------------------------------------------------------------------
 state <- new.env(parent=emptyenv())
@@ -93,9 +93,6 @@ igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL,
     package = 'igvShiny',
     elementId = elementId
   )
-
-
-
 
 } # igvShiny constructor
 #----------------------------------------------------------------------------------------------------
@@ -387,6 +384,85 @@ loadBedGraphTrack <- function(session, id, trackName, tbl, color="gray", trackHe
 
 } # loadBedGraphTrack
 #------------------------------------------------------------------------------------------------------------------------
+#' load a scored genome annotation track provided as a data.frame
+#'
+#' @description load a genome annotation track provided as a data.frame
+#'
+#' @rdname loadGenomeAnnotationTrack
+#' @aliases loadGenomeAnnotationTrack
+#'
+#' @param session an environment or list, provided and managed by shiny
+#' @param id character string, the html element id of this widget instance
+#' @param trackName character string
+#' @param tbl data.frame, with at least "chrom" "start" "end" "score" columns
+#' @param color character string, a legal CSS color, or "random", "gray" by default
+#' @param trackHeight an integer, 30 (pixels) by default
+#' @param autoscale logical
+#' @param min numeric, consulted when autoscale is FALSE
+#' @param max numeric, consulted when autoscale is FALSE
+#' @param deleteTracksOfSameName logical, default TRUE
+#' @param quiet logical, default TRUE, controls verbosity
+#'
+#' @return
+#' nothing
+#'
+#' @export
+
+loadBedGraphTrack <- function(session, id, trackName, tbl, color="gray", trackHeight=30,
+                              autoscale, autoscaleGroup=-1,
+                              min=NA_real_, max=NA_real_,
+                              deleteTracksOfSameName=TRUE, quiet=TRUE)
+{
+   stopifnot(ncol(tbl) >= 4)
+
+   if(color == "random")
+      color <- randomColors[sample(seq_len(length(randomColors)), 1)]
+
+   if(!quiet){
+      log("--- igvShiny::loadGenomeAnnotationTrack: %s", trackName);
+      log("    %d rows, %d columns", nrow(tbl), ncol(tbl))
+      #log("    colnames: %s", paste(colnames(tbl), collapse=", "))
+      #log("    col classes: %s", paste(unlist(lapply(tbl, class)), collapse=", "))
+      }
+
+   if(deleteTracksOfSameName){
+      log("--- igvShiny.R loadBedGraphTrack, calling removeTracksByName: %s, %s", id, trackName)
+      removeTracksByName(session, id, trackName);
+      }
+
+   state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
+
+   if(colnames(tbl)[1] == "chrom")
+      colnames(tbl)[1] <- "chr"
+
+   colnames(tbl)[4] <- "value"
+
+   if(all(colnames(tbl)[1:3] != c("chr", "start", "end"))){
+      log("found these colnames: %s", paste(colnames(tbl)[1:3], collapse=", "))
+      log("            required: %s", paste(c("chr", "start", "end"), collapse=", "))
+      stop("improper columns in bed track data.frame")
+      }
+
+   stopifnot(is(tbl$chr, "character"))
+   stopifnot(is(tbl$start, "numeric"))
+   stopifnot(is(tbl$end, "numeric"))
+   stopifnot(is(tbl$value, "numeric"))
+
+   new.order <- order(tbl$start, decreasing=FALSE)
+   tbl <- tbl[new.order,]
+
+   msg.to.igv <- list(elementID=id, trackName=trackName, tbl=jsonlite::toJSON(tbl),
+                      color=color, trackHeight=trackHeight,
+                      autoscale=autoscale, min=min, max=max,
+                      autoscaleGroup=autoscaleGroup)  # -1 means no grouping
+
+   session$sendCustomMessage("loadBedGraphTrack", msg.to.igv)
+
+} # loadBedGraphTrack
+#------------------------------------------------------------------------------------------------------------------------
+
+
+
 #' load a seg track provided as a data.frame
 #'
 #' @description load a SEG track provided as a data.frame.  igv "displays segmented data as
@@ -574,7 +650,7 @@ loadBamTrackFromLocalData <- function(session, id, trackName, data, deleteTracks
                    displayMode = displayMode)
    session$sendCustomMessage("loadBamTrackFromLocalData", message)
 
-} # loadBanTrackFromLocalData
+} # loadBamTrackFromLocalData
 #------------------------------------------------------------------------------------------------------------------------
 #' load a cram track which, with index, is served up by http
 #'
@@ -606,6 +682,101 @@ loadCramTrackFromURL <- function(session, id, trackName, cramURL, indexURL, dele
    message <- list(elementID=id,trackName=trackName, cram=cramURL, index=indexURL)
    session$sendCustomMessage("loadCramTrackFromURL", message)
 
-} # loadCramTrack
+} # loadCramTrackFromURL
 #------------------------------------------------------------------------------------------------------------------------
+#' load a GFF3 track which, with index, is served up by http
+#'
+#' @description
+#'
+#' @rdname loadGFF3TrackFromURL
+#' @aliases loadGFF3TrackFromURL
+#'
+#' @param session an environment or list, provided and managed by shiny
+#' @param id character string, the html element id of this widget instance
+#' @param trackName character string
+#' @param gff3URL character string http url for the bam file, typically very large
+#' @param indexURL character string http url for the bam file index, typically small
+#' @param color character #RGB or a recognized color name.  ignored if colorTable and colorByAttribute provided
+#' @param colorTable list, mapping a gff3 attribute, typically biotype, to a color
+#' @param colorByAttribute character, name of a gff3 attribute in column 9, typically 'biotype'
+#' @param displayMode character,  "EXPANDED",  "SQUISHED" or "COLLAPSED"
+#' @param visibilityWindow numeric, Maximum window size in base pairs for which indexed annotations or variants are displayed
+#' @param deleteTracksOfSameName logical, default TRUE
+#'
+#' @return
+#' nothing
+#'
+#' @export
 
+loadGFF3TrackFromURL <- function(session, id, trackName, gff3URL, indexURL,
+                                 color="gray", colorTable, colorByAttribute,
+                                 displayMode, trackHeight=50,
+                                 visibilityWindow, deleteTracksOfSameName=TRUE)
+{
+   if(deleteTracksOfSameName){
+      removeTracksByName(session, id, trackName);
+      }
+
+   state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
+
+   message <- list(elementID=id,trackName=trackName, dataURL=gff3URL, indexURL=indexURL,
+                   color=color, colorTable=colorTable, colorByAttribute=colorByAttribute,
+                   displayMode=displayMode, trackHeight=trackHeight,
+                   visibilityWindow=visibilityWindow)
+
+   session$sendCustomMessage("loadGFF3TrackFromURL", message)
+
+} # loadGFF3TrackFromURL
+#------------------------------------------------------------------------------------------------------------------------
+#' load a GFF3 track defined by local data
+#'
+#' @description
+#'
+#' @rdname loadGFF3TrackFromLocalData
+#' @aliases loadGFF3TrackFromLocalData
+#'
+#' @param session an environment or list, provided and managed by shiny
+#' @param id character string, the html element id of this widget instance
+#' @param trackName character string
+#' @param tbl.gff3 data.frame  in standard 9-column GFF3 format
+#' @param color character #RGB or a recognized color name.  ignored if colorTable and colorByAttribute provided
+#' @param colorTable list, mapping a gff3 attribute, typically biotype, to a color
+#' @param colorByAttribute character, name of a gff3 attribute in column 9, typically 'biotype'
+#' @param displayMode character,  "EXPANDED",  "SQUISHED" or "COLLAPSED"
+#' @param visibilityWindow numeric, Maximum window size in base pairs for which indexed annotations or variants are displayed
+#' @param deleteTracksOfSameName logical, default TRUE
+#'
+#' @return
+#' nothing
+#'
+#' @export
+
+loadGFF3TrackFromLocalData <- function(session, id, trackName, tbl.gff3,
+                                       color="gray", colorTable, colorByAttribute,
+                                       displayMode, trackHeight=50,
+                                       visibilityWindow, deleteTracksOfSameName=TRUE)
+{
+   log("--- entering loadGFF3TrackFromLocalDAta")
+
+   if(deleteTracksOfSameName){
+      removeTracksByName(session, id, trackName);
+      }
+
+   state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
+
+   gff3.filePath <- tempfile(tmpdir="tracks", fileext=".gff3")
+   write.table(tbl.gff3, sep="\t", row.names=FALSE, quote=FALSE, file=gff3.filePath)
+   log("--- igvShiny.R, loadGFF3TrackFromLocalData wrote %d,%d to %s",
+       nrow(tbl.gff3), ncol(tbl.gff3), gff3.filePath)
+
+   log("exists? %s", file.exists(gff3.filePath))
+
+   message <- list(elementID=id, trackName=trackName, filePath=gff3.filePath,
+                   color=color, colorTable=colorTable, colorByAttribute=colorByAttribute,
+                   displayMode=displayMode, trackHeight=trackHeight,
+                   visibilityWindow=visibilityWindow)
+
+   session$sendCustomMessage("loadGFF3TrackFromLocalData", message)
+
+} # loadGFF3TrackFromLocalData
+#------------------------------------------------------------------------------------------------------------------------
