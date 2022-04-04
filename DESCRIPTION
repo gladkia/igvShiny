@@ -1,7 +1,7 @@
 Package: igvShiny
 Title: igvShiny
-Version: 1.4.4
-Date: 2022-03-16
+Version: 1.4.5
+Date: 2022-04-04
 Author: Paul Shannon
 Maintainer: Paul Shannon <pshannon@systemsbiology.org>
 Description: igv.js as a shiny widget
