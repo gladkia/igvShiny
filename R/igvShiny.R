@@ -28,7 +28,7 @@ state[["userAddedTracks"]] <- list()
 #' @param options a list, with required elements 'genomeName' and 'initialLocus'.
 #'   Local or remote custom genomes can be used by setting 'genomeName' to 'local' or
 #'   'remote'. The necessary fasta and index files are provided via 'fasta' and 'index'
-#'   arguments, either as path on disc or as URL.
+#'   arguments, either as path on disk or as URL.
 #' @param width a character string, standard css notations, either e.g., "1000px" or "95\%"
 #' @param height a character string, needs to be an explicit pixel measure, e.g., "800px"
 #' @param elementId a character string, the html element id within which igv is created
@@ -56,14 +56,20 @@ igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL,
     stopifnot(httr::http_status(httr::HEAD(options$index))$category == "Success")
   }
   if (options$genomeName == "local") {
-    # assert that the fasta and index exists
     stopifnot("fasta" %in% names(options))
     stopifnot(file.exists(options$fasta))
     log("Provided local fasta file: %s", options$fasta)
-    if (is.null(options$index))
-      options$index <- paste(options$fasta, "fai", sep = ".")
-    stopifnot(file.exists(options$index))
-    log("Local fasta index file: %s", options$index)
+    log("         local index file: %s", options$index)
+        # fasta index file is optional, typically not provided for small
+        # custom genomes.  check for that case, otherwise test for its existence
+    if(!is.null(options$index)){
+       stopifnot(file.exists(options$index))
+       log("Local fasta index file: %s", options$index)
+    } else {
+        log("no fasta index file provided")
+        # todo: check length of fasta file, warn if long & no index
+        }
+
 
     # copy fasta file to tracks directory
     directory.name <- "tracks"   # need this as directory within the current working directory
@@ -71,10 +77,14 @@ igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL,
     filename <- file.path(directory.name, basename(options$fasta))
     file.copy(options$fasta, filename, overwrite = TRUE)
     options$fasta <- filename
-    filename <- file.path(directory.name, basename(options$index))
-    file.copy(options$index, filename, overwrite = TRUE)
-    options$index <- filename
-  }
+    if(!is.null(options$index)){
+       filename <- file.path(directory.name, basename(options$index))
+       file.copy(options$index, filename, overwrite = TRUE)
+       options$index <- filename
+    } else {
+        log("no index file to copy to the tracks directory")
+        }
+    } # genomeName is "local"
 
   state[["requestedHeight"]] <- height
 
