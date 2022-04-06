@@ -5,6 +5,7 @@
 #' @import shiny
 #' @import jsonlite
 #' @import randomcoloR
+#' @import httr
 #'
 #' @name igvShiny
 #' @rdname igvShiny
@@ -18,6 +19,74 @@ log <- function(...)if(verbose) print(noquote(sprintf(...)))
 state <- new.env(parent=emptyenv())
 state[["userAddedTracks"]] <- list()
 #----------------------------------------------------------------------------------------------------
+#' @description a helper function for mostly internal use, tests for availability of a url, modeled
+#' after file.exists
+#'
+#' @rdname url.exists
+#' @aliases url.exits
+#'
+#' @return logical TRUE or FALSE
+#' @export
+#'
+url.exists <- function(url)
+{
+   response <- tolower(httr::http_status(httr::HEAD(url))$category)
+   return(tolower(response) == "success")
+
+} # url.exists
+#----------------------------------------------------------------------------------------------------
+#' @description a helper function for mostly internal use, obtains the genome codes (e.g. 'hg38')
+#' supported by igv.js
+#'
+#' @rdname current.genomes
+#' @aliases current.genomes
+#'
+#' @return an list of short genome codes, e.g., "hg38", "dm6", "tair10"
+#' @export
+#'
+current.genomes <- function(test=FALSE)
+{
+    basic.offerings <-  c("hg38", "hg19", "mm10", "tair10", "rhos", "custom", "dm6", "sacCer3")
+    if(test) return(basic.offerings)
+
+    current.genomes.file <- "https://s3.amazonaws.com/igv.org.genomes/genomes.json"
+
+
+    if(!url.exists(current.genomes.file))
+        return(basic.offerings)
+
+    current.genomes.raw <- readLines(current.genomes.file, warn=FALSE, skipNul=TRUE)
+    genomes.raw <- grep('^    "id": ', current.genomes.raw, value=TRUE)
+    supported.genomes <- sub(",", "", sub(" *id: ", "", gsub('"', '', genomes.raw)))
+    return(supported.genomes)
+
+} # current.genomes
+#----------------------------------------------------------------------------------------------------
+#' @description a helper function for internal use by the igvShiny constructor, but possible also
+#' of use to those building an igvShiny app, to test their genome specification for validity
+#'
+#' @rdname parseAndValidateGenomeSpec
+#' @aliases parseAndValidateGenomeSpec
+#'
+#' @param genomeSpec a list, with one required field 'genoneCode', and 3 optional: 'fasta', 'fasta.index'
+#' genome.annotation, all of which use remote urls, or a full path to a local file
+#'
+#' @return an options list directly usable by igvApp.js, and thus igv.js
+#' @export
+#'
+parseAndValidateGenomeSpec <- function(genomeSpec)
+{
+    supported.genomes <- c(current.genomes, "customGenome")
+    supported <- genomeSpec$genomeCode %in% suppored.genomes
+    if (!supported){
+
+
+    browser()
+    options <- list()
+    return(options)
+
+} # parseAndValidateGenomeSpec
+#----------------------------------------------------------------------------------------------------
 #' Create an igvShiny instance
 #'
 #' @description This function is called in the server function of your shiny app
@@ -25,6 +94,8 @@ state[["userAddedTracks"]] <- list()
 #' @rdname igvShiny
 #' @aliases igvShiny
 #'
+#' @param genomeSpec a list, with either a recognized genomeName (e.g., "hg38"),
+#' or a fasta/geneAnnotation specified as urls, with optional indices, or equivalent local files
 #' @param options a list, with required elements 'genomeName' and 'initialLocus'.
 #'   Local or remote custom genomes can be used by setting 'genomeName' to 'local' or
 #'   'remote'. The necessary fasta and index files are provided via 'fasta' and 'index'
@@ -38,14 +109,15 @@ state[["userAddedTracks"]] <- list()
 #'
 #' @export
 #'
-igvShiny <- function(options, width = NULL, height = NULL, elementId = NULL,
-                     displayMode="squished", tracks=list())
+igvShiny <- function(genomeSpec, initialLocus="all", width = NULL, height = NULL,
+                     elementId = NULL, displayMode="squished", tracks=list())
 {
+  options <- parseAndValidateGenomeSpec(genomeSpec)
   mandatoryOptions <- c("genomeName", "initialLocus")
   stopifnot(all(mandatoryOptions %in% names(options)))
-  supportedGenomeNames <- c("hg38", "hg19", "mm10", "tair10", "rhos", "local", "remote")
+  supportedGenomeNames <- c("hg38", "hg19", "mm10", "tair10", "rhos", "custom")
   stopifnot(options$genomeName %in% supportedGenomeNames)
-  if (options$genomeName == "remote") {
+  if (options$genomeName == "custom") {
     log("Provided remote fasta url: %s", options$fasta)
     # assert that the fasta and index are accessible
     stopifnot("fasta" %in% names(options))
