@@ -62,31 +62,6 @@ current.genomes <- function(test=FALSE)
 
 } # current.genomes
 #----------------------------------------------------------------------------------------------------
-#' @description a helper function for internal use by the igvShiny constructor, but possible also
-#' of use to those building an igvShiny app, to test their genome specification for validity
-#'
-#' @rdname parseAndValidateGenomeSpec
-#' @aliases parseAndValidateGenomeSpec
-#'
-#' @param genomeSpec a list, with one required field 'genoneCode', and 3 optional: 'fasta', 'fasta.index'
-#' genome.annotation, all of which use remote urls, or a full path to a local file
-#'
-#' @return an options list directly usable by igvApp.js, and thus igv.js
-#' @export
-#'
-parseAndValidateGenomeSpec <- function(genomeSpec)
-{
-    supported.genomes <- c(current.genomes, "customGenome")
-    supported <- genomeSpec$genomeCode %in% suppored.genomes
-    if (!supported){
-
-
-    browser()
-    options <- list()
-    return(options)
-
-} # parseAndValidateGenomeSpec
-#----------------------------------------------------------------------------------------------------
 #' Create an igvShiny instance
 #'
 #' @description This function is called in the server function of your shiny app
@@ -852,3 +827,4 @@ loadGFF3TrackFromLocalData <- function(session, id, trackName, tbl.gff3,
 
 } # loadGFF3TrackFromLocalData
 #------------------------------------------------------------------------------------------------------------------------
+

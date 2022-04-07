@@ -62,16 +62,46 @@ parseAndValidateGenomeSpec <- function(genomeSpec)
 {
     supported.genomes <- c(current.genomes(), "customGenome")
     genomeCode <- genomeSpec$genomeCode
-    browser()
+    # browser()
     supported <-  genomeCode %in% supported.genomes
+
     if (!supported){
-       s.1 <- sprintf("Your genome '%s' is not currently supported", code)
+       s.1 <- sprintf("Your genome '%s' is not currently supported", genomeCode)
        s.2 <- sprintf("Currently supported: %s", paste(supported.genomes, collapse=","))
        msg <- sprintf("%s\n%s", s.1, s.2)
        stop(msg)
        }
 
-    options <- list()
+    options <- list(name=genomeCode)
+
+    if(genomeCode == "customGenome"){
+       required.fields <- c("name", "dataMode", "fasta", "fastaIndex", "annotation")
+       missing.fields <- setdiff(required.fields, names(genomeSpec))
+       if(length(missing.fields) > 0){
+           s.1 <- sprintf("missing fields, needed for your customGenome: %s", paste(missing.fields, collapse=","))
+           msg <- sprintf("%s", s.1)
+           stop(msg)
+           }
+       dataMode <- genomeSpec$dataMode
+       recognized.modes <- c("localFile", "http")  # "direct" for an in-memory R data structure, deferred
+       if(!dataMode %in% recognized.modes){
+          msg <- sprintf("dataMode '%s' should be one of %s", paste(recognized.modes, collapse=","))
+          stop(msg)
+          }
+       exists.function <- switch(dataMode,
+                                 "localFile" = file.exists,
+                                 "http" = url.exists
+                                 )
+       stopifnot(exists.function(genomeSpec$fasta))
+       stopifnot(exists.function(genomeSpec$fastaIndex))
+       stopifnot(exists.function(genomeSpec$annotation))
+
+       options[["name"]]  <- genomeSpec$name
+       options[["fasta"]] <- genomeSpec$fasta
+       options[["fastaIndex"]] <- genomeSpec$fastaIndex
+       options[["annotation"]] <- genomeSpec$annotation
+       }
+
     return(options)
 
 } # parseAndValidateGenomeSpec
