@@ -50,10 +50,12 @@ HTMLWidgets.widget({
          log(el.id)
          var htmlContainerID = el.id;
          log("fasta: " + options.fasta)
-         log("index: " + options.index)
+         log("index: " + options.fastaIndex)
          var fullOptions = genomeSpecificOptions(options.genomeName, options.initialLocus,
-                                                 options.displayMode, parseInt(options.trackHeight), options.fasta,
-                                                 options.index, options.moduleNS)
+                                                 options.displayMode, parseInt(options.trackHeight),
+                                                 options.fasta,
+                                                 options.fastaIndex,
+                                                 options.moduleNS)
 
          log("about to createBrowser, trackHeight: " + fullOptions.height)
          igv.createBrowser(igvDiv, fullOptions)

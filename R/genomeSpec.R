@@ -1,17 +1,19 @@
 #' @import httr
 #'
 #----------------------------------------------------------------------------------------------------
-log <- function(...)if(verbose) print(noquote(sprintf(...)))
+# log <- function(...)if(verbose) print(noquote(sprintf(...)))
 #----------------------------------------------------------------------------------------------------
-#' @description a helper function for mostly internal use, tests for availability of a url, modeled
-#' after file.exists
+#' @description a helper function for mostly internal use, tests for availability of a url,
+#'              modeled after file.exists
 #'
 #' @rdname url.exists
-#' @aliases url.exits
+#' @aliases url.exists
+#'
+#' @param url character the http address to test
 #'
 #' @return logical TRUE or FALSE
-#' @export
 #'
+#' @export
 url.exists <- function(url)
 {
    response <- tolower(httr::http_status(httr::HEAD(url))$category)
@@ -20,21 +22,20 @@ url.exists <- function(url)
 } # url.exists
 #----------------------------------------------------------------------------------------------------
 #' @description a helper function for mostly internal use, obtains the genome codes (e.g. 'hg38')
-#' supported by igv.js
+#'       supported by igv.js
 #'
-#' @rdname current.genomes
-#' @aliases current.genomes
+#' @rdname currently.supported.genomes
+#' @aliases currently.supported.genomes
 #'
 #' @return an list of short genome codes, e.g., "hg38", "dm6", "tair10"
 #' @export
 #'
-current.genomes <- function(test=FALSE)
+currently.supported.genomes <- function(test=FALSE)
 {
     basic.offerings <-  c("hg38", "hg19", "mm10", "tair10", "rhos", "custom", "dm6", "sacCer3")
     if(test) return(basic.offerings)
 
     current.genomes.file <- "https://s3.amazonaws.com/igv.org.genomes/genomes.json"
-
 
     if(!url.exists(current.genomes.file))
         return(basic.offerings)
@@ -44,7 +45,7 @@ current.genomes <- function(test=FALSE)
     supported.genomes <- sub(",", "", sub(" *id: ", "", gsub('"', '', genomes.raw)))
     return(supported.genomes)
 
-} # current.genomes
+} # currently.supported.genomes
 #----------------------------------------------------------------------------------------------------
 #' @description a helper function for internal use by the igvShiny constructor, but possible also
 #' of use to those building an igvShiny app, to test their genome specification for validity
@@ -52,59 +53,77 @@ current.genomes <- function(test=FALSE)
 #' @rdname parseAndValidateGenomeSpec
 #' @aliases parseAndValidateGenomeSpec
 #'
-#' @param genomeSpec a list, with one required field 'genoneCode', and 3 optional: 'fasta', 'fasta.index'
-#' genome.annotation, all of which use remote urls, or a full path to a local file
+#' @param genomeName character usually one short code of a supported ("stock") genome (e.g., "hg38") or for
+#'        a user-supplied custom genome, the name you wish to use
+#' @param initialLocus character default "all", otherwise "chrN:start-end" or a recognized gene symbol
+#' @param stockGenome logical default FALSE
+#' @param dataMode character either "stock", "localFile" or "http"
+#' @param fasta character when supplying a custom (non-stock) genome, either a file path or a URL
+#' @param fastaIndex character when supplying a custom (non-stock) genome, either a file path or a URL,
+#'     essential for all but the very small custom genomes.
+#' @param genomeAnnotation character when supplying a custom (non-stock) genome, a file path or URL pointing
+#'    to a genome annotation file in a gff3 format
 #'
 #' @return an options list directly usable by igvApp.js, and thus igv.js
 #' @export
 #'
-parseAndValidateGenomeSpec <- function(genomeSpec)
+parseAndValidateGenomeSpec <- function(genomeName, initialLocus="all",
+                                       stockGenome=TRUE, dataMode="stock",
+                                       fasta=NA, fastaIndex=NA, genomeAnnotation=NA)
 {
-    if(length(genomeSpec) == 1)
-        stopifnot(names(genomeSpec) == "genomeName")
-    if(length(genomeSpec) == 2)
-        stopifnot(names(genomeSpec) == c("genomeName", "initialLocus"))
-    if(length(genomeSpec) > 2)
-        stopifnot(all(c("genomeName", "initialLocus", "displayMode") %in% names(genomeSpec)))
+    options <- list()
+    options[["validated"]] <- FALSE
 
-    supported.genomes <- c(current.genomes(), "customGenome")
-    genomeName <- genomeSpec$genomeName
-    supported <-  genomeName %in% supported.genomes
+    #--------------------------------------------------
+    # first: is this a stock genome?  if so, we need
+    # only check if the genomeName is recognized
+    #--------------------------------------------------
 
-    if (!supported){
-       s.1 <- sprintf("Your genome '%s' is not currently supported", genomeName)
-       s.2 <- sprintf("Currently supported: %s", paste(supported.genomes, collapse=","))
-       msg <- sprintf("%s\n%s", s.1, s.2)
-       stop(msg)
-       }
+    if(stockGenome){
+       supported.genomes <- currently.supported.genomes()
+       if(!genomeName %in% supported.genomes){
+          s.1 <- sprintf("Your genome '%s' is not currently supported", genomeName)
+          s.2 <- sprintf("Currently supported: %s", paste(supported.genomes, collapse=","))
+          msg <- sprintf("%s\n%s", s.1, s.2)
+          stop(msg)
+          }
+       options[["genomeName"]] <- genomeName
+       options[["initialLocus"]] <- initialLocus
+       options[["fasta"]] <- NA
+       options[["fastaIndex"]] <- NA
+       options[["annotation"]] <- NA
+       options[["validated"]] <- TRUE
+       } # stockGenome requested
 
-    options <- list(name=genomeName)
+    if(!stockGenome){
+       stopifnot(!is.na(dataMode))
+       stopifnot(!is.na(fasta))
+       stopifnot(!is.na(fastaIndex))
+         # genomeAnnotation is optional
 
-    if(genomeName == "customGenome"){
-       required.fields <- c("name", "dataMode", "fasta", "fastaIndex", "annotation")
-       missing.fields <- setdiff(required.fields, names(genomeSpec))
-       if(length(missing.fields) > 0){
-           s.1 <- sprintf("missing fields, needed for your customGenome: %s", paste(missing.fields, collapse=","))
-           msg <- sprintf("%s", s.1)
-           stop(msg)
-           }
        dataMode <- genomeSpec$dataMode
        recognized.modes <- c("localFile", "http")  # "direct" for an in-memory R data structure, deferred
        if(!dataMode %in% recognized.modes){
           msg <- sprintf("dataMode '%s' should be one of %s", paste(recognized.modes, collapse=","))
           stop(msg)
           }
+
+       #---------------------------------------------------------------------
+       # dataMode determines how to check for the existence of each resource
+       #---------------------------------------------------------------------
+
        exists.function <- switch(dataMode,
                                  "localFile" = file.exists,
                                  "http" = url.exists
                                  )
        stopifnot(exists.function(genomeSpec$fasta))
        stopifnot(exists.function(genomeSpec$fastaIndex))
-       stopifnot(exists.function(genomeSpec$annotation))
+       if(!is.na(genomeAnnotation))
+          stopifnot(exists.function(genomeSpec$annotation))
 
-       options[["name"]]  <- genomeSpec$name
-       options[["fasta"]] <- genomeSpec$fasta
-       options[["fastaIndex"]] <- genomeSpec$fastaIndex
+       options[["genomeName"]]  <- genomeName
+       options[["fasta"]] <- fasta
+       options[["fastaIndex"]] <- fastaIndex
        options[["annotation"]] <- genomeSpec$annotation
        }
 

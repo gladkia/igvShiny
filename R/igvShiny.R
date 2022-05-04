@@ -19,49 +19,6 @@ log <- function(...)if(verbose) print(noquote(sprintf(...)))
 state <- new.env(parent=emptyenv())
 state[["userAddedTracks"]] <- list()
 #----------------------------------------------------------------------------------------------------
-#' @description a helper function for mostly internal use, tests for availability of a url, modeled
-#' after file.exists
-#'
-#' @rdname url.exists
-#' @aliases url.exits
-#'
-#' @return logical TRUE or FALSE
-#' @export
-#'
-url.exists <- function(url)
-{
-   response <- tolower(httr::http_status(httr::HEAD(url))$category)
-   return(tolower(response) == "success")
-
-} # url.exists
-#----------------------------------------------------------------------------------------------------
-#' @description a helper function for mostly internal use, obtains the genome codes (e.g. 'hg38')
-#' supported by igv.js
-#'
-#' @rdname current.genomes
-#' @aliases current.genomes
-#'
-#' @return an list of short genome codes, e.g., "hg38", "dm6", "tair10"
-#' @export
-#'
-current.genomes <- function(test=FALSE)
-{
-    basic.offerings <-  c("hg38", "hg19", "mm10", "tair10", "rhos", "custom", "dm6", "sacCer3")
-    if(test) return(basic.offerings)
-
-    current.genomes.file <- "https://s3.amazonaws.com/igv.org.genomes/genomes.json"
-
-
-    if(!url.exists(current.genomes.file))
-        return(basic.offerings)
-
-    current.genomes.raw <- readLines(current.genomes.file, warn=FALSE, skipNul=TRUE)
-    genomes.raw <- grep('^    "id": ', current.genomes.raw, value=TRUE)
-    supported.genomes <- sub(",", "", sub(" *id: ", "", gsub('"', '', genomes.raw)))
-    return(supported.genomes)
-
-} # current.genomes
-#----------------------------------------------------------------------------------------------------
 #' Create an igvShiny instance
 #'
 #' @description This function is called in the server function of your shiny app
@@ -69,8 +26,7 @@ current.genomes <- function(test=FALSE)
 #' @rdname igvShiny
 #' @aliases igvShiny
 #'
-#' @param genomeSpec a list, with either a recognized genomeName (e.g., "hg38"),
-#' or a fasta/geneAnnotation specified as urls, with optional indices, or equivalent local files
+#' @param genomeOptions a list with these fields: genomeName, initialLocus,
 #' @param options a list, with required elements 'genomeName' and 'initialLocus'.
 #'   Local or remote custom genomes can be used by setting 'genomeName' to 'local' or
 #'   'remote'. The necessary fasta and index files are provided via 'fasta' and 'index'
@@ -84,45 +40,43 @@ current.genomes <- function(test=FALSE)
 #'
 #' @export
 #'
-igvShiny <- function(genomeSpec, initialLocus="all", width = NULL, height = NULL,
+igvShiny <- function(genomeOptions, width = NULL, height = NULL,
                      elementId = NULL, displayMode="squished", tracks=list())
 {
+  message(sprintf("igvShiny ctor, checking genomeOptions, either stock, or fully-specified custom"))
+  stopifnot(sort(names(genomeOptions)) == c("annotation", "fasta", "fastaIndex", "genomeName", "validated"))
+  stopifnot(genomeOptions[["validated"]])
   browser()
-  options <- parseAndValidateGenomeSpec(genomeSpec)
-  mandatoryOptions <- c("genomeName", "initialLocus")
-  stopifnot(all(mandatoryOptions %in% names(options)))
-  supportedGenomeNames <- c("hg38", "hg19", "mm10", "tair10", "rhos", "custom")
-  stopifnot(options$genomeName %in% supportedGenomeNames)
-  if (options$genomeName == "custom") {
-    log("Provided remote fasta url: %s", options$fasta)
-    # assert that the fasta and index are accessible
-    stopifnot("fasta" %in% names(options))
-    stopifnot(httr::http_status(httr::HEAD(options$fasta))$category == "Success")
-    if (is.null(options$index))
-      options$index <- paste(options$fasta, "fai", sep = ".")
-    log("Remote fasta index url: %s", options$index)
-    stopifnot(httr::http_status(httr::HEAD(options$index))$category == "Success")
-  }
-  if (options$genomeName == "local") {
-    # assert that the fasta and index exists
-    stopifnot("fasta" %in% names(options))
-    stopifnot(file.exists(options$fasta))
-    log("Provided local fasta file: %s", options$fasta)
-    if (is.null(options$index))
-      options$index <- paste(options$fasta, "fai", sep = ".")
-    stopifnot(file.exists(options$index))
-    log("Local fasta index file: %s", options$index)
-
-    # copy fasta file to tracks directory
-    directory.name <- "tracks"   # need this as directory within the current working directory
-    if (!dir.exists(directory.name)) dir.create(directory.name)
-    filename <- file.path(directory.name, basename(options$fasta))
-    file.copy(options$fasta, filename, overwrite = TRUE)
-    options$fasta <- filename
-    filename <- file.path(directory.name, basename(options$index))
-    file.copy(options$index, filename, overwrite = TRUE)
-    options$index <- filename
-  }
+  # options <- parseAndValidateGenomeSpec(genomeSpec)
+  # if (options$genomeName == "custom") {
+  #   log("Provided remote fasta url: %s", options$fasta)
+  #   # assert that the fasta and index are accessible
+  #   stopifnot("fasta" %in% names(options))
+  #   stopifnot(httr::http_status(httr::HEAD(options$fasta))$category == "Success")
+  #   if (is.null(options$index))
+  #     options$index <- paste(options$fasta, "fai", sep = ".")
+  #   log("Remote fasta index url: %s", options$index)
+  #   stopifnot(httr::http_status(httr::HEAD(options$index))$category == "Success")
+ #  }
+ #  if (options$genomeName == "local") {
+ #    # assert that the fasta and index exists
+ #    stopifnot("fasta" %in% names(options))
+ #    stopifnot(file.exists(options$fasta))
+ #    log("Provided local fasta file: %s", options$fasta)
+ #    if (is.null(options$index))
+ #      options$index <- paste(options$fasta, "fai", sep = ".")
+ #    stopifnot(file.exists(options$index))
+ #    log("Local fasta index file: %s", options$index)
+ # copy fasta file to tracks directory
+ #    directory.name <- "tracks"   # need this as directory within the current working directory
+ #    if (!dir.exists(directory.name)) dir.create(directory.name)
+ #    filename <- file.path(directory.name, basename(options$fasta))
+ #    file.copy(options$fasta, filename, overwrite = TRUE)
+ #    options$fasta <- filename
+ #    filename <- file.path(directory.name, basename(options$index))
+ #    file.copy(options$index, filename, overwrite = TRUE)
+ #    options$index <- filename
+ #    }
 
   state[["requestedHeight"]] <- height
 
@@ -131,11 +85,11 @@ igvShiny <- function(genomeSpec, initialLocus="all", width = NULL, height = NULL
 
   #send namespace info in case widget is being called from a module
   session <- shiny::getDefaultReactiveDomain()
-  options$moduleNS <- session$ns("")
+  genomeOptions$moduleNS <- session$ns("")
 
   htmlwidgets::createWidget(
     name = 'igvShiny',
-    options,
+    genomeOptions,
     width = width,
     height = height,
     package = 'igvShiny',

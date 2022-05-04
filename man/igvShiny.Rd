@@ -5,8 +5,7 @@
 \title{Create an igvShiny instance}
 \usage{
 igvShiny(
-  genomeSpec,
-  initialLocus = "all",
+  genomeOptions,
   width = NULL,
   height = NULL,
   elementId = NULL,
@@ -15,8 +14,7 @@ igvShiny(
 )
 }
 \arguments{
-\item{genomeSpec}{a list, with either a recognized genomeName (e.g., "hg38"),
-or a fasta/geneAnnotation specified as urls, with optional indices, or equivalent local files}
+\item{genomeOptions}{a list with these fields: genomeName, initialLocus,}
 
 \item{width}{a character string, standard css notations, either e.g., "1000px" or "95\%"}
 
