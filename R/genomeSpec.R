@@ -60,21 +60,27 @@ current.genomes <- function(test=FALSE)
 #'
 parseAndValidateGenomeSpec <- function(genomeSpec)
 {
+    if(length(genomeSpec) == 1)
+        stopifnot(names(genomeSpec) == "genomeName")
+    if(length(genomeSpec) == 2)
+        stopifnot(names(genomeSpec) == c("genomeName", "initialLocus"))
+    if(length(genomeSpec) > 2)
+        stopifnot(all(c("genomeName", "initialLocus", "displayMode") %in% names(genomeSpec)))
+
     supported.genomes <- c(current.genomes(), "customGenome")
-    genomeCode <- genomeSpec$genomeCode
-    # browser()
-    supported <-  genomeCode %in% supported.genomes
+    genomeName <- genomeSpec$genomeName
+    supported <-  genomeName %in% supported.genomes
 
     if (!supported){
-       s.1 <- sprintf("Your genome '%s' is not currently supported", genomeCode)
+       s.1 <- sprintf("Your genome '%s' is not currently supported", genomeName)
        s.2 <- sprintf("Currently supported: %s", paste(supported.genomes, collapse=","))
        msg <- sprintf("%s\n%s", s.1, s.2)
        stop(msg)
        }
 
-    options <- list(name=genomeCode)
+    options <- list(name=genomeName)
 
-    if(genomeCode == "customGenome"){
+    if(genomeName == "customGenome"){
        required.fields <- c("name", "dataMode", "fasta", "fastaIndex", "annotation")
        missing.fields <- setdiff(required.fields, names(genomeSpec))
        if(length(missing.fields) > 0){

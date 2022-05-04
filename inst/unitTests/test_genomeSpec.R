@@ -3,6 +3,9 @@ library(RUnit)
 #----------------------------------------------------------------------------------------------------
 runTests <- function()
 {
+    test_url.exists()
+    test_availableGenomes()
+    test_parseAndVAlidateGenomeSpec()
 
 } # runTests
 #----------------------------------------------------------------------------------------------------
@@ -16,9 +19,9 @@ test_url.exists <- function()
 
 } # test_url.exists
 #----------------------------------------------------------------------------------------------------
-test_stockGenomes <- function()
+test_availableGenomes <- function()
 {
-    message(sprintf("--- test_stockGenomes"))
+    message(sprintf("--- test_availableGenomes"))
 
     cg <- current.genomes()
     checkTrue(length(cg) > 30)
@@ -26,19 +29,21 @@ test_stockGenomes <- function()
     cg.minimal <- current.genomes(test=TRUE)
     checkEquals(cg.minimal, c("hg38", "hg19", "mm10", "tair10", "rhos", "custom", "dm6", "sacCer3"))
 
-} # test_stockGenomes
+} # test_availableGenomes
 #----------------------------------------------------------------------------------------------------
-test_stockGenomes <- function()
+test_parseAndVAlidateGenomeSpec <- function()
 {
-    message(sprintf("--- test_stockGenomes"))
+    message(sprintf("--- test_parseAndVAlidateGenomeSpec"))
 
-    spec <- list(genomeCode="hg38")
+    spec <- list(genomeName="hg38",
+                 initialLocus="all")
+
     options <- parseAndValidateGenomeSpec(spec)
     checkEquals(names(options), "name")
     checkEquals(options$name, "hg38")
 
     error.caught <- tryCatch({
-        spec <- list(genomeCode="fubar")
+        spec <- list(genomeName="fubar")
         options <- parseAndValidateGenomeSpec(spec)
         FALSE;
         },
@@ -51,7 +56,7 @@ test_stockGenomes <- function()
         # now an http explicit genomeSpec on our server
         #------------------------------------------------
 
-    spec <- list(genomeCode="customGenome",
+    spec <- list(genomeName="customGenome",
                  name="ribosome RNA",
                  dataMode="http",
                  fasta="https://igv-data.systemsbiology.net/testFiles/ribosomal-RNA-gene.fasta",
@@ -89,7 +94,7 @@ test_stockGenomes <- function()
     fasta.index.file <- file.path(data.dir, "ribosomal-RNA-gene.fasta.fai")
     annotation.file <- file.path(data.dir, "ribosomal-RNA-gene.gff3")
 
-    spec <- list(genomeCode="customGenome",
+    spec <- list(genomeName="customGenome",
                  name="ribosome RNA",
                  dataMode="localFile",
                  fasta=fasta.file,
@@ -117,7 +122,7 @@ test_stockGenomes <- function()
            })
     checkTrue(error.caught)
 
-
-
-} # test_stockGenomes
+} # test_parseAndVAlidateGenomeSpec
 #----------------------------------------------------------------------------------------------------
+if(!interactive())
+    runTests()

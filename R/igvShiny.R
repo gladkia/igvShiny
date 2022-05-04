@@ -87,6 +87,7 @@ current.genomes <- function(test=FALSE)
 igvShiny <- function(genomeSpec, initialLocus="all", width = NULL, height = NULL,
                      elementId = NULL, displayMode="squished", tracks=list())
 {
+  browser()
   options <- parseAndValidateGenomeSpec(genomeSpec)
   mandatoryOptions <- c("genomeName", "initialLocus")
   stopifnot(all(mandatoryOptions %in% names(options)))
