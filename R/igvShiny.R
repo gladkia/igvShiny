@@ -44,9 +44,11 @@ igvShiny <- function(genomeOptions, width = NULL, height = NULL,
                      elementId = NULL, displayMode="squished", tracks=list())
 {
   message(sprintf("igvShiny ctor, checking genomeOptions, either stock, or fully-specified custom"))
-  stopifnot(sort(names(genomeOptions)) == c("annotation", "fasta", "fastaIndex", "genomeName", "validated"))
+  print(genomeOptions)
+  stopifnot(sort(names(genomeOptions)) ==
+                c("annotation", "fasta", "fastaIndex", "genomeName", "initialLocus", "validated"))
   stopifnot(genomeOptions[["validated"]])
-  browser()
+  #browser()
   # options <- parseAndValidateGenomeSpec(genomeSpec)
   # if (options$genomeName == "custom") {
   #   log("Provided remote fasta url: %s", options$fasta)

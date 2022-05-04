@@ -191,11 +191,15 @@ server = function(input, output, session) {
 
    output$igvShiny_0 <- renderIgvShiny({
      cat("--- starting renderIgvShiny\n");
-     x <- igvShiny(list(genomeName=genomes[2],
-                        initialLocus=loci[7],
-                        displayMode="SQUISHED",
-                        tracks=list()
-                        ))
+     genomeOptions <- parseAndValidateGenomeSpec(genomeName="hg38",  initialLocus=loci[7],
+                                                 stockGenome=TRUE, dataMode="stock",
+                                                 fasta=NA, fastaIndex=NA, genomeAnnotation=NA)
+
+     genomeSpec <-
+     x <- igvShiny(genomeOptions,
+                   displayMode="SQUISHED",
+                   tracks=list()
+                   )
      cat("--- ending renderIgvShiny\n");
      #later(function() {
      #    loadBedTrack(session, id="igvShiny_0", trackName="bed.start", tbl=tbl.bed, color="red");
