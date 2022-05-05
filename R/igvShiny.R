@@ -43,50 +43,42 @@ state[["userAddedTracks"]] <- list()
 igvShiny <- function(genomeOptions, width = NULL, height = NULL,
                      elementId = NULL, displayMode="squished", tracks=list())
 {
-  message(sprintf("igvShiny ctor, checking genomeOptions, either stock, or fully-specified custom"))
-  print(genomeOptions)
   stopifnot(sort(names(genomeOptions)) ==
-                c("annotation", "fasta", "fastaIndex", "genomeName", "initialLocus", "validated"))
+            c("annotation", "dataMode", "fasta", "fastaIndex", "genomeName", "initialLocus",
+              "stockGenome", "validated"))
   stopifnot(genomeOptions[["validated"]])
-  #browser()
-  # options <- parseAndValidateGenomeSpec(genomeSpec)
-  # if (options$genomeName == "custom") {
-  #   log("Provided remote fasta url: %s", options$fasta)
-  #   # assert that the fasta and index are accessible
-  #   stopifnot("fasta" %in% names(options))
-  #   stopifnot(httr::http_status(httr::HEAD(options$fasta))$category == "Success")
-  #   if (is.null(options$index))
-  #     options$index <- paste(options$fasta, "fai", sep = ".")
-  #   log("Remote fasta index url: %s", options$index)
-  #   stopifnot(httr::http_status(httr::HEAD(options$index))$category == "Success")
- #  }
- #  if (options$genomeName == "local") {
- #    # assert that the fasta and index exists
- #    stopifnot("fasta" %in% names(options))
- #    stopifnot(file.exists(options$fasta))
- #    log("Provided local fasta file: %s", options$fasta)
- #    if (is.null(options$index))
- #      options$index <- paste(options$fasta, "fai", sep = ".")
- #    stopifnot(file.exists(options$index))
- #    log("Local fasta index file: %s", options$index)
- # copy fasta file to tracks directory
- #    directory.name <- "tracks"   # need this as directory within the current working directory
- #    if (!dir.exists(directory.name)) dir.create(directory.name)
- #    filename <- file.path(directory.name, basename(options$fasta))
- #    file.copy(options$fasta, filename, overwrite = TRUE)
- #    options$fasta <- filename
- #    filename <- file.path(directory.name, basename(options$index))
- #    file.copy(options$index, filename, overwrite = TRUE)
- #    options$index <- filename
- #    }
+
+  if(!genomeOptions[["stockGenome"]] && genomeOptions[["dataMode"]] == "localFiles"){
+     directory.name <- "tracks"     # todo: may wish to parameterize this directory name
+     fasta.file <- genomeOptions[["fasta"]]
+     fasta.indexFile <- genomeOptions[["fastaIndex"]]
+     gff3.file <- genomeOptions[["annotation"]]
+     if(!dir.exists(directory.name))
+        dir.create(directory.name)
+     destination <- file.path(directory.name, basename(fasta.file))
+     file.copy(fasta.file, destination, overwrite = TRUE)
+     destination <- file.path(directory.name, basename(fasta.indexFile))
+     file.copy(fasta.indexFile, destination, overwrite = TRUE)
+     if(!is.na(gff3.file)){
+        destination <- file.path(directory.name, basename(gff3.file))
+        file.copy(gff3.file, destination, overwrite = TRUE)
+        genomeOptions[["annotation"]] <- file.path(directory.name, basename(gff3.file))
+        }
+        # now that they have been copied, store the new paths
+     genomeOptions[["fasta"]] <- file.path(directory.name, basename(fasta.file))
+     genomeOptions[["fastaIndex"]] <- file.path(directory.name, basename(fasta.indexFile))
+     } # if custom genome, local files
+
 
   state[["requestedHeight"]] <- height
 
   log("--- ~/github/igvShiny/R/igvShiny ctor");
   log("  initial track count: %d", length(tracks))
 
-  #send namespace info in case widget is being called from a module
+    #send namespace info in case widget is being called from a module
   session <- shiny::getDefaultReactiveDomain()
+  genomeOptions$displayMode <- displayMode
+  genomeOptions$trackHeight <- 100      # todo: make this an igvShiny ctor argument
   genomeOptions$moduleNS <- session$ns("")
 
   htmlwidgets::createWidget(
@@ -464,9 +456,6 @@ loadBedGraphTrack <- function(session, id, trackName, tbl, color="gray", trackHe
 
 } # loadBedGraphTrack
 #------------------------------------------------------------------------------------------------------------------------
-
-
-
 #' load a seg track provided as a data.frame
 #'
 #' @description load a SEG track provided as a data.frame.  igv "displays segmented data as

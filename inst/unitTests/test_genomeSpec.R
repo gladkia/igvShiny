@@ -6,6 +6,10 @@ runTests <- function()
     test_url.exists()
     test_supportedGenomes()
     test_parseAndValidateGenomeSpec.stock()
+    test_parseAndValidateGenomeSpec.custom.http()
+    test_parseAndValidateGenomeSpec.custom.localFiles()
+    test_parseAndValidateGenomeSpec.custom.localFiles.sarsWithGFF3()
+
 
 } # runTests
 #----------------------------------------------------------------------------------------------------
@@ -33,16 +37,18 @@ test_supportedGenomes <- function()
 #----------------------------------------------------------------------------------------------------
 test_parseAndValidateGenomeSpec.stock <- function()
 {
-    message(sprintf("--- test_parseAndVAlidateGenomeSpec"))
+    message(sprintf("--- test_parseAndValidateGenomeSpec.stock"))
 
     options <- parseAndValidateGenomeSpec(genomeName="hg38",  initialLocus="NDUFS2",
                                           stockGenome=TRUE, dataMode="stock",
                                           fasta=NA, fastaIndex=NA, genomeAnnotation=NA)
 
     checkEquals(sort(names(options)),
-                c("annotation", "fasta", "fastaIndex", "genomeName", "initialLocus", "validated"))
+                c("annotation", "dataMode", "fasta", "fastaIndex", "genomeName",
+                  "initialLocus", "stockGenome", "validated"))
     checkEquals(options[["genomeName"]], "hg38")
     checkTrue(options[["validated"]])
+    checkTrue(options[["stockGenome"]])
     checkTrue(all(is.na(options[c("fasta", "fastaIndex", "annotation")])))
 
     error.caught <- tryCatch({
@@ -56,7 +62,155 @@ test_parseAndValidateGenomeSpec.stock <- function()
       })
     checkTrue(error.caught)
 
+} # test_parseAndValidateGenomeSpec.stock
+#----------------------------------------------------------------------------------------------------
+test_parseAndValidateGenomeSpec.custom.http <- function()
+{
+    message(sprintf("--- test_parseAndValidateGenomeSpec.custom.http"))
 
+    base.url <- "https://igv-data.systemsbiology.net/testFiles"
+    fasta.file <- sprintf("%s/%s", base.url, "ribosomal-RNA-gene.fasta")
+    fastaIndex.file <- sprintf("%s/%s", base.url, "ribosomal-RNA-gene.fasta.fai")
+    annotation.file <- sprintf("%s/%s", base.url, "ribosomal-RNA-gene.gff3")
+
+
+    options <- parseAndValidateGenomeSpec(genomeName="ribo",
+                                          initialLocus="all",
+                                          stockGenome=FALSE,
+                                          dataMode="http",
+                                          fasta=fasta.file,
+                                          fastaIndex=fastaIndex.file,
+                                          genomeAnnotation=annotation.file)
+
+    checkEquals(sort(names(options)),
+                c("annotation", "dataMode", "fasta", "fastaIndex", "genomeName",
+                  "initialLocus", "stockGenome", "validated"))
+    checkEquals(options[["genomeName"]], "ribo")
+    checkTrue(options[["validated"]])
+    checkTrue(!options[["stockGenome"]])
+    checkTrue(all(!is.na(options[c("fasta", "fastaIndex", "annotation")])))
+
+    checkEquals(options$fasta, fasta.file)
+    checkEquals(options$fastaIndex, fastaIndex.file)
+    checkEquals(options$annotation, annotation.file)
+    checkEquals(options$dataMode, "http")
+
+       #--------------------------------------------------------
+       # now an intentional failure, with bogus fasta.file name
+       #--------------------------------------------------------
+    error.caught <- tryCatch({
+       fasta.file <- sprintf("%s-bogus", fasta.file)
+       options <- parseAndValidateGenomeSpec(genomeName="ribo-willFail",
+                                             initialLocus="all",
+                                             stockGenome=FALSE,
+                                             dataMode="http",
+                                             fasta=fasta.file,
+                                             fastaIndex=fastaIndex.file,
+                                             genomeAnnotation=annotation.file)
+       FALSE;
+       },
+    error = function(e){
+      TRUE;
+      })
+
+    checkTrue(error.caught)
+
+} # test_parseAndValidateGenomeSpec.custom.http
+#----------------------------------------------------------------------------------------------------
+test_parseAndValidateGenomeSpec.custom.localFiles <- function()
+{
+    message(sprintf("--- test_parseAndValidateGenomeSpec.custom.localFiles"))
+
+    data.directory <- system.file(package="igvShiny", "extdata")
+    fasta.file <- file.path(data.directory, "ribosomal-RNA-gene.fasta")
+    fastaIndex.file <- file.path(data.directory, "ribosomal-RNA-gene.fasta.fai")
+    annotation.file <- file.path(data.directory, "ribosomal-RNA-gene.gff3")
+
+    checkTrue(file.exists(fasta.file))
+    checkTrue(file.exists(fastaIndex.file))
+    checkTrue(file.exists(annotation.file))
+
+    options <- parseAndValidateGenomeSpec(genomeName="ribosome local files",
+                                          initialLocus="all",
+                                          stockGenome=FALSE,
+                                          dataMode="localFiles",
+                                          fasta=fasta.file,
+                                          fastaIndex=fastaIndex.file,
+                                          genomeAnnotation=annotation.file)
+
+    checkEquals(sort(names(options)),
+                c("annotation", "dataMode", "fasta", "fastaIndex", "genomeName",
+                  "initialLocus", "stockGenome", "validated"))
+    checkEquals(options[["genomeName"]], "ribosome local files")
+    checkTrue(options[["validated"]])
+    checkTrue(!options[["stockGenome"]])
+    checkTrue(all(!is.na(options[c("fasta", "fastaIndex", "annotation")])))
+
+    checkEquals(options$fasta, fasta.file)
+    checkEquals(options$fastaIndex, fastaIndex.file)
+    checkEquals(options$annotation, annotation.file)
+    checkEquals(options$dataMode, "localFiles")
+
+       #--------------------------------------------------------
+       # now an intentional failure, with bogus fasta.file name
+       #--------------------------------------------------------
+    error.caught <- tryCatch({
+       fasta.file <- sprintf("%s-bogus", fasta.file)
+       options <- parseAndValidateGenomeSpec(genomeName="ribo-willFail",
+                                             initialLocus="all",
+                                             stockGenome=FALSE,
+                                             dataMode="http",
+                                             fasta=fasta.file,
+                                             fastaIndex=fastaIndex.file,
+                                             genomeAnnotation=annotation.file)
+       FALSE;
+       },
+    error = function(e){
+      TRUE;
+      })
+
+    checkTrue(error.caught)
+
+} # test_parseAndValidateGenomeSpec.custom.files
+#----------------------------------------------------------------------------------------------------
+test_parseAndValidateGenomeSpec.custom.localFiles.sarsWithGFF3 <- function()
+{
+    message(sprintf("--- test_parseAndValidateGenomeSpec.custom.localFiles.sarsWithGFF3"))
+
+    data.directory <- system.file(package="igvShiny", "extdata", "sarsGenome")
+    fasta.file <- file.path(data.directory, "Sars_cov_2.ASM985889v3.dna.toplevel.fa")
+    fastaIndex.file <- file.path(data.directory, "Sars_cov_2.ASM985889v3.dna.toplevel.fa.fai")
+    annotation.file <- file.path(data.directory, "Sars_cov_2.ASM985889v3.101.gff3")
+
+    checkTrue(file.exists(fasta.file))
+    checkTrue(file.exists(fastaIndex.file))
+    checkTrue(file.exists(annotation.file))
+
+    title <- "SARS-CoV-2"
+    options <- parseAndValidateGenomeSpec(genomeName=title,
+                                          initialLocus="all",
+                                          stockGenome=FALSE,
+                                          dataMode="localFiles",
+                                          fasta=fasta.file,
+                                          fastaIndex=fastaIndex.file,
+                                          genomeAnnotation=annotation.file)
+
+    checkEquals(sort(names(options)),
+                c("annotation", "dataMode", "fasta", "fastaIndex", "genomeName",
+                  "initialLocus", "stockGenome", "validated"))
+    checkEquals(options[["genomeName"]], title)
+    checkTrue(options[["validated"]])
+    checkTrue(!options[["stockGenome"]])
+    checkTrue(all(!is.na(options[c("fasta", "fastaIndex", "annotation")])))
+
+    checkEquals(options$fasta, fasta.file)
+    checkEquals(options$fastaIndex, fastaIndex.file)
+    checkEquals(options$annotation, annotation.file)
+    checkEquals(options$dataMode, "localFiles")
+
+
+} # test_parseAndValidateGenomeSpec.custom.localFiles.sarsWithGFF3
+#----------------------------------------------------------------------------------------------------
 
 #    options <- parseAndValidateGenomeSpec(genomeName="hg38", initialLocus="all")
 #      #                                    stockGenome=TRUE, dataMode=NA, fasta=NA, fastaIndex=NA, genomeAnnotation=NA)
@@ -142,8 +296,6 @@ test_parseAndValidateGenomeSpec.stock <- function()
 #           TRUE;
 #           })
 #    checkTrue(error.caught)
-
-} # test_parseAndVAlidateGenomeSpec
 #----------------------------------------------------------------------------------------------------
 if(!interactive())
     runTests()

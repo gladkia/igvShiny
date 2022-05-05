@@ -68,10 +68,12 @@ currently.supported.genomes <- function(test=FALSE)
 #' @export
 #'
 parseAndValidateGenomeSpec <- function(genomeName, initialLocus="all",
-                                       stockGenome=TRUE, dataMode="stock",
-                                       fasta=NA, fastaIndex=NA, genomeAnnotation=NA)
+                                       stockGenome=TRUE,
+                                       dataMode=NA, fasta=NA, fastaIndex=NA, genomeAnnotation=NA)
 {
     options <- list()
+    options[["stockGenome"]] <- stockGenome
+    options[["dataMode"]] <- dataMode
     options[["validated"]] <- FALSE
 
     #--------------------------------------------------
@@ -93,7 +95,7 @@ parseAndValidateGenomeSpec <- function(genomeName, initialLocus="all",
        options[["fastaIndex"]] <- NA
        options[["annotation"]] <- NA
        options[["validated"]] <- TRUE
-       } # stockGenome requested
+       }# stockGenome requested
 
     if(!stockGenome){
        stopifnot(!is.na(dataMode))
@@ -101,31 +103,31 @@ parseAndValidateGenomeSpec <- function(genomeName, initialLocus="all",
        stopifnot(!is.na(fastaIndex))
          # genomeAnnotation is optional
 
-       dataMode <- genomeSpec$dataMode
-       recognized.modes <- c("localFile", "http")  # "direct" for an in-memory R data structure, deferred
+       recognized.modes <- c("localFiles", "http")  # "direct" for an in-memory R data structure, deferred
        if(!dataMode %in% recognized.modes){
-          msg <- sprintf("dataMode '%s' should be one of %s", paste(recognized.modes, collapse=","))
+          msg <- sprintf("dataMode '%s' should be one of %s", dataMode, paste(recognized.modes, collapse=","))
           stop(msg)
           }
-
        #---------------------------------------------------------------------
        # dataMode determines how to check for the existence of each resource
        #---------------------------------------------------------------------
 
        exists.function <- switch(dataMode,
-                                 "localFile" = file.exists,
+                                 "localFiles" = file.exists,
                                  "http" = url.exists
                                  )
-       stopifnot(exists.function(genomeSpec$fasta))
-       stopifnot(exists.function(genomeSpec$fastaIndex))
+       stopifnot(exists.function(fasta))
+       stopifnot(exists.function(fastaIndex))
        if(!is.na(genomeAnnotation))
-          stopifnot(exists.function(genomeSpec$annotation))
+          stopifnot(exists.function(genomeAnnotation))
 
        options[["genomeName"]]  <- genomeName
        options[["fasta"]] <- fasta
        options[["fastaIndex"]] <- fastaIndex
-       options[["annotation"]] <- genomeSpec$annotation
-       }
+       options[["initialLocus"]] <- initialLocus
+       options[["annotation"]] <- genomeAnnotation
+       options[["validated"]] <- TRUE
+       } # if !stockGenome
 
     return(options)
 

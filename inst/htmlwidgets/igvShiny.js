@@ -51,10 +51,16 @@ HTMLWidgets.widget({
          var htmlContainerID = el.id;
          log("fasta: " + options.fasta)
          log("index: " + options.fastaIndex)
-         var fullOptions = genomeSpecificOptions(options.genomeName, options.initialLocus,
-                                                 options.displayMode, parseInt(options.trackHeight),
+         //debugger;
+         var fullOptions = genomeSpecificOptions(options.genomeName,
+                                                 options.stockGenome,
+                                                 options.dataMode,
+                                                 options.initialLocus,
+                                                 options.displayMode,
+                                                 parseInt(options.trackHeight),
                                                  options.fasta,
                                                  options.fastaIndex,
+                                                 options.annotation,
                                                  options.moduleNS)
 
          log("about to createBrowser, trackHeight: " + fullOptions.height)
@@ -125,8 +131,9 @@ function moduleNamespace(ns, nameEvent)
 {
   return(ns + nameEvent)
 }
-//----------------------------------------------------------------------------------------------------
-function genomeSpecificOptions(genomeName, initialLocus, displayMode, trackHeight, fasta, index)
+//------------------------------------------------------------------------------------------------------------
+function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, displayMode, trackHeight,
+                               fasta, fastaIndex, annotation, moduleNS)
 {
     var localCustomGenome_options = {
         locus: initialLocus,
@@ -135,12 +142,13 @@ function genomeSpecificOptions(genomeName, initialLocus, displayMode, trackHeigh
         minimumBases: 5,
         reference:{
             id: genomeName,
-            fastaURL: window.location.href +  fasta,
-            indexURL: (index == null) ? false : index,
-            indexed:  (index == null)  ? false : true
+            fastaURL: window.location.href + fasta,
+            indexURL: window.location.href + fastaIndex,
+            indexed:  (fastaIndex == null)  ? false : true
             }
         }; // localCustomGenome_options
-    
+
+    //debugger;
     var remoteCustomGenome_options = {
         locus: initialLocus,
         flanking: 1000,
@@ -150,9 +158,27 @@ function genomeSpecificOptions(genomeName, initialLocus, displayMode, trackHeigh
         reference: {
             id: genomeName,
             fastaURL: fasta,
-            indexURL: index
+            indexURL: fastaIndex,
+            indexed:  (fastaIndex == null)  ? false : true
             }
         }; // remoteCustomGenome_options
+
+    if(annotation != null){
+        var annotationTrack = {
+            "type": "annotation",
+            "format": "gff3",
+            "name": "GENES",
+            "height": 200,
+            "order": Number.MAX_VALUE}
+        if(dataMode == "http"){
+           remoteCustomGenome_options.reference.tracks = [annotationTrack];
+           remoteCustomGenome_options.reference.tracks[0].url = annotation;
+           }
+        if(dataMode == "localFiles"){
+           localCustomGenome_options.reference.tracks = [annotationTrack];
+           localCustomGenome_options.reference.tracks[0].url = window.location.href + annotation;
+           }
+        } // if annotation (gff3) supplied
     
     var hg19_options = {
         locus: initialLocus,
@@ -241,7 +267,6 @@ function genomeSpecificOptions(genomeName, initialLocus, displayMode, trackHeigh
     }; // rhos_options
     
     var igvOptions = null;
-    debugger;
     
     switch(genomeName) {
     case "hg19":
@@ -260,13 +285,18 @@ function genomeSpecificOptions(genomeName, initialLocus, displayMode, trackHeigh
     case "rhos":
         igvOptions = rhos_options;
         break;
-    case "remote":
-        igvOptions = remoteCustomGenome_options;
-        break;
-    case "local":
-        igvOptions = localCustomGenome_options;
-        break;
         } // switch on genomeName
+
+    if(!stockGenome){
+       switch(dataMode){
+       case "http":
+          igvOptions = remoteCustomGenome_options;
+          break;
+       case "localFiles":
+          igvOptions = localCustomGenome_options;
+          break;
+          }
+       } // switch on dataMode, for a non-stock (custom) genome
     
     return(igvOptions)
 

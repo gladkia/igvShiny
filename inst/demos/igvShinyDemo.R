@@ -195,24 +195,13 @@ server = function(input, output, session) {
                                                  stockGenome=TRUE, dataMode="stock",
                                                  fasta=NA, fastaIndex=NA, genomeAnnotation=NA)
 
-     genomeSpec <-
      x <- igvShiny(genomeOptions,
                    displayMode="SQUISHED",
                    tracks=list()
                    )
      cat("--- ending renderIgvShiny\n");
-     #later(function() {
-     #    loadBedTrack(session, id="igvShiny_0", trackName="bed.start", tbl=tbl.bed, color="red");
-     #    }, 8)
      return(x)
      })
-
-   #output$igvShiny.1 <- renderIgvShiny(
-   #  igvShiny(list(
-   #     genomeName="hg38",
-   #     initialLocus="chr2:232,983,999-233,283,872"
-   #     ))
-   #)
 
 } # server
 #----------------------------------------------------------------------------------------------------
