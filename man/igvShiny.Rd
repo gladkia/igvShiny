@@ -17,7 +17,7 @@ igvShiny(
 \item{options}{a list, with required elements 'genomeName' and 'initialLocus'.
 Local or remote custom genomes can be used by setting 'genomeName' to 'local' or
 'remote'. The necessary fasta and index files are provided via 'fasta' and 'index'
-arguments, either as path on disc or as URL.}
+arguments, either as path on disk or as URL.}
 
 \item{width}{a character string, standard css notations, either e.g., "1000px" or "95\%"}
 

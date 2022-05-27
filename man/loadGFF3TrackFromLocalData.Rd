@@ -43,5 +43,5 @@ loadGFF3TrackFromLocalData(
 nothing
 }
 \description{
-
+load a GFF3 track defined by local data
 }

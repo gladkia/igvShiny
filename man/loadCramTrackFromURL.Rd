@@ -29,5 +29,5 @@ loadCramTrackFromURL(
 nothing
 }
 \description{
-
+load a cram track which, with index, is served up by http
 }

@@ -46,5 +46,5 @@ loadGFF3TrackFromURL(
 nothing
 }
 \description{
-
+load a GFF3 track which, with index, is served up by http
 }
