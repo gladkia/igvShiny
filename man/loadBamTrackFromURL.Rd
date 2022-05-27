@@ -37,5 +37,5 @@ loadBamTrackFromURL(
 nothing
 }
 \description{
-load a bam track which, with index, is served up by http
+load a remote bam track
 }

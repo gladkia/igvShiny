@@ -1,5 +1,9 @@
 library(igvShiny)
 #----------------------------------------------------------------------------------------------------
+options <- parseAndValidateGenomeSpec(genomeName="hg38",  initialLocus="NDUFS2",
+                                      stockGenome=TRUE, dataMode="stock",
+                                      fasta=NA, fastaIndex=NA, genomeAnnotation=NA)
+#----------------------------------------------------------------------------------------------------
 ui = shinyUI(
 
    fluidPage(
@@ -12,7 +16,7 @@ ui = shinyUI(
 server = function(input, output, session)
 {
    output$igvShiny <- renderIgvShiny({
-      options <- list(genomeName="hg38", initialLocus="NDUFS2")
+      # options <- list(genomeName="hg38", initialLocus="NDUFS2")
       igvShiny(options)
       })
 

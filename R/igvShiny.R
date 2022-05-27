@@ -569,7 +569,7 @@ loadGwasTrack <- function(session, id, trackName, tbl.gwas, ymin = 0, ymax = 35,
 #------------------------------------------------------------------------------------------------------------------------
 #' load a bam track which, with index, is served up by http
 #'
-#' @description
+#' @description load a remote bam track
 #'
 #' @rdname loadBamTrackFromURL
 #' @aliases loadBamTrackFromURL
@@ -647,7 +647,7 @@ loadBamTrackFromLocalData <- function(session, id, trackName, data, deleteTracks
 #------------------------------------------------------------------------------------------------------------------------
 #' load a cram track which, with index, is served up by http
 #'
-#' @description
+#' @description load a remote cram track
 #'
 #' @rdname loadCramTrackFromURL
 #' @aliases loadCramTrackFromURL
@@ -679,7 +679,7 @@ loadCramTrackFromURL <- function(session, id, trackName, cramURL, indexURL, dele
 #------------------------------------------------------------------------------------------------------------------------
 #' load a GFF3 track which, with index, is served up by http
 #'
-#' @description
+#' @description load a remote GFF3 track
 #'
 #' @rdname loadGFF3TrackFromURL
 #' @aliases loadGFF3TrackFromURL
@@ -723,7 +723,7 @@ loadGFF3TrackFromURL <- function(session, id, trackName, gff3URL, indexURL,
 #------------------------------------------------------------------------------------------------------------------------
 #' load a GFF3 track defined by local data
 #'
-#' @description
+#' @description load a local GFF3 track file
 #'
 #' @rdname loadGFF3TrackFromLocalData
 #' @aliases loadGFF3TrackFromLocalData

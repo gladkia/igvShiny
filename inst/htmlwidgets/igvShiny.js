@@ -49,8 +49,8 @@ HTMLWidgets.widget({
          igvshiny_log(el);
          igvshiny_log(el.id)
          var htmlContainerID = el.id;
-         log("fasta: " + options.fasta)
-         log("index: " + options.fastaIndex)
+         igvshiny_log("fasta: " + options.fasta)
+         igvshiny_log("index: " + options.fastaIndex)
          //debugger;
          var fullOptions = genomeSpecificOptions(options.genomeName,
                                                  options.stockGenome,
@@ -273,7 +273,7 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
         igvOptions = hg19_options;
         break;
     case "hg38":
-        log("hg38 options, trackHeight: " + hg38_options.height);
+        igvshiny_log("hg38 options, trackHeight: " + hg38_options.height);
         igvOptions = hg38_options;
         break;
     case "mm10":
