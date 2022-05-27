@@ -30,7 +30,7 @@ state[["userAddedTracks"]] <- list()
 #' @param options a list, with required elements 'genomeName' and 'initialLocus'.
 #'   Local or remote custom genomes can be used by setting 'genomeName' to 'local' or
 #'   'remote'. The necessary fasta and index files are provided via 'fasta' and 'index'
-#'   arguments, either as path on disc or as URL.
+#'   arguments, either as path on disk or as URL.
 #' @param width a character string, standard css notations, either e.g., "1000px" or "95\%"
 #' @param height a character string, needs to be an explicit pixel measure, e.g., "800px"
 #' @param elementId a character string, the html element id within which igv is created
@@ -43,6 +43,7 @@ state[["userAddedTracks"]] <- list()
 igvShiny <- function(genomeOptions, width = NULL, height = NULL,
                      elementId = NULL, displayMode="squished", tracks=list())
 {
+
   stopifnot(sort(names(genomeOptions)) ==
             c("annotation", "dataMode", "fasta", "fastaIndex", "genomeName", "initialLocus",
               "stockGenome", "validated"))
@@ -68,7 +69,6 @@ igvShiny <- function(genomeOptions, width = NULL, height = NULL,
      genomeOptions[["fasta"]] <- file.path(directory.name, basename(fasta.file))
      genomeOptions[["fastaIndex"]] <- file.path(directory.name, basename(fasta.indexFile))
      } # if custom genome, local files
-
 
   state[["requestedHeight"]] <- height
 

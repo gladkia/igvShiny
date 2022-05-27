@@ -14,7 +14,9 @@ igvShiny(
 )
 }
 \arguments{
+
 \item{genomeOptions}{a list with these fields: genomeName, initialLocus,}
+
 
 \item{width}{a character string, standard css notations, either e.g., "1000px" or "95\%"}
 

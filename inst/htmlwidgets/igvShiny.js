@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------------------------------
 var executionMode = "devel";
 //executionMode = "production";
-const log = function(msg)
+const igvshiny_log = function(msg)
 {
   if(executionMode == "devel")
       console.log(msg);
@@ -37,17 +37,17 @@ HTMLWidgets.widget({
 
     return {
       renderValue: function(options) {
-         log("---- ~/github/igvShiny/inst/htmlwidgets, renderValue");
-         log("     el: ");
-         log(el);
-         log("igv.js renderValue, wh: " + width + ", " + height)
-         log("--------- options");
-         log(options)
+         igvshiny_log("---- ~/github/igvShiny/inst/htmlwidgets, renderValue");
+         igvshiny_log("     el: ");
+         igvshiny_log(el);
+         igvshiny_log("igv.js renderValue, wh: " + width + ", " + height)
+         igvshiny_log("--------- options");
+         igvshiny_log(options)
          var igvDiv;
          igvDiv = el; // $("#igvDiv")[0];
-         log("---- el");
-         log(el);
-         log(el.id)
+         igvshiny_log("---- el");
+         igvshiny_log(el);
+         igvshiny_log(el.id)
          var htmlContainerID = el.id;
          log("fasta: " + options.fasta)
          log("index: " + options.fastaIndex)
@@ -63,25 +63,25 @@ HTMLWidgets.widget({
                                                  options.annotation,
                                                  options.moduleNS)
 
-         log("about to createBrowser, trackHeight: " + fullOptions.height)
+         igvshiny_log("about to createBrowser, trackHeight: " + fullOptions.height)
          igv.createBrowser(igvDiv, fullOptions)
              .then(function (browser) {
-                log("createBrowser promise fulfilled");
+                igvshiny_log("createBrowser promise fulfilled");
                 igvWidget = browser;
                 window.chromLocString = "";
-                log("about to save igv browser");
+                igvshiny_log("about to save igv browser");
                 document.getElementById(htmlContainerID).igvBrowser = browser;
                 document.getElementById(htmlContainerID).chromLocString = options.initialLocus;
                 jqueryTag = "#" + htmlContainerID + " .igv-root";
-                log("jqueryTag: " + jqueryTag);
+                igvshiny_log("jqueryTag: " + jqueryTag);
                 igvRoots = $(jqueryTag);
                 if(igvRoots.length > 1){
                    igvRoots[0].remove()
                    }
-                log(" count: " + igvRoots.length);
+                igvshiny_log(" count: " + igvRoots.length);
                 igvWidget.on('locuschange', debounce(function (referenceFrame){
-                   log("---- locuschange, referenceFrame: ")
-                   log(referenceFrame);
+                   igvshiny_log("---- locuschange, referenceFrame: ")
+                   igvshiny_log(referenceFrame);
                    var chrom = referenceFrame[0].chr
                    var start = Math.round(referenceFrame[0].start)
 		   var end = Math.round(referenceFrame[0].end)
@@ -89,18 +89,18 @@ HTMLWidgets.widget({
                    
                    document.getElementById(htmlContainerID).chromLocString = chromLocString;
                    var eventName = "currentGenomicRegion." + htmlContainerID
-                   log("--- calling Shiny.setInputValue:");
-   		   log("eventName: " + eventName);
-                   log("chromLocString:        " + chromLocString);
-                   log("window.chromLocString: " + window.chromLocString);
+                   igvshiny_log("--- calling Shiny.setInputValue:");
+   		   igvshiny_log("eventName: " + eventName);
+                   igvshiny_log("chromLocString:        " + chromLocString);
+                   igvshiny_log("window.chromLocString: " + window.chromLocString);
                    var newRegion = chromLocString != window.chromLocString;
-                   log("--- new.loc? " + newRegion);
+                   igvshiny_log("--- new.loc? " + newRegion);
                    if(newRegion){
-                      log("--- generating currentGenomicRegion event: " + chromLocString)
+                      igvshiny_log("--- generating currentGenomicRegion event: " + chromLocString)
                       Shiny.setInputValue(eventName, chromLocString, {priority: "event"});
                       var moduleEventName = moduleNamespace(options.moduleNS, "currentGenomicRegion.") + htmlContainerID.replace(options.moduleNS, "");
                       if(moduleEventName != eventName){
-                         log("moduleEventName: " + moduleEventName);
+                         igvshiny_log("moduleEventName: " + moduleEventName);
                          Shiny.setInputValue(moduleEventName, chromLocString, {priority: "event"});
                          }
                    window.chromLocString = chromLocString;
@@ -108,7 +108,7 @@ HTMLWidgets.widget({
                  }, 250, false));
                 igvWidget.on('trackclick', function (track, popoverData){
                    var x = popoverData;
-                   log(x)
+                   igvshiny_log(x)
                        // prepend module namespace to support the github/shinyModules/igvModule.R
                    Shiny.setInputValue(moduleNamespace(options.moduleNS, "trackClick"), x, {priority: "event"})
                        // for use outside of the ShinyModule idiom
@@ -262,7 +262,7 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
              indexed: true,
              height: trackHeight,
              displayMode: displayMode
-            },
+            }
         ]
     }; // rhos_options
     
@@ -305,7 +305,7 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
 Shiny.addCustomMessageHandler("redrawIgvWidget",
 
     function(message) {
-        log("--- redrawIgvShiny")
+        igvshiny_log("--- redrawIgvShiny")
         window.igvBrowser.resize();
         window.igvBrowser.visibilityChange();
         });
@@ -326,14 +326,14 @@ Shiny.addCustomMessageHandler("getGenomicRegion",
     function(message) {
        var elementID = message.elementID;
        var currentValue = document.getElementById(elementID).chromLocString;
-       log("current chromLocString: " + currentValue)
+       igvshiny_log("current chromLocString: " + currentValue)
        var eventName = "currentGenomicRegion." + elementID;
-       log("--- calling Shiny.setInputValue:");
-       log("eventName: " + eventName);
-       log("chromLocString: " + currentValue)
+       igvshiny_log("--- calling Shiny.setInputValue:");
+       igvshiny_log("eventName: " + eventName);
+       igvshiny_log("chromLocString: " + currentValue)
        Shiny.setInputValue(eventName, currentValue, {priority: "event"});
        var moduleEventName = "igv-currentGenomicRegion." + elementID.replace("igv-", "");
-       log("moduleEventName: " + moduleEventName);
+       igvshiny_log("moduleEventName: " + moduleEventName);
        Shiny.setInputValue(moduleEventName, currentValue, {priority: "event"});
        })
 
@@ -344,8 +344,8 @@ Shiny.addCustomMessageHandler("removeTracksByName",
        var elementID = message.elementID;
        var igvBrowser = document.getElementById(elementID).igvBrowser;
        var trackNames = message.trackNames;
-       log("=== removeTracksByName")
-       log(trackNames)
+       igvshiny_log("=== removeTracksByName")
+       igvshiny_log(trackNames)
        if(typeof(trackNames) == "string")
            trackNames = [trackNames];
        var count = igvBrowser.trackViews.length;
@@ -354,7 +354,7 @@ Shiny.addCustomMessageHandler("removeTracksByName",
           var trackView = igvBrowser.trackViews[i];
           var trackViewName = trackView.track.name;
           var matched = trackNames.indexOf(trackViewName) >= 0;
-          log(" is " + trackViewName + " in " + JSON.stringify(trackNames) + "? " + matched);
+          igvshiny_log(" is " + trackViewName + " in " + JSON.stringify(trackNames) + "? " + matched);
           if (matched){
              igvBrowser.removeTrack(trackView.track);
              } // if matched
@@ -365,8 +365,8 @@ Shiny.addCustomMessageHandler("removeTracksByName",
 Shiny.addCustomMessageHandler("loadBedTrackFromFile",
 
    function(message){
-       log("=== loadBedTrackFile");
-       log(message);
+       igvshiny_log("=== loadBedTrackFile");
+       igvshiny_log(message);
        var elementID = message.elementID;
        var igvBrowser = document.getElementById(elementID).igvBrowser;
 
@@ -391,8 +391,8 @@ Shiny.addCustomMessageHandler("loadBedTrackFromFile",
 Shiny.addCustomMessageHandler("loadGenomeAnnotationTrackFromFile",
 
    function(message){
-       log("=== loadGenomeAnnotationTrackFromFile");
-       log(message);
+       igvshiny_log("=== loadGenomeAnnotationTrackFromFile");
+       igvshiny_log(message);
        var elementID = message.elementID;
        var igvBrowser = document.getElementById(elementID).igvBrowser;
 
@@ -417,8 +417,8 @@ Shiny.addCustomMessageHandler("loadGenomeAnnotationTrackFromFile",
 Shiny.addCustomMessageHandler("loadBedTrack",
 
    function(message){
-      log("=== loadBedTrack");
-      log(message)
+      igvshiny_log("=== loadBedTrack");
+      igvshiny_log(message)
       var elementID = message.elementID;
       var igvBrowser = document.getElementById(elementID).igvBrowser;
       var trackName = message.trackName;
@@ -445,8 +445,8 @@ Shiny.addCustomMessageHandler("loadBedTrack",
 Shiny.addCustomMessageHandler("loadBedGraphTrack",
 
    function(message){
-      log("=== loadBedGraphTrack");
-      log(message)
+      igvshiny_log("=== loadBedGraphTrack");
+      igvshiny_log(message)
       var elementID = message.elementID;
       var igvBrowser = document.getElementById(elementID).igvBrowser;
       var trackName = message.trackName;
@@ -482,13 +482,13 @@ Shiny.addCustomMessageHandler("loadBedGraphTrack",
 Shiny.addCustomMessageHandler("loadSegTrack",
 
    function(message){
-      log("=== loadSegTrack");
-      log(message);
+      igvshiny_log("=== loadSegTrack");
+      igvshiny_log(message);
       var elementID = message.elementID;
       var igvBrowser = document.getElementById(elementID).igvBrowser;
       var trackName = message.trackName;
       var bedFeatures = message.tbl;
-      log("--- about to assign seg config")
+      igvshiny_log("--- about to assign seg config")
 
       var config = {type: "seg",
 		    format: "seg",
@@ -500,7 +500,7 @@ Shiny.addCustomMessageHandler("loadSegTrack",
                     //sourceType: "file",
                     height: 50
                     };
-      log("--- about to  loadTrack seg")
+      igvshiny_log("--- about to  loadTrack seg")
       igvBrowser.loadTrack(config);
       }
 
@@ -511,13 +511,13 @@ Shiny.addCustomMessageHandler("loadVcfTrack",
 
    function(message){
 
-      log("=== loadVcfTrack");
+      igvshiny_log("=== loadVcfTrack");
       var elementID = message.elementID;
       var igvBrowser = document.getElementById(elementID).igvBrowser;
       var trackName = message.trackName;
       var vcfFile = message.vcfDataFilepath;
       var dataURL = window.location.href + message.vcfDataFilepath;
-      log("dataURL: " + dataURL);
+      igvshiny_log("dataURL: " + dataURL);
 
       var config = {format: "vcf",
                      name: trackName,
@@ -558,7 +558,7 @@ Shiny.addCustomMessageHandler("loadGwasTrack",
 
       var gwasFile = message.gwasDataFilepath;
       var dataURL = window.location.href + gwasFile;
-      log("dataURL: " + dataURL);
+      igvshiny_log("dataURL: " + dataURL);
 
       var config = {format: "gwas",
                     type: "gwas",
@@ -580,8 +580,8 @@ Shiny.addCustomMessageHandler("loadGwasTrack",
 Shiny.addCustomMessageHandler("loadBamTrackFromURL",
 
    function(message){
-      log("=== loadBamTrack");
-      log(message)
+      igvshiny_log("=== loadBamTrack");
+      igvshiny_log(message)
       var elementID = message.elementID;
       var igvBrowser = document.getElementById(elementID).igvBrowser;
       var trackName = message.trackName;
@@ -607,8 +607,8 @@ Shiny.addCustomMessageHandler("loadBamTrackFromURL",
 Shiny.addCustomMessageHandler("loadBamTrackFromLocalData",
 
    function(message){
-      log("=== loadBamTrackFromLocalData");
-      log(message)
+      igvshiny_log("=== loadBamTrackFromLocalData");
+      igvshiny_log(message)
       var elementID = message.elementID;
       var igvBrowser = document.getElementById(elementID).igvBrowser;
       var dataURL = window.location.href + message.bamDataFilepath;
@@ -631,8 +631,8 @@ Shiny.addCustomMessageHandler("loadBamTrackFromLocalData",
 Shiny.addCustomMessageHandler("loadCramTrackFromURL",
 
    function(message){
-      log("=== loadCramTrackFromURL");
-      log(message)
+      igvshiny_log("=== loadCramTrackFromURL");
+      igvshiny_log(message)
       var elementID = message.elementID;
       var igvBrowser = document.getElementById(elementID).igvBrowser;
       var trackName = message.trackName;
@@ -654,8 +654,8 @@ Shiny.addCustomMessageHandler("loadCramTrackFromURL",
 Shiny.addCustomMessageHandler("loadGFF3TrackFromURL",
 
    function(message){
-      log("=== loadGFF3TrackFromURL");
-      log(message)
+      igvshiny_log("=== loadGFF3TrackFromURL");
+      igvshiny_log(message)
       var elementID = message.elementID;
       var igvBrowser = document.getElementById(elementID).igvBrowser;
 
@@ -681,7 +681,7 @@ Shiny.addCustomMessageHandler("loadGFF3TrackFromURL",
          }
        
        igvBrowser.loadTrack(config)
-       log("=== after loadTrack, loadGFF3TrackFromURL")
+       igvshiny_log("=== after loadTrack, loadGFF3TrackFromURL")
      } // function
 
 ); // loadGFF3TrackFromURL
@@ -689,8 +689,8 @@ Shiny.addCustomMessageHandler("loadGFF3TrackFromURL",
 Shiny.addCustomMessageHandler("loadGFF3TrackFromLocalData",
 
    function(message){
-      log("=== loadGFF3TrackFromLocalData");
-      log(message)
+      igvshiny_log("=== loadGFF3TrackFromLocalData");
+      igvshiny_log(message)
 
       var elementID = message.elementID;
       var igvBrowser = document.getElementById(elementID).igvBrowser;
