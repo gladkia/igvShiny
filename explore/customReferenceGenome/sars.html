@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta content="" name="description">
+    <meta content="" name="author">
+    <link href=img/favicon.ico rel="shortcut icon">
+    <title>Sars-CoV-2</title>
+    <script src="https://cdn.jsdelivr.net/npm/igv@2.10.5/dist/igv.min.js"></script>
+</head>
+
+<body>
+
+<div id="igvDiv" style="padding-top: 50px;padding-bottom: 20px; height: auto"></div>
+
+<script type="module">
+    var options = {
+        reference: {
+            "id": "sars",
+            "name": "Sars-CoV-2",
+            "fastaURL": "https://igv-data.systemsbiology.net/testFiles/sarsGenome/Sars_cov_2.ASM985889v3.dna.toplevel.fa",
+            "indexURL": "https://igv-data.systemsbiology.net/testFiles/sarsGenome/Sars_cov_2.ASM985889v3.dna.toplevel.fa.fai",
+            tracks: [
+                {"url": "https://igv-data.systemsbiology.net/testFiles/sarsGenome/Sars_cov_2.ASM985889v3.101.gff3",
+                 "type": "annotation",
+                 "format": "gff3",
+                 "name": "sars gff3",
+                 "height":  200,
+                 "order": Number.MAX_VALUE,
+                 "colorBy": "biotype",
+                 "colorTable": {
+                     "antisense": "blueviolet",
+                     "protein_coding": "blue",
+                     "retained_intron": "rgb(0, 150, 150)",
+                     "processed_transcript": "purple",
+                     "processed_pseudogene": "#7fff00",
+                     "unprocessed_pseudogene": "#d2691e",
+                     "*": "black"
+                      }
+                }]
+        }};
+
+    var igvDiv = document.getElementById("igvDiv");
+
+    igv.createBrowser(igvDiv, options)
+        .then(function (browser) {
+            console.log("Created IGV browser");
+        })
+
+
+</script>
+
+</body>
+
+</html>
+
+

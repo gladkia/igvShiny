@@ -107,7 +107,7 @@ server = function(input, output, session) {
        })
 
 
-    observeEvent(input$addLocalGFF3TrackButton, {
+    observeEvent(input$addoLcalGFF3TrackButton, {
        showGenomicRegion(session, id="igvShiny_0", "chr1:161,172,691-161,241,018")
        full.path <- system.file(package="igvShiny", "extdata", "GRCh38.94.NDUFS2.gff3")
        tbl.gff3 <- read.table(full.path, sep="\t", as.is=TRUE, header=TRUE)

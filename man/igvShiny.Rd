@@ -5,7 +5,7 @@
 \title{Create an igvShiny instance}
 \usage{
 igvShiny(
-  options,
+  genomeOptions,
   width = NULL,
   height = NULL,
   elementId = NULL,
@@ -14,10 +14,9 @@ igvShiny(
 )
 }
 \arguments{
-\item{options}{a list, with required elements 'genomeName' and 'initialLocus'.
-Local or remote custom genomes can be used by setting 'genomeName' to 'local' or
-'remote'. The necessary fasta and index files are provided via 'fasta' and 'index'
-arguments, either as path on disk or as URL.}
+
+\item{genomeOptions}{a list with these fields: genomeName, initialLocus,}
+
 
 \item{width}{a character string, standard css notations, either e.g., "1000px" or "95\%"}
 
@@ -28,6 +27,11 @@ arguments, either as path on disk or as URL.}
 \item{displayMode}{a character string, default "SQUISHED".}
 
 \item{tracks}{a list of track specifications to be created and displayed at startup}
+
+\item{options}{a list, with required elements 'genomeName' and 'initialLocus'.
+Local or remote custom genomes can be used by setting 'genomeName' to 'local' or
+'remote'. The necessary fasta and index files are provided via 'fasta' and 'index'
+arguments, either as path on disc or as URL.}
 }
 \value{
 the created widget

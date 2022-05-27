@@ -49,11 +49,19 @@ HTMLWidgets.widget({
          igvshiny_log(el);
          igvshiny_log(el.id)
          var htmlContainerID = el.id;
-         igvshiny_log("fasta: " + options.fasta)
-         igvshiny_log("index: " + options.index)
-         var fullOptions = genomeSpecificOptions(options.genomeName, options.initialLocus,
-                                                 options.displayMode, parseInt(options.trackHeight), options.fasta,
-                                                 options.index, options.moduleNS)
+         log("fasta: " + options.fasta)
+         log("index: " + options.fastaIndex)
+         //debugger;
+         var fullOptions = genomeSpecificOptions(options.genomeName,
+                                                 options.stockGenome,
+                                                 options.dataMode,
+                                                 options.initialLocus,
+                                                 options.displayMode,
+                                                 parseInt(options.trackHeight),
+                                                 options.fasta,
+                                                 options.fastaIndex,
+                                                 options.annotation,
+                                                 options.moduleNS)
 
          igvshiny_log("about to createBrowser, trackHeight: " + fullOptions.height)
          igv.createBrowser(igvDiv, fullOptions)
@@ -123,147 +131,173 @@ function moduleNamespace(ns, nameEvent)
 {
   return(ns + nameEvent)
 }
-//----------------------------------------------------------------------------------------------------
-function genomeSpecificOptions(genomeName, initialLocus, displayMode, trackHeight, fasta, index)
+//------------------------------------------------------------------------------------------------------------
+function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, displayMode, trackHeight,
+                               fasta, fastaIndex, annotation, moduleNS)
 {
-    var local_options = {
-    locus: initialLocus,
-    flanking: 1000,
-    showRuler: true,
-    minimumBases: 5,
+    var localCustomGenome_options = {
+        locus: initialLocus,
+        flanking: 1000,
+        showRuler: true,
+        minimumBases: 5,
+        reference:{
+            id: genomeName,
+            fastaURL: window.location.href + fasta,
+            indexURL: window.location.href + fastaIndex,
+            indexed:  (fastaIndex == null)  ? false : true
+            }
+        }; // localCustomGenome_options
 
-     reference: {
-       id: genomeName,
-       fastaURL:window.location.href +  fasta,
-       indexURL:window.location.href +  index
-       }
-     }; // local_options
-    var remote_options = {
-    locus: initialLocus,
-    flanking: 1000,
-    showRuler: true,
-    minimumBases: 5,
+    //debugger;
+    var remoteCustomGenome_options = {
+        locus: initialLocus,
+        flanking: 1000,
+        showRuler: true,
+        minimumBases: 5,
+        
+        reference: {
+            id: genomeName,
+            fastaURL: fasta,
+            indexURL: fastaIndex,
+            indexed:  (fastaIndex == null)  ? false : true
+            }
+        }; // remoteCustomGenome_options
 
-     reference: {
-       id: genomeName,
-       fastaURL: fasta,
-       indexURL: index
-       }
-     }; // remote_options
+    if(annotation != null){
+        var annotationTrack = {
+            "type": "annotation",
+            "format": "gff3",
+            "name": "GENES",
+            "height": 200,
+            "order": Number.MAX_VALUE}
+        if(dataMode == "http"){
+           remoteCustomGenome_options.reference.tracks = [annotationTrack];
+           remoteCustomGenome_options.reference.tracks[0].url = annotation;
+           }
+        if(dataMode == "localFiles"){
+           localCustomGenome_options.reference.tracks = [annotationTrack];
+           localCustomGenome_options.reference.tracks[0].url = window.location.href + annotation;
+           }
+        } // if annotation (gff3) supplied
+    
     var hg19_options = {
-    locus: initialLocus,
-    flanking: 1000,
-    showRuler: true,
-    minimumBases: 5,
-
-     reference: {id: "hg19"},
-     tracks: [
-        {name: 'Gencode v18',
-              url: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.collapsed.bed",
-         indexURL: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.collapsed.bed.idx",
-         visibilityWindow: 2000000,
-         displayMode: displayMode
-         }
-        ]
-     }; // hg19_options
-
-
+        locus: initialLocus,
+        flanking: 1000,
+        showRuler: true,
+        minimumBases: 5,
+        
+        reference: {id: "hg19"},
+        tracks: [
+            {name: 'Gencode v18',
+             url: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.collapsed.bed",
+             indexURL: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.collapsed.bed.idx",
+             visibilityWindow: 2000000,
+             displayMode: displayMode
+            }]
+        }; // hg19_options
+    
+    
     var hg38_options = {
-       locus: initialLocus,
-       height: 200,
-       //autoHeight: true,
-       minimumBases: 5,
-       flanking: 1000,
+        locus: initialLocus,
+        height: 200,
+        //autoHeight: true,
+        minimumBases: 5,
+        flanking: 1000,
 	name: "foo",
-       showRuler: true,
-       genome: "hg38"
-       }; // hg38_options
-
-
-   var mm10_options = {
-      locus: initialLocus,
-      flanking: 2000,
-      minimumBases: 5,
-      showRuler: true,
-      genome: "mm10"
-      }; // mm10_options
-
-   var tair10_options = {
-         locus: initialLocus,
-         flanking: 2000,
-	 showKaryo: false,
-         showNavigation: true,
-         minimumBases: 5,
-         showRuler: true,
-         reference: {id: "TAIR10",
-                fastaURL: "https://igv-data.systemsbiology.net/static/tair10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa",
-                indexURL: "https://igv-data.systemsbiology.net/static/tair10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.fai",
-                aliasURL: "https://igv-data.systemsbiology.net/static/tair10/chromosomeAliases.txt"
-                },
-         tracks: [
-           {name: 'Genes TAIR10',
-            type: 'annotation',
-            visibilityWindow: 500000,
-            url: "https://igv-data.systemsbiology.net/static/tair10/TAIR10_genes.sorted.chrLowered.gff3.gz",
-            color: "darkred",
-            indexed: true,
-            height: trackHeight,
-            displayMode: displayMode
+        showRuler: true,
+        genome: "hg38"
+        }; // hg38_options
+    
+    
+    var mm10_options = {
+        locus: initialLocus,
+        flanking: 2000,
+        minimumBases: 5,
+        showRuler: true,
+        genome: "mm10"
+        }; // mm10_options
+    
+    var tair10_options = {
+        locus: initialLocus,
+        flanking: 2000,
+	showKaryo: false,
+        showNavigation: true,
+        minimumBases: 5,
+        showRuler: true,
+        reference: {id: "TAIR10",
+                    fastaURL: "https://igv-data.systemsbiology.net/static/tair10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa",
+                    indexURL: "https://igv-data.systemsbiology.net/static/tair10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.fai",
+                    aliasURL: "https://igv-data.systemsbiology.net/static/tair10/chromosomeAliases.txt"
+                   },
+        tracks: [
+            {name: 'Genes TAIR10',
+             type: 'annotation',
+             visibilityWindow: 500000,
+             url: "https://igv-data.systemsbiology.net/static/tair10/TAIR10_genes.sorted.chrLowered.gff3.gz",
+             color: "darkred",
+             indexed: true,
+             height: trackHeight,
+             displayMode: displayMode
             },
-            ]
-          }; // tair10_options
+        ]
+    }; // tair10_options
+    
+    var rhos_options = {
+        locus: initialLocus,
+        flanking: 2000,
+	showKaryo: false,
+        showNavigation: true,
+        minimumBases: 5,
+        showRuler: true,
+        reference: {id: "Rhodobacter sphaeroides",
+                    fastaURL: "https://igv-data.systemsbiology.net/static/rhos/GCF_000012905.2_ASM1290v2_genomic.fna",
+                    indexURL: "https://igv-data.systemsbiology.net/static/rhos/GCF_000012905.2_ASM1290v2_genomic.fna.fai"
+                   },
+        tracks: [
+            {name: 'Genes',
+             type: 'annotation',
+             visibilityWindow: 500000,
+             url: "https://igv-data.systemsbiology.net/static/rhos/GCF_000012905.2_ASM1290v2_genomic.gff.gz",
+             color: "darkred",
+             indexed: true,
+             height: trackHeight,
+             displayMode: displayMode
+            }
+        ]
+    }; // rhos_options
+    
+    var igvOptions = null;
+    
+    switch(genomeName) {
+    case "hg19":
+        igvOptions = hg19_options;
+        break;
+    case "hg38":
+        log("hg38 options, trackHeight: " + hg38_options.height);
+        igvOptions = hg38_options;
+        break;
+    case "mm10":
+        igvOptions = mm10_options;
+        break;
+    case "tair10":
+        igvOptions = tair10_options;
+        break;
+    case "rhos":
+        igvOptions = rhos_options;
+        break;
+        } // switch on genomeName
 
-   var rhos_options = {
-         locus: initialLocus,
-         flanking: 2000,
-	 showKaryo: false,
-         showNavigation: true,
-         minimumBases: 5,
-         showRuler: true,
-         reference: {id: "Rhodobacter sphaeroides",
-                     fastaURL: "https://igv-data.systemsbiology.net/static/rhos/GCF_000012905.2_ASM1290v2_genomic.fna",
-                     indexURL: "https://igv-data.systemsbiology.net/static/rhos/GCF_000012905.2_ASM1290v2_genomic.fna.fai"
-                },
-         tracks: [
-           {name: 'Genes',
-            type: 'annotation',
-            visibilityWindow: 500000,
-            url: "https://igv-data.systemsbiology.net/static/rhos/GCF_000012905.2_ASM1290v2_genomic.gff.gz",
-            color: "darkred",
-            indexed: true,
-            height: trackHeight,
-            displayMode: displayMode
-            },
-            ]
-          }; // rhos_options
-
-   var igvOptions = null;
-
-   switch(genomeName) {
-      case "hg19":
-         igvOptions = hg19_options;
-         break;
-      case "hg38":
-         igvshiny_log("hg38 options, trackHeight: " + hg38_options.height);
-         igvOptions = hg38_options;
-         break;
-       case "mm10":
-         igvOptions = mm10_options;
-         break;
-       case "tair10":
-         igvOptions = tair10_options;
-         break;
-       case "rhos":
-         igvOptions = rhos_options;
-         break;
-       case "remote":
-         igvOptions = remote_options;
-         break;
-       case "local":
-         igvOptions = local_options;
-         break;
-         } // switch on genomeName
-
+    if(!stockGenome){
+       switch(dataMode){
+       case "http":
+          igvOptions = remoteCustomGenome_options;
+          break;
+       case "localFiles":
+          igvOptions = localCustomGenome_options;
+          break;
+          }
+       } // switch on dataMode, for a non-stock (custom) genome
+    
     return(igvOptions)
 
 } // genomeSpecificOptions
@@ -627,15 +661,16 @@ Shiny.addCustomMessageHandler("loadGFF3TrackFromURL",
 
       var indexedData = message.indexURL.length > 0;
        
-      var config = {format: "gff3",
-                    name: message.name,
-                    url: message.dataURL,
-                    indexURL: message.indexURL,
-                    indexed: indexedData,
-                    displayMode: message.displayMode,
-                    visibilityWindow: message.visibilityWindow,
-                    order: Number.MAX_VALUE,
-                    height: message.trackHeight};
+       var config = {type: "annotation",
+                     format: "gff3",
+                     name: message.name,
+                     url: message.dataURL,
+                     indexURL: message.indexURL,
+                     indexed: indexedData,
+                     displayMode: message.displayMode,
+                     visibilityWindow: message.visibilityWindow,
+                     order: Number.MAX_VALUE,
+                     height: message.trackHeight};
        
       if(Object.keys(message.colorTable).length > 0 && message.colorByAttribute.length > 0){
          config.colorTable = message.colorTable;
@@ -661,7 +696,9 @@ Shiny.addCustomMessageHandler("loadGFF3TrackFromLocalData",
       var igvBrowser = document.getElementById(elementID).igvBrowser;
       var dataURL = window.location.href + message.filePath;
 
-      var config = {format: "gff3",
+       var config = {type: "annotation",
+                     format: "gff3",
+                    //nameField: "gene",
                     name: message.trackName,
                     url: dataURL,
                     indexed: false,
