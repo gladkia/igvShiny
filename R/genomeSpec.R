@@ -3,6 +3,8 @@
 #----------------------------------------------------------------------------------------------------
 # log <- function(...)if(verbose) print(noquote(sprintf(...)))
 #----------------------------------------------------------------------------------------------------
+#' @title url.exists
+#'
 #' @description a helper function for mostly internal use, tests for availability of a url,
 #'              modeled after file.exists
 #'
@@ -21,16 +23,17 @@ url.exists <- function(url)
 
 } # url.exists
 #----------------------------------------------------------------------------------------------------
+#' @title currently.supported.stock.genomes
 #' @description a helper function for mostly internal use, obtains the genome codes (e.g. 'hg38')
 #'       supported by igv.js
 #'
-#' @rdname currently.supported.genomes
-#' @aliases currently.supported.genomes
+#' @rdname currently.supported.stock.genomes
+#' @aliases currently.supported.stock.genomes
 #'
 #' @return an list of short genome codes, e.g., "hg38", "dm6", "tair10"
 #' @export
 #'
-currently.supported.genomes <- function(test=FALSE)
+currently.supported.stock.genomes <- function(test=FALSE)
 {
     basic.offerings <-  c("hg38", "hg19", "mm10", "tair10", "rhos", "custom", "dm6", "sacCer3")
     if(test) return(basic.offerings)
@@ -42,27 +45,45 @@ currently.supported.genomes <- function(test=FALSE)
 
     current.genomes.raw <- readLines(current.genomes.file, warn=FALSE, skipNul=TRUE)
     genomes.raw <- grep('^    "id": ', current.genomes.raw, value=TRUE)
-    supported.genomes <- sub(",", "", sub(" *id: ", "", gsub('"', '', genomes.raw)))
-    return(supported.genomes)
+    supported.stock.genomes <- sub(",", "", sub(" *id: ", "", gsub('"', '', genomes.raw)))
+    return(supported.stock.genomes)
 
-} # currently.supported.genomes
+} # currently.supported.stock.genomes
 #----------------------------------------------------------------------------------------------------
+#' @title parseAndValidateGenomeSpec
 #' @description a helper function for internal use by the igvShiny constructor, but possible also
 #' of use to those building an igvShiny app, to test their genome specification for validity
 #'
-#' @rdname parseAndValidateGenomeSpec
+#' @rdname  parseAndValidateGenomeSpec
 #' @aliases parseAndValidateGenomeSpec
 #'
 #' @param genomeName character usually one short code of a supported ("stock") genome (e.g., "hg38") or for
 #'        a user-supplied custom genome, the name you wish to use
 #' @param initialLocus character default "all", otherwise "chrN:start-end" or a recognized gene symbol
-#' @param stockGenome logical default FALSE
+#' @param stockGenome logical default TRUE
 #' @param dataMode character either "stock", "localFile" or "http"
 #' @param fasta character when supplying a custom (non-stock) genome, either a file path or a URL
 #' @param fastaIndex character when supplying a custom (non-stock) genome, either a file path or a URL,
 #'     essential for all but the very small custom genomes.
 #' @param genomeAnnotation character when supplying a custom (non-stock) genome, a file path or URL pointing
 #'    to a genome annotation file in a gff3 format
+#'
+#' @examples
+#' genomeSpec <- parseAndValidateGenomeSpec("hg38", "APOE")  # the simplest case
+#' base.url <- "https://igv-data.systemsbiology.net/testFiles/sarsGenome"
+#' fasta.file <- sprintf("%s/%s", base.url,"Sars_cov_2.ASM985889v3.dna.toplevel.fa")
+#' fastaIndex.file <-  sprintf("%s/%s", base.url, "Sars_cov_2.ASM985889v3.dna.toplevel.fa.fai")
+#' annotation.file <-  sprintf("%s/%s", base.url, "Sars_cov_2.ASM985889v3.101.gff3")
+#' custom.genome.title <- "SARS-CoV-2"
+#' genomeOptions <- parseAndValidateGenomeSpec(genomeName=custom.genome.title,
+#'                                             initialLocus="all",
+#'                                             stockGenome=FALSE,
+#'                                             dataMode="http",
+#'                                             fasta=fasta.file,
+#'                                             fastaIndex=fastaIndex.file,
+#'                                             genomeAnnotation=annotation.file)
+#'
+#' @seealso [currently.supported.stock.genomes()] for stock genomes we support.
 #'
 #' @return an options list directly usable by igvApp.js, and thus igv.js
 #' @export
@@ -82,10 +103,10 @@ parseAndValidateGenomeSpec <- function(genomeName, initialLocus="all",
     #--------------------------------------------------
 
     if(stockGenome){
-       supported.genomes <- currently.supported.genomes()
-       if(!genomeName %in% supported.genomes){
+       supported.stock.genomes <- currently.supported.stock.genomes()
+       if(!genomeName %in% supported.stock.genomes){
           s.1 <- sprintf("Your genome '%s' is not currently supported", genomeName)
-          s.2 <- sprintf("Currently supported: %s", paste(supported.genomes, collapse=","))
+          s.2 <- sprintf("Currently supported: %s", paste(supported.stock.genomes, collapse=","))
           msg <- sprintf("%s\n%s", s.1, s.2)
           stop(msg)
           }
