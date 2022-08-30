@@ -13,7 +13,7 @@
 library(randomcoloR)
 randomColors <- distinctColorPalette(24)
 #----------------------------------------------------------------------------------------------------
-verbose <- TRUE
+verbose <- FALSE
 log <- function(...)if(verbose) print(noquote(sprintf(...)))
 #----------------------------------------------------------------------------------------------------
 state <- new.env(parent=emptyenv())
@@ -304,17 +304,17 @@ loadBedTrack <- function(session, id, trackName, tbl, color="gray", trackHeight=
 
 } # loadBedTrack
 #------------------------------------------------------------------------------------------------------------------------
-#' load a bedgraph track provided as a data.frame
+#' load a bedgraph track from a URL
 #'
 #' @description load a bedgrapn track provided as a data.frame
 #'
-#' @rdname loadBedGraphTrack
-#' @aliases loadBedGraphTrack
+#' @rdname loadBedGraphTrackFromURL
+#' @aliases loadBedGraphTrackFromURL
 #'
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
 #' @param trackName character string
-#' @param tbl data.frame, with at least "chrom" "start" "end" "score" columns
+#' @param url character
 #' @param color character string, a legal CSS color, or "random", "gray" by default
 #' @param trackHeight an integer, 30 (pixels) by default
 #' @param autoscale logical
@@ -328,57 +328,41 @@ loadBedTrack <- function(session, id, trackName, tbl, color="gray", trackHeight=
 #'
 #' @export
 
-loadBedGraphTrack <- function(session, id, trackName, tbl, color="gray", trackHeight=30,
-                              autoscale, autoscaleGroup=-1,
-                              min=NA_real_, max=NA_real_,
-                              deleteTracksOfSameName=TRUE, quiet=TRUE)
+loadBedGraphTrackFromURL <- function(session, id, trackName, url, color="gray", trackHeight=30,
+                                     autoscale, autoscaleGroup=-1,
+                                     min=NA_real_, max=NA_real_,
+                                     deleteTracksOfSameName=TRUE, quiet=TRUE)
 {
-   stopifnot(ncol(tbl) >= 4)
+   printf("---- loadBedGraphTrackFromURL")
 
    if(color == "random")
       color <- randomColors[sample(seq_len(length(randomColors)), 1)]
 
    if(!quiet){
-      log("--- igvShiny::loadBedGraphTrack: %s", trackName);
-      log("    %d rows, %d columns", nrow(tbl), ncol(tbl))
-      #log("    colnames: %s", paste(colnames(tbl), collapse=", "))
-      #log("    col classes: %s", paste(unlist(lapply(tbl, class)), collapse=", "))
+      log("--- igvShiny::loadBedGraphTrackFromURL: %s", trackName);
       }
 
    if(deleteTracksOfSameName){
-      log("--- igvShiny.R loadBedGraphTrack, calling removeTracksByName: %s, %s", id, trackName)
+      log("--- igvShiny.R loadBedGraphTrackFromURL, calling removeTracksByName: %s, %s", id, trackName)
       removeTracksByName(session, id, trackName);
       }
 
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
 
-   if(colnames(tbl)[1] == "chrom")
-      colnames(tbl)[1] <- "chr"
 
-   colnames(tbl)[4] <- "value"
-
-   if(all(colnames(tbl)[1:3] != c("chr", "start", "end"))){
-      log("found these colnames: %s", paste(colnames(tbl)[1:3], collapse=", "))
-      log("            required: %s", paste(c("chr", "start", "end"), collapse=", "))
-      stop("improper columns in bed track data.frame")
-      }
-
-   stopifnot(is(tbl$chr, "character"))
-   stopifnot(is(tbl$start, "numeric"))
-   stopifnot(is(tbl$end, "numeric"))
-   stopifnot(is(tbl$value, "numeric"))
-
-   new.order <- order(tbl$start, decreasing=FALSE)
-   tbl <- tbl[new.order,]
-
-   msg.to.igv <- list(elementID=id, trackName=trackName, tbl=jsonlite::toJSON(tbl),
+   msg.to.igv <- list(elementID=id, trackName=trackName, url=url,
                       color=color, trackHeight=trackHeight,
                       autoscale=autoscale, min=min, max=max,
                       autoscaleGroup=autoscaleGroup)  # -1 means no grouping
 
-   session$sendCustomMessage("loadBedGraphTrack", msg.to.igv)
+   log("--- igvShiny.R loadBedGraphTrackFromURL, msg.to.igv: ")
+   print(msg.to.igv)
+   log("--- igvShiny.R loadBedGraphTrackFromURL, sendingCustomMessage")
+   session$sendCustomMessage("fubar", msg.to.igv)
+   log("--- igvShiny.R loadBedGraphTrackFromURL, after sendingCustomMessage")
+   #session$sendCustomMessage("loadBedGraphTrackFromURL", msg.to.igv)
 
-} # loadBedGraphTrack
+} # loadBedGraphTrackFromURL
 #------------------------------------------------------------------------------------------------------------------------
 #' load a scored genome annotation track provided as a data.frame
 #'

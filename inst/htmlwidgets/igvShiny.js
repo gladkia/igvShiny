@@ -474,10 +474,58 @@ Shiny.addCustomMessageHandler("loadBedGraphTrack",
                     };
       if(autoscaleGroup >= 0)
           config['autoscaleGroup'] = autoscaleGroup;
+      console.log("--- loading bedGraphTrack");
+      console.log(config)
+      // debugger;
       igvBrowser.loadTrack(config);
       }
 
 );
+//------------------------------------------------------------------------------------------------------------------------
+//Shiny.addCustomMessageHandler("loadBedGraphTrackFromURL",
+Shiny.addCustomMessageHandler("fubar",
+
+   function(message){
+      igvshiny_log("=== loadBedGraphTrackFromURL");
+      igvshiny_log(message)
+      var elementID = message.elementID;
+      var igvBrowser = document.getElementById(elementID).igvBrowser;
+      var trackName = message.trackName;
+      var tbl = message.tbl;
+      var color = message.color;
+      var trackHeight = message.trackHeight;
+      var autoscale = message.autoscale;
+      var autoscaleGroup = message.autoscaleGroup;
+      var min = message.min;
+      var max = message.max;
+      var url = message.url;       
+
+      var config = {//format: "bigWig",
+                    name: trackName,
+                    //type: "wig",
+                    order: Number.MAX_VALUE,
+                    url: url,
+                    color: color,
+                    height: trackHeight,
+                    autoscaleGroup: "1" //autoscaleGroup
+                    };
+       config = {url: 'https://www.encodeproject.org/files/ENCFF000ASF/@@download/ENCFF000ASF.bigWig',
+                 name: 'GM12878 H3K4me3',
+                 color: 'rgb(200,0,0)',
+                 autoscaleGroup: '1'
+                 //order: Number.MAX_VALUE
+                 },
+
+
+      //if(autoscaleGroup >= 0)
+      //    config['autoscaleGroup'] = autoscaleGroup;
+      console.log("--- loading bedGraphTrackFromURL");
+      console.log(config)
+      // debugger;
+      igvBrowser.loadTrack(config).then(function(newTrack){alert("Track loaded: " + newTrack.name);});
+      }
+
+); // loadBedGraphTrackFromURL
 //------------------------------------------------------------------------------------------------------------------------
 Shiny.addCustomMessageHandler("loadSegTrack",
 
@@ -560,6 +608,7 @@ Shiny.addCustomMessageHandler("loadGwasTrack",
       var dataURL = window.location.href + gwasFile;
       igvshiny_log("dataURL: " + dataURL);
 
+      debugger;
       var config = {format: "gwas",
                     type: "gwas",
                     name: trackName,
@@ -715,7 +764,7 @@ Shiny.addCustomMessageHandler("loadGFF3TrackFromLocalData",
          config.color=message.color;
          }
 
-      igvBrowser.loadTrack(config);
+       igvBrowser.loadTrack(config)
       } // function
 
 );  // loadGFF3TrackFromLocalData

@@ -1,0 +1,10 @@
+name: igvShinyDemo-VCF
+title: igvShiny Demo VCF
+username:
+account: hoodlab
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3536708
+bundleId: 4154821
+url: https://hoodlab.shinyapps.io/igvShinyDemo-VCF/
+when: 1611860761.16314
