@@ -40,7 +40,6 @@ server = function(input, output, session) {
    output$igvShiny_0 <- renderIgvShiny({
      genomeOptions <- parseAndValidateGenomeSpec(genomeName="hg19",  initialLocus="all")
      igvShiny(genomeOptions)
-     #loadGwasTrack(session, id="igvShiny_0", trackName="demo", tbl=tbl.gwas, deleteTracksOfSameName=TRUE)
      })
 
    observeEvent(input$loadGwasTrackButton, {
