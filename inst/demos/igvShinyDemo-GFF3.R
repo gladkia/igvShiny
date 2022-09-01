@@ -107,7 +107,7 @@ server = function(input, output, session) {
        })
 
 
-    observeEvent(input$addoLcalGFF3TrackButton, {
+    observeEvent(input$addLocalGFF3TrackButton, {
        showGenomicRegion(session, id="igvShiny_0", "chr1:161,172,691-161,241,018")
        full.path <- system.file(package="igvShiny", "extdata", "GRCh38.94.NDUFS2.gff3")
        tbl.gff3 <- read.table(full.path, sep="\t", as.is=TRUE, header=TRUE)
@@ -160,12 +160,6 @@ server = function(input, output, session) {
       })
 
 
-  # observeEvent(input$trackClick, {
-  #     printf("--- trackclick event")
-  #     x <- input$trackClick
-  #     print(x)
-  #     })
-
    observeEvent(input[["igv-trackClick"]], {
        printf("--- igv-trackClick event")
        x <- input[["igv-trackClick"]]
@@ -202,13 +196,10 @@ server = function(input, output, session) {
    loci <- c("chr5:88,466,402-89,135,305", "MEF2C", "Mef2c", "1:7,432,931-7,440,395", "NC_007494.2:370,757-378,078")
    i <- 2
 
-   output$igvShiny_0 <- renderIgvShiny(
-     igvShiny(list(
-        genomeName="hg38",
-        initialLocus=loci[i],
-        displayMode="SQUISHED"
-        ))
-      )
+   output$igvShiny_0 <- renderIgvShiny({
+     genomeOptions <- parseAndValidateGenomeSpec(genomeName="hg38",  initialLocus=loci[2])
+     igvShiny(genomeOptions)
+     })
 
 } # server
 #----------------------------------------------------------------------------------------------------

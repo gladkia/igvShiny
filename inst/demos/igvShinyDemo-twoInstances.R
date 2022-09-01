@@ -144,20 +144,16 @@ server = function(input, output, session) {
    loci <- c("chr5:88,466,402-89,135,305", "MEF2C", "Mef2c", "1:7,432,931-7,440,395", "NC_007494.2:370,757-378,078")
    i <- 2
 
-   output$igvShiny_0 <- renderIgvShiny(
-     igvShiny(list(
-        genomeName=genomes[i],
-        initialLocus=loci[i],
-        displayMode="SQUISHED"
-        ))
-      )
+   output$igvShiny_0 <- renderIgvShiny({
+     genomeOptions <- parseAndValidateGenomeSpec(genomeName=genomes[i],  initialLocus=loci[i])
+     igvShiny(genomeOptions)
+     })
 
-   output$igvShiny_1 <- renderIgvShiny(
-     igvShiny(list(
-        genomeName="hg38",
-        initialLocus="chr2:232,983,999-233,283,872"
-        ))
-   )
+   output$igvShiny_1 <- renderIgvShiny({
+     genomeOptions <- parseAndValidateGenomeSpec(genomeName="hg38",
+                                                 initialLocus="chr2:232,983,999-233,283,872")
+     igvShiny(genomeOptions)
+     })
 
 } # server
 #----------------------------------------------------------------------------------------------------
