@@ -108,12 +108,13 @@ HTMLWidgets.widget({
                  }, 250, false));
                 igvWidget.on('trackclick', function (track, popoverData){
                    var x = popoverData;
-                   igvshiny_log(x)
+                   igvshiny_log("--- trackclikc");
+                   //igvshiny_log(x)
                        // prepend module namespace to support the github/shinyModules/igvModule.R
                    Shiny.setInputValue(moduleNamespace(options.moduleNS, "trackClick"), x, {priority: "event"})
                        // for use outside of the ShinyModule idiom
                    Shiny.setInputValue("trackClick", x, {priority: "event"})
-                   return false; // undefined causes follow on display of standard popup
+                   //return false; // undefined causes follow on display of standard popup
                    }); // on
                 Shiny.setInputValue("igvReady", htmlContainerID, {priority: "event"});
                 Shiny.setInputValue(moduleNamespace(options.moduleNS, "igvReady"), htmlContainerID, {priority: "event"});
@@ -148,7 +149,6 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
             }
         }; // localCustomGenome_options
 
-    //debugger;
     var remoteCustomGenome_options = {
         locus: initialLocus,
         flanking: 1000,
@@ -476,7 +476,6 @@ Shiny.addCustomMessageHandler("loadBedGraphTrack",
           config['autoscaleGroup'] = autoscaleGroup;
       console.log("--- loading bedGraphTrack");
       console.log(config)
-      // debugger;
       igvBrowser.loadTrack(config);
       }
 
@@ -521,7 +520,6 @@ Shiny.addCustomMessageHandler("fubar",
       //    config['autoscaleGroup'] = autoscaleGroup;
       console.log("--- loading bedGraphTrackFromURL");
       console.log(config)
-      // debugger;
       igvBrowser.loadTrack(config).then(function(newTrack){alert("Track loaded: " + newTrack.name);});
       }
 
@@ -608,7 +606,6 @@ Shiny.addCustomMessageHandler("loadGwasTrack",
       var dataURL = window.location.href + gwasFile;
       igvshiny_log("dataURL: " + dataURL);
 
-      debugger;
       var config = {format: "gwas",
                     type: "gwas",
                     name: trackName,
