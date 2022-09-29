@@ -1,7 +1,7 @@
 Package: igvShiny
 Title: igvShiny
-Version: 1.5.3
-Date: 2022-09-01
+Version: 1.5.5
+Date: 2022-09-28
 Author: Paul Shannon
 Maintainer: Paul Shannon <pshannon@systemsbiology.org>
 Description: igv.js as a shiny widget
@@ -12,5 +12,6 @@ Encoding: UTF-8
 LazyData: true
 Collate:
     'genomeSpec.R'
+    'GWASTrack.R'
     'igvShiny.R'
 RoxygenNote: 7.2.1

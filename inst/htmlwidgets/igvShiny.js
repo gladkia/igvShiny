@@ -623,6 +623,44 @@ Shiny.addCustomMessageHandler("loadGwasTrack",
 
 ); // loadGwasTrack
 //------------------------------------------------------------------------------------------------------------------------
+// either local url (pointing to a just-written data.frame) or a remote url
+Shiny.addCustomMessageHandler("loadGwasTrackFlexibleSource",
+
+   function(message){
+
+      var elementID = message.elementID;
+      var igvBrowser = document.getElementById(elementID).igvBrowser;
+      var dataMode = message.dataMode;
+      var trackName = message.trackName;
+      var url = message.dataUrl;
+      var color = message.color;
+      var trackHeight = message.trackHeight;
+      var autoscale = message.autoscale;
+      var min = message.min;
+      var max = message.max;
+
+      if(dataMode == "local.ulr")
+          url = window.location.href + url;
+
+      igvshiny_log("url: " + url)
+
+      var config = {format: "gwas",
+                    type: "gwas",
+                    name: trackName,
+                    order: Number.MAX_VALUE,
+		    url: url,
+                    indexed: false,
+                    displayMode: "EXPANDED",
+                    height: trackHeight,
+                    autoscale: autoscale,
+                    min: min,
+                    max: max
+                    };
+      igvBrowser.loadTrack(config);
+      }
+
+); // loadGwasTrackFlexibleSource
+//------------------------------------------------------------------------------------------------------------------------
 Shiny.addCustomMessageHandler("loadBamTrackFromURL",
 
    function(message){
