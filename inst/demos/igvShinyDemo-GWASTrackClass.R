@@ -21,12 +21,11 @@ url.gwasTrack <- GWASTrack("remote url gwas",
                            chrom.col=3,
                            pos.col=4,
                            pval.col=10,
-                           color="darkgreen",
                            trackHeight=100,
                            autoscale=FALSE,
                            minY=0,
-                           maxY=300,
-                           visibilityWindow=100000)
+                           maxY=300)
+
 #----------------------------------------------------------------------------------------------------
 # a gwas file hosted locally
 #----------------------------------------
@@ -37,9 +36,7 @@ tbl.gwasTrack <- GWASTrack("data.frame gwas",
                            chrom.col=3,
                            pos.col=4,
                            pval.col=10,
-                           color="brown",
-                           trackHeight=100,
-                           visibilityWindow=100000)
+                           trackHeight=100)
 #----------------------------------------------------------------------------------------------------
 printf <- function(...) print(noquote(sprintf(...)))
 #----------------------------------------------------------------------------------------------------

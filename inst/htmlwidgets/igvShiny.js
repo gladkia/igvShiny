@@ -633,7 +633,6 @@ Shiny.addCustomMessageHandler("loadGwasTrackFlexibleSource",
       var dataMode = message.dataMode;
       var trackName = message.trackName;
       var url = message.dataUrl;
-      var color = message.color;
       var trackHeight = message.trackHeight;
       var autoscale = message.autoscale;
       var min = message.min;

@@ -13,7 +13,6 @@ GWASTrack(
   chrom.col,
   pos.col,
   pval.col,
-  color = "darkBlue",
   trackHeight = 50,
   autoscale = TRUE,
   minY = 0,
@@ -31,9 +30,7 @@ GWASTrack(
 
 \item{pval.col}{numeric, the column number of the GWAS pvalue colum}
 
-\item{color}{A css color name (e.g., "red" or "#FF0000"}
-
-\item{trackHeight}{numeric typically in range 20 (for annotations) and up to 1000 (for large sample vcf files)}
+\item{trackHeight}{numeric in pixels}
 
 \item{autoscale}{logical}
 
@@ -45,12 +42,27 @@ GWASTrack(
 A GWASTrack object
 }
 \description{
-\code{GWASTrack} creates an \code{IGV} manhattan track GWAS data
+\code{GWASTrack} creates an \code{IGV} manhattan track from GWAS data
 }
 \examples{
 
-  file <- system.file(package="igvR", "extdata", "gwas-5k.tsv")
+  file <- system.file(package="igvR", "extdata", "gwas-5k.tsv") # a local gwas file
   tbl.gwas <- read.table(file, sep="\t", header=TRUE, quote="")
   dim(tbl.gwas)
   track <- GWASTrack("gwas 5k", tbl.gwas, chrom.col=12, pos.col=13, pval.col=28)
+  getUrl(track)
+
+  url <- "https://s3.amazonaws.com/igv.org.demo/gwas_sample.tsv.gz"
+  track <- GWASTrack("remote url gwas",
+                     url,
+                     chrom.col=3,
+                     pos.col=4,
+                     pval.col=10,
+                     autoscale=FALSE,
+                     minY=0,
+                     maxY=300,
+                     trackHeight=100)
+  getUrl(track)
+
+
 }
