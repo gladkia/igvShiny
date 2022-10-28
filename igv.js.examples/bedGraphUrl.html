@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="https://igv.org/web/img/favicon.ico">
+
+    <title>igv.js</title>
+    <!--script src="../dist/igv.min.js"></script-->
+    <script src="../inst/htmlwidgets/lib/igv-268.min.js"></script>
+
+</head>
+
+<body>
+
+<p>
+
+<h1>bigWig from url</h1>
+
+<div id="igvDiv" style="padding-top: 10px;padding-bottom: 10px; border:1px solid lightgray"></div>
+
+<script type="text/javascript">
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        var options =
+            {
+                // Example of fully specifying a reference .  We could alternatively use  "genome: 'hg19'"
+                reference:
+                    {
+                        id: "hg19",
+                        fastaURL: "https://s3.amazonaws.com/igv.broadinstitute.org/genomes/seq/1kg_v37/human_g1k_v37_decoy.fasta",
+                        cytobandURL: "https://s3.amazonaws.com/igv.broadinstitute.org/genomes/seq/b37/b37_cytoband.txt"
+                    },
+                locus: "myc",
+                tracks:
+                    [
+                        {
+                            type: "wig",
+                            name: "CTCF",
+                            url: "https://www.encodeproject.org/files/ENCFF356YES/@@download/ENCFF356YES.bigWig",
+                            min: "0",
+                            max: "30",
+                            color: "rgb(0, 0, 150)",
+                            guideLines: [
+                                {color: 'green', dotted: true, y: 25}, 
+                                {color: 'red', dotted: false, y: 5}
+                            ]
+                        }
+
+                    ]
+
+            };
+
+        var igvDiv = document.getElementById("igvDiv");
+
+        igv.createBrowser(igvDiv, options)
+            .then(function (browser) {
+                console.log("Created IGV browser");
+            })
+
+    })
+
+</script>
+
+</body>
+
+</html>

@@ -328,9 +328,11 @@ loadBedTrack <- function(session, id, trackName, tbl, color="gray", trackHeight=
 #'
 #' @export
 
-loadBedGraphTrackFromURL <- function(session, id, trackName, url, color="gray", trackHeight=30,
-                                     autoscale, autoscaleGroup=-1,
-                                     min=NA_real_, max=NA_real_,
+loadBedGraphTrackFromURL <- function(session, id, trackName, url, color="gray",
+                                     trackHeight=30,
+                                     autoscale=TRUE,
+                                     min=0, max=1,
+                                     autoscaleGroup=-1,
                                      deleteTracksOfSameName=TRUE, quiet=TRUE)
 {
    printf("---- loadBedGraphTrackFromURL")
@@ -358,9 +360,8 @@ loadBedGraphTrackFromURL <- function(session, id, trackName, url, color="gray", 
    log("--- igvShiny.R loadBedGraphTrackFromURL, msg.to.igv: ")
    print(msg.to.igv)
    log("--- igvShiny.R loadBedGraphTrackFromURL, sendingCustomMessage")
-   session$sendCustomMessage("fubar", msg.to.igv)
+   session$sendCustomMessage("loadBedGraphTrackFromURL", msg.to.igv)
    log("--- igvShiny.R loadBedGraphTrackFromURL, after sendingCustomMessage")
-   #session$sendCustomMessage("loadBedGraphTrackFromURL", msg.to.igv)
 
 } # loadBedGraphTrackFromURL
 #------------------------------------------------------------------------------------------------------------------------

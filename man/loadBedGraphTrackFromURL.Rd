@@ -11,10 +11,10 @@ loadBedGraphTrackFromURL(
   url,
   color = "gray",
   trackHeight = 30,
-  autoscale,
+  autoscale = TRUE,
+  min = 0,
+  max = 1,
   autoscaleGroup = -1,
-  min = NA_real_,
-  max = NA_real_,
   deleteTracksOfSameName = TRUE,
   quiet = TRUE
 )

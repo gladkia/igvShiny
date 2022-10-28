@@ -41,7 +41,8 @@ ui = shinyUI(fluidPage(
         h5("One simple data.frame, three igv formats:"),
         actionButton("addBedTrackButton", "Add as Bed"),
         actionButton("addBedGraphTrackButton", "Add as BedGraph"),
-        actionButton("addAutoscaledGroupBedGraphTrackButton", "Add Autoscaled Group BedGraphs"),
+        actionButton("addBedGraphTrackFromURLButton", "Add BedGraph from URL"),
+        # actionButton("addAutoscaledGroupBedGraphTrackButton", "Add Autoscaled Group BedGraphs"),
         # data immediate seg track apparently abandoned with igv.js 2.10.4 or before
         #actionButton("addSegTrackButton", "Add as SEG"),
         br(),
@@ -82,7 +83,8 @@ server = function(input, output, session) {
 
    observeEvent(input$addBedGraphTrackButton, {
       showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
-      loadBedGraphTrack(session, id="igvShiny_0", trackName="wig", tbl=tbl.bed, color="blue", autoscale=TRUE)
+      loadBedGraphTrack(session, id="igvShiny_0", trackName="wig/bedGraph/local", tbl=tbl.bed,
+                        color="blue", autoscale=TRUE)
       })
 
    observeEvent(input$addAutoscaledGroupBedGraphTrackButton, {
@@ -94,6 +96,17 @@ server = function(input, output, session) {
       loadBedGraphTrack(session, id="igvShiny_0", trackName="wig1b", tbl=tbl.wig1b, color="brown",
                         autoscale=TRUE, autoscaleGroup=1)
       })
+
+    #
+
+   observeEvent(input$addBedGraphTrackFromURLButton, {
+      showGenomicRegion(session, id="igvShiny_0", "chr1:154,946,914-155,080,475")
+      url <- "https://www.encodeproject.org/files/ENCFF356YES/@@download/ENCFF356YES.bigWig"
+      loadBedGraphTrackFromURL(session, id="igvShiny_0", trackName="bedGraph/remote",
+                               url=url, color="brown",
+                               trackHeight=50, autoscale=TRUE)
+      })
+
 
    observeEvent(input$addSegTrackButton, {
       showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")

@@ -45,6 +45,8 @@ HTMLWidgets.widget({
          igvshiny_log(options)
          var igvDiv;
          igvDiv = el; // $("#igvDiv")[0];
+         var igvDiv_jquerySignature = "#" + igvDiv.id;
+         $(igvDiv_jquerySignature).children().remove() // any previously created igv instance
          igvshiny_log("---- el");
          igvshiny_log(el);
          igvshiny_log(el.id)
@@ -136,6 +138,19 @@ function moduleNamespace(ns, nameEvent)
 function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, displayMode, trackHeight,
                                fasta, fastaIndex, annotation, moduleNS)
 {
+    if(stockGenome){
+       igvOptions = {
+         locus: initialLocus,
+         height: trackHeight,
+         minimumBases: 5,
+         flanking: 1000,
+	       name: genomeName,
+         showRuler: true,
+         genome: genomeName
+         }; 
+       return(igvOptions)
+       }
+       
     var localCustomGenome_options = {
         locus: initialLocus,
         flanking: 1000,
@@ -203,7 +218,7 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
         //autoHeight: true,
         minimumBases: 5,
         flanking: 1000,
-	name: "foo",
+	      name: "foo",
         showRuler: true,
         genome: "hg38"
         }; // hg38_options
@@ -220,7 +235,7 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
     var tair10_options = {
         locus: initialLocus,
         flanking: 2000,
-	showKaryo: false,
+	      showKaryo: false,
         showNavigation: true,
         minimumBases: 5,
         showRuler: true,
@@ -481,8 +496,7 @@ Shiny.addCustomMessageHandler("loadBedGraphTrack",
 
 );
 //------------------------------------------------------------------------------------------------------------------------
-//Shiny.addCustomMessageHandler("loadBedGraphTrackFromURL",
-Shiny.addCustomMessageHandler("fubar",
+Shiny.addCustomMessageHandler("loadBedGraphTrackFromURL",
 
    function(message){
       igvshiny_log("=== loadBedGraphTrackFromURL");
@@ -490,7 +504,6 @@ Shiny.addCustomMessageHandler("fubar",
       var elementID = message.elementID;
       var igvBrowser = document.getElementById(elementID).igvBrowser;
       var trackName = message.trackName;
-      var tbl = message.tbl;
       var color = message.color;
       var trackHeight = message.trackHeight;
       var autoscale = message.autoscale;
@@ -499,28 +512,28 @@ Shiny.addCustomMessageHandler("fubar",
       var max = message.max;
       var url = message.url;       
 
-      var config = {//format: "bigWig",
+      var config = {type: "wig",
                     name: trackName,
-                    //type: "wig",
-                    order: Number.MAX_VALUE,
                     url: url,
+                    order: Number.MAX_VALUE,
                     color: color,
-                    height: trackHeight,
-                    autoscaleGroup: "1" //autoscaleGroup
+                    autoscale: autoscale,
+                    min: min,
+                    max: max
+                    //height: trackHeight
                     };
-       config = {url: 'https://www.encodeproject.org/files/ENCFF000ASF/@@download/ENCFF000ASF.bigWig',
-                 name: 'GM12878 H3K4me3',
-                 color: 'rgb(200,0,0)',
-                 autoscaleGroup: '1'
-                 //order: Number.MAX_VALUE
-                 },
+
+     // type: "wig",
+     // name: "CTCF",
+     // url: "https://www.encodeproject.org/files/ENCFF356YES/@@download/ENCFF356YES.bigWig",
+     // min: "0",
+     // max: "30",
+     // color: "rgb(0, 0, 150)",
 
 
-      //if(autoscaleGroup >= 0)
-      //    config['autoscaleGroup'] = autoscaleGroup;
       console.log("--- loading bedGraphTrackFromURL");
       console.log(config)
-      igvBrowser.loadTrack(config).then(function(newTrack){alert("Track loaded: " + newTrack.name);});
+      igvBrowser.loadTrack(config);
       }
 
 ); // loadBedGraphTrackFromURL
