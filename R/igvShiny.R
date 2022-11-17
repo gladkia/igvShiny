@@ -335,7 +335,7 @@ loadBedGraphTrackFromURL <- function(session, id, trackName, url, color="gray",
                                      autoscaleGroup=-1,
                                      deleteTracksOfSameName=TRUE, quiet=TRUE)
 {
-   printf("---- loadBedGraphTrackFromURL")
+   print("---- loadBedGraphTrackFromURL")
 
    if(color == "random")
       color <- randomColors[sample(seq_len(length(randomColors)), 1)]
