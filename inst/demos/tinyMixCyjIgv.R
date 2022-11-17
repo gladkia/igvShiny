@@ -33,8 +33,8 @@ ui = shinyUI(
 server = function(input, output, session)
 {
    output$igvShiny <- renderIgvShiny({
-      options <- list(genomeName="hg38", initialLocus="NDUFS2")
-      igvShiny(options)
+      genomeOptions <- parseAndValidateGenomeSpec(genomeName="hg38",  initialLocus="NDUFS2")
+      igvShiny(genomeOptions)
       })
 
    #output$igvShiny_0 <- renderIgvShiny({
