@@ -1,5 +1,8 @@
 #' @name GWASTrack-class
 #' @rdname GWASTrack-class
+#' @rawNamespace  importFrom("methods", "is", "new")
+#' @rawNamespace  importFrom("utils", "write.table")
+
 #' @exportClass GWASTrack
 
 .GWASTrack <- setClass("GWASTrack",
@@ -79,7 +82,10 @@ GWASTrack <- function(trackName,
 
     if(data.class == "data.frame"){
         mode <- "local.url"
-        url <- tempfile(tmpdir="tracks", fileext=".gwas") # expanded in javascript
+# as written, assumes ./tracks exists
+#        url <- tempfile(tmpdir="tracks", fileext=".gwas") # expanded in javascript
+        dir.create(tdir <- paste0(tempdir(), "/tracks"))
+        url <- tempfile(tmpdir=tdir, fileext=".gwas") # expanded in javascript
         write.table(data, sep="\t", row.names=FALSE, quote=FALSE, file=url)
         }
 

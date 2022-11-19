@@ -6,6 +6,9 @@
 \usage{
 currently.supported.stock.genomes(test = FALSE)
 }
+\arguments{
+\item{test}{logical(1) defaults to FALSE}
+}
 \value{
 an list of short genome codes, e.g., "hg38", "dm6", "tair10"
 }

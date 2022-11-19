@@ -38,6 +38,8 @@ loadGFF3TrackFromURL(
 
 \item{displayMode}{character,  "EXPANDED",  "SQUISHED" or "COLLAPSED"}
 
+\item{trackHeight}{numeric defaults to 50}
+
 \item{visibilityWindow}{numeric, Maximum window size in base pairs for which indexed annotations or variants are displayed}
 
 \item{deleteTracksOfSameName}{logical, default TRUE}
