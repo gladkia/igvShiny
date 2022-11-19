@@ -82,9 +82,11 @@ GWASTrack <- function(trackName,
 
     if(data.class == "data.frame"){
         mode <- "local.url"
-# as written, assumes ./tracks exists
+# as written, assumes ./tracks exists, which need not be
 #        url <- tempfile(tmpdir="tracks", fileext=".gwas") # expanded in javascript
-        dir.create(tdir <- paste0(tempdir(), "/tracks"))
+        tdir <- paste0(tempdir(), "/tracks")
+        if (!dir.exists(tdir)) x <- try(dir.create(tdir))
+        if (inherits(x, "try-error")) stop(sprintf("could not create %s\n", tdir))
         url <- tempfile(tmpdir=tdir, fileext=".gwas") # expanded in javascript
         write.table(data, sep="\t", row.names=FALSE, quote=FALSE, file=url)
         }
