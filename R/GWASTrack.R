@@ -85,6 +85,7 @@ GWASTrack <- function(trackName,
 # as written, assumes ./tracks exists, which need not be
 #        url <- tempfile(tmpdir="tracks", fileext=".gwas") # expanded in javascript
         tdir <- paste0(tempdir(), "/tracks")
+        x <- NULL
         if (!dir.exists(tdir)) x <- try(dir.create(tdir))
         if (inherits(x, "try-error")) stop(sprintf("could not create %s\n", tdir))
         url <- tempfile(tmpdir=tdir, fileext=".gwas") # expanded in javascript
