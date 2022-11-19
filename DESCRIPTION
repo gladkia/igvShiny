@@ -7,7 +7,7 @@ Maintainer: Paul Shannon <paul.thurmond.shannon@gmail.com>
 Description: igv.js as a shiny widget
 Depends: R (>= 3.5.0), shiny, GenomicRanges, methods
 Suggests: rtracklayer, VariantAnnotation
-Imports: httr, jsonlite, randomcoloR, GenomeInfoDbData, jsonlite, BiocGenerics,
+Imports: httr, jsonlite, randomcoloR, GenomeInfoDbData, BiocGenerics,
 	htmlwidgets
 License: MIT
 Encoding: UTF-8
