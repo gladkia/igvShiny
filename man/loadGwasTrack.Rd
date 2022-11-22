@@ -23,6 +23,10 @@ loadGwasTrack(
 
 \item{tbl.gwas}{data.frame, with at least "chrom" "start" "end" columns}
 
+\item{ymin}{numeric defaults to 0}
+
+\item{ymax}{numeric defaults to 35}
+
 \item{deleteTracksOfSameName}{logical, default TRUE}
 }
 \value{

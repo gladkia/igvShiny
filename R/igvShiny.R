@@ -1,23 +1,30 @@
 #' @import BiocGenerics
 #' @import GenomicRanges
 #' @import GenomeInfoDbData
-#' @import rtracklayer
 #' @import shiny
-#' @import jsonlite
-#' @import randomcoloR
+#' @importFrom jsonlite toJSON
+#' @importFrom randomcoloR distinctColorPalette
 #' @import httr
+#' @importFrom htmlwidgets createWidget shinyWidgetOutput shinyRenderWidget
 #'
 #' @name igvShiny
 #' @rdname igvShiny
 
-library(randomcoloR)
-randomColors <- distinctColorPalette(24)
+randomColors <- randomcoloR::distinctColorPalette(24)
 #----------------------------------------------------------------------------------------------------
 verbose <- FALSE
 log <- function(...)if(verbose) print(noquote(sprintf(...)))
 #----------------------------------------------------------------------------------------------------
 state <- new.env(parent=emptyenv())
 state[["userAddedTracks"]] <- list()
+
+# THE FOLLOWING WAS MOVED OUT OF doc section for igvShiny
+# param options a list, with required elements 'genomeName' and 'initialLocus'.
+#   Local or remote custom genomes can be used by setting 'genomeName' to 'local' or
+#   'remote'. The necessary fasta and index files are provided via 'fasta' and 'index'
+#   arguments, either as path on disk or as URL.
+
+
 #----------------------------------------------------------------------------------------------------
 #' Create an igvShiny instance
 #'
@@ -26,11 +33,8 @@ state[["userAddedTracks"]] <- list()
 #' @rdname igvShiny
 #' @aliases igvShiny
 #'
-#' @param genomeOptions a list with these fields: genomeName, initialLocus,
-#' @param options a list, with required elements 'genomeName' and 'initialLocus'.
-#'   Local or remote custom genomes can be used by setting 'genomeName' to 'local' or
-#'   'remote'. The necessary fasta and index files are provided via 'fasta' and 'index'
-#'   arguments, either as path on disk or as URL.
+#' @param genomeOptions a list with these fields: genomeName, initialLocus, annotation,
+#' dataMode, fasta, fastaIndex, stockGenome, validated
 #' @param width a character string, standard css notations, either e.g., "1000px" or "95\%"
 #' @param height a character string, needs to be an explicit pixel measure, e.g., "800px"
 #' @param elementId a character string, the html element id within which igv is created
@@ -320,8 +324,9 @@ loadBedTrack <- function(session, id, trackName, tbl, color="gray", trackHeight=
 #' @param autoscale logical
 #' @param min numeric, consulted when autoscale is FALSE
 #' @param max numeric, consulted when autoscale is FALSE
-#' @param deleteTracksOfSameName logical, default TRUE
 #' @param quiet logical, default TRUE, controls verbosity
+#' @param autoscaleGroup numeric(1) defaults to -1
+#' @param deleteTracksOfSameName logical(1) defaults to TRUE
 #'
 #' @return
 #' nothing
@@ -379,6 +384,7 @@ loadBedGraphTrackFromURL <- function(session, id, trackName, url, color="gray",
 #' @param color character string, a legal CSS color, or "random", "gray" by default
 #' @param trackHeight an integer, 30 (pixels) by default
 #' @param autoscale logical
+#' @param autoscaleGroup numeric(1) defaults to -1
 #' @param min numeric, consulted when autoscale is FALSE
 #' @param max numeric, consulted when autoscale is FALSE
 #' @param deleteTracksOfSameName logical, default TRUE
@@ -496,6 +502,7 @@ loadSegTrack <- function(session, id, trackName, tbl, deleteTracksOfSameName=TRU
 
 loadVcfTrack <- function(session, id, trackName, vcfData, deleteTracksOfSameName=TRUE)
 {
+   if (!requireNamespace("VariantAnnotation")) stop("install VariantAnnotation to use this function")
 
    log("======== igvShiny.R, loadVcfTrack")
    if(deleteTracksOfSameName){
@@ -504,9 +511,9 @@ loadVcfTrack <- function(session, id, trackName, vcfData, deleteTracksOfSameName
 
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
    path <- file.path("tracks", "tmp.vcf")
-   log("igvShiny::loadVcfTrac, about to write to file '%s'", path)
-   writeVcf(vcfData, path)
-   log("igvShiny::loadVcfTrac, file.exists(%s)? %s", path, file.exists(path))
+   log("igvShiny::loadVcfTrack, about to write to file '%s'", path)
+   VariantAnnotation::writeVcf(vcfData, path)
+   log("igvShiny::loadVcfTrack, file.exists(%s)? %s", path, file.exists(path))
 
    message <- list(elementID=id, trackName=trackName, vcfDataFilepath=path)
    session$sendCustomMessage("loadVcfTrack", message)
@@ -523,6 +530,8 @@ loadVcfTrack <- function(session, id, trackName, vcfData, deleteTracksOfSameName
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
 #' @param trackName character string
+#' @param ymin numeric defaults to 0
+#' @param ymax numeric defaults to 35
 #' @param tbl.gwas data.frame, with at least "chrom" "start" "end" columns
 #' @param deleteTracksOfSameName logical, default TRUE
 #'
@@ -611,6 +620,7 @@ loadBamTrackFromURL <- function(session, id, trackName, bamURL, indexURL, delete
 loadBamTrackFromLocalData <- function(session, id, trackName, data, deleteTracksOfSameName=TRUE,
                                       displayMode = "EXPANDED")
 {
+   if (!requireNamespace("rtracklayer")) stop("install rtracklayer to use loadBamTrackFromLocalData")
    if(deleteTracksOfSameName){
       removeTracksByName(session, id, trackName);
       }
@@ -620,7 +630,7 @@ loadBamTrackFromLocalData <- function(session, id, trackName, data, deleteTracks
    file.path <- tempfile(tmpdir=directory.name, fileext=".bam")
 
    log("igvShiny::load bam from local data, about to write to file '%s'", file.path)
-   export(data, file.path, format="BAM")
+   rtracklayer::export(data, file.path, format="BAM")
 
    state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
 
@@ -642,7 +652,7 @@ loadBamTrackFromLocalData <- function(session, id, trackName, data, deleteTracks
 #' @param trackName character string
 #' @param cramURL character string http url for the bam file, typically very large
 #' @param indexURL character string http url for the bam file index, typically small
-#' #' @param deleteTracksOfSameName logical, default TRUE
+#' @param deleteTracksOfSameName logical, default TRUE
 #'
 #' @return
 #' nothing
@@ -672,6 +682,7 @@ loadCramTrackFromURL <- function(session, id, trackName, cramURL, indexURL, dele
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
 #' @param trackName character string
+#' @param trackHeight numeric defaults to 50
 #' @param gff3URL character string http url for the bam file, typically very large
 #' @param indexURL character string http url for the bam file index, typically small
 #' @param color character #RGB or a recognized color name.  ignored if colorTable and colorByAttribute provided
@@ -716,6 +727,7 @@ loadGFF3TrackFromURL <- function(session, id, trackName, gff3URL, indexURL,
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
 #' @param trackName character string
+#' @param trackHeight numeric defaults to 50
 #' @param tbl.gff3 data.frame  in standard 9-column GFF3 format
 #' @param color character #RGB or a recognized color name.  ignored if colorTable and colorByAttribute provided
 #' @param colorTable list, mapping a gff3 attribute, typically biotype, to a color

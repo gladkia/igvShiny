@@ -1,4 +1,4 @@
-#' @import httr
+#' @importFrom httr HEAD
 #'
 #----------------------------------------------------------------------------------------------------
 # log <- function(...)if(verbose) print(noquote(sprintf(...)))
@@ -29,6 +29,7 @@ url.exists <- function(url)
 #'
 #' @rdname currently.supported.stock.genomes
 #' @aliases currently.supported.stock.genomes
+#' @param test logical(1) defaults to FALSE
 #'
 #' @return an list of short genome codes, e.g., "hg38", "dm6", "tair10"
 #' @export

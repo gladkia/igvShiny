@@ -38,7 +38,9 @@ loadBedGraphTrackFromURL(
 
 \item{max}{numeric, consulted when autoscale is FALSE}
 
-\item{deleteTracksOfSameName}{logical, default TRUE}
+\item{autoscaleGroup}{numeric(1) defaults to -1}
+
+\item{deleteTracksOfSameName}{logical(1) defaults to TRUE}
 
 \item{quiet}{logical, default TRUE, controls verbosity}
 }

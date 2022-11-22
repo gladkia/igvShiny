@@ -35,6 +35,8 @@ loadBedGraphTrack(
 
 \item{autoscale}{logical}
 
+\item{autoscaleGroup}{numeric(1) defaults to -1}
+
 \item{min}{numeric, consulted when autoscale is FALSE}
 
 \item{max}{numeric, consulted when autoscale is FALSE}
