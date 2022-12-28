@@ -11,7 +11,8 @@ parseAndValidateGenomeSpec(
   dataMode = NA,
   fasta = NA,
   fastaIndex = NA,
-  genomeAnnotation = NA
+  genomeAnnotation = NA,
+  ...
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ essential for all but the very small custom genomes.}
 
 \item{genomeAnnotation}{character when supplying a custom (non-stock) genome, a file path or URL pointing
 to a genome annotation file in a gff3 format}
+
+\item{...}{optional parameters for currently.supported.stock.genomes()}
 }
 \value{
 an options list directly usable by igvApp.js, and thus igv.js
