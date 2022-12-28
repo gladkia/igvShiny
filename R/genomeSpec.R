@@ -68,6 +68,7 @@ currently.supported.stock.genomes <- function(test=FALSE)
 #'     essential for all but the very small custom genomes.
 #' @param genomeAnnotation character when supplying a custom (non-stock) genome, a file path or URL pointing
 #'    to a genome annotation file in a gff3 format
+#' @param ... optional parameters for currently.supported.stock.genomes()
 #'
 #' @examples
 #' genomeSpec <- parseAndValidateGenomeSpec("hg38", "APOE")  # the simplest case
@@ -91,7 +92,7 @@ currently.supported.stock.genomes <- function(test=FALSE)
 #'
 parseAndValidateGenomeSpec <- function(genomeName, initialLocus="all",
                                        stockGenome=TRUE,
-                                       dataMode=NA, fasta=NA, fastaIndex=NA, genomeAnnotation=NA)
+                                       dataMode=NA, fasta=NA, fastaIndex=NA, genomeAnnotation=NA, ...)
 {
     options <- list()
     options[["stockGenome"]] <- stockGenome
@@ -104,7 +105,7 @@ parseAndValidateGenomeSpec <- function(genomeName, initialLocus="all",
     #--------------------------------------------------
 
     if(stockGenome){
-       supported.stock.genomes <- currently.supported.stock.genomes()
+       supported.stock.genomes <- currently.supported.stock.genomes(...)
        if(!genomeName %in% supported.stock.genomes){
           s.1 <- sprintf("Your genome '%s' is not currently supported", genomeName)
           s.2 <- sprintf("Currently supported: %s", paste(supported.stock.genomes, collapse=","))
