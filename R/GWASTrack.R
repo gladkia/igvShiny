@@ -85,6 +85,7 @@ GWASTrack <- function(trackName,
 # as written, assumes ./tracks exists, which need not be
 #        url <- tempfile(tmpdir="tracks", fileext=".gwas") # expanded in javascript
         tdir <- paste0(tempdir(), "/tracks")
+        #tdir <- "tracks"
         x <- NULL
         if (!dir.exists(tdir)) x <- try(dir.create(tdir))
         if (inherits(x, "try-error")) stop(sprintf("could not create %s\n", tdir))
@@ -134,13 +135,17 @@ setMethod('display', 'GWASTrack',
   function (obj, session, id, deleteTracksOfSameName=TRUE) {
 
    if(deleteTracksOfSameName){
-      removeTracksByName(session, id, trackName);
+      removeTracksByName(session, id, obj@trackName);
       }
 
-   state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], trackName))
+   state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], obj@trackName))
 
      # javascript function consults dataMode, modifies dataUrl if local.url,
      # prepending the http host of the modest RStudio/Shiny webserver
+     # make sure the embedded shiny webserver can find it by:
+     #   - adding a resource path with a convenient shorthand name, pointing
+     #     to the typically long and cryptic actual local host temporary directory
+     #   - adjusting message$dataUrl to use that shorthand directory name
 
    message <- list(elementID=id,
                    trackName=obj@trackName,
@@ -150,6 +155,13 @@ setMethod('display', 'GWASTrack',
                    autoscale=obj@autoscale,
                    min=obj@minY,
                    max=obj@maxY)
+
+   if(obj@data.mode == "local.url"){
+      directory.name <- dirname(obj@url)
+      file.name      <-  basename(obj@url)
+      shiny::addResourcePath("tmpTracks", directory.name)
+      message$dataUrl <- sprintf("tmpTracks/%s", file.name)
+      }
 
    session$sendCustomMessage("loadGwasTrackFlexibleSource", message)
 

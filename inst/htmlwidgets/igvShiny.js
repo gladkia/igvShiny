@@ -651,10 +651,10 @@ Shiny.addCustomMessageHandler("loadGwasTrackFlexibleSource",
       var min = message.min;
       var max = message.max;
 
-      if(dataMode == "local.ulr")
+      if(dataMode == "local.url")
           url = window.location.href + url;
 
-      igvshiny_log("url: " + url)
+      igvshiny_log("loadGwasTrackFlexibleSource, url: " + url)
 
       var config = {format: "gwas",
                     type: "gwas",

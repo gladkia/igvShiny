@@ -1,7 +1,7 @@
 Package: igvShiny
 Title: igvShiny
-Version: 1.5.9002
-Date: 2022-11-17
+Version: 1.5.9003
+Date: 2022-12-29
 Author: Paul Shannon
 Maintainer: Paul Shannon <paul.thurmond.shannon@gmail.com>
 Description: igv.js as a shiny widget
