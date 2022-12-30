@@ -3,6 +3,7 @@
  importFrom("methods", "is", "new")
  importFrom("utils", "write.table")
 export(GWASTrack)
+export(common.always.available.stock.genomes)
 export(currently.supported.stock.genomes)
 export(getGenomicRegion)
 export(igvShiny)

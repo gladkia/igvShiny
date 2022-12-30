@@ -23,6 +23,22 @@ url.exists <- function(url)
 
 } # url.exists
 #----------------------------------------------------------------------------------------------------
+#' @title common.always.available.stock.genomes
+#' @description a helper function for mostly internal use, returns the basic sure-to-be-supported
+#'       igv.js stock genomes, the most commonly used, obviating an aws lookup
+#'
+#' @rdname common.always.available.stock.genomes
+#' @aliases common.always.available.stock.genomes
+#' #'
+#' @return an list of short genome codes
+#' @export
+#'
+common.always.available.stock.genomes <- function()
+{
+    c("hg38", "hg19", "mm10", "tair10", "custom", "dm6", "sacCer3")
+
+} # common.always.available.stock.genomes
+#----------------------------------------------------------------------------------------------------
 #' @title currently.supported.stock.genomes
 #' @description a helper function for mostly internal use, obtains the genome codes (e.g. 'hg38')
 #'       supported by igv.js
@@ -104,13 +120,15 @@ parseAndValidateGenomeSpec <- function(genomeName, initialLocus="all",
     #--------------------------------------------------
 
     if(stockGenome){
-       supported.stock.genomes <- currently.supported.stock.genomes()
-       if(!genomeName %in% supported.stock.genomes){
-          s.1 <- sprintf("Your genome '%s' is not currently supported", genomeName)
-          s.2 <- sprintf("Currently supported: %s", paste(supported.stock.genomes, collapse=","))
-          msg <- sprintf("%s\n%s", s.1, s.2)
-          stop(msg)
-          }
+       if(!genomeName %in% common.always.available.stock.genomes()){
+           supported.stock.genomes <- currently.supported.stock.genomes()
+           if(!genomeName %in% supported.stock.genomes){
+               s.1 <- sprintf("Your genome '%s' is not currently supported", genomeName)
+               s.2 <- sprintf("Currently supported: %s", paste(supported.stock.genomes, collapse=","))
+               msg <- sprintf("%s\n%s", s.1, s.2)
+               stop(msg)
+               }
+            } # if not common & always available
        options[["genomeName"]] <- genomeName
        options[["initialLocus"]] <- initialLocus
        options[["fasta"]] <- NA

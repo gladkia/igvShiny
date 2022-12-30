@@ -5,11 +5,11 @@ runTests <- function()
 {
     test_url.exists()
     test_supportedGenomes()
+    test_common.always.available.stock.genomes()
     test_parseAndValidateGenomeSpec.stock()
     test_parseAndValidateGenomeSpec.custom.http()
     test_parseAndValidateGenomeSpec.custom.localFiles()
     test_parseAndValidateGenomeSpec.custom.localFiles.sarsWithGFF3()
-
 
 } # runTests
 #----------------------------------------------------------------------------------------------------
@@ -27,13 +27,45 @@ test_supportedGenomes <- function()
 {
     message(sprintf("--- test_supportedGenomes"))
 
-    cg <- currently.supported.genomes()
+    cg <- currently.supported.stock.genomes()
     checkTrue(length(cg) > 30)
 
-    cg.minimal <- currently.supported.genomes(test=TRUE)
+    cg.minimal <- currently.supported.stock.genomes(test=TRUE)
     checkEquals(cg.minimal, c("hg38", "hg19", "mm10", "tair10", "rhos", "custom", "dm6", "sacCer3"))
 
 } # test_supportedGenomes
+#----------------------------------------------------------------------------------------------------
+test_common.always.available.stock.genomes <- function()
+{
+    message(sprintf("--- test_common.always.available.stock.genomes"))
+
+        #-------------------------------------------------------------------------
+        # should return immediately, in contrast currently.supported.stock.genomes
+        # which requires an aws lookup
+        #-------------------------------------------------------------------------
+
+    t1 <- system.time(caasg <- common.always.available.stock.genomes())
+    checkTrue(t1[["elapsed"]] < 0.001)
+    checkTrue(all(c("hg38", "hg19", "mm10", "tair10", "custom", "dm6", "sacCer3") %in% caasg))
+
+    t2 <- system.time(cssg  <-currently.supported.stock.genomes())
+    checkTrue(t2[["elapsed"]] > 0.25)
+
+        #-------------------------------------------------------------------------
+        # make sure that using one of the caasg also gets a nearly zero time
+        # genomeSpec.  this ensures that the caasg is actually used.
+        #-------------------------------------------------------------------------
+
+    t3 <- system.time(parseAndValidateGenomeSpec(genomeName="hg38",  initialLocus="NDUFS2",
+                                                 stockGenome=TRUE, dataMode="stock",
+                                                 fasta=NA, fastaIndex=NA, genomeAnnotation=NA))
+    t4 <- system.time(parseAndValidateGenomeSpec(genomeName="macFas5",  initialLocus="all",
+                                                 stockGenome=TRUE, dataMode="stock",
+                                                 fasta=NA, fastaIndex=NA, genomeAnnotation=NA))
+    checkTrue(t3[["elapsed"]] < 0.001)
+    checkTrue(t4[["elapsed"]] > 0.25)
+
+} # test_common.always.available.stock.genomes
 #----------------------------------------------------------------------------------------------------
 test_parseAndValidateGenomeSpec.stock <- function()
 {
