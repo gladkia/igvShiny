@@ -1,7 +1,7 @@
 default:
-	@echo available targets: roxy install demo all
+	@echo available targets: roxy install test demo all
 
-all: roxy install demo
+all: roxy install test demo
 
 roxy:
 	R -e "devtools::document()"

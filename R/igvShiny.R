@@ -2,7 +2,7 @@
 #' @import GenomicRanges
 #' @import GenomeInfoDbData
 #' @import shiny
-#' @importFrom jsonlite toJSON
+#' @import jsonlite
 #' @importFrom randomcoloR distinctColorPalette
 #' @import httr
 #' @importFrom htmlwidgets createWidget shinyWidgetOutput shinyRenderWidget
