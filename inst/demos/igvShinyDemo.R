@@ -102,7 +102,7 @@ server = function(input, output, session) {
 
    observeEvent(input$addBedGraphTrackButton, {
       showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
-      loadBedGraphTrack(session, id="igvShiny_0", trackName="wig/bedGraph/local", tbl=tbl.bed,
+      loadBedGraphTrack(session, id="igvShiny_0", trackName="wig/bedGraph/local", tbl=tbl.bed5,
                         color="blue", autoscale=TRUE)
       })
 
