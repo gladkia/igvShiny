@@ -16,12 +16,25 @@ stopifnot(file.exists(f))
 tbl.gwas <- get(load(f))
 printf <- function(...) print(noquote(sprintf(...)))
 #----------------------------------------------------------------------------------------------------
-tbl.bed <- data.frame(chr=c("1","1", "1"),
-                      start=c(7432951, 7437000, 7438000),
-                      end=  c(7436000, 7437500, 7440000),
-                      value=c(-2.239, 3.0, 0.5),
-                      sampleID=c("sample1", "sample2", "sample3"),
-                      stringsAsFactors=FALSE)
+tbl.bed5 <- data.frame(chr=c("1","1", "1"),
+                       start=c(7432951, 7437000, 7438000),
+                       end=  c(7436000, 7437500, 7440000),
+                       value=c(-2.239, 3.0, 0.5),
+                       sampleID=c("sample1", "sample2", "sample3"),
+                       stringsAsFactors=FALSE)
+
+base.loc <- 161200000
+tbl.bed9 <- data.frame(chrom=rep("chr1", 3),
+                       start=c(base.loc, base.loc+100, base.loc + 250),
+                       end=c(base.loc + 50, base.loc+120, base.loc+290),
+                       name=c("red", "green", "blue"),
+                       score=round(runif(3), 2),
+                       strand=c("+", "-", "+"),
+                       thickStart=c(base.loc+10, base.loc+110, base.loc+260),
+                       thickEnd=c(base.loc+20, base.loc+130, base.loc+250),
+                       itemRgb=c("255,0,128", "0,255,0", "0,0,255"),
+                       stringsAsFactors=FALSE)
+
 wig.size <- 100
 values.100 <- runif(n=wig.size, min=-1, max=1)
 starts.100 <- seq(from=7432951, to=7432951+(wig.size-1))
@@ -46,6 +59,7 @@ ui = shinyUI(fluidPage(
         # data immediate seg track apparently abandoned with igv.js 2.10.4 or before
         #actionButton("addSegTrackButton", "Add as SEG"),
         br(),
+        actionButton("addBed9TrackButton", "bed9 track"),
         actionButton("addGwasTrackButton", "Add GWAS Track"),
         actionButton("addBamViaHttpButton", "BAM from URL"),
         actionButton("addBamLocalFileButton", "BAM local data"),
@@ -78,7 +92,12 @@ server = function(input, output, session) {
 
    observeEvent(input$addBedTrackButton, {
       showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
-      loadBedTrack(session, id="igvShiny_0", trackName="bed", tbl=tbl.bed, color="green");
+      loadBedTrack(session, id="igvShiny_0", trackName="bed5", tbl=tbl.bed5);
+      })
+
+   observeEvent(input$addBed9TrackButton, {
+      showGenomicRegion(session, id="igvShiny_0", "chr1:161,199,757-161,201,277")
+      loadBedTrack(session, id="igvShiny_0", trackName="bed9", tbl=tbl.bed9)
       })
 
    observeEvent(input$addBedGraphTrackButton, {
@@ -110,7 +129,7 @@ server = function(input, output, session) {
 
    observeEvent(input$addSegTrackButton, {
       showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
-      loadSegTrack(session, id="igvShiny_0", trackName="seg", tbl=tbl.bed)
+      loadSegTrack(session, id="igvShiny_0", trackName="seg", tbl=tbl.bed5)
       })
 
    observeEvent(input$addGwasTrackButton, {
@@ -155,7 +174,7 @@ server = function(input, output, session) {
         printf("--- igvReady")
         containerID <- input$igvReady
         printf("igv ready, %s", containerID)
-        loadBedTrack(session, id=containerID, trackName="bed loaded on ready", tbl=tbl.bed, color="red");
+        loadBedTrack(session, id=containerID, trackName="bed5 loaded on ready", tbl=tbl.bed5, color="red");
         })
 
    observeEvent(input$trackClick, {

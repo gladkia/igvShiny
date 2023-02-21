@@ -270,7 +270,7 @@ removeUserAddedTracks <- function(session, id)
 #'
 #' @export
 
-loadBedTrack <- function(session, id, trackName, tbl, color="gray", trackHeight=50,
+loadBedTrack <- function(session, id, trackName, tbl, color="", trackHeight=50,
                          deleteTracksOfSameName=TRUE, quiet=TRUE)
 {
    if(color == "random")
@@ -302,9 +302,13 @@ loadBedTrack <- function(session, id, trackName, tbl, color="gray", trackHeight=
    new.order <- order(tbl$start, decreasing=FALSE)
    tbl <- tbl[new.order,]
 
+   temp.file <- tempfile(tmpdir="tracks", fileext=".bed")
+   write.table(tbl, sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE, file=temp.file)
+   log("--- igvShiny.R, loadBedTrack wrote %d,%d to %s", nrow(tbl), ncol(tbl), temp.file)
+   log("exists? %s", file.exists(temp.file))
    msg.to.igv <- list(elementID=id, trackName=trackName,
-                      tbl=jsonlite::toJSON(tbl), color=color, trackHeight=trackHeight)
-   session$sendCustomMessage("loadBedTrack", msg.to.igv)
+                      bedFilepath=temp.file, color=color, trackHeight=trackHeight)
+   session$sendCustomMessage("loadBedTrackFromFile", msg.to.igv)
 
 } # loadBedTrack
 #------------------------------------------------------------------------------------------------------------------------

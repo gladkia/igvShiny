@@ -53,7 +53,6 @@ HTMLWidgets.widget({
          var htmlContainerID = el.id;
          igvshiny_log("fasta: " + options.fasta)
          igvshiny_log("index: " + options.fastaIndex)
-         //debugger;
          var fullOptions = genomeSpecificOptions(options.genomeName,
                                                  options.stockGenome,
                                                  options.dataMode,
@@ -446,6 +445,37 @@ Shiny.addCustomMessageHandler("loadBedTrack",
                     type: "annotation",
                     order: Number.MAX_VALUE,
                     features: tbl,
+                    indexed: false,
+                    displayMode: "EXPANDED",
+                    color: color,
+                    height: trackHeight
+                    };
+      igvBrowser.loadTrack(config);
+      }
+
+
+);
+//------------------------------------------------------------------------------------------------------------------------
+Shiny.addCustomMessageHandler("loadBedTrackFromFile",
+
+   function(message){
+      igvshiny_log("=== loadBedTrackFromFile");
+      igvshiny_log(message)
+      var elementID = message.elementID;
+      var igvBrowser = document.getElementById(elementID).igvBrowser;
+      var trackName = message.trackName;
+      var bedFile = message.bedFilepath;
+      var dataURL = window.location.href + bedFile;
+      igvshiny_log("dataURL: " + dataURL);
+
+      var color = message.color;
+      var trackHeight = message.trackHeight;
+
+      var config = {format: "bed",
+                    name: trackName,
+                    type: "annotation",
+                    order: Number.MAX_VALUE,
+                    url: dataURL,
                     indexed: false,
                     displayMode: "EXPANDED",
                     color: color,

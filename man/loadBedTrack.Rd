@@ -9,7 +9,7 @@ loadBedTrack(
   id,
   trackName,
   tbl,
-  color = "gray",
+  color = "",
   trackHeight = 50,
   deleteTracksOfSameName = TRUE,
   quiet = TRUE
