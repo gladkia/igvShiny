@@ -184,8 +184,8 @@ showGenomicRegion <- function(session, id, region)
 #'
 #' @description return the current region displayed by your igv instance
 #'
-#' @rdname showGenomicRegion
-#' @aliases showGenomicRegion
+#' @rdname getGenomicRegion
+#' @aliases getGenomicRegion
 #'
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
@@ -200,7 +200,7 @@ getGenomicRegion <- function(session, id)
    message <- list(elementID=id)
    session$sendCustomMessage("getGenomicRegion", message)
 
-} # gertGenomicRegion
+} # getGenomicRegion
 #------------------------------------------------------------------------------------------------------------------------
 #' remove tracks from the browser
 #'
