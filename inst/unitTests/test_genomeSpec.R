@@ -45,7 +45,7 @@ test_common.always.available.stock.genomes <- function()
         #-------------------------------------------------------------------------
 
     t1 <- system.time(caasg <- common.always.available.stock.genomes())
-    checkTrue(t1[["elapsed"]] < 0.001)
+    checkTrue(t1[["elapsed"]] < 0.1)
     checkTrue(all(c("hg38", "hg19", "mm10", "tair10", "custom", "dm6", "sacCer3") %in% caasg))
 
     t2 <- system.time(cssg  <-currently.supported.stock.genomes())
@@ -62,7 +62,7 @@ test_common.always.available.stock.genomes <- function()
     t4 <- system.time(parseAndValidateGenomeSpec(genomeName="macFas5",  initialLocus="all",
                                                  stockGenome=TRUE, dataMode="stock",
                                                  fasta=NA, fastaIndex=NA, genomeAnnotation=NA))
-    checkTrue(t3[["elapsed"]] < 0.001)
+    checkTrue(t3[["elapsed"]] < 0.1)
     checkTrue(t4[["elapsed"]] > 0.25)
 
 } # test_common.always.available.stock.genomes

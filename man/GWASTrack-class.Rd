@@ -22,7 +22,7 @@ GWASTrack(
 \arguments{
 \item{trackName}{A character string, used as track label by igv, we recommend unique names per track.}
 
-\item{data}{a data.frame or a url pointing to one, whose essential structure is described by chrom.col, pos.col, pval.col}
+\item{data}{a data.frame or a url pointing to one, whose structure is described by chrom.col, pos.col, pval.col}
 
 \item{chrom.col}{numeric, the column number of the chromosome column}
 
@@ -46,7 +46,7 @@ A GWASTrack object
 }
 \examples{
 
-  file <- system.file(package="igvR", "extdata", "gwas-5k.tsv") # a local gwas file
+  file <- system.file(package="igvShiny", "extdata", "gwas-5k.tsv.gz") # a local gwas file
   tbl.gwas <- read.table(file, sep="\t", header=TRUE, quote="")
   dim(tbl.gwas)
   track <- GWASTrack("gwas 5k", tbl.gwas, chrom.col=12, pos.col=13, pval.col=28)
