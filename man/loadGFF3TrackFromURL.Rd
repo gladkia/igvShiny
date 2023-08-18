@@ -34,13 +34,14 @@ loadGFF3TrackFromURL(
 
 \item{colorTable}{list, mapping a gff3 attribute, typically biotype, to a color}
 
-\item{colorByAttribute}{character, name of a gff3 attribute in column 9, typically 'biotype'}
+\item{colorByAttribute}{character, name of a gff3 attribute in column 9, typically "biotype"}
 
 \item{displayMode}{character,  "EXPANDED",  "SQUISHED" or "COLLAPSED"}
 
 \item{trackHeight}{numeric defaults to 50}
 
-\item{visibilityWindow}{numeric, Maximum window size in base pairs for which indexed annotations or variants are displayed}
+\item{visibilityWindow}{numeric, Maximum window size in base pairs 
+for which indexed annotations or variants are displayed}
 
 \item{deleteTracksOfSameName}{logical, default TRUE}
 }

@@ -5,23 +5,32 @@
 
 #' @exportClass GWASTrack
 
-.GWASTrack <- setClass("GWASTrack",
-                        slots=representation(
-                            trackName="character",
-                            data.mode="character",
-                            url="character",
-                            chrom.col="numeric",
-                            pos.col="numeric",
-                            pval.col="numeric",
-                            trackHeight="numeric",
-                            autoscale="logical",
-                            minY="numeric",
-                            maxY="numeric")
-                       )
+.GWASTrack <- setClass(
+  "GWASTrack",
+  slots = representation(
+    trackName = "character",
+    data.mode = "character",
+    url = "character",
+    chrom.col = "numeric",
+    pos.col = "numeric",
+    pval.col = "numeric",
+    trackHeight = "numeric",
+    autoscale = "logical",
+    minY = "numeric",
+    maxY = "numeric"
+  )
+)
 
-setGeneric('display',  signature='obj', function(obj, session, id, deleteTracksOfSameName=TRUE)
-    standardGeneric ('display'))
-setGeneric('getUrl',  signature='obj', function(obj) standardGeneric ('getUrl'))
+setGeneric("display",  signature = "obj",
+           function(obj, session, id, deleteTracksOfSameName = TRUE) {
+             standardGeneric("display")
+           })
+
+setGeneric("getUrl",  signature = "obj",
+           function(obj) {
+             standardGeneric("getUrl")
+           })
+
 #----------------------------------------------------------------------------------------------------
 #' Constructor for GWASTrack
 #'
@@ -31,7 +40,7 @@ setGeneric('getUrl',  signature='obj', function(obj) standardGeneric ('getUrl'))
 #' @rdname GWASTrack-class
 #'
 #' @param trackName  A character string, used as track label by igv, we recommend unique names per track.
-#' @param data a data.frame or a url pointing to one, whose essential structure is described by chrom.col, pos.col, pval.col
+#' @param data a data.frame or a url pointing to one, whose structure is described by chrom.col, pos.col, pval.col
 #' @param chrom.col numeric, the column number of the chromosome column
 #' @param pos.col numeric, the column number of the position column
 #' @param pval.col numeric, the column number of the GWAS pvalue colum
@@ -44,7 +53,7 @@ setGeneric('getUrl',  signature='obj', function(obj) standardGeneric ('getUrl'))
 #'
 #' @examples
 #'
-#'   file <- system.file(package="igvR", "extdata", "gwas-5k.tsv") # a local gwas file
+#'   file <- system.file(package="igvShiny", "extdata", "gwas-5k.tsv.gz") # a local gwas file
 #'   tbl.gwas <- read.table(file, sep="\t", header=TRUE, quote="")
 #'   dim(tbl.gwas)
 #'   track <- GWASTrack("gwas 5k", tbl.gwas, chrom.col=12, pos.col=13, pval.col=28)
@@ -71,49 +80,60 @@ GWASTrack <- function(trackName,
                       chrom.col,
                       pos.col,
                       pval.col,
-                      trackHeight=50,
-                      autoscale=TRUE,
-                      minY=0,
-                      maxY=30
-                      )
-{
-    data.class <- class(data)
-    stopifnot(data.class %in% c("data.frame", "character"))
-
-    if(data.class == "data.frame"){
-        mode <- "local.url"
-# as written, assumes ./tracks exists, which need not be
-#        url <- tempfile(tmpdir="tracks", fileext=".gwas") # expanded in javascript
-        tdir <- paste0(tempdir(), "/tracks")
-        #tdir <- "tracks"
-        x <- NULL
-        if (!dir.exists(tdir)) x <- try(dir.create(tdir))
-        if (inherits(x, "try-error")) stop(sprintf("could not create %s\n", tdir))
-        url <- tempfile(tmpdir=tdir, fileext=".gwas") # expanded in javascript
-        write.table(data, sep="\t", row.names=FALSE, quote=FALSE, file=url)
-        }
-
-    if(data.class == "character"){
-       if(!url.exists(data)){  # was a legitimate url provided?
-           error.message <- sprintf("error: putative gwas file url unreachable: '%s'", data)
-           stop(error.message)
-           }
-       mode <- "remote.url"
-       url <- data
-       }
-
-    obj <- .GWASTrack(trackName=trackName,
-                      data.mode=mode,
-                      url=url,
-                      chrom.col=chrom.col,
-                      pos.col=pos.col,
-                      pval.col=pval.col,
-                      trackHeight=trackHeight,
-                      autoscale=autoscale,
-                      minY=minY,
-                      maxY=maxY)
-    obj
-
+                      trackHeight = 50,
+                      autoscale = TRUE,
+                      minY = 0,
+                      maxY = 30) {
+  
+  data.class <- class(data)
+  stopifnot(data.class %in% c("data.frame", "character"))
+  
+  if (data.class == "data.frame") {
+    mode <- "local.url"
+    # as written, assumes ./tracks exists, which need not be
+    # url <- tempfile(tmpdir="tracks", fileext=".gwas") # expanded in javascript # nolint
+    tdir <- paste0(tempdir(), "/tracks")
+    x <- NULL
+    if (!dir.exists(tdir))
+      x <- try(dir.create(tdir))
+    if (inherits(x, "try-error"))
+      stop(sprintf("could not create %s\n", tdir))
+    url <-
+      tempfile(tmpdir = tdir, fileext = ".gwas") # expanded in javascript
+    write.table(
+      data,
+      sep = "\t",
+      row.names = FALSE,
+      quote = FALSE,
+      file = url
+    )
+  }
+  
+  if (data.class == "character") {
+    if (!url.exists(data)) {
+      # was a legitimate url provided?
+      error.message <-
+        sprintf("error: putative gwas file url unreachable: '%s'", data)
+      stop(error.message)
+    }
+    mode <- "remote.url"
+    url <- data
+  }
+  
+  obj <- .GWASTrack(
+    trackName = trackName,
+    data.mode = mode,
+    url = url,
+    chrom.col = chrom.col,
+    pos.col = pos.col,
+    pval.col = pval.col,
+    trackHeight = trackHeight,
+    autoscale = autoscale,
+    minY = minY,
+    maxY = maxY
+  )
+  obj
+  
 } # GWASTrack
 #----------------------------------------------------------------------------------------------------
 #' display the already constructed and configured track
@@ -130,42 +150,45 @@ GWASTrack <- function(trackName,
 #'
 #' @export
 #'
-setMethod('display', 'GWASTrack',
-
-  function (obj, session, id, deleteTracksOfSameName=TRUE) {
-
-   if(deleteTracksOfSameName){
-      removeTracksByName(session, id, obj@trackName);
-      }
-
-   state[["userAddedTracks"]] <- unique(c(state[["userAddedTracks"]], obj@trackName))
-
-     # javascript function consults dataMode, modifies dataUrl if local.url,
-     # prepending the http host of the modest RStudio/Shiny webserver
-     # make sure the embedded shiny webserver can find it by:
-     #   - adding a resource path with a convenient shorthand name, pointing
-     #     to the typically long and cryptic actual local host temporary directory
-     #   - adjusting message$dataUrl to use that shorthand directory name
-
-   message <- list(elementID=id,
-                   trackName=obj@trackName,
-                   dataMode=obj@data.mode,
-                   dataUrl=obj@url,
-                   trackHeight=obj@trackHeight,
-                   autoscale=obj@autoscale,
-                   min=obj@minY,
-                   max=obj@maxY)
-
-   if(obj@data.mode == "local.url"){
-      directory.name <- dirname(obj@url)
-      file.name      <-  basename(obj@url)
-      shiny::addResourcePath("tmpTracks", directory.name)
-      message$dataUrl <- sprintf("tmpTracks/%s", file.name)
-      }
-
-   session$sendCustomMessage("loadGwasTrackFlexibleSource", message)
-
-}) # display
+setMethod("display", "GWASTrack",
+          
+          function(obj, session, id, deleteTracksOfSameName = TRUE) {
+            if (deleteTracksOfSameName) {
+              removeTracksByName(session, id, obj@trackName)
+              
+            }
+            
+            state[["userAddedTracks"]] <-
+              unique(c(state[["userAddedTracks"]], obj@trackName))
+            
+            # javascript function consults dataMode, modifies dataUrl if local.url,
+            # prepending the http host of the modest RStudio/Shiny webserver
+            # make sure the embedded shiny webserver can find it by:
+            #   - adding a resource path with a convenient shorthand name, pointing
+            #     to the typically long and cryptic actual local host temporary directory
+            #   - adjusting message$dataUrl to use that shorthand directory name
+            
+            message <- list(
+              elementID = id,
+              trackName = obj@trackName,
+              dataMode = obj@data.mode,
+              dataUrl = obj@url,
+              trackHeight = obj@trackHeight,
+              autoscale = obj@autoscale,
+              min = obj@minY,
+              max = obj@maxY
+            )
+            
+            if (obj@data.mode == "local.url") {
+              directory.name <- dirname(obj@url)
+              file.name      <-  basename(obj@url)
+              shiny::addResourcePath("tmpTracks", directory.name)
+              message$dataUrl <- sprintf("tmpTracks/%s", file.name)
+            }
+            
+            session$sendCustomMessage("loadGwasTrackFlexibleSource", message)
+            
+          }) # display
 #----------------------------------------------------------------------------------------------------
 #' the url of the gwas table
 #'
@@ -178,9 +201,8 @@ setMethod('display', 'GWASTrack',
 #'
 #' @export
 #'
-setMethod('getUrl', 'GWASTrack',
-
-    function (obj) {
-        obj@url
-        })
-
+setMethod("getUrl", "GWASTrack",
+          
+          function(obj) {
+            obj@url
+          })
