@@ -11,6 +11,9 @@
 #'
 #' @return logical TRUE or FALSE
 #'
+#' @examples
+#'   g_ue <- url.exists("google.com")
+#'
 #' @export
 url.exists <- function(url) {
   response <- tolower(httr::http_status(httr::HEAD(url))$category)
@@ -26,6 +29,10 @@ url.exists <- function(url) {
 #' @aliases common.always.available.stock.genomes
 #' #'
 #' @return an list of short genome codes
+#'
+#' @examples
+#'   cs <- common.always.available.stock.genomes()
+#'
 #' @export
 #'
 common.always.available.stock.genomes <- function() {
@@ -43,6 +50,10 @@ common.always.available.stock.genomes <- function() {
 #' @param test logical(1) defaults to FALSE
 #'
 #' @return an list of short genome codes, e.g., "hg38", "dm6", "tair10"
+#'
+#' @examples
+#'   cs <- currently.supported.stock.genomes(test = TRUE)
+#'
 #' @export
 #'
 currently.supported.stock.genomes <- function(test = FALSE) {

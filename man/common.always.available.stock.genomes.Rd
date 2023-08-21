@@ -14,3 +14,7 @@ an list of short genome codes
 a helper function for mostly internal use, returns the basic sure-to-be-supported
       igv.js stock genomes, the most commonly used, obviating an aws lookup
 }
+\examples{
+  cs <- common.always.available.stock.genomes()
+
+}
