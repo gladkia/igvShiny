@@ -1,10 +1,11 @@
 Package: igvShiny
 Title: igvShiny
-Version: 1.5.9010
-Date: 2023-08-18
-Author: Paul Shannon
-Maintainer: Paul Shannon <paul.thurmond.shannon@gmail.com>
-Description: igv.js as a shiny widget.
+Version: 1.5.9011
+Date: 2023-08-22
+Authors@R: c(
+    person("Paul","Shannon", , "paul.thurmond.shannon@gmail.com", role = c("cre", "aut"))
+    )
+Description: This pacakge comprises an htmlwidget version of IGV. It can be used as a module in Shiny apps.
 Depends: 
     GenomicRanges,
     methods,
@@ -21,6 +22,7 @@ Imports:
     httr,
     jsonlite,
     randomcoloR
+biocViews: Software, ShinyApps, Sequencing, Coverage
 License: MIT + file LICENSE
 Encoding: UTF-8
 Collate:

@@ -1,7 +1,7 @@
 #' @name GWASTrack-class
 #' @rdname GWASTrack-class
-#' @rawNamespace  importFrom("methods", "is", "new")
-#' @rawNamespace  importFrom("utils", "write.table")
+#' @importFrom methods is new
+#' @importFrom utils write.table
 
 #' @exportClass GWASTrack
 

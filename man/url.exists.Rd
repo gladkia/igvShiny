@@ -16,3 +16,7 @@ logical TRUE or FALSE
 a helper function for mostly internal use, tests for availability of a url,
              modeled after file.exists
 }
+\examples{
+  g_ue <- url.exists("google.com")
+
+}

@@ -129,6 +129,9 @@ igvShiny <- function(genomeOptions, width = NULL, height = NULL,
 #'
 #' @return the created widget's html
 #'
+#' @examples
+#'   io <- igvShinyOutput("igvOut")
+#'
 #' @export
 #'
 igvShinyOutput <- function(outputId, width = "100%", height = NULL) {

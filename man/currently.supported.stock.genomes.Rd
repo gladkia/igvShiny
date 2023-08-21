@@ -16,3 +16,7 @@ an list of short genome codes, e.g., "hg38", "dm6", "tair10"
 a helper function for mostly internal use, obtains the genome codes (e.g. 'hg38')
       supported by igv.js
 }
+\examples{
+  cs <- currently.supported.stock.genomes(test = TRUE)
+
+}
