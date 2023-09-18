@@ -26,3 +26,11 @@ load a SEG track provided as a data.frame.  igv "displays segmented data as
  a blue-to-red heatmap where the data range is -1.5 to 1.5... The segmented data
 file format is the output of the Circular Binary Segmentation algorithm (Olshen et al., 2004)".
 }
+\examples{
+library(igvShiny)
+demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+if (interactive()) {
+ shiny::runApp(demo_app_file)
+}
+
+}

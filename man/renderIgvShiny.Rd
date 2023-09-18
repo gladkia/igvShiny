@@ -7,11 +7,14 @@
 renderIgvShiny(expr, env = parent.frame(), quoted = FALSE)
 }
 \arguments{
-\item{expr}{not sure...}
+\item{expr}{an expression that generates an HTML widget}
 
-\item{env}{not sure...}
+\item{env}{the environment in which to evaluate expr}
 
-\item{quoted}{not sure...}
+\item{quoted}{logical flag indicating if expr a quoted expression}
+}
+\value{
+an output or render function that enables the use of the widget within Shiny applications
 }
 \description{
 This function is called in the server function of your shiny app
