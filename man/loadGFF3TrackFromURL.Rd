@@ -51,3 +51,11 @@ nothing
 \description{
 load a remote GFF3 track
 }
+\examples{
+library(igvShiny)
+demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo-GFF3.R")
+if (interactive()) {
+ shiny::runApp(demo_app_file)
+}
+
+}

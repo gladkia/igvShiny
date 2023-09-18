@@ -1,0 +1,182 @@
+---
+title: "igvShiny: a wrapper of IGV in the Shiny apps"
+author:
+- name: Arkadiusz Gladki
+package: igvShiny
+output:
+  BiocStyle::html_document:
+    toc: false
+vignette: >
+  %\VignetteIndexEntry{igvShiny Overview}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# igvShiny
+
+The `igvShiny` pacakge is a wrapper of Intergrative Genomics Viewer (IGV). 
+It comprises an htmlwidget version of IGV. It can be used as a module in Shiny apps. 
+
+# Installation
+
+```{r,eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("igvShiny")
+```
+
+# Loading the package
+
+```{r,include=TRUE,results="hide",message=FALSE,warning=FALSE}
+library(igvShiny)
+```
+
+# Running minimal Shiny app
+
+Running the minimal Shiny app with igvShiny is as simple as:
+
+* providing genome details via `parseAndValidateGenomeSpec`
+* using `igvShinyOutput` as the UI function
+* using `renderIgvShiny` as the server function
+
+The he minimal Shiny app make look like: 
+
+```{r,eval=FALSE}
+library(igvShiny)
+options <- parseAndValidateGenomeSpec(genomeName="hg38",  initialLocus="NDUFS2")
+if (interactive()) {
+  ui <- shinyUI(fluidPage(igvShinyOutput('igvShiny'), width = 10))
+  server <-
+    function(input, output, session) {
+      output$igvShiny <- renderIgvShiny({
+        igvShiny(options)
+      })
+    }
+  runApp(shinyApp(ui = ui, server = server))
+}
+```
+
+# Providing genome details
+
+Multiple genomes are currently supported by IGV: [link](https://s3.amazonaws.com/igv.org.genomes/genomes.json). In igvShiny this set of genomes is called stock genomes.
+One can select any stock genome easily by running `parseAndValidateGenomeSpec` with single `genomeName` value properly assigned.
+For example to use the most popular mouse genome one need to run:
+
+```{r,echo=TRUE}
+igvShiny::parseAndValidateGenomeSpec("mm10")
+```
+
+The list of available stock genomes in igvShiny can be found with:
+```{r,echo=TRUE}
+igvShiny::currently.supported.stock.genomes()
+```
+
+See also demo app for stock genomes when one can select genome of interest and familiarize with the basic functionalities provided via igvShiny:
+```{r,echo=TRUE}
+library(igvShiny)
+demo_app_file <- system.file(package= "igvShiny", "demos/stockGenomesDemo.R")
+if (interactive()) {
+  shiny::runApp(demo_app_file)
+}
+```
+
+It's also possible to use custom genomes (i.e. non-stock genoems). In such cases one has to provide data for: `FASTA file`, `FASTA index file` and `genome annotation file`.
+The files can provided as local paths (`dataMode` = `localFiles` or via URLs (`dataMode = http`). See below the examples for both cases.
+
+```{r,echo=TRUE}
+library(igvShiny)
+
+# defining custom genome with data provided via URLs
+base_url <- "https://igv-data.systemsbiology.net/testFiles"
+title <- "ribo remote"
+fasta_file <- sprintf("%s/%s", base_url, "ribosomal-RNA-gene.fasta")
+fastaIndex_file <- sprintf("%s/%s", base_url, "ribosomal-RNA-gene.fasta.fai")
+annotation_file <- sprintf("%s/%s", base_url, "ribosomal-RNA-gene.gff3")
+locus <- "U13369.1:7,276-8,225"
+genomeOptions <- parseAndValidateGenomeSpec(
+  genomeName = title,
+  initialLocus = locus,
+  stockGenome = FALSE,
+  dataMode = "http",
+  fasta = fasta_file,
+  fastaIndex = fastaIndex_file,
+  genomeAnnotation = annotation_file
+)
+genomeOptions
+
+# defining custom genome with data provided with local files
+data_directory <- system.file(package = "igvShiny", "extdata")
+fasta_file      <- file.path(data_directory, "ribosomal-RNA-gene.fasta")
+fastaIndex_file <- file.path(data_directory, "ribosomal-RNA-gene.fasta.fai")
+annotation_file <- file.path(data_directory, "ribosomal-RNA-gene.gff3")
+genomeOptions2 <- parseAndValidateGenomeSpec(
+  genomeName = "ribo local",
+  initialLocus = "U13369.1:7,276-8,225",
+  stockGenome = FALSE,
+  dataMode = "localFiles",
+  fasta = fasta_file,
+  fastaIndex = fastaIndex_file,
+  genomeAnnotation = annotation_file
+)
+genomeOptions2
+```
+
+See also demo apps for custom genomes with data provided via URLs:
+```{r,echo=TRUE}
+library(igvShiny)
+demo_app_file <-
+  system.file(package = "igvShiny", "demos/igvShinyDemo-customGenome-http.R")
+if (interactive()) {
+  shiny::runApp(demo_app_file)
+}
+```
+as well as data provided via local files:
+```{r,echo=TRUE}
+library(igvShiny)
+demo_app_file <-
+  system.file(package = "igvShiny", "demos/igvShinyDemo-customGenome-localFiles.R")
+if (interactive()) {
+  shiny::runApp(demo_app_file)
+}
+```
+
+
+# Main functionalities
+
+In principle igvShiny provides the same functionalities that one can find in igv.js. In summary following actions are currently possible (wrapped as the R helpers):
+
+* load tracks with the following formats/data types:
+  + Bed
+  + BedGraph
+  + Seg
+  + GWAS
+  + Bam
+  + Cram
+  + Vcf
+  + GFF3
+* showGenomicRegion (zoom in or out to show the nominated region, by chromosome locus or gene symbol)
+* getGenomicRegion (return the current IGV region)
+* removeUserAddedTracks (remove tracks from the browser, added during the session by the user)
+ 
+See also demo app to familiarize with the basic functionalities provided by igvShiny:
+```{r,echo=TRUE}
+library(igvShiny)
+demo_app_file <- system.file(package= "igvShiny", "demos/igvShinyDemo.R")
+if (interactive()) {
+  shiny::runApp(demo_app_file)
+}
+```
+
+# Session Info
+
+```{r}
+sessionInfo()
+```

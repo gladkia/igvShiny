@@ -1,17 +1,19 @@
 Package: igvShiny
 Title: igvShiny
-Version: 1.5.9011
-Date: 2023-08-22
+Version: 0.99.0
+Date: 2023-09-17
 Authors@R: c(
     person("Paul","Shannon", , "paul.thurmond.shannon@gmail.com", role = c("cre", "aut"))
     )
-Description: This pacakge comprises an htmlwidget version of IGV. It can be used as a module in Shiny apps.
+Description: This pacakge is a wrapper of Intergrative Genomics Viewer (IGV). It comprises an htmlwidget version of IGV. It can be used as a module in Shiny apps. 
 Depends: 
     GenomicRanges,
     methods,
-    R (>= 3.5.0),
+    R (>= 4.2.0),
     shiny
 Suggests: 
+    BiocStyle,
+    knitr,
     rtracklayer,
     RUnit,
     VariantAnnotation
@@ -21,7 +23,8 @@ Imports:
     htmlwidgets,
     httr,
     jsonlite,
-    randomcoloR
+    randomcoloR,
+    utils
 biocViews: Software, ShinyApps, Sequencing, Coverage
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -31,3 +34,5 @@ Collate:
     'igvShiny.R'
     'test_igvShiny_package.R'
 RoxygenNote: 7.2.3
+VignetteBuilder: 
+    knitr

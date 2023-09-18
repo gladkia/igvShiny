@@ -50,3 +50,11 @@ nothing
 \description{
 load a bedgrapn track provided as a data.frame
 }
+\examples{
+library(igvShiny)
+demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+if (interactive()) {
+ shiny::runApp(demo_app_file)
+}
+
+}
