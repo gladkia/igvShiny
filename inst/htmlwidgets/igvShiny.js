@@ -316,15 +316,6 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
 
 } // genomeSpecificOptions
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("redrawIgvWidget",
-
-    function(message) {
-        igvshiny_log("--- redrawIgvShiny")
-        window.igvBrowser.resize();
-        window.igvBrowser.visibilityChange();
-        });
-
-//------------------------------------------------------------------------------------------------------------------------
 Shiny.addCustomMessageHandler("showGenomicRegion",
 
     function(message) {
