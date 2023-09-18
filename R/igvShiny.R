@@ -43,6 +43,14 @@ state[["userAddedTracks"]] <- list()
 #' @param elementId a character string, the html element id within which igv is created
 #' @param displayMode a character string, default "SQUISHED".
 #' @param tracks a list of track specifications to be created and displayed at startup
+#' 
+#' @examples 
+#' library(igvShiny)
+#' demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#' if (interactive()) {
+#'  shiny::runApp(demo_app_file)
+#' }
+#' 
 #' @return the created widget
 #'
 #' @export
@@ -151,9 +159,11 @@ igvShinyOutput <- function(outputId, width = "100%", height = NULL) {
 #' @rdname renderIgvShiny
 #' @aliases renderIgvShiny
 #'
-#' @param expr not sure...
-#' @param env  not sure...
-#' @param quoted not sure...
+#' @param expr an expression that generates an HTML widget 
+#' @param env  the environment in which to evaluate expr
+#' @param quoted logical flag indicating if expr a quoted expression 
+#' 
+#' @return an output or render function that enables the use of the widget within Shiny applications
 #'
 #' @export
 renderIgvShiny <- function(expr, env = parent.frame(), quoted = FALSE) {
@@ -169,22 +179,6 @@ renderIgvShiny <- function(expr, env = parent.frame(), quoted = FALSE) {
 }
 
 #----------------------------------------------------------------------------------------------------
-#' redraw the igv genome browser element
-#'
-#' @description maybe a relic, unused, originally intended to refresh?
-#'
-#' @rdname redrawIgvWidget
-#' @aliases redrawIgvWidget
-#'
-#' @param session an environmet or list, provided and managed by shiny
-#'
-#' @export
-redrawIgvWidget <- function(session) {
-  
-  session$sendCustomMessage("redrawIgvWidget", message = list())
-} # redrawIgvWidget
-
-#----------------------------------------------------------------------------------------------------
 #' focus igv on a region
 #'
 #' @description zoom in or out to show the nominated region, by chromosome locus or gene symbol
@@ -195,6 +189,13 @@ redrawIgvWidget <- function(session) {
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
 #' @param region a character string, either e.g. "chr5:92,221,640-92,236,523" or "MEF2C"
+#' 
+#' @examples 
+#' library(igvShiny)
+#' demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#' if (interactive()) {
+#'  shiny::runApp(demo_app_file)
+#' }
 #'
 #' @export
 showGenomicRegion <- function(session, id, region) {
@@ -212,6 +213,13 @@ showGenomicRegion <- function(session, id, region) {
 #'
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
+#' 
+#' @examples 
+#' library(igvShiny)
+#' demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#' if (interactive()) {
+#'  shiny::runApp(demo_app_file)
+#' }
 #'
 #' @return
 #'  a character string of format "chrom:start-end"
@@ -240,7 +248,6 @@ getGenomicRegion <- function(session, id) {
 #' nothing
 #'
 #' @export
-
 removeTracksByName <- function(session, id, trackNames) {
   
   message <- list(trackNames = trackNames, elementID = id)
@@ -263,6 +270,13 @@ removeTracksByName <- function(session, id, trackNames) {
 #'
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
+#' 
+#' @examples 
+#' library(igvShiny)
+#' demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#' if (interactive()) {
+#'  shiny::runApp(demo_app_file)
+#' }
 #'
 #' @return
 #' nothing
@@ -291,6 +305,13 @@ removeUserAddedTracks <- function(session, id) {
 #' @param trackHeight an integer, 50 (pixels) by default
 #' @param deleteTracksOfSameName logical, default TRUE
 #' @param quiet logical, default TRUE, controls verbosity
+#' 
+#' @examples 
+#' library(igvShiny)
+#' demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#' if (interactive()) {
+#'  shiny::runApp(demo_app_file)
+#' }
 #'
 #' @return
 #' nothing
@@ -377,6 +398,13 @@ loadBedTrack <- function(session, id, trackName, tbl, color = "", trackHeight = 
 #' @param quiet logical, default TRUE, controls verbosity
 #' @param autoscaleGroup numeric(1) defaults to -1
 #' @param deleteTracksOfSameName logical(1) defaults to TRUE
+#' 
+#' @examples 
+#' library(igvShiny)
+#' demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#' if (interactive()) {
+#'  shiny::runApp(demo_app_file)
+#' }
 #'
 #' @return
 #' nothing
@@ -455,6 +483,13 @@ loadBedGraphTrackFromURL <- function(session, id, trackName, url, color = "gray"
 #' @param max numeric, consulted when autoscale is FALSE
 #' @param deleteTracksOfSameName logical, default TRUE
 #' @param quiet logical, default TRUE, controls verbosity
+#' 
+#' @examples 
+#' library(igvShiny)
+#' demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#' if (interactive()) {
+#'  shiny::runApp(demo_app_file)
+#' }
 #'
 #' @return
 #' nothing
@@ -540,6 +575,13 @@ loadBedGraphTrack <- function(session, id, trackName, tbl, color = "gray", track
 #' @param trackName character string
 #' @param tbl data.frame, with at least "chrom" "start" "end" "score" columns
 #' @param deleteTracksOfSameName logical, default TRUE
+#' 
+#' @examples 
+#' library(igvShiny)
+#' demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#' if (interactive()) {
+#'  shiny::runApp(demo_app_file)
+#' }
 #'
 #' @return
 #' nothing
@@ -580,6 +622,13 @@ loadSegTrack <- function(session, id, trackName, tbl, deleteTracksOfSameName = T
 #' @param trackName character string
 #' @param vcfData VariantAnnotation object
 #' @param deleteTracksOfSameName logical, default TRUE
+#' 
+#' @examples 
+#' library(igvShiny)
+#' demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo-withVCF.R")
+#' if (interactive()) {
+#'  shiny::runApp(demo_app_file)
+#' }
 #'
 #' @return
 #' nothing
@@ -628,6 +677,13 @@ loadVcfTrack <- function(session, id, trackName, vcfData, deleteTracksOfSameName
 #' @param ymax numeric defaults to 35
 #' @param tbl.gwas data.frame, with at least "chrom" "start" "end" columns
 #' @param deleteTracksOfSameName logical, default TRUE
+#' 
+#' @examples 
+#' library(igvShiny)
+#' demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#' if (interactive()) {
+#'  shiny::runApp(demo_app_file)
+#' }
 #'
 #' @return
 #' nothing
@@ -691,6 +747,13 @@ loadGwasTrack <- function(session, id, trackName, tbl.gwas, ymin = 0, ymax = 35,
 #' @param displayMode character string, possible values are "EXPANDED" (default),
 #'   "SQUISHED" or "COLLAPSED"
 #' @param showAllBases logical, show all bases in the alignment, default FALSE
+#' 
+#' @examples 
+#' library(igvShiny)
+#' demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#' if (interactive()) {
+#'  shiny::runApp(demo_app_file)
+#' }
 #'
 #' @return
 #' nothing
@@ -741,6 +804,13 @@ loadBamTrackFromURL <-
 #' @param deleteTracksOfSameName logical, default TRUE
 #' @param displayMode character string, possible values are "EXPANDED" (default),
 #'   "SQUISHED" or "COLLAPSED"
+#' 
+#' @examples 
+#' library(igvShiny)
+#' demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#' if (interactive()) {
+#'  shiny::runApp(demo_app_file)
+#' }
 #'
 #' @return
 #' nothing
@@ -799,6 +869,13 @@ loadBamTrackFromLocalData <-
 #' @param cramURL character string http url for the bam file, typically very large
 #' @param indexURL character string http url for the bam file index, typically small
 #' @param deleteTracksOfSameName logical, default TRUE
+#' 
+#' @examples 
+#' library(igvShiny)
+#' demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#' if (interactive()) {
+#'  shiny::runApp(demo_app_file)
+#' }
 #'
 #' @return
 #' nothing
@@ -852,6 +929,13 @@ loadCramTrackFromURL <-
 #' @param visibilityWindow numeric, Maximum window size in base pairs 
 #'        for which indexed annotations or variants are displayed
 #' @param deleteTracksOfSameName logical, default TRUE
+#' 
+#' @examples 
+#' library(igvShiny)
+#' demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo-GFF3.R")
+#' if (interactive()) {
+#'  shiny::runApp(demo_app_file)
+#' }
 #'
 #' @return
 #' nothing
@@ -916,6 +1000,13 @@ loadGFF3TrackFromURL <-
 #' @param visibilityWindow numeric, Maximum window size in base pairs 
 #'        for which indexed annotations or variants are displayed
 #' @param deleteTracksOfSameName logical, default TRUE
+#' 
+#' @examples 
+#' library(igvShiny)
+#' demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo-GFF3.R")
+#' if (interactive()) {
+#'  shiny::runApp(demo_app_file)
+#' }
 #'
 #' @return
 #' nothing
