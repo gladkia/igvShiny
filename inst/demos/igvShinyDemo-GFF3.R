@@ -197,7 +197,13 @@ server = function(input, output, session) {
    i <- 2
 
    output$igvShiny_0 <- renderIgvShiny({
-     genomeOptions <- parseAndValidateGenomeSpec(genomeName="hg38",  initialLocus=loci[2])
+     genomeOptions <-
+       parseAndValidateGenomeSpec(
+         genomeName = "hg38",
+         initialLocus = loci[2],
+         dataMode = "localFile",
+         stockGenome = FALSE
+       )
      igvShiny(genomeOptions)
      })
 
