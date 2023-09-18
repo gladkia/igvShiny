@@ -3,7 +3,8 @@ Title: igvShiny
 Version: 0.99.0
 Date: 2023-09-17
 Authors@R: c(
-    person("Paul","Shannon", , "paul.thurmond.shannon@gmail.com", role = c("cre", "aut"))
+    person("Paul","Shannon", role = c("aut"), email = "paul.thurmond.shannon@gmail.com"),
+    person("Arkadiusz", "Gladki", role=c("cre"), email="gladki.arkadiusz@gmail.com")
     )
 Description: This pacakge is a wrapper of Intergrative Genomics Viewer (IGV). It comprises an htmlwidget version of IGV. It can be used as a module in Shiny apps. 
 Depends: 
