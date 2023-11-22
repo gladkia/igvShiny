@@ -6,7 +6,7 @@ Authors@R: c(
     person("Paul","Shannon", role = c("aut"), email = "paul.thurmond.shannon@gmail.com"),
     person("Arkadiusz", "Gladki", role=c("aut", "cre"), email="gladki.arkadiusz@gmail.com")
     )
-Description: This pacakge is a wrapper of Intergrative Genomics Viewer (IGV).
+Description: This package is a wrapper of Integrative Genomics Viewer (IGV).
     It comprises an htmlwidget version of IGV. It can be used as a module 
     in Shiny apps. 
 URL: https://github.com/gladkia/igvShiny
