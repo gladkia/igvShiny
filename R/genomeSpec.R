@@ -18,28 +18,8 @@
 url.exists <- function(url) {
   response <- tolower(httr::http_status(httr::HEAD(url))$category)
   return(tolower(response) == "success")
-  
-} # url.exists
-#----------------------------------------------------------------------------------------------------
-#' @title common.always.available.stock.genomes
-#' @description a helper function for mostly internal use, returns the basic sure-to-be-supported
-#'       igv.js stock genomes, the most commonly used, obviating an aws lookup
-#'
-#' @rdname common.always.available.stock.genomes
-#' @aliases common.always.available.stock.genomes
-#' #'
-#' @return an list of short genome codes
-#'
-#' @examples
-#'   cs <- common.always.available.stock.genomes()
-#'
-#' @export
-#'
-common.always.available.stock.genomes <- function() {
-  c("hg38", "hg19", "mm10", "tair10", "custom", "dm6", "sacCer3")
-  
-} # common.always.available.stock.genomes
 
+} # url.exists
 #----------------------------------------------------------------------------------------------------
 #' @title currently.supported.stock.genomes
 #' @description a helper function for mostly internal use, obtains the genome codes (e.g. 'hg38')
@@ -57,29 +37,20 @@ common.always.available.stock.genomes <- function() {
 #' @export
 #'
 currently.supported.stock.genomes <- function(test = FALSE) {
-  basic.offerings <-
-    c("hg38",
-      "hg19",
-      "mm10",
-      "tair10",
-      "rhos",
-      "custom",
-      "dm6",
-      "sacCer3")
   if (test)
-    return(basic.offerings)
-  
+    return(BASIC.OFFERINGS)
+
   current.genomes.file <-
     "https://s3.amazonaws.com/igv.org.genomes/genomes.json"
-  
+
   if (!url.exists(current.genomes.file))
-    return(basic.offerings)
-  
+    return(BASIC.OFFERINGS)
+
   current.genomes.raw <-
     readLines(current.genomes.file, warn = FALSE, skipNul = TRUE)
   tbl.genomes <- jsonlite::fromJSON(current.genomes.raw)
   tbl.genomes$id
-  
+
 } # currently.supported.stock.genomes
 
 #----------------------------------------------------------------------------------------------------
@@ -133,14 +104,14 @@ parseAndValidateGenomeSpec <-
     options[["stockGenome"]] <- stockGenome
     options[["dataMode"]] <- dataMode
     options[["validated"]] <- FALSE
-    
+
     #--------------------------------------------------
     # first: is this a stock genome?  if so, we need
     # only check if the genomeName is recognized
     #--------------------------------------------------
-    
+
     if (stockGenome) {
-      if (!genomeName %in% common.always.available.stock.genomes()) {
+      if (!genomeName %in% COMMON.ALWAYS.AVAILABLE.STOCK.GENOMES) {
         supported.stock.genomes <- currently.supported.stock.genomes()
         if (!genomeName %in% supported.stock.genomes) {
           s.1 <-
@@ -159,13 +130,13 @@ parseAndValidateGenomeSpec <-
       options[["annotation"]] <- NA
       options[["validated"]] <- TRUE
     }# stockGenome requested
-    
+
     if (!stockGenome) {
       stopifnot(!is.na(dataMode))
       stopifnot(!is.na(fasta))
       stopifnot(!is.na(fastaIndex))
       # genomeAnnotation is optional
-      
+
       recognized.modes <-
         c("localFiles", "http")  # "direct" for an in-memory R data structure, deferred
       if (!dataMode %in% recognized.modes) {
@@ -180,7 +151,7 @@ parseAndValidateGenomeSpec <-
       #---------------------------------------------------------------------
       # dataMode determines how to check for the existence of each resource
       #---------------------------------------------------------------------
-      
+
       exists.function <- switch(dataMode,
                                 "localFiles" = file.exists,
                                 "http" = url.exists)
@@ -188,7 +159,7 @@ parseAndValidateGenomeSpec <-
       stopifnot(exists.function(fastaIndex))
       if (!is.na(genomeAnnotation))
         stopifnot(exists.function(genomeAnnotation))
-      
+
       options[["genomeName"]]  <- genomeName
       options[["fasta"]] <- fasta
       options[["fastaIndex"]] <- fastaIndex
@@ -196,8 +167,8 @@ parseAndValidateGenomeSpec <-
       options[["annotation"]] <- genomeAnnotation
       options[["validated"]] <- TRUE
     } # if !stockGenome
-    
+
     return(options)
-    
+
   } # parseAndValidateGenomeSpec
 #----------------------------------------------------------------------------------------------------
