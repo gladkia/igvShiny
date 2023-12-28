@@ -1,7 +1,7 @@
-COMMON.ALWAYS.AVAILABLE.STOCK.GENOMES <-
+CAS_GENOMES <-
   c("hg38", "hg19", "mm10", "tair10", "custom", "dm6", "sacCer3")
 
-BASIC.OFFERINGS <-
+BASIC_GENOMES <-
   c("hg38",
     "hg19",
     "mm10",

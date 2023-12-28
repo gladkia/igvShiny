@@ -44,7 +44,7 @@ currently.supported.stock.genomes <- function(test = FALSE) {
     "https://s3.amazonaws.com/igv.org.genomes/genomes.json"
 
   if (!url.exists(current.genomes.file))
-    return(BASIC.OFFERINGS)
+    return(BASIC_GENOMES)
 
   current.genomes.raw <-
     readLines(current.genomes.file, warn = FALSE, skipNul = TRUE)
@@ -111,7 +111,7 @@ parseAndValidateGenomeSpec <-
     #--------------------------------------------------
 
     if (stockGenome) {
-      if (!genomeName %in% COMMON.ALWAYS.AVAILABLE.STOCK.GENOMES) {
+      if (!genomeName %in% CAS_GENOMES) {
         supported.stock.genomes <- currently.supported.stock.genomes()
         if (!genomeName %in% supported.stock.genomes) {
           s.1 <-
