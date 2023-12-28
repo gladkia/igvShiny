@@ -10,3 +10,11 @@ BASIC_GENOMES <-
     "custom",
     "dm6",
     "sacCer3")
+
+get_cas_genomes <- function() {
+  CAS_GENOMES
+}
+
+get_basic_genomes <- function() {
+  BASIC_GENOMES
+}

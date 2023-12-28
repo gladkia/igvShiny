@@ -21,37 +21,37 @@ url.exists <- function(url) {
 
 } # url.exists
 #----------------------------------------------------------------------------------------------------
-#' @title currently.supported.stock.genomes
+#' @title get_css_genomes
 #' @description a helper function for mostly internal use, obtains the genome codes (e.g. 'hg38')
 #'       supported by igv.js
 #'
-#' @rdname currently.supported.stock.genomes
-#' @aliases currently.supported.stock.genomes
+#' @rdname get_css_genomes
+#' @aliases get_css_genomes
 #' @param test logical(1) defaults to FALSE
 #'
 #' @return an list of short genome codes, e.g., "hg38", "dm6", "tair10"
 #'
 #' @examples
-#'   cs <- currently.supported.stock.genomes(test = TRUE)
+#'   cs <- get_css_genomes(test = TRUE)
 #'
 #' @export
 #'
-currently.supported.stock.genomes <- function(test = FALSE) {
+get_css_genomes <- function(test = FALSE) {
   if (test)
-    return(BASIC.OFFERINGS)
+    return(get_basic_genomes())
 
   current.genomes.file <-
     "https://s3.amazonaws.com/igv.org.genomes/genomes.json"
 
   if (!url.exists(current.genomes.file))
-    return(BASIC_GENOMES)
+    return(get_basic_genomes())
 
   current.genomes.raw <-
     readLines(current.genomes.file, warn = FALSE, skipNul = TRUE)
   tbl.genomes <- jsonlite::fromJSON(current.genomes.raw)
   tbl.genomes$id
 
-} # currently.supported.stock.genomes
+} # get_css_genomes
 
 #----------------------------------------------------------------------------------------------------
 #' @title parseAndValidateGenomeSpec
@@ -87,7 +87,7 @@ currently.supported.stock.genomes <- function(test = FALSE) {
 #'                                             fastaIndex=fastaIndex.file,
 #'                                             genomeAnnotation=annotation.file)
 #'
-#' @seealso [currently.supported.stock.genomes()] for stock genomes we support.
+#' @seealso [get_css_genomes()] for stock genomes we support.
 #'
 #' @return an options list directly usable by igvApp.js, and thus igv.js
 #' @export
@@ -111,8 +111,8 @@ parseAndValidateGenomeSpec <-
     #--------------------------------------------------
 
     if (stockGenome) {
-      if (!genomeName %in% CAS_GENOMES) {
-        supported.stock.genomes <- currently.supported.stock.genomes()
+      if (!genomeName %in% get_cas_genomes()) {
+        supported.stock.genomes <- get_css_genomes()
         if (!genomeName %in% supported.stock.genomes) {
           s.1 <-
             sprintf("Your genome '%s' is not currently supported", genomeName)
