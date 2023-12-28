@@ -27,28 +27,28 @@ test_supportedGenomes <- function()
 {
     message(sprintf("--- test_supportedGenomes"))
 
-    cg <- currently.supported.stock.genomes()
+    cg <- get_css_genomes()
     checkTrue(length(cg) > 30)
 
-    cg.minimal <- currently.supported.stock.genomes(test=TRUE)
+    cg.minimal <- get_css_genomes(test=TRUE)
     checkEquals(cg.minimal, c("hg38", "hg19", "mm10", "tair10", "rhos", "custom", "dm6", "sacCer3"))
 
 } # test_supportedGenomes
 #----------------------------------------------------------------------------------------------------
-test_common.always.available.stock.genomes <- function()
+test_get_cas_genomes <- function()
 {
-    message(sprintf("--- test_common.always.available.stock.genomes"))
+    message(sprintf("--- test_get_cas_genomes"))
 
         #-------------------------------------------------------------------------
         # should return immediately, in contrast currently.supported.stock.genomes
         # which requires an aws lookup
         #-------------------------------------------------------------------------
 
-    t1 <- system.time(caasg <- common.always.available.stock.genomes())
+    t1 <- system.time(caasg <- get_cas_genomes())
     checkTrue(t1[["elapsed"]] < 0.1)
     checkTrue(all(c("hg38", "hg19", "mm10", "tair10", "custom", "dm6", "sacCer3") %in% caasg))
 
-    t2 <- system.time(cssg  <-currently.supported.stock.genomes())
+    t2 <- system.time(cssg  <-get_css_genomes())
     checkTrue(t2[["elapsed"]] > 0.25)
 
         #-------------------------------------------------------------------------
@@ -65,7 +65,7 @@ test_common.always.available.stock.genomes <- function()
     checkTrue(t3[["elapsed"]] < 0.1)
     checkTrue(t4[["elapsed"]] > 0.25)
 
-} # test_common.always.available.stock.genomes
+} # test_get_cas_genomes
 #----------------------------------------------------------------------------------------------------
 test_parseAndValidateGenomeSpec.stock <- function()
 {
