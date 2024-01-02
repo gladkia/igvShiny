@@ -56,5 +56,5 @@ genomeOptions <- parseAndValidateGenomeSpec(genomeName=custom.genome.title,
 
 }
 \seealso{
-[currently.supported.stock.genomes()] for stock genomes we support.
+[get_css_genomes()] for stock genomes we support.
 }

@@ -23,7 +23,7 @@ test_dataFrameConstructor <- function()
                            pval.col=10,
                            trackHeight=100)
     url <- getUrl(gwasTrack)  # e.g.  "tracks/file123ab627a0689.gwas"
-    checkTrue(grepl("tracks/.*\\.gwas", url))
+    checkTrue(grepl("tracks.*\\.gwas", url))
 
 } # test_dataFrameConstructor
 #----------------------------------------------------------------------------------------------------

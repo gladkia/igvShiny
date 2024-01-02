@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 
 # igvShiny
 
-The `igvShiny` pacakge is a wrapper of Intergrative Genomics Viewer (IGV). 
+The `igvShiny` package is a wrapper of Integrative Genomics Viewer (IGV). 
 It comprises an htmlwidget version of IGV. It can be used as a module in Shiny apps. 
 
 # Installation
@@ -76,7 +76,7 @@ igvShiny::parseAndValidateGenomeSpec("mm10")
 
 The list of available stock genomes in igvShiny can be found with:
 ```{r,echo=TRUE}
-igvShiny::currently.supported.stock.genomes()
+igvShiny::get_css_genomes()
 ```
 
 See also demo app for stock genomes when one can select genome of interest and familiarize with the basic functionalities provided via igvShiny:
