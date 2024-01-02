@@ -5,7 +5,7 @@ runTests <- function()
 {
     test_url.exists()
     test_supportedGenomes()
-    test_common.always.available.stock.genomes()
+    test_get_cas_genomes()
     test_parseAndValidateGenomeSpec.stock()
     test_parseAndValidateGenomeSpec.custom.http()
     test_parseAndValidateGenomeSpec.custom.localFiles()
@@ -40,7 +40,7 @@ test_get_cas_genomes <- function()
     message(sprintf("--- test_get_cas_genomes"))
 
         #-------------------------------------------------------------------------
-        # should return immediately, in contrast currently.supported.stock.genomes
+        # should return immediately, in contrast get_css_genomes
         # which requires an aws lookup
         #-------------------------------------------------------------------------
 
@@ -48,7 +48,7 @@ test_get_cas_genomes <- function()
     checkTrue(t1[["elapsed"]] < 0.1)
     checkTrue(all(c("hg38", "hg19", "mm10", "tair10", "custom", "dm6", "sacCer3") %in% caasg))
 
-    t2 <- system.time(cssg  <-get_css_genomes())
+    t2 <- system.time(cssg  <- get_css_genomes())
     checkTrue(t2[["elapsed"]] > 0.25)
 
         #-------------------------------------------------------------------------

@@ -21,6 +21,43 @@ url.exists <- function(url) {
 
 } # url.exists
 #----------------------------------------------------------------------------------------------------
+#' @title get_basic_genomes
+#' @description a helper function for basic genomes, obtains the genome codes (e.g. 'hg38')
+#'
+#' @rdname get_basic_genomes
+#' @aliases get_basic_genomes
+#'
+#' @return an list of short genome codes, e.g., "hg38", "dm6"
+#'
+#' @examples
+#'   bs <- get_basic_genomes()
+#'
+#' @export
+#'
+get_basic_genomes <- function() {
+  BASIC_GENOMES
+
+} # get_basic_genomes
+#----------------------------------------------------------------------------------------------------
+#' @title get_cas_genomes
+#' @description a helper function for common always available stock genomes,
+#'       obtains the genome codes (e.g. 'hg38')
+#'
+#' @rdname get_cas_genomes
+#' @aliases get_cas_genomes
+#'
+#' @return an list of short genome codes, e.g., "hg38", "dm6"
+#'
+#' @examples
+#'   cas <- get_cas_genomes()
+#'
+#' @export
+#'
+get_cas_genomes <- function() {
+  CAS_GENOMES
+
+} # get_cas_genomes
+#----------------------------------------------------------------------------------------------------
 #' @title get_css_genomes
 #' @description a helper function for mostly internal use, obtains the genome codes (e.g. 'hg38')
 #'       supported by igv.js
@@ -32,7 +69,7 @@ url.exists <- function(url) {
 #' @return an list of short genome codes, e.g., "hg38", "dm6", "tair10"
 #'
 #' @examples
-#'   cs <- get_css_genomes(test = TRUE)
+#'   css <- get_css_genomes(test = TRUE)
 #'
 #' @export
 #'
@@ -52,7 +89,6 @@ get_css_genomes <- function(test = FALSE) {
   tbl.genomes$id
 
 } # get_css_genomes
-
 #----------------------------------------------------------------------------------------------------
 #' @title parseAndValidateGenomeSpec
 #' @description a helper function for internal use by the igvShiny constructor, but possible also

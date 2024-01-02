@@ -2,6 +2,8 @@
 
 export(GWASTrack)
 export(getGenomicRegion)
+export(get_basic_genomes)
+export(get_cas_genomes)
 export(get_css_genomes)
 export(igvShiny)
 export(igvShinyOutput)
