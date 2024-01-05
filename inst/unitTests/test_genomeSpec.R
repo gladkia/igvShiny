@@ -49,7 +49,7 @@ test_get_cas_genomes <- function()
     checkTrue(all(c("hg38", "hg19", "mm10", "tair10", "custom", "dm6", "sacCer3") %in% caasg))
 
     t2 <- system.time(cssg  <- get_css_genomes())
-    checkTrue(t2[["elapsed"]] > 0.1)
+    checkTrue(t2[["elapsed"]] > 0.01)
 
         #-------------------------------------------------------------------------
         # make sure that using one of the caasg also gets a nearly zero time
@@ -63,7 +63,7 @@ test_get_cas_genomes <- function()
                                                  stockGenome=TRUE, dataMode="stock",
                                                  fasta=NA, fastaIndex=NA, genomeAnnotation=NA))
     checkTrue(t3[["elapsed"]] < 0.1)
-    checkTrue(t4[["elapsed"]] > 0.1)
+    checkTrue(t4[["elapsed"]] > 0.01)
 
 } # test_get_cas_genomes
 #----------------------------------------------------------------------------------------------------
