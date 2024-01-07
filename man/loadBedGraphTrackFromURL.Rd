@@ -48,7 +48,7 @@ loadBedGraphTrackFromURL(
 nothing
 }
 \description{
-load a bedgrapn track provided as a data.frame
+load a bedgraph track provided as a data.frame
 }
 \examples{
 library(igvShiny)

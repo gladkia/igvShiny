@@ -2,7 +2,7 @@
 % Please edit documentation in R/igvShiny.R
 \name{loadBamTrackFromLocalData}
 \alias{loadBamTrackFromLocalData}
-\title{load GenomicAlignments data as an igv.js alignemnt track}
+\title{load GenomicAlignments data as an igv.js alignment track}
 \usage{
 loadBamTrackFromLocalData(
   session,
@@ -31,7 +31,7 @@ loadBamTrackFromLocalData(
 nothing
 }
 \description{
-load GenomicAlignments data  as an igv.js alignemnt track
+load GenomicAlignments data  as an igv.js alignment track
 }
 \examples{
 library(igvShiny)
