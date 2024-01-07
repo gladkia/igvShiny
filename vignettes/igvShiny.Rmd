@@ -22,7 +22,8 @@ knitr::opts_chunk$set(
 # igvShiny
 
 The `igvShiny` package is a wrapper of Integrative Genomics Viewer (IGV). 
-It comprises an htmlwidget version of IGV. It can be used as a module in Shiny apps. 
+It comprises an htmlwidget version of IGV. 
+It can be used as a module in Shiny apps. 
 
 # Installation
 
@@ -66,8 +67,10 @@ if (interactive()) {
 
 # Providing genome details
 
-Multiple genomes are currently supported by IGV: [link](https://s3.amazonaws.com/igv.org.genomes/genomes.json). In igvShiny this set of genomes is called stock genomes.
-One can select any stock genome easily by running `parseAndValidateGenomeSpec` with single `genomeName` value properly assigned.
+Multiple genomes are currently supported by IGV: [link](https://s3.amazonaws.com/igv.org.genomes/genomes.json). In igvShiny 
+this set of genomes is called stock genomes.
+One can select any stock genome easily by running `parseAndValidateGenomeSpec`
+with single `genomeName` value properly assigned.
 For example to use the most popular mouse genome one need to run:
 
 ```{r,echo=TRUE}
@@ -79,7 +82,8 @@ The list of available stock genomes in igvShiny can be found with:
 igvShiny::get_css_genomes()
 ```
 
-See also demo app for stock genomes when one can select genome of interest and familiarize with the basic functionalities provided via igvShiny:
+See also demo app for stock genomes when one can select genome of interest and
+familiarize with the basic functionalities provided via igvShiny:
 ```{r,echo=TRUE}
 library(igvShiny)
 demo_app_file <- system.file(package= "igvShiny", "demos/stockGenomesDemo.R")
@@ -88,8 +92,11 @@ if (interactive()) {
 }
 ```
 
-It's also possible to use custom genomes (i.e. non-stock genoems). In such cases one has to provide data for: `FASTA file`, `FASTA index file` and `genome annotation file`.
-The files can provided as local paths (`dataMode` = `localFiles` or via URLs (`dataMode = http`). See below the examples for both cases.
+It's also possible to use custom genomes (i.e. non-stock genomes). In such cases 
+one has to provide data for: `FASTA file`, `FASTA index file` 
+and `genome annotation file`.
+The files can provided as local paths (`dataMode` = `localFiles` or via URLs
+(`dataMode = http`). See below the examples for both cases.
 
 ```{r,echo=TRUE}
 library(igvShiny)
@@ -151,7 +158,9 @@ if (interactive()) {
 
 # Main functionalities
 
-In principle igvShiny provides the same functionalities that one can find in igv.js. In summary following actions are currently possible (wrapped as the R helpers):
+In principle igvShiny provides the same functionalities that one can find in
+igv.js. In summary following actions are currently possible
+(wrapped as the R helpers):
 
 * load tracks with the following formats/data types:
   + Bed
@@ -162,11 +171,14 @@ In principle igvShiny provides the same functionalities that one can find in igv
   + Cram
   + Vcf
   + GFF3
-* showGenomicRegion (zoom in or out to show the nominated region, by chromosome locus or gene symbol)
+* showGenomicRegion (zoom in or out to show the nominated region, by chromosome
+locus or gene symbol)
 * getGenomicRegion (return the current IGV region)
-* removeUserAddedTracks (remove tracks from the browser, added during the session by the user)
- 
-See also demo app to familiarize with the basic functionalities provided by igvShiny:
+* removeUserAddedTracks (remove tracks from the browser, added during the
+session by the user)
+  
+See also demo app to familiarize with the basic functionalities provided by
+igvShiny:
 ```{r,echo=TRUE}
 library(igvShiny)
 demo_app_file <- system.file(package= "igvShiny", "demos/igvShinyDemo.R")
