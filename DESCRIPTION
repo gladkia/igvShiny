@@ -6,7 +6,9 @@ Authors@R: c(
     person("Paul","Shannon", role = c("aut"), 
     email = "paul.thurmond.shannon@gmail.com"),
     person("Arkadiusz", "Gladki", role=c("aut", "cre"), 
-    email="gladki.arkadiusz@gmail.com")
+    email="gladki.arkadiusz@gmail.com"),
+    person("Karolina","Scigocka", role = c("ctb"), 
+    email = "scigocka.karolina@gmail.com")
     )
 Description: This package is a wrapper of Integrative Genomics Viewer (IGV).
     It comprises an htmlwidget version of IGV. It can be used as a module 
