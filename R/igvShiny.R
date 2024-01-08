@@ -57,7 +57,6 @@ state[["userAddedTracks"]] <- list()
 #'
 igvShiny <- function(genomeOptions, width = NULL, height = NULL,
                      elementId = NULL, displayMode = "squished", tracks = list()) {
-
   stopifnot(
     sort(names(genomeOptions)) ==
       c(
@@ -381,7 +380,7 @@ loadBedTrack <- function(session, id, trackName, tbl, color = "", trackHeight = 
 #-----------------------------------------------------------------------------------------------------------------------
 #' load a bedgraph track from a URL
 #'
-#' @description load a bedgrapn track provided as a data.frame
+#' @description load a bedgraph track provided as a data.frame
 #'
 #' @rdname loadBedGraphTrackFromURL
 #' @aliases loadBedGraphTrackFromURL
@@ -791,9 +790,9 @@ loadBamTrackFromURL <-
   } # loadBamTrackFromURL
 
 #----------------------------------------------------------------------------------------------------------------------
-#' load GenomicAlignments data as an igv.js alignemnt track
+#' load GenomicAlignments data as an igv.js alignment track
 #'
-#' @description load GenomicAlignments data  as an igv.js alignemnt track
+#' @description load GenomicAlignments data  as an igv.js alignment track
 #' @rdname loadBamTrackFromLocalData
 #' @aliases loadBamTrackFromLocalData
 #'
