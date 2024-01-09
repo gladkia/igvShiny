@@ -90,14 +90,8 @@ GWASTrack <- function(trackName,
   
   if (data.class == "data.frame") {
     mode <- "local.url"
-    # as written, assumes ./tracks exists, which need not be
-    # url <- tempfile(tmpdir="tracks", fileext=".gwas") # expanded in javascript # nolint
-    tdir <- paste0(tempdir(), "/tracks")
+    tdir <- get_tracks_dir()
     x <- NULL
-    if (!dir.exists(tdir))
-      x <- try(dir.create(tdir))
-    if (inherits(x, "try-error"))
-      stop(sprintf("could not create %s\n", tdir))
     url <-
       tempfile(tmpdir = tdir, fileext = ".gwas") # expanded in javascript
     write.table(
@@ -182,8 +176,7 @@ setMethod("display", "GWASTrack",
             if (obj@data.mode == "local.url") {
               directory.name <- dirname(obj@url)
               file.name      <-  basename(obj@url)
-              shiny::addResourcePath("tmpTracks", directory.name)
-              message$dataUrl <- sprintf("tmpTracks/%s", file.name)
+              message$dataUrl <- file.path("tracks", file.name)
             }
             
             session$sendCustomMessage("loadGwasTrackFlexibleSource", message)

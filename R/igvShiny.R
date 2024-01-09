@@ -74,13 +74,11 @@ igvShiny <- function(genomeOptions, width = NULL, height = NULL,
   
   if (!genomeOptions[["stockGenome"]] &&
         genomeOptions[["dataMode"]] == "localFiles") {
-    directory.name <-
-      "tracks"     # todo: may wish to parameterize this directory name
+
+    directory.name <- get_tracks_dir()
     fasta.file <- genomeOptions[["fasta"]]
     fasta.indexFile <- genomeOptions[["fastaIndex"]]
     gff3.file <- genomeOptions[["annotation"]]
-    if (!dir.exists(directory.name))
-      dir.create(directory.name)
     destination <- file.path(directory.name, basename(fasta.file))
     file.copy(fasta.file, destination, overwrite = TRUE)
     destination <-
@@ -352,7 +350,7 @@ loadBedTrack <- function(session, id, trackName, tbl, color = "", trackHeight = 
   new.order <- order(tbl$start, decreasing = FALSE)
   tbl <- tbl[new.order, ]
   
-  temp.file <- tempfile(tmpdir = "tracks", fileext = ".bed")
+  temp.file <- tempfile(tmpdir = get_tracks_dir(), fileext = ".bed")
   write.table(
     tbl,
     sep = "\t",
@@ -369,7 +367,7 @@ loadBedTrack <- function(session, id, trackName, tbl, color = "", trackHeight = 
   msg.to.igv <- list(
     elementID = id,
     trackName = trackName,
-    bedFilepath = temp.file,
+    bedFilepath = file.path("tracks", basename(temp.file)),
     color = color,
     trackHeight = trackHeight
   )
@@ -646,7 +644,7 @@ loadVcfTrack <- function(session, id, trackName, vcfData, deleteTracksOfSameName
   
   state[["userAddedTracks"]] <-
     unique(c(state[["userAddedTracks"]], trackName))
-  path <- file.path("tracks", "tmp.vcf")
+  path <- file.path(get_tracks_dir(), "tmp.vcf")
   log("igvShiny::loadVcfTrack, about to write to file '%s'", path)
   VariantAnnotation::writeVcf(vcfData, path)
   log("igvShiny::loadVcfTrack, file.exists(%s)? %s",
@@ -699,7 +697,7 @@ loadGwasTrack <- function(session, id, trackName, tbl.gwas, ymin = 0, ymax = 35,
   state[["userAddedTracks"]] <-
     unique(c(state[["userAddedTracks"]], trackName))
   
-  temp.file <- tempfile(tmpdir = "tracks", fileext = ".gwas")
+  temp.file <- tempfile(tmpdir = get_tracks_dir(), fileext = ".gwas")
   write.table(
     tbl.gwas,
     sep = "\t",
@@ -718,7 +716,7 @@ loadGwasTrack <- function(session, id, trackName, tbl.gwas, ymin = 0, ymax = 35,
     list(
       elementID = id,
       trackName = trackName,
-      gwasDataFilepath = temp.file,
+      gwasDataFilepath = file.path("tracks", basename(temp.file)),
       color = "red",
       trackHeight = 200,
       autoscale = FALSE,
@@ -830,15 +828,12 @@ loadBamTrackFromLocalData <-
       
     }
     
-    directory.name <-
-      "tracks"   # need this as directory within the current working directory
-    if (!dir.exists(directory.name))
-      dir.create(directory.name)
-    file.path <- tempfile(tmpdir = directory.name, fileext = ".bam")
+    t_dir <- get_tracks_dir()
+    fpath <- tempfile(tmpdir = t_dir, fileext = ".bam")
     
     log("igvShiny::load bam from local data, about to write to file '%s'",
         file.path)
-    rtracklayer::export(data, file.path, format = "BAM")
+    rtracklayer::export(data, fpath, format = "BAM")
     
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
@@ -847,7 +842,7 @@ loadBamTrackFromLocalData <-
       list(
         elementID = id,
         trackName = trackName,
-        bamDataFilepath = file.path,
+        bamDataFilepath = file.path("tracks", basename(fpath)),
         displayMode = displayMode
       )
     session$sendCustomMessage("loadBamTrackFromLocalData", message)
@@ -1035,7 +1030,7 @@ loadGFF3TrackFromLocalData <-
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
     
-    gff3.filePath <- tempfile(tmpdir = "tracks", fileext = ".gff3")
+    gff3.filePath <- tempfile(tmpdir = get_tracks_dir(), fileext = ".gff3")
     write.table(
       tbl.gff3,
       sep = "\t",
@@ -1056,7 +1051,7 @@ loadGFF3TrackFromLocalData <-
       list(
         elementID = id,
         trackName = trackName,
-        filePath = gff3.filePath,
+        filePath = file.path("tracks", gff3.filePath),
         color = color,
         colorTable = colorTable,
         colorByAttribute = colorByAttribute,
