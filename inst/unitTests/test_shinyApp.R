@@ -11,6 +11,7 @@ test_shinyApp <- function()
 {
   message(sprintf("--- test_shinyApp"))
   
+  options(chromote.timeout = 60)
   shinytest2::load_app_env()
   
   #test_that("{shinytest2} recording: test_app", {
