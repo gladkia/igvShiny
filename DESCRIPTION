@@ -23,9 +23,11 @@ Depends:
     shiny
 Suggests: 
     BiocStyle,
+    GenomicAlignments,
     knitr,
     rtracklayer,
     RUnit,
+    shinytest2,
     VariantAnnotation
 Imports: 
     BiocGenerics,
