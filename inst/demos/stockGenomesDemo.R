@@ -1,11 +1,5 @@
 library(igvShiny)
-#----------------------------------------------------------------------------------------------------
-# we need a local directory to write files - for instance, a vcf file representing a genomic
-# region of interest.  we then tell shiny about that directory, so that shiny's built-in http server
-# can serve up files we write there, ultimately consumed by igv.js
-if(!dir.exists("tracks"))
-  dir.create("tracks")
-addResourcePath("tracks", "tracks")
+
 #----------------------------------------------------------------------------------------------------
 f <- system.file(package = "igvShiny", "extdata", "gwas.RData")
 stopifnot(file.exists(f))

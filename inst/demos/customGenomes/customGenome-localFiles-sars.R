@@ -2,13 +2,7 @@ library(shiny)
 library(igvShiny)
 library(htmlwidgets)
 # library(biomaRt)
-#----------------------------------------------------------------------------------------------------
-# we need a local directory to write files - for instance, a vcf file representing a genomic
-# region of interest.  we then tell shiny about that directory, so that shiny's built-in http server
-# can serve up files we write there, ultimately consumed by igv.js
-if(!dir.exists("tracks"))
-  dir.create("tracks")
-addResourcePath("tracks", "tracks")
+
 #----------------------------------------------------------------------------------------------------
 data.directory <- system.file(package="igvShiny", "extdata", "sarsGenome")
 fasta.file <- file.path(data.directory, "Sars_cov_2.ASM985889v3.dna.toplevel.fa")
