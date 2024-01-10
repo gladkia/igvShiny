@@ -40,6 +40,7 @@ env:
   has_RUnit: 'true'
   cache-version: 'cache-v1'
   run_docker: 'false'
+  pkg_name: 'igvShiny'
 
 jobs:
   build-check:
@@ -171,7 +172,7 @@ jobs:
 
           ## For running the checks
           message(paste('****', Sys.time(), 'installing rcmdcheck and BiocCheck ****'))
-          install.packages(c("rcmdcheck", "BiocCheck"), repos = BiocManager::repositories())
+          install.packages(c("rcmdcheck", "BiocCheck", "gDRstyle"), repos = BiocManager::repositories())
 
           ## Pass #1 at installing dependencies
           message(paste('****', Sys.time(), 'pass number 1 at installing dependencies: local dependencies ****'))
@@ -218,12 +219,16 @@ jobs:
           DISPLAY: 99.0
         run: |
           options(crayon.enabled = TRUE)
-          rcmdcheck::rcmdcheck(
-              args = c("--no-manual", "--no-vignettes", "--timings"),
-              build_args = c("--no-manual", "--keep-empty-dirs", "--no-resave-data"),
-              error_on = "warning",
-              check_dir = "check"
-          )
+          #rcmdcheck::rcmdcheck(
+          #    args = c("--no-manual", "--no-vignettes", "--timings"),
+          #    build_args = c("--no-manual", "--keep-empty-dirs", "--no-resave-data"),
+          #    error_on = "warning",
+          #    check_dir = "check"
+          #)
+          # wrapper of rcmdcheck with some improvements:
+          # - notes can be controlled
+          # - linter checks
+          gDRstyle::checkPackage(pkg_name, repoDir = ".", skip_tests = TRUE)
         shell: Rscript {0}
 
       ## Might need an to add this to the if:  && runner.os == 'Linux'
