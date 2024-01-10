@@ -228,6 +228,7 @@ jobs:
           # wrapper of rcmdcheck with some improvements:
           # - notes can be controlled
           # - linter checks
+          # TODO: use BiocCheck with `bioc_check = TRUE`
           gDRstyle::checkPackage(pkg_name, repoDir = ".", skip_tests = TRUE)
         shell: Rscript {0}
 
@@ -246,8 +247,10 @@ jobs:
         env:
           DISPLAY: 99.0
         run: |
+          build_file <- pkgbuild::build(".")
           BiocCheck::BiocCheck(
-              dir('check', 'tar.gz$', full.names = TRUE),
+              #dir('check', 'tar.gz$', full.names = TRUE),
+              build_file,
               `quit-with-status` = TRUE,
               `no-check-R-ver` = TRUE,
               `no-check-bioc-help` = TRUE
