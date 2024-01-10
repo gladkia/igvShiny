@@ -120,8 +120,11 @@ jobs:
       - name: Install Linux system dependencies
         if: runner.os == 'Linux'
         run: |
-          # chromium-browser for shinytest2 (via chromote)
-          apt-get update && apt-get -y install chromium-browser
+          # google-chromer for shinytest2 (via chromote)
+          apt-get update && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+          && dpkg -i ./google-chrome-stable_current_amd64.deb || true \
+          && rm google-chrome-stable_current_amd64.deb\
+          && apt-get -f -y install
 
           #sysreqs=$(Rscript -e 'cat("apt-get update -y && apt-get install -y", paste(gsub("apt-get install -y ", "", remotes::system_requirements("ubuntu", "20.04")), collapse = " "))')
           #echo $sysreqs
