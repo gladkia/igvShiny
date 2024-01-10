@@ -26,6 +26,7 @@ Suggests:
     knitr,
     rtracklayer,
     RUnit,
+    shinytest2,
     VariantAnnotation
 Imports: 
     BiocGenerics,
