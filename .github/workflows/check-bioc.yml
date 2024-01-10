@@ -73,6 +73,9 @@ jobs:
         uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: stable
+      
+      # Show google chrome path on envs
+      - name: Provide info abut google-chrome path
         run: |
           #${{ steps.setup-chrome.outputs.chrome-path }} --version
           chromote:::find_chrome()
