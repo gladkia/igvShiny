@@ -122,7 +122,7 @@ jobs:
         run: |
           # google-chromer for shinytest2 (via chromote)
           apt-get update && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-          && dpkg -i ./google-chrome-stable_current_amd64.deb \
+          && dpkg -i ./google-chrome-stable_current_amd64.deb || true \
           && rm google-chrome-stable_current_amd64.deb\
           && apt-get -f -y install
 
