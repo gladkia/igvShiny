@@ -1,16 +1,9 @@
-library(igvShiny)
 library(shiny)
 library(igvShiny)
 library(GenomicAlignments)
 library(later)
 library(htmlwidgets)
-#----------------------------------------------------------------------------------------------------
-# we need a local directory to write files - for instance, a vcf file representing a genomic
-# region of interest.  we then tell shiny about that directory, so that shiny's built-in http server
-# can serve up files we write there, ultimately consumed by igv.js
-if(!dir.exists("tracks"))
-  dir.create("tracks")
-addResourcePath("tracks", "tracks")
+
 #----------------------------------------------------------------------------------------------------
 f <- system.file(package="igvShiny", "extdata", "gwas.RData")
 stopifnot(file.exists(f))
@@ -160,9 +153,9 @@ server = function(input, output, session) {
   observeEvent(input$addCramViaHttpButton, {
     printf("---- addCramViaHttpTrack")
     showGenomicRegion(session, id="igvShiny_0", "chr5:88,733,959-88,761,606")
-    base.url <- "https://s3.amazonaws.com/1000genomes/phase3/data/HG00096/exome_alignment"
-    url <- sprintf("%s/%s", base.url, "HG00096.mapped.ILLUMINA.bwa.GBR.exome.20120522.bam.cram")
-    indexURL <- sprintf("%s/%s", base.url, "HG00096.mapped.ILLUMINA.bwa.GBR.exome.20120522.bam.cram.crai")
+    base.url <- "https://s3.amazonaws.com/1000genomes"
+    url <- sprintf("%s/%s", base.url, "1000G_2504_high_coverage/additional_698_related/data/ERR3989250/HG04160.final.cram")
+    indexURL <- sprintf("%s.%s", url, "crai")
     loadCramTrackFromURL(session, id="igvShiny_0",trackName="CRAM", cramURL=url, indexURL=indexURL)
   })
   
@@ -234,4 +227,10 @@ server = function(input, output, session) {
   })
   
 } # server
-runApp(shinyApp(ui = ui, server = server))
+#------------------------------------------------------------------------------------------------------------------------
+# shinyApp(ui = ui, server = server)
+if(grepl("hagfish", Sys.info()[["nodename"]]) & !interactive()){
+  runApp(shinyApp(ui, server), port=6867)
+} else {
+  shinyApp(ui, server)
+}

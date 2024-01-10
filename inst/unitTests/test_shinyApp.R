@@ -4,19 +4,24 @@ library(shinytest2)
 #----------------------------------------------------------------------------------------------------
 runAppTests <- function()
 {
-  test_shinyApp
+  test_shinyAppDemo
 } # runAppTests
 #----------------------------------------------------------------------------------------------------
-test_shinyApp <- function()
+test_shinyAppDemo <- function()
 {
-  message(sprintf("--- test_shinyApp"))
+  message(sprintf("--- test_shinyAppDemo"))
   
-  options(chromote.timeout = 60)
-  shinytest2::load_app_env()
+  test_that("{shinytest2} recording: test_app", {
   
-  #test_that("{shinytest2} recording: test_app", {
-    
-    app <- AppDriver$new(app_dir = system.file("app", package = "igvShiny"), name = "test_app", height = 695, width = 1235)
+    sf <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+    app <- shinytest2::    AppDriver$new(
+      app_dir = shiny::shinyAppFile(sf),
+      name = "test_app",
+      height = 695,
+      width = 1235,
+      load_timeout = 1e+5,
+      timeout = 1e+5
+    )
     app$set_inputs(igvReady = "igvShiny_0", allow_no_input_binding_ = TRUE, priority_ = "event")
     app$set_inputs(igvReady = "igvShiny_0", allow_no_input_binding_ = TRUE, priority_ = "event")
     Sys.sleep(15)
@@ -29,6 +34,6 @@ test_shinyApp <- function()
     app$set_inputs(currentGenomicRegion.igvShiny_0 = "chr19:45248107-45564645", allow_no_input_binding_ = TRUE, 
                    priority_ = "event")
     app$expect_values()
-  #})
+  })
   
-} # test_shinyApp
+} # test_shinyAppDemo
