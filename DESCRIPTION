@@ -29,6 +29,7 @@ Suggests:
     VariantAnnotation
 Imports: 
     BiocGenerics,
+    checkmate,
     GenomeInfoDbData,
     htmlwidgets,
     httr,
@@ -43,7 +44,10 @@ Collate:
     'genomeSpec.R'
     'GWASTrack.R'
     'igvShiny.R'
+    'packages.R'
     'test_igvShiny_package.R'
+    'utils.R'
+    'zzz.R'
 RoxygenNote: 7.2.3
 VignetteBuilder: 
     knitr
