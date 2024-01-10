@@ -1,26 +1,4 @@
-#' @importFrom httr HEAD
-#' @title url.exists
-#'
-#' @description a helper function for mostly internal use, tests for availability of a url,
-#'              modeled after file.exists
-#'
-#' @rdname url.exists
-#' @aliases url.exists
-#'
-#' @param url character the http address to test
-#'
-#' @return logical TRUE or FALSE
-#'
-#' @examples
-#'   g_ue <- url.exists("google.com")
-#'
-#' @export
-url.exists <- function(url) {
-  response <- tolower(httr::http_status(httr::HEAD(url))$category)
-  return(tolower(response) == "success")
 
-} # url.exists
-#----------------------------------------------------------------------------------------------------
 #' @title get_basic_genomes
 #' @description a helper function for basic genomes, obtains the genome codes (e.g. 'hg38')
 #'
@@ -80,7 +58,7 @@ get_css_genomes <- function(test = FALSE) {
   current.genomes.file <-
     "https://s3.amazonaws.com/igv.org.genomes/genomes.json"
 
-  if (!url.exists(current.genomes.file))
+  if (!RCurl::url.exists(current.genomes.file))
     return(get_basic_genomes())
 
   current.genomes.raw <-
@@ -190,7 +168,7 @@ parseAndValidateGenomeSpec <-
 
       exists.function <- switch(dataMode,
                                 "localFiles" = file.exists,
-                                "http" = url.exists)
+                                "http" = RCurl::url.exists)
       stopifnot(exists.function(fasta))
       stopifnot(exists.function(fastaIndex))
       if (!is.na(genomeAnnotation))
