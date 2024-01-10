@@ -3,7 +3,6 @@ library(RUnit)
 #----------------------------------------------------------------------------------------------------
 runTests <- function()
 {
-    test_url.exists()
     test_supportedGenomes()
     test_get_cas_genomes()
     test_parseAndValidateGenomeSpec.stock()
@@ -12,16 +11,6 @@ runTests <- function()
     test_parseAndValidateGenomeSpec.custom.localFiles.sarsWithGFF3()
 
 } # runTests
-#----------------------------------------------------------------------------------------------------
-test_url.exists <- function()
-{
-    message(sprintf("--- test_url.exists"))
-    checkTrue(url.exists("https://google.com"))
-    checkTrue(!url.exists("https://google.com/bogusAndImprobableFilename.txt"))
-
-    checkTrue(url.exists("https://s3.amazonaws.com/igv.org.genomes/genomes.json"))
-
-} # test_url.exists
 #----------------------------------------------------------------------------------------------------
 test_supportedGenomes <- function()
 {

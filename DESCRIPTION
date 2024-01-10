@@ -36,6 +36,7 @@ Imports:
     httr,
     jsonlite,
     randomcoloR,
+    RCurl,
     utils
 biocViews: Software, ShinyApps, Sequencing, Coverage
 License: MIT + file LICENSE
