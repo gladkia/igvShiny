@@ -68,6 +68,16 @@ jobs:
 
     steps:
 
+      ## Install google-chrome on on envs
+      - name: Install google-chrome (stable)
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+        run: |
+          #${{ steps.setup-chrome.outputs.chrome-path }} --version
+          chromote:::find_chrome()
+        shell: Rscript {0}
+
       ## Set the R library to the directory matching the
       ## R packages cache step further below when running on Docker (Linux).
       - name: Set R Library home on Linux
