@@ -25,22 +25,4 @@ get_tracks_dir <- function(env_var = "TRACKS_DIR") {
   }
   tracks_dir
 } # get_tracks_dir
-#----------------------------------------------------------------------------------------------------
-#' @title test_click_and_check
-#' @description a helper function for clicking the button and checking if
-#' second parameter exist in html code
-#' 
-#' @param button_id string of button which will be clicked in the test
-#' @param expected_html_label string which attendance will be expected in html
-#' @param app AppDriver shinyApp using for test
-#'
-#' @rdname test_click_and_check
-#'
-#' @export
-#'
-test_click_and_check <- function(button_id, expected_html_label, app) {
-  app$click(button_id)
-  igv_html <- app$get_html(selector = "#igvShiny_0")
-  Sys.sleep(1)
-  expect_true(grepl(expected_html_label, igv_html))
-} # test_click_and_check
+
