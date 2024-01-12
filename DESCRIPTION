@@ -23,6 +23,7 @@ Depends:
     shiny
 Suggests: 
     BiocStyle,
+    GenomicAlignments,
     knitr,
     rtracklayer,
     RUnit,

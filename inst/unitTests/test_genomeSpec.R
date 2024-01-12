@@ -1,5 +1,6 @@
 library(igvShiny)
 library(RUnit)
+library(shinytest2)
 #----------------------------------------------------------------------------------------------------
 runTests <- function()
 {

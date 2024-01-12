@@ -168,7 +168,7 @@ server = function(input, output, session) {
     printf("--- igvReady")
     containerID <- input$igvReady
     printf("igv ready, %s", containerID)
-    # loadBedTrack(session, id=containerID, trackName="bed5 loaded on ready", tbl=tbl.bed5, color="red");
+    loadBedTrack(session, id=containerID, trackName="bed5 loaded on ready", tbl=tbl.bed5, color="red");
   })
   
   observeEvent(input$trackClick, {
@@ -227,34 +227,6 @@ server = function(input, output, session) {
   })
   
 } # server
-#----------------------------------------------------------------------------------------------------
-deploy <-function()
-{
-  repos <- options("repos")[[1]]
-  stopifnot(sort(names(repos)) == c("BioCann", "BioCsoft", "CRAN"))
-  stopifnot(repos$BioCann=="https://bioconductor.org/packages/3.13/data/annotation")
-  stopifnot(repos$BioCsoft=="https://bioconductor.org/packages/3.13/bioc")
-  stopifnot(repos$CRAN=="https://cran.microsoft.com")
-  require(devtools)
-  
-  # jim hester suggests, with reference
-  # Setting R_REMOTES_NO_ERRORS_FROM_WARNINGS="false" will cause warning
-  # messages during calls to install.packages() to become errors. Often warning
-  # messages are caused by dependencies failing to install.
-  Sys.setenv("R_REMOTES_NO_ERRORS_FROM_WARNINGS" = "true")
-  
-  install_github("paul-shannon/igvShiny", force=TRUE)
-  
-  require(rsconnect)
-  
-  deployApp(account="hoodlab",
-            appName="igvShinyDemo",
-            appTitle="igvShiny Demo",
-            appFiles=c("igvShinyDemo.R", "tracks/file14c6569b08f1.bam"),
-            appPrimaryDoc="igvShinyDemo.R"
-  )
-  
-} # deploy
 #------------------------------------------------------------------------------------------------------------------------
 # shinyApp(ui = ui, server = server)
 if(grepl("hagfish", Sys.info()[["nodename"]]) & !interactive()){

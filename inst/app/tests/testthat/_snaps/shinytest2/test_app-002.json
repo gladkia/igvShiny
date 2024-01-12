@@ -1,0 +1,49 @@
+{
+  "input": {
+    "addBamLocalFileButton": 0,
+    "addBamViaHttpButton": 0,
+    "addBed9TrackButton": 0,
+    "addBedGraphTrackButton": 1,
+    "addBedGraphTrackFromURLButton": 0,
+    "addBedTrackButton": 0,
+    "addCramViaHttpButton": 0,
+    "addGwasTrackButton": 0,
+    "clearChromLocButton": 0,
+    "currentGenomicRegion.igvShiny_0": "chr1:7426230-7453241",
+    "getChromLocButton": 0,
+    "igvReady": "igvShiny_0",
+    "removeUserTracksButton": 0,
+    "roi": "",
+    "searchButton": 0
+  },
+  "output": {
+    "chromLocDisplay": "chr1:7426230-7453241",
+    "igvShiny_0": {
+      "x": {
+        "stockGenome": true,
+        "dataMode": null,
+        "validated": true,
+        "genomeName": "hg38",
+        "initialLocus": "chr1:6,575,383-8,304,088",
+        "fasta": null,
+        "fastaIndex": null,
+        "annotation": null,
+        "displayMode": "SQUISHED",
+        "trackHeight": 100,
+        "moduleNS": ""
+      },
+      "evals": [
+
+      ],
+      "jsHooks": [
+
+      ],
+      "deps": [
+
+      ]
+    }
+  },
+  "export": {
+
+  }
+}
