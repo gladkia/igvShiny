@@ -43,4 +43,4 @@ test_click_and_check <- function(button_id, expected_html_label, app) {
   igv_html <- app$get_html(selector = "#igvShiny_0")
   Sys.sleep(1)
   expect_true(grepl(expected_html_label, igv_html))
-} #test_click_and_check
+} # test_click_and_check
