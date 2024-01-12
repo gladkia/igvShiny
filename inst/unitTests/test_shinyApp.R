@@ -49,7 +49,7 @@ test_shinyAppDemo <- function()
       load_timeout = 1e+6,
       timeout = 1e+6
     )
-    Sys.sleep(2)
+    Sys.sleep(20)
     checkTrue(.test_click_and_check("addBedGraphTrackButton", "title=\"wig/bedGraph/local\"", app))
     checkTrue(.test_click_and_check("addBedGraphTrackFromURLButton", "title=\"bedGraph/remote\"", app))
     checkTrue(.test_click_and_check("addBamViaHttpButton", "title=\"1kg.bam\"", app))
