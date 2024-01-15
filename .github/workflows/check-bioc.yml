@@ -220,7 +220,7 @@ jobs:
         shell: Rscript {0}
 
       # Show google chrome path on envs
-      - name: Provide info abut google-chrome path
+      - name: Provide info about google-chrome path
         run: |
           #${{ steps.setup-chrome.outputs.chrome-path }} --version
           chromote:::find_chrome()

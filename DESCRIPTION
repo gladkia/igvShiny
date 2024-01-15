@@ -8,7 +8,7 @@ Authors@R: c(
     email = "paul.thurmond.shannon@gmail.com"),
     person("Arkadiusz", "Gladki", role=c("aut", "cre"), 
     email="gladki.arkadiusz@gmail.com"),
-    person("Karolina","Scigocka", role = c("ctb"), 
+    person("Karolina","Scigocka", role = c("aut"), 
     email = "scigocka.karolina@gmail.com")
     )
 Description: This package is a wrapper of Integrative Genomics Viewer (IGV).
@@ -23,6 +23,7 @@ Depends:
     shiny
 Suggests: 
     BiocStyle,
+    GenomicAlignments,
     knitr,
     rtracklayer,
     RUnit,

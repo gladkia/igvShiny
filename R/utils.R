@@ -24,6 +24,5 @@ get_tracks_dir <- function(env_var = "TRACKS_DIR") {
     dir.create(tracks_dir, recursive = TRUE)
   }
   tracks_dir
-}
-
+} # get_tracks_dir
 
