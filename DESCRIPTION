@@ -19,7 +19,6 @@ BugReports: https://github.com/gladkia/igvShiny/issues
 Depends: 
     GenomicRanges,
     methods,
-    R (>= 4.2.0),
     shiny
 Suggests: 
     BiocStyle,
