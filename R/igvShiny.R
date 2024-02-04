@@ -23,9 +23,9 @@ state[["userAddedTracks"]] <- list()
 
 # THE FOLLOWING WAS MOVED OUT OF doc section for igvShiny
 # param options a list, with required elements "genomeName" and "initialLocus".
-#   Local or remote custom genomes can be used by setting "genomeName" to 
-#   "local" or "remote". The necessary fasta and index files are provided via
-#   "fasta" and "index" arguments, either as path on disk or as URL.
+#   Local or remote custom genomes can be used by setting "genomeName" to "local" or
+#   "remote". The necessary fasta and index files are provided via "fasta" and "index"
+#   arguments, either as path on disk or as URL.
 
 
 #----------------------------------------------------------------------------------------------------
@@ -36,17 +36,13 @@ state[["userAddedTracks"]] <- list()
 #' @rdname igvShiny
 #' @aliases igvShiny
 #'
-#' @param genomeOptions a list with these fields: genomeName, initialLocus, 
-#'        annotation, dataMode, fasta, fastaIndex, stockGenome, validated
-#' @param width a character string, standard css notations, 
-#'        either e.g., "1000px" or "95\%"
-#' @param height a character string, needs to be an explicit pixel measure, 
-#'        e.g., "800px"
-#' @param elementId a character string, the html element id within which
-#'        igv is created
+#' @param genomeOptions a list with these fields: genomeName, initialLocus, annotation,
+#' dataMode, fasta, fastaIndex, stockGenome, validated
+#' @param width a character string, standard css notations, either e.g., "1000px" or "95\%"
+#' @param height a character string, needs to be an explicit pixel measure, e.g., "800px"
+#' @param elementId a character string, the html element id within which igv is created
 #' @param displayMode a character string, default "SQUISHED".
-#' @param tracks a list of track specifications to be created
-#'         and displayed at startup
+#' @param tracks a list of track specifications to be created and displayed at startup
 #' 
 #' @examples 
 #' library(igvShiny)
@@ -59,12 +55,8 @@ state[["userAddedTracks"]] <- list()
 #'
 #' @export
 #'
-igvShiny <- function(genomeOptions,
-                     width = NULL,
-                     height = NULL,
-                     elementId = NULL,
-                     displayMode = "squished",
-                     tracks = list()) {
+igvShiny <- function(genomeOptions, width = NULL, height = NULL,
+                     elementId = NULL, displayMode = "squished", tracks = list()) {
   stopifnot(
     sort(names(genomeOptions)) ==
       c(
@@ -137,10 +129,8 @@ igvShiny <- function(genomeOptions,
 #' @aliases igvShinyOutput
 #'
 #' @param outputId a character string, specifies the html element id
-#' @param width a character string, standard css notations, 
-#'        either e.g., "1000px" or "95\%", "100\%" by default
-#' @param height a character string, needs to be an explicit pixel measure, 
-#'        e.g., "800px", "400px" by default
+#' @param width a character string, standard css notations, either e.g., "1000px" or "95\%", "100\%" by default
+#' @param height a character string, needs to be an explicit pixel measure, e.g., "800px", "400px" by default
 #'
 #' @return the created widget's html
 #'
@@ -155,11 +145,7 @@ igvShinyOutput <- function(outputId, width = "100%", height = NULL) {
     height <- state[["requestedHeight"]]
   }
   
-  htmlwidgets::shinyWidgetOutput(outputId, 
-                                 "igvShiny", 
-                                 width, 
-                                 height, 
-                                 package = "igvShiny")
+  htmlwidgets::shinyWidgetOutput(outputId, "igvShiny", width, height, package = "igvShiny")
 }
 
 #----------------------------------------------------------------------------------------------------
@@ -174,8 +160,7 @@ igvShinyOutput <- function(outputId, width = "100%", height = NULL) {
 #' @param env  the environment in which to evaluate expr
 #' @param quoted logical flag indicating if expr a quoted expression 
 #' 
-#' @return an output or render function that enables the use of the widget
-#'        within Shiny applications
+#' @return an output or render function that enables the use of the widget within Shiny applications
 #'
 #' @export
 renderIgvShiny <- function(expr, env = parent.frame(), quoted = FALSE) {
@@ -193,16 +178,14 @@ renderIgvShiny <- function(expr, env = parent.frame(), quoted = FALSE) {
 #----------------------------------------------------------------------------------------------------
 #' focus igv on a region
 #'
-#' @description zoom in or out to show the nominated region, by chromosome locus
-#'        or gene symbol
+#' @description zoom in or out to show the nominated region, by chromosome locus or gene symbol
 #'
 #' @rdname showGenomicRegion
 #' @aliases showGenomicRegion
 #'
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
-#' @param region a character string, either e.g. "chr5:92,221,640-92,236,523" 
-#'        or "MEF2C"
+#' @param region a character string, either e.g. "chr5:92,221,640-92,236,523" or "MEF2C"
 #' 
 #' @examples 
 #' library(igvShiny)
@@ -276,8 +259,8 @@ removeTracksByName <- function(session, id, trackNames) {
 #-----------------------------------------------------------------------------------------------------------------------
 #' remove only those tracks explicitly added by your app
 #'
-#' @description remove only those tracks explicitly added by your app.
-#'        stock tracks (i.e., #' Refseq Genes) remain
+#' @description remove only those tracks explicitly added by your app.  stock tracks (i.e.,
+#' Refseq Genes) remain
 #'
 #' @rdname removeUserAddedTracks
 #' @aliases removeUserAddedTracks
@@ -315,8 +298,7 @@ removeUserAddedTracks <- function(session, id) {
 #' @param id character string, the html element id of this widget instance
 #' @param trackName character string
 #' @param tbl data.frame, with at least "chrom" "start" "end" columns
-#' @param color character string, a legal CSS color, or "random", 
-#'        "gray" by default
+#' @param color character string, a legal CSS color, or "random", "gray" by default
 #' @param trackHeight an integer, 50 (pixels) by default
 #' @param deleteTracksOfSameName logical, default TRUE
 #' @param quiet logical, default TRUE, controls verbosity
@@ -333,16 +315,9 @@ removeUserAddedTracks <- function(session, id) {
 #'
 #' @export
 
-loadBedTrack <-
-  function(session,
-           id,
-           trackName,
-           tbl,
-           color = "",
-           trackHeight = 50,
-           deleteTracksOfSameName = TRUE,
-           quiet = TRUE) {
-    if (color == "random")
+loadBedTrack <- function(session, id, trackName, tbl, color = "", trackHeight = 50,
+                         deleteTracksOfSameName = TRUE, quiet = TRUE) {
+  if (color == "random")
     color <-
       randomColors[sample(seq_len(length(randomColors)), 1)]
   
@@ -365,8 +340,7 @@ loadBedTrack <-
   
   if (all(colnames(tbl)[1:3] != c("chr", "start", "end"))) {
     log("found these colnames: %s", paste(colnames(tbl), collapse = ", "))
-    log("            required: %s", paste(c("chr", "start", "end"), 
-                                          collapse = ", "))
+    log("            required: %s", paste(c("chr", "start", "end"), collapse = ", "))
     stop("improper columns in bed track data.frame")
   }
   
@@ -413,8 +387,7 @@ loadBedTrack <-
 #' @param id character string, the html element id of this widget instance
 #' @param trackName character string
 #' @param url character
-#' @param color character string, a legal CSS color, or "random", 
-#'        "gray" by default
+#' @param color character string, a legal CSS color, or "random", "gray" by default
 #' @param trackHeight an integer, 30 (pixels) by default
 #' @param autoscale logical
 #' @param min numeric, consulted when autoscale is FALSE
@@ -435,22 +408,15 @@ loadBedTrack <-
 #'
 #' @export
 
-loadBedGraphTrackFromURL <-
-  function(session,
-           id,
-           trackName,
-           url,
-           color = "gray",
-           trackHeight = 30,
-           autoscale = TRUE,
-           min = 0,
-           max = 1,
-           autoscaleGroup = -1,
-           deleteTracksOfSameName = TRUE,
-           quiet = TRUE) {
-    print("---- loadBedGraphTrackFromURL")
-    
-    if  (color == "random")
+loadBedGraphTrackFromURL <- function(session, id, trackName, url, color = "gray",
+                                     trackHeight = 30,
+                                     autoscale = TRUE,
+                                     min = 0, max = 1,
+                                     autoscaleGroup = -1,
+                                     deleteTracksOfSameName = TRUE, quiet = TRUE) {
+  print("---- loadBedGraphTrackFromURL")
+  
+  if (color == "random")
     color <-
       randomColors[sample(seq_len(length(randomColors)), 1)]
   
@@ -506,8 +472,7 @@ loadBedGraphTrackFromURL <-
 #' @param id character string, the html element id of this widget instance
 #' @param trackName character string
 #' @param tbl data.frame, with at least "chrom" "start" "end" "score" columns
-#' @param color character string, a legal CSS color, or "random", 
-#'        "gray" by default
+#' @param color character string, a legal CSS color, or "random", "gray" by default
 #' @param trackHeight an integer, 30 (pixels) by default
 #' @param autoscale logical
 #' @param autoscaleGroup numeric(1) defaults to -1
@@ -528,20 +493,11 @@ loadBedGraphTrackFromURL <-
 #'
 #' @export
 
-loadBedGraphTrack <-
-  function(session,
-           id,
-           trackName,
-           tbl,
-           color = "gray",
-           trackHeight = 30,
-           autoscale,
-           autoscaleGroup = -1,
-           min = NA_real_,
-           max = NA_real_,
-           deleteTracksOfSameName = TRUE,
-           quiet = TRUE) {
-    stopifnot(ncol(tbl) >= 4)
+loadBedGraphTrack <- function(session, id, trackName, tbl, color = "gray", trackHeight = 30,
+                              autoscale, autoscaleGroup = -1,
+                              min = NA_real_, max = NA_real_,
+                              deleteTracksOfSameName = TRUE, quiet = TRUE) {
+  stopifnot(ncol(tbl) >= 4)
   
   if (color == "random")
     color <-
@@ -604,10 +560,9 @@ loadBedGraphTrack <-
 #-----------------------------------------------------------------------------------------------------------------------
 #' load a seg track provided as a data.frame
 #'
-#' @description load a SEG track provided as a data.frame.  igv "displays
-#'        segmented data as a blue-to-red heatmap where the data range is
-#'        -1.5 to 1.5... The segmented data file format is the output of
-#'        the Circular Binary Segmentation algorithm (Olshen et al., 2004)".
+#' @description load a SEG track provided as a data.frame.  igv "displays segmented data as
+#'  a blue-to-red heatmap where the data range is -1.5 to 1.5... The segmented data
+#' file format is the output of the Circular Binary Segmentation algorithm (Olshen et al., 2004)".
 #'
 #' @rdname loadSEGTrack
 #' @aliases loadSEGTrack
@@ -629,16 +584,9 @@ loadBedGraphTrack <-
 #' nothing
 #'
 #' @export
-loadSegTrack <-
-  function(session,
-           id,
-           trackName,
-           tbl,
-           deleteTracksOfSameName = TRUE) {
-    log("--- entering loadSegTrack %s with %d rows",
-        trackName,
-        nrow(tbl))
-    
+loadSegTrack <- function(session, id, trackName, tbl, deleteTracksOfSameName = TRUE) {
+  log("--- entering loadSegTrack %s with %d rows", trackName, nrow(tbl))
+  
   if (deleteTracksOfSameName) {
     removeTracksByName(session, id, trackName)
     
@@ -661,8 +609,7 @@ loadSegTrack <-
 #----------------------------------------------------------------------------------------------------------------------
 #' load a VCF (variant) track provided as a Bioconductor VariantAnnotation object
 #'
-#' @description load a VCF (variant) track provided as a Bioconductor 
-#'        VariantAnnotation object
+#' @description load a VCF (variant) track provided as a Bioconductor VariantAnnotation object
 #'
 #' @rdname loadVcfTrack
 #' @aliases loadVcfTrack
@@ -675,8 +622,7 @@ loadSegTrack <-
 #' 
 #' @examples 
 #' library(igvShiny)
-#' demo_app_file <-
-#'    system.file(package = "igvShiny", "demos", "igvShinyDemo-withVCF.R")
+#' demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo-withVCF.R")
 #' if (interactive()) {
 #'  shiny::runApp(demo_app_file)
 #' }
@@ -686,11 +632,7 @@ loadSegTrack <-
 #'
 #' @export
 
-loadVcfTrack <- function(session,
-                         id,
-                         trackName,
-                         vcfData,
-                         deleteTracksOfSameName = TRUE) {
+loadVcfTrack <- function(session, id, trackName, vcfData, deleteTracksOfSameName = TRUE) {
   if (!requireNamespace("VariantAnnotation"))
     stop("install VariantAnnotation to use this function")
   
@@ -720,8 +662,7 @@ loadVcfTrack <- function(session,
 #----------------------------------------------------------------------------------------------------------------------
 #' load a GWAS (genome-wide association study)  track provided as a data.frame
 #'
-#' @description load a GWAS (genome-wide association study) track provided as
-#'        a data.frame
+#' @description load a GWAS (genome-wide association study)  track provided as a data.frame
 #'
 #' @rdname loadGwasTrack
 #' @aliases loadGwasTrack
@@ -745,15 +686,7 @@ loadVcfTrack <- function(session,
 #' nothing
 #'
 #' @export
-loadGwasTrack <- function(
-    session,
-    id,
-    trackName,
-    tbl.gwas,
-    ymin = 0,
-    ymax = 35,
-    deleteTracksOfSameName = TRUE
-) {
+loadGwasTrack <- function(session, id, trackName, tbl.gwas, ymin = 0, ymax = 35, deleteTracksOfSameName = TRUE) {
   log("======== entering igvShiny::loadGwasTrack")
   
   if (deleteTracksOfSameName) {
@@ -805,12 +738,10 @@ loadGwasTrack <- function(
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
 #' @param trackName character string
-#' @param bamURL character string http url for the bam file, 
-#'        typically very large
-#' @param indexURL character string http url for the bam file index, 
-#'        typically small
+#' @param bamURL character string http url for the bam file, typically very large
+#' @param indexURL character string http url for the bam file index, typically small
 #' @param deleteTracksOfSameName logical, default TRUE
-#' @param displayMode character string, possible values are "EXPANDED"(default),
+#' @param displayMode character string, possible values are "EXPANDED" (default),
 #'   "SQUISHED" or "COLLAPSED"
 #' @param showAllBases logical, show all bases in the alignment, default FALSE
 #' 
@@ -868,7 +799,7 @@ loadBamTrackFromURL <-
 #' @param trackName character string
 #' @param data  GenomicAlignments object
 #' @param deleteTracksOfSameName logical, default TRUE
-#' @param displayMode character string, possible values are "EXPANDED"(default),
+#' @param displayMode character string, possible values are "EXPANDED" (default),
 #'   "SQUISHED" or "COLLAPSED"
 #' 
 #' @examples 
@@ -929,10 +860,8 @@ loadBamTrackFromLocalData <-
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
 #' @param trackName character string
-#' @param cramURL character string http url for the bam file, 
-#'        typically very large
-#' @param indexURL character string http url for the bam file index, 
-#'        typically small
+#' @param cramURL character string http url for the bam file, typically very large
+#' @param indexURL character string http url for the bam file index, typically small
 #' @param deleteTracksOfSameName logical, default TRUE
 #' 
 #' @examples 
@@ -985,16 +914,11 @@ loadCramTrackFromURL <-
 #' @param id character string, the html element id of this widget instance
 #' @param trackName character string
 #' @param trackHeight numeric defaults to 50
-#' @param gff3URL character string http url for the bam file, 
-#'        typically very large
-#' @param indexURL character string http url for the bam file index, 
-#'        typically small
-#' @param color character #RGB or a recognized color name.  ignored if 
-#'        colorTable and colorByAttribute provided
-#' @param colorTable list, mapping a gff3 attribute, typically biotype, 
-#'        to a color
-#' @param colorByAttribute character, name of a gff3 attribute in column 9,
-#'        typically "biotype"
+#' @param gff3URL character string http url for the bam file, typically very large
+#' @param indexURL character string http url for the bam file index, typically small
+#' @param color character #RGB or a recognized color name.  ignored if colorTable and colorByAttribute provided
+#' @param colorTable list, mapping a gff3 attribute, typically biotype, to a color
+#' @param colorByAttribute character, name of a gff3 attribute in column 9, typically "biotype"
 #' @param displayMode character,  "EXPANDED",  "SQUISHED" or "COLLAPSED"
 #' @param visibilityWindow numeric, Maximum window size in base pairs 
 #'        for which indexed annotations or variants are displayed
@@ -1002,10 +926,9 @@ loadCramTrackFromURL <-
 #' 
 #' @examples 
 #' library(igvShiny)
-#' demo_app_file <-
-#'     system.file(package = "igvShiny", "demos", "igvShinyDemo-GFF3.R")
+#' demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo-GFF3.R")
 #' if (interactive()) {
-#'     shiny::runApp(demo_app_file)
+#'  shiny::runApp(demo_app_file)
 #' }
 #'
 #' @return
@@ -1064,12 +987,9 @@ loadGFF3TrackFromURL <-
 #' @param trackName character string
 #' @param trackHeight numeric defaults to 50
 #' @param tbl.gff3 data.frame  in standard 9-column GFF3 format
-#' @param color character #RGB or a recognized color name.  ignored if 
-#'        colorTable and colorByAttribute provided
-#' @param colorTable list, mapping a gff3 attribute, typically biotype, 
-#'        to a color
-#' @param colorByAttribute character, name of a gff3 attribute in column 9, 
-#'        typically "biotype"
+#' @param color character #RGB or a recognized color name.  ignored if colorTable and colorByAttribute provided
+#' @param colorTable list, mapping a gff3 attribute, typically biotype, to a color
+#' @param colorByAttribute character, name of a gff3 attribute in column 9, typically "biotype"
 #' @param displayMode character,  "EXPANDED",  "SQUISHED" or "COLLAPSED"
 #' @param visibilityWindow numeric, Maximum window size in base pairs 
 #'        for which indexed annotations or variants are displayed
@@ -1077,11 +997,10 @@ loadGFF3TrackFromURL <-
 #' 
 #' @examples 
 #' library(igvShiny)
-#'demo_app_file <-
-#'    system.file(package = "igvShiny", "demos", "igvShinyDemo-GFF3.R")
-#'if (interactive()) {
-#'    shiny::runApp(demo_app_file)
-#'}
+#' demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo-GFF3.R")
+#' if (interactive()) {
+#'  shiny::runApp(demo_app_file)
+#' }
 #'
 #' @return
 #' nothing
@@ -1146,4 +1065,3 @@ loadGFF3TrackFromLocalData <-
   } # loadGFF3TrackFromLocalData
 #-----------------------------------------------------------------------------------------------------------------------
 
--
