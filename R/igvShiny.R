@@ -448,7 +448,7 @@ loadBedGraphTrackFromURL <-
            autoscaleGroup = -1,
            deleteTracksOfSameName = TRUE,
            quiet = TRUE) {
-    print("---- loadBedGraphTrackFromURL")
+    message("---- loadBedGraphTrackFromURL")
     
     if  (color == "random")
     color <-
