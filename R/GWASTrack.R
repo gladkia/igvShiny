@@ -39,11 +39,13 @@ setGeneric("getUrl",  signature = "obj",
 #' @name GWASTrack
 #' @rdname GWASTrack-class
 #'
-#' @param trackName  A character string, used as track label by igv, we recommend unique names per track.
-#' @param data a data.frame or a url pointing to one, whose structure is described by chrom.col, pos.col, pval.col
+#' @param trackName  A character string, used as track label by igv, 
+#'        we recommend unique names per track.
+#' @param data a data.frame or a url pointing to one, 
+#'        whose structure is described by chrom.col, pos.col, pval.col
 #' @param chrom.col numeric, the column number of the chromosome column
 #' @param pos.col numeric, the column number of the position column
-#' @param pval.col numeric, the column number of the GWAS pvalue colum
+#' @param pval.col numeric, the column number of the GWAS pvalue column
 #' @param trackHeight numeric in pixels
 #' @param autoscale  logical
 #' @param minY  numeric for explicit (non-auto) scaling
@@ -53,11 +55,22 @@ setGeneric("getUrl",  signature = "obj",
 #'
 #' @examples
 #'
-#'   file <- system.file(package="igvShiny", "extdata", "gwas-5k.tsv.gz") # a local gwas file
-#'   tbl.gwas <- read.table(file, sep="\t", header=TRUE, quote="")
-#'   dim(tbl.gwas)
-#'   track <- GWASTrack("gwas 5k", tbl.gwas, chrom.col=12, pos.col=13, pval.col=28)
-#'   getUrl(track)
+#'file <-
+#'    system.file(package = "igvShiny", "extdata", "gwas-5k.tsv.gz") # a local gwas file
+#'tbl.gwas <- read.table(file,
+#'                       sep = "\t",
+#'                       header = TRUE,
+#'                       quote = "")
+#'dim(tbl.gwas)
+#'track <-
+#'    GWASTrack(
+#'        "gwas 5k",
+#'        tbl.gwas,
+#'        chrom.col = 12,
+#'        pos.col = 13,
+#'        pval.col = 28
+#'    )
+#'getUrl(track)
 #'
 #'   url <- "https://s3.amazonaws.com/igv.org.demo/gwas_sample.tsv.gz"
 #'   track <- GWASTrack("remote url gwas",
@@ -155,11 +168,13 @@ setMethod("display", "GWASTrack",
             state[["userAddedTracks"]] <-
               unique(c(state[["userAddedTracks"]], obj@trackName))
             
-            # javascript function consults dataMode, modifies dataUrl if local.url,
+            # javascript function consults dataMode, 
+            # modifies dataUrl if local.url,
             # prepending the http host of the modest RStudio/Shiny webserver
             # make sure the embedded shiny webserver can find it by:
-            #   - adding a resource path with a convenient shorthand name, pointing
-            #     to the typically long and cryptic actual local host temporary directory
+            #   - adding a resource path with a convenient shorthand name, 
+            #   pointing to the typically long and cryptic actual local host
+            #   temporary directory
             #   - adjusting message$dataUrl to use that shorthand directory name
             
             message <- list(
