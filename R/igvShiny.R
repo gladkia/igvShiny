@@ -363,7 +363,7 @@ loadBedTrack <-
   if (colnames(tbl)[1] == "chrom")
     colnames(tbl)[1] <- "chr"
   
-  if (all(colnames(tbl)[1:3] != c("chr", "start", "end"))) {
+  if (all(colnames(tbl)[c(1, 2, 3)] != c("chr", "start", "end"))) {
     log("found these colnames: %s", paste(colnames(tbl), collapse = ", "))
     log("            required: %s", paste(c("chr", "start", "end"), 
                                           collapse = ", "))
@@ -570,10 +570,11 @@ loadBedGraphTrack <-
   
   colnames(tbl)[4] <- "value"
   
-  if (all(colnames(tbl)[1:3] != c("chr", "start", "end"))) {
-    log("found these colnames: %s", paste(colnames(tbl)[1:3], collapse = ", "))
-    log("            required: %s", paste(c("chr", "start", "end"), collapse =
-                                            ", "))
+  if (all(colnames(tbl)[c(1, 2, 3)] != c("chr", "start", "end"))) {
+    log("found these colnames: %s", paste(colnames(tbl)[c(1, 2, 3)], 
+                                          collapse = ", "))
+    log("            required: %s", paste(c("chr", "start", "end"), 
+                                          collapse = ", "))
     stop("improper columns in bed track data.frame")
   }
   
