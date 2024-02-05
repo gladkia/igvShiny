@@ -31,7 +31,7 @@ setGeneric("getUrl",  signature = "obj",
              standardGeneric("getUrl")
            })
 
-#----------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' Constructor for GWASTrack
 #'
 #' \code{GWASTrack} creates an \code{IGV} manhattan track from GWAS data
@@ -56,7 +56,8 @@ setGeneric("getUrl",  signature = "obj",
 #' @examples
 #'
 #'file <-
-#'    system.file(package = "igvShiny", "extdata", "gwas-5k.tsv.gz") # a local gwas file
+#'     # a local gwas file
+#'    system.file(package = "igvShiny", "extdata", "gwas-5k.tsv.gz") 
 #'tbl.gwas <- read.table(file,
 #'                       sep = "\t",
 #'                       header = TRUE,
@@ -142,7 +143,7 @@ GWASTrack <- function(trackName,
   obj
   
 } # GWASTrack
-#----------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' display the already constructed and configured track
 #'
 #' @rdname display
@@ -197,7 +198,7 @@ setMethod("display", "GWASTrack",
             session$sendCustomMessage("loadGwasTrackFlexibleSource", message)
             
           }) # display
-#----------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' the url of the gwas table
 #'
 #' @rdname getUrl

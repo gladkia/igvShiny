@@ -28,7 +28,8 @@ loadBedGraphTrackFromURL(
 
 \item{url}{character}
 
-\item{color}{character string, a legal CSS color, or "random", "gray" by default}
+\item{color}{character string, a legal CSS color, or "random", 
+"gray" by default}
 
 \item{trackHeight}{an integer, 30 (pixels) by default}
 

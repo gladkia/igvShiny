@@ -15,36 +15,47 @@ parseAndValidateGenomeSpec(
 )
 }
 \arguments{
-\item{genomeName}{character usually one short code of a supported ("stock") genome (e.g., "hg38") or for
-a user-supplied custom genome, the name you wish to use}
+\item{genomeName}{character usually one short code of a supported ("stock") 
+genome (e.g., "hg38") or for a user-supplied custom genome, 
+the name you wish to use}
 
-\item{initialLocus}{character default "all", otherwise "chrN:start-end" or a recognized gene symbol}
+\item{initialLocus}{character default "all", otherwise "chrN:start-end" 
+or a recognized gene symbol}
 
 \item{stockGenome}{logical default TRUE}
 
 \item{dataMode}{character either "stock", "localFile" or "http"}
 
-\item{fasta}{character when supplying a custom (non-stock) genome, either a file path or a URL}
+\item{fasta}{character when supplying a custom (non-stock) genome, 
+either a file path or a URL}
 
-\item{fastaIndex}{character when supplying a custom (non-stock) genome, either a file path or a URL,
+\item{fastaIndex}{character when supplying a custom (non-stock) genome, 
+either a file path or a URL,
 essential for all but the very small custom genomes.}
 
-\item{genomeAnnotation}{character when supplying a custom (non-stock) genome, a file path or URL pointing
-to a genome annotation file in a gff3 format}
+\item{genomeAnnotation}{character when supplying a custom (non-stock) genome,
+a file path or URL pointing to a genome annotation file in
+a gff3 format}
 }
 \value{
 an options list directly usable by igvApp.js, and thus igv.js
 }
 \description{
-a helper function for internal use by the igvShiny constructor, but possible also
-of use to those building an igvShiny app, to test their genome specification for validity
+a helper function for internal use by the igvShiny constructor, 
+       but possible also of use to those building an igvShiny app, 
+       to test their genome specification for validity
 }
 \examples{
 genomeSpec <- parseAndValidateGenomeSpec("hg38", "APOE")  # the simplest case
 base.url <- "https://igv-data.systemsbiology.net/testFiles/sarsGenome"
-fasta.file <- sprintf("\%s/\%s", base.url,"Sars_cov_2.ASM985889v3.dna.toplevel.fa")
-fastaIndex.file <-  sprintf("\%s/\%s", base.url, "Sars_cov_2.ASM985889v3.dna.toplevel.fa.fai")
-annotation.file <-  sprintf("\%s/\%s", base.url, "Sars_cov_2.ASM985889v3.101.gff3")
+fasta.file <-
+   sprintf("\%s/\%s", base.url, "Sars_cov_2.ASM985889v3.dna.toplevel.fa")
+fastaIndex.file <-
+   sprintf("\%s/\%s",
+           base.url,
+           "Sars_cov_2.ASM985889v3.dna.toplevel.fa.fai")
+annotation.file <-
+   sprintf("\%s/\%s", base.url, "Sars_cov_2.ASM985889v3.101.gff3")
 custom.genome.title <- "SARS-CoV-2"
 genomeOptions <- parseAndValidateGenomeSpec(genomeName=custom.genome.title,
                                             initialLocus="all",

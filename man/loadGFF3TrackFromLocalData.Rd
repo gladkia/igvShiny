@@ -27,11 +27,14 @@ loadGFF3TrackFromLocalData(
 
 \item{tbl.gff3}{data.frame  in standard 9-column GFF3 format}
 
-\item{color}{character #RGB or a recognized color name.  ignored if colorTable and colorByAttribute provided}
+\item{color}{character #RGB or a recognized color name.  ignored if 
+colorTable and colorByAttribute provided}
 
-\item{colorTable}{list, mapping a gff3 attribute, typically biotype, to a color}
+\item{colorTable}{list, mapping a gff3 attribute, typically biotype, 
+to a color}
 
-\item{colorByAttribute}{character, name of a gff3 attribute in column 9, typically "biotype"}
+\item{colorByAttribute}{character, name of a gff3 attribute in column 9, 
+typically "biotype"}
 
 \item{displayMode}{character,  "EXPANDED",  "SQUISHED" or "COLLAPSED"}
 
@@ -50,9 +53,10 @@ load a local GFF3 track file
 }
 \examples{
 library(igvShiny)
-demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo-GFF3.R")
+demo_app_file <-
+   system.file(package = "igvShiny", "demos", "igvShinyDemo-GFF3.R")
 if (interactive()) {
- shiny::runApp(demo_app_file)
+   shiny::runApp(demo_app_file)
 }
 
 }

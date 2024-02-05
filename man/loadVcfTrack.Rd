@@ -2,7 +2,8 @@
 % Please edit documentation in R/igvShiny.R
 \name{loadVcfTrack}
 \alias{loadVcfTrack}
-\title{load a VCF (variant) track provided as a Bioconductor VariantAnnotation object}
+\title{load a VCF (variant) track provided as a Bioconductor 
+VariantAnnotation object}
 \usage{
 loadVcfTrack(session, id, trackName, vcfData, deleteTracksOfSameName = TRUE)
 }
@@ -21,11 +22,13 @@ loadVcfTrack(session, id, trackName, vcfData, deleteTracksOfSameName = TRUE)
 nothing
 }
 \description{
-load a VCF (variant) track provided as a Bioconductor VariantAnnotation object
+load a VCF (variant) track provided as a Bioconductor 
+       VariantAnnotation object
 }
 \examples{
 library(igvShiny)
-demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo-withVCF.R")
+demo_app_file <-
+   system.file(package = "igvShiny", "demos", "igvShinyDemo-withVCF.R")
 if (interactive()) {
  shiny::runApp(demo_app_file)
 }

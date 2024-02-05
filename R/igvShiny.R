@@ -10,14 +10,14 @@
 #' @rdname igvShiny
 
 randomColors <- randomcoloR::distinctColorPalette(24)
-#----------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 verbose <- FALSE
 log <- function(...) {
   if (verbose)
     print(noquote(sprintf(...)))
 }
 
-#----------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 state <- new.env(parent = emptyenv())
 state[["userAddedTracks"]] <- list()
 
@@ -28,7 +28,7 @@ state[["userAddedTracks"]] <- list()
 #   "fasta" and "index" arguments, either as path on disk or as URL.
 
 
-#----------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' Create an igvShiny instance
 #'
 #' @description This function is called in the server function of your shiny app
@@ -128,7 +128,7 @@ igvShiny <- function(genomeOptions,
   )
 
 } # igvShiny constructor
-#----------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' create the UI for the widget
 #'
 #' @description This function is called in the ui function of your shiny app
@@ -162,7 +162,7 @@ igvShinyOutput <- function(outputId, width = "100%", height = NULL) {
                                  package = "igvShiny")
 }
 
-#----------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' draw the igv genome browser element
 #'
 #' @description This function is called in the server function of your shiny app
@@ -190,7 +190,7 @@ renderIgvShiny <- function(expr, env = parent.frame(), quoted = FALSE) {
   
 }
 
-#----------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' focus igv on a region
 #'
 #' @description zoom in or out to show the nominated region, by chromosome locus
@@ -217,7 +217,7 @@ showGenomicRegion <- function(session, id, region) {
   session$sendCustomMessage("showGenomicRegion", message)
 } # showGenomicRegion
 
-#-----------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' return the current igv region
 #'
 #' @description return the current region displayed by your igv instance
@@ -246,7 +246,7 @@ getGenomicRegion <- function(session, id) {
   session$sendCustomMessage("getGenomicRegion", message)
 } # gertGenomicRegion
 
-#-----------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' remove tracks from the browser
 #'
 #' @description delete tracks on the browser
@@ -273,7 +273,7 @@ removeTracksByName <- function(session, id, trackNames) {
 
 } # removeTracksByName
 
-#-----------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' remove only those tracks explicitly added by your app
 #'
 #' @description remove only those tracks explicitly added by your app.
@@ -303,7 +303,7 @@ removeUserAddedTracks <- function(session, id) {
   
 } # removeUserAddedTracks
 
-#-----------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' load a bed track provided as a data.frame
 #'
 #' @description load a bed track provided as a data.frame
@@ -401,7 +401,7 @@ loadBedTrack <-
 
 } # loadBedTrack
 
-#-----------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' load a bedgraph track from a URL
 #'
 #' @description load a bedgraph track provided as a data.frame
@@ -461,7 +461,8 @@ loadBedGraphTrackFromURL <-
   
   if (deleteTracksOfSameName) {
     log(
-      "--- igvShiny.R loadBedGraphTrackFromURL, calling removeTracksByName: %s, %s",
+      "--- igvShiny.R loadBedGraphTrackFromURL, 
+      calling removeTracksByName: %s, %s",
       id,
       trackName
     )
@@ -494,7 +495,7 @@ loadBedGraphTrackFromURL <-
 
 } # loadBedGraphTrackFromURL
 
-#-----------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' load a scored genome annotation track provided as a data.frame
 #'
 #' @description load a genome annotation track provided as a data.frame
@@ -602,7 +603,7 @@ loadBedGraphTrack <-
   session$sendCustomMessage("loadBedGraphTrack", msg.to.igv)
 
 } # loadBedGraphTrack
-#-----------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' load a seg track provided as a data.frame
 #'
 #' @description load a SEG track provided as a data.frame.  igv "displays
@@ -659,8 +660,9 @@ loadSegTrack <-
   
 } # loadSegTrack
 
-#----------------------------------------------------------------------------------------------------------------------
-#' load a VCF (variant) track provided as a Bioconductor VariantAnnotation object
+#-------------------------------------------------------------------------------
+#' load a VCF (variant) track provided as a Bioconductor 
+#' VariantAnnotation object
 #'
 #' @description load a VCF (variant) track provided as a Bioconductor 
 #'        VariantAnnotation object
@@ -718,11 +720,12 @@ loadVcfTrack <- function(session,
 
 } # loadVcfTrack
 
-#----------------------------------------------------------------------------------------------------------------------
-#' load a GWAS (genome-wide association study)  track provided as a data.frame
+#-------------------------------------------------------------------------------
+#' load a GWAS (genome-wide association study) track 
+#' provided as a data.frame
 #'
-#' @description load a GWAS (genome-wide association study) track provided as
-#'        a data.frame
+#' @description load a GWAS (genome-wide association study) track
+#'        provided as a data.frame
 #'
 #' @rdname loadGwasTrack
 #' @aliases loadGwasTrack
@@ -795,7 +798,7 @@ loadGwasTrack <- function(
   
 } # loadGwasTrack
 
-#----------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' load a bam track which, with index, is served up by http
 #'
 #' @description load a remote bam track
@@ -857,7 +860,7 @@ loadBamTrackFromURL <-
     
   } # loadBamTrackFromURL
 
-#----------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' load GenomicAlignments data as an igv.js alignment track
 #'
 #' @description load GenomicAlignments data  as an igv.js alignment track
@@ -919,7 +922,7 @@ loadBamTrackFromLocalData <-
     
   } # loadBamTrackFromLocalData
 
-#----------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' load a cram track which, with index, is served up by http
 #'
 #' @description load a remote cram track
@@ -974,7 +977,7 @@ loadCramTrackFromURL <-
     
   } # loadCramTrackFromURL
 
-#----------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' load a GFF3 track which, with index, is served up by http
 #'
 #' @description load a remote GFF3 track
@@ -1052,7 +1055,7 @@ loadGFF3TrackFromURL <-
     session$sendCustomMessage("loadGFF3TrackFromURL", message)
     
   } # loadGFF3TrackFromURL
-#-----------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' load a GFF3 track defined by local data
 #'
 #' @description load a local GFF3 track file
@@ -1145,4 +1148,4 @@ loadGFF3TrackFromLocalData <-
     session$sendCustomMessage("loadGFF3TrackFromLocalData", message)
     
   } # loadGFF3TrackFromLocalData
-#-----------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------

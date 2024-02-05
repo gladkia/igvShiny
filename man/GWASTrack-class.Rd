@@ -20,15 +20,17 @@ GWASTrack(
 )
 }
 \arguments{
-\item{trackName}{A character string, used as track label by igv, we recommend unique names per track.}
+\item{trackName}{A character string, used as track label by igv, 
+we recommend unique names per track.}
 
-\item{data}{a data.frame or a url pointing to one, whose structure is described by chrom.col, pos.col, pval.col}
+\item{data}{a data.frame or a url pointing to one, 
+whose structure is described by chrom.col, pos.col, pval.col}
 
 \item{chrom.col}{numeric, the column number of the chromosome column}
 
 \item{pos.col}{numeric, the column number of the position column}
 
-\item{pval.col}{numeric, the column number of the GWAS pvalue colum}
+\item{pval.col}{numeric, the column number of the GWAS pvalue column}
 
 \item{trackHeight}{numeric in pixels}
 
@@ -46,11 +48,23 @@ A GWASTrack object
 }
 \examples{
 
-  file <- system.file(package="igvShiny", "extdata", "gwas-5k.tsv.gz") # a local gwas file
-  tbl.gwas <- read.table(file, sep="\t", header=TRUE, quote="")
-  dim(tbl.gwas)
-  track <- GWASTrack("gwas 5k", tbl.gwas, chrom.col=12, pos.col=13, pval.col=28)
-  getUrl(track)
+file <-
+    # a local gwas file
+   system.file(package = "igvShiny", "extdata", "gwas-5k.tsv.gz") 
+tbl.gwas <- read.table(file,
+                      sep = "\t",
+                      header = TRUE,
+                      quote = "")
+dim(tbl.gwas)
+track <-
+   GWASTrack(
+       "gwas 5k",
+       tbl.gwas,
+       chrom.col = 12,
+       pos.col = 13,
+       pval.col = 28
+   )
+getUrl(track)
 
   url <- "https://s3.amazonaws.com/igv.org.demo/gwas_sample.tsv.gz"
   track <- GWASTrack("remote url gwas",

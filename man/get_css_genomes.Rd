@@ -13,8 +13,8 @@ get_css_genomes(test = FALSE)
 an list of short genome codes, e.g., "hg38", "dm6", "tair10"
 }
 \description{
-a helper function for mostly internal use, obtains the genome codes (e.g. 'hg38')
-      supported by igv.js
+a helper function for mostly internal use, 
+       obtains the genome codes (e.g. 'hg38') supported by igv.js
 }
 \examples{
   css <- get_css_genomes(test = TRUE)

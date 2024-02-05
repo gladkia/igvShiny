@@ -24,7 +24,7 @@ loadBamTrackFromLocalData(
 
 \item{deleteTracksOfSameName}{logical, default TRUE}
 
-\item{displayMode}{character string, possible values are "EXPANDED" (default),
+\item{displayMode}{character string, possible values are "EXPANDED"(default),
 "SQUISHED" or "COLLAPSED"}
 }
 \value{

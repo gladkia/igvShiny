@@ -20,9 +20,11 @@ loadCramTrackFromURL(
 
 \item{trackName}{character string}
 
-\item{cramURL}{character string http url for the bam file, typically very large}
+\item{cramURL}{character string http url for the bam file, 
+typically very large}
 
-\item{indexURL}{character string http url for the bam file index, typically small}
+\item{indexURL}{character string http url for the bam file index, 
+typically small}
 
 \item{deleteTracksOfSameName}{logical, default TRUE}
 }

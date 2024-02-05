@@ -24,7 +24,8 @@ loadBedTrack(
 
 \item{tbl}{data.frame, with at least "chrom" "start" "end" columns}
 
-\item{color}{character string, a legal CSS color, or "random", "gray" by default}
+\item{color}{character string, a legal CSS color, or "random", 
+"gray" by default}
 
 \item{trackHeight}{an integer, 50 (pixels) by default}
 

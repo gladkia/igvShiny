@@ -17,7 +17,7 @@ get_basic_genomes <- function() {
   BASIC_GENOMES
 
 } # get_basic_genomes
-#----------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' @title get_cas_genomes
 #' @description a helper function for common always available stock genomes,
 #'        obtains the genome codes (e.g. 'hg38')
@@ -36,7 +36,7 @@ get_cas_genomes <- function() {
   CAS_GENOMES
 
 } # get_cas_genomes
-#----------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' @title get_css_genomes
 #' @description a helper function for mostly internal use, 
 #'        obtains the genome codes (e.g. 'hg38') supported by igv.js
@@ -68,7 +68,7 @@ get_css_genomes <- function(test = FALSE) {
   tbl.genomes$id
 
 } # get_css_genomes
-#----------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #' @title parseAndValidateGenomeSpec
 #' @description a helper function for internal use by the igvShiny constructor, 
 #'        but possible also of use to those building an igvShiny app, 
@@ -89,8 +89,9 @@ get_css_genomes <- function(test = FALSE) {
 #' @param fastaIndex character when supplying a custom (non-stock) genome, 
 #'        either a file path or a URL,
 #'        essential for all but the very small custom genomes.
-#' @param genomeAnnotation character when supplying a custom (non-stock) genome, 
-#'        a file path or URL pointing to a genome annotation file in a gff3 format
+#' @param genomeAnnotation character when supplying a custom (non-stock) genome,
+#'        a file path or URL pointing to a genome annotation file in
+#'        a gff3 format
 #'
 #' @examples
 #' genomeSpec <- parseAndValidateGenomeSpec("hg38", "APOE")  # the simplest case
@@ -163,7 +164,8 @@ parseAndValidateGenomeSpec <-
       # genomeAnnotation is optional
 
       recognized.modes <-
-        c("localFiles", "http")  # "direct" for an in-memory R data structure, deferred
+        c("localFiles", "http")  # "direct" for an in-memory R data structure, 
+                                 # deferred
       if (!dataMode %in% recognized.modes) {
         msg <-
           sprintf(
@@ -196,4 +198,4 @@ parseAndValidateGenomeSpec <-
     return(options)
 
   } # parseAndValidateGenomeSpec
-#----------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------

@@ -21,18 +21,22 @@ igvShiny(
 )
 }
 \arguments{
-\item{genomeOptions}{a list with these fields: genomeName, initialLocus, annotation,
-dataMode, fasta, fastaIndex, stockGenome, validated}
+\item{genomeOptions}{a list with these fields: genomeName, initialLocus, 
+annotation, dataMode, fasta, fastaIndex, stockGenome, validated}
 
-\item{width}{a character string, standard css notations, either e.g., "1000px" or "95\%"}
+\item{width}{a character string, standard css notations, 
+either e.g., "1000px" or "95\%"}
 
-\item{height}{a character string, needs to be an explicit pixel measure, e.g., "800px"}
+\item{height}{a character string, needs to be an explicit pixel measure, 
+e.g., "800px"}
 
-\item{elementId}{a character string, the html element id within which igv is created}
+\item{elementId}{a character string, the html element id within which
+igv is created}
 
 \item{displayMode}{a character string, default "SQUISHED".}
 
-\item{tracks}{a list of track specifications to be created and displayed at startup}
+\item{tracks}{a list of track specifications to be created
+and displayed at startup}
 }
 \value{
 the created widget

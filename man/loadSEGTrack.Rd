@@ -22,9 +22,10 @@ loadSegTrack(session, id, trackName, tbl, deleteTracksOfSameName = TRUE)
 nothing
 }
 \description{
-load a SEG track provided as a data.frame.  igv "displays segmented data as
- a blue-to-red heatmap where the data range is -1.5 to 1.5... The segmented data
-file format is the output of the Circular Binary Segmentation algorithm (Olshen et al., 2004)".
+load a SEG track provided as a data.frame.  igv "displays
+       segmented data as a blue-to-red heatmap where the data range is
+       -1.5 to 1.5... The segmented data file format is the output of
+       the Circular Binary Segmentation algorithm (Olshen et al., 2004)".
 }
 \examples{
 library(igvShiny)
