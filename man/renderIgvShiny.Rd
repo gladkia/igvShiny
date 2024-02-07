@@ -15,7 +15,7 @@ renderIgvShiny(expr, env = parent.frame(), quoted = FALSE)
 }
 \value{
 an output or render function that enables the use of the widget
-       within Shiny applications
+within Shiny applications
 }
 \description{
 This function is called in the server function of your shiny app

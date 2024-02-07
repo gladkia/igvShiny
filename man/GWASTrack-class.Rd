@@ -50,33 +50,35 @@ A GWASTrack object
 
 file <-
     # a local gwas file
-   system.file(package = "igvShiny", "extdata", "gwas-5k.tsv.gz") 
+    system.file(package = "igvShiny", "extdata", "gwas-5k.tsv.gz")
 tbl.gwas <- read.table(file,
-                      sep = "\t",
-                      header = TRUE,
-                      quote = "")
+                       sep = "\t",
+                       header = TRUE,
+                       quote = "")
 dim(tbl.gwas)
 track <-
-   GWASTrack(
-       "gwas 5k",
-       tbl.gwas,
-       chrom.col = 12,
-       pos.col = 13,
-       pval.col = 28
-   )
+    GWASTrack(
+        "gwas 5k",
+        tbl.gwas,
+        chrom.col = 12,
+        pos.col = 13,
+        pval.col = 28
+    )
 getUrl(track)
 
-  url <- "https://s3.amazonaws.com/igv.org.demo/gwas_sample.tsv.gz"
-  track <- GWASTrack("remote url gwas",
-                     url,
-                     chrom.col=3,
-                     pos.col=4,
-                     pval.col=10,
-                     autoscale=FALSE,
-                     minY=0,
-                     maxY=300,
-                     trackHeight=100)
-  getUrl(track)
+url <- "https://s3.amazonaws.com/igv.org.demo/gwas_sample.tsv.gz"
+track <- GWASTrack(
+    "remote url gwas",
+    url,
+    chrom.col = 3,
+    pos.col = 4,
+    pval.col = 10,
+    autoscale = FALSE,
+    minY = 0,
+    maxY = 300,
+    trackHeight = 100
+)
+getUrl(track)
 
 
 }

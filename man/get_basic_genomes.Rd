@@ -11,9 +11,9 @@ an list of short genome codes, e.g., "hg38", "dm6"
 }
 \description{
 a helper function for basic genomes, 
-       obtains the genome codes (e.g. 'hg38')
+obtains the genome codes (e.g. 'hg38')
 }
 \examples{
-  bs <- get_basic_genomes()
+bs <- get_basic_genomes()
 
 }

@@ -31,3 +31,7 @@ a vcf file representing a genomic region of interest.
 We then tell shiny about that directory, so that shiny's built-in http server
 can serve up files we write there, ultimately consumed by igv.js
 }
+\examples{
+gtd <- get_tracks_dir(env_var = "TRACKS_DIR")
+
+}

@@ -22,6 +22,6 @@ the created widget's html
 This function is called in the ui function of your shiny app
 }
 \examples{
-  io <- igvShinyOutput("igvOut")
+io <- igvShinyOutput("igvOut")
 
 }

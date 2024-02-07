@@ -22,21 +22,23 @@ a character string of format "chrom:start-end"
 }
 \description{
 zoom in or out to show the nominated region, by chromosome locus
-       or gene symbol
+or gene symbol
 
 return the current region displayed by your igv instance
 }
 \examples{
 library(igvShiny)
-demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+demo_app_file <-
+    system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
 if (interactive()) {
- shiny::runApp(demo_app_file)
+    shiny::runApp(demo_app_file)
 }
 
 library(igvShiny)
-demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+demo_app_file <-
+    system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
 if (interactive()) {
- shiny::runApp(demo_app_file)
+    shiny::runApp(demo_app_file)
 }
 
 }

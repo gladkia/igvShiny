@@ -42,28 +42,31 @@ an options list directly usable by igvApp.js, and thus igv.js
 }
 \description{
 a helper function for internal use by the igvShiny constructor, 
-       but possible also of use to those building an igvShiny app, 
-       to test their genome specification for validity
+but possible also of use to those building an igvShiny app, 
+to test their genome specification for validity
 }
 \examples{
-genomeSpec <- parseAndValidateGenomeSpec("hg38", "APOE")  # the simplest case
-base.url <- "https://igv-data.systemsbiology.net/testFiles/sarsGenome"
+genomeSpec <-
+    parseAndValidateGenomeSpec("hg38", "APOE")  # the simplest case
+base.url <-
+    "https://igv-data.systemsbiology.net/testFiles/sarsGenome"
 fasta.file <-
-   sprintf("\%s/\%s", base.url, "Sars_cov_2.ASM985889v3.dna.toplevel.fa")
+    sprintf("\%s/\%s", base.url, "Sars_cov_2.ASM985889v3.dna.toplevel.fa")
 fastaIndex.file <-
-   sprintf("\%s/\%s",
-           base.url,
-           "Sars_cov_2.ASM985889v3.dna.toplevel.fa.fai")
+    sprintf("\%s/\%s",
+            base.url,
+            "Sars_cov_2.ASM985889v3.dna.toplevel.fa.fai")
 annotation.file <-
-   sprintf("\%s/\%s", base.url, "Sars_cov_2.ASM985889v3.101.gff3")
+    sprintf("\%s/\%s", base.url, "Sars_cov_2.ASM985889v3.101.gff3")
 custom.genome.title <- "SARS-CoV-2"
-genomeOptions <- parseAndValidateGenomeSpec(genomeName=custom.genome.title,
-                                            initialLocus="all",
-                                            stockGenome=FALSE,
-                                            dataMode="http",
-                                            fasta=fasta.file,
-                                            fastaIndex=fastaIndex.file,
-                                            genomeAnnotation=annotation.file)
+genomeOptions <- parseAndValidateGenomeSpec(genomeName = custom.genome.title,
+                                            initialLocus = "all",
+                                            stockGenome = FALSE,
+                                            dataMode = "http",
+                                            fasta = fasta.file,
+                                            fastaIndex = fastaIndex.file,
+                                            genomeAnnotation = annotation.file
+)
 
 }
 \seealso{

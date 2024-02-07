@@ -23,14 +23,14 @@ nothing
 }
 \description{
 load a VCF (variant) track provided as a Bioconductor 
-       VariantAnnotation object
+VariantAnnotation object
 }
 \examples{
 library(igvShiny)
 demo_app_file <-
-   system.file(package = "igvShiny", "demos", "igvShinyDemo-withVCF.R")
+    system.file(package = "igvShiny", "demos", "igvShinyDemo-withVCF.R")
 if (interactive()) {
- shiny::runApp(demo_app_file)
+    shiny::runApp(demo_app_file)
 }
 
 }
