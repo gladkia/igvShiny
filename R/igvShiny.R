@@ -82,7 +82,7 @@ igvShiny <- function(genomeOptions,
   stopifnot(genomeOptions[["validated"]])
   
   if (!genomeOptions[["stockGenome"]] &&
-      genomeOptions[["dataMode"]] == "localFiles") {
+    genomeOptions[["dataMode"]] == "localFiles") {
     directory.name <- get_tracks_dir()
     fasta.file <- genomeOptions[["fasta"]]
     fasta.indexFile <- genomeOptions[["fastaIndex"]]
