@@ -14,8 +14,8 @@
 #' @export
 #'
 get_basic_genomes <- function() {
-    BASIC_GENOMES
-    
+  BASIC_GENOMES
+  
 } # get_basic_genomes
 #-------------------------------------------------------------------------------
 #' @title get_cas_genomes
@@ -33,8 +33,8 @@ get_basic_genomes <- function() {
 #' @export
 #'
 get_cas_genomes <- function() {
-    CAS_GENOMES
-    
+  CAS_GENOMES
+  
 } # get_cas_genomes
 #-------------------------------------------------------------------------------
 #' @title get_css_genomes
@@ -53,20 +53,20 @@ get_cas_genomes <- function() {
 #' @export
 #'
 get_css_genomes <- function(test = FALSE) {
-    if (test)
-        return(get_basic_genomes())
-    
-    current.genomes.file <-
-        "https://s3.amazonaws.com/igv.org.genomes/genomes.json"
-    
-    if (!RCurl::url.exists(current.genomes.file))
-        return(get_basic_genomes())
-    
-    current.genomes.raw <-
-        readLines(current.genomes.file, warn = FALSE, skipNul = TRUE)
-    tbl.genomes <- jsonlite::fromJSON(current.genomes.raw)
-    tbl.genomes$id
-    
+  if (test)
+    return(get_basic_genomes())
+  
+  current.genomes.file <-
+    "https://s3.amazonaws.com/igv.org.genomes/genomes.json"
+  
+  if (!RCurl::url.exists(current.genomes.file))
+    return(get_basic_genomes())
+  
+  current.genomes.raw <-
+    readLines(current.genomes.file, warn = FALSE, skipNul = TRUE)
+  tbl.genomes <- jsonlite::fromJSON(current.genomes.raw)
+  tbl.genomes$id
+  
 } # get_css_genomes
 #-------------------------------------------------------------------------------
 #' @title parseAndValidateGenomeSpec
@@ -95,114 +95,112 @@ get_css_genomes <- function(test = FALSE) {
 #'
 #' @examples
 #' genomeSpec <-
-#'     parseAndValidateGenomeSpec("hg38", "APOE")  # the simplest case
+#'   parseAndValidateGenomeSpec("hg38", "APOE")  # the simplest case
 #' base.url <-
-#'     "https://igv-data.systemsbiology.net/testFiles/sarsGenome"
+#'   "https://igv-data.systemsbiology.net/testFiles/sarsGenome"
 #' fasta.file <-
-#'     sprintf("%s/%s", base.url, "Sars_cov_2.ASM985889v3.dna.toplevel.fa")
+#'   sprintf("%s/%s", base.url, "Sars_cov_2.ASM985889v3.dna.toplevel.fa")
 #' fastaIndex.file <-
-#'     sprintf("%s/%s",
-#'             base.url,
-#'             "Sars_cov_2.ASM985889v3.dna.toplevel.fa.fai")
+#'   sprintf("%s/%s",
+#'           base.url,
+#'           "Sars_cov_2.ASM985889v3.dna.toplevel.fa.fai")
 #' annotation.file <-
-#'     sprintf("%s/%s", base.url, "Sars_cov_2.ASM985889v3.101.gff3")
+#'   sprintf("%s/%s", base.url, "Sars_cov_2.ASM985889v3.101.gff3")
 #' custom.genome.title <- "SARS-CoV-2"
-#' genomeOptions <- parseAndValidateGenomeSpec(genomeName = custom.genome.title,
-#'                                             initialLocus = "all",
-#'                                             stockGenome = FALSE,
-#'                                             dataMode = "http",
-#'                                             fasta = fasta.file,
-#'                                             fastaIndex = fastaIndex.file,
-#'                                             genomeAnnotation = annotation.file
-#' )
+#' genomeOptions <-
+#'   parseAndValidateGenomeSpec(
+#'     genomeName = custom.genome.title,
+#'     initialLocus = "all",
+#'     stockGenome = FALSE,
+#'     dataMode = "http",
+#'     fasta = fasta.file,
+#'     fastaIndex = fastaIndex.file,
+#'     genomeAnnotation = annotation.file
+#'   )
 #'
 #' @seealso [get_css_genomes()] for stock genomes we support.
 #'
 #' @return an options list directly usable by igvApp.js, and thus igv.js
 #' @export
 #'
-parseAndValidateGenomeSpec <- function(
-        genomeName,
-        initialLocus = "all",
-        stockGenome = TRUE,
-        dataMode = NA,
-        fasta = NA,
-        fastaIndex = NA,
-        genomeAnnotation = NA) {
-    options <- list()
-    options[["stockGenome"]] <- stockGenome
-    options[["dataMode"]] <- dataMode
-    options[["validated"]] <- FALSE
-        
-        
-        #--------------------------------------------------
-        # first: is this a stock genome?  if so, we need
-        # only check if the genomeName is recognized
-        #--------------------------------------------------
-        
-        if (stockGenome) {
-            if (!genomeName %in% get_cas_genomes()) {
-                supported.stock.genomes <- get_css_genomes()
-                if (!genomeName %in% supported.stock.genomes) {
-                    s.1 <-
-                        sprintf("Your genome '%s' is not currently supported",
-                                genomeName)
-                    s.2 <-
-                        sprintf(
-                            "Currently supported: %s",
-                            paste(supported.stock.genomes, collapse = ",")
-                        )
-                    msg <- sprintf("%s\n%s", s.1, s.2)
-                    stop(msg)
-                }
-            } # if not common & always available
-            options[["genomeName"]] <- genomeName
-            options[["initialLocus"]] <- initialLocus
-            options[["fasta"]] <- NA
-            options[["fastaIndex"]] <- NA
-            options[["annotation"]] <- NA
-            options[["validated"]] <- TRUE
-        }# stockGenome requested
-        
-        if (!stockGenome) {
-            stopifnot(!is.na(dataMode))
-            stopifnot(!is.na(fasta))
-            stopifnot(!is.na(fastaIndex))
-            # genomeAnnotation is optional
-            
-            recognized.modes <-
-                c("localFiles", "http")  # "direct" for an in-memory R data structure, deferred
-            if (!dataMode %in% recognized.modes) {
-                msg <-
-                    sprintf(
-                        "dataMode '%s' should be one of %s",
-                        dataMode,
-                        paste(recognized.modes, collapse = ",")
-                    )
-                stop(msg)
-            }
-        #---------------------------------------------------------------------
-        # dataMode determines how to check for the existence of each resource
-        #---------------------------------------------------------------------
-            
-            exists.function <- switch(
-                dataMode, 
-                "localFiles" = file.exists, 
-                "http" = RCurl::url.exists)
-            stopifnot(exists.function(fasta))
-            stopifnot(exists.function(fastaIndex))
-            if (!is.na(genomeAnnotation))
-                stopifnot(exists.function(genomeAnnotation))
-            
-            options[["genomeName"]]  <- genomeName
-            options[["fasta"]] <- fasta
-            options[["fastaIndex"]] <- fastaIndex
-            options[["initialLocus"]] <- initialLocus
-            options[["annotation"]] <- genomeAnnotation
-            options[["validated"]] <- TRUE
-        } # if !stockGenome
-        
-        return(options)
-        
-    } # parseAndValidateGenomeSpec
+parseAndValidateGenomeSpec <- function(genomeName,
+                                       initialLocus = "all",
+                                       stockGenome = TRUE,
+                                       dataMode = NA,
+                                       fasta = NA,
+                                       fastaIndex = NA,
+                                       genomeAnnotation = NA) {
+  options <- list()
+  options[["stockGenome"]] <- stockGenome
+  options[["dataMode"]] <- dataMode
+  options[["validated"]] <- FALSE
+  
+  
+  #--------------------------------------------------
+  # first: is this a stock genome?  if so, we need
+  # only check if the genomeName is recognized
+  #--------------------------------------------------
+  
+  if (stockGenome) {
+    if (!genomeName %in% get_cas_genomes()) {
+      supported.stock.genomes <- get_css_genomes()
+      if (!genomeName %in% supported.stock.genomes) {
+        s.1 <-
+          sprintf("Your genome '%s' is not currently supported",
+                  genomeName)
+        s.2 <-
+          sprintf("Currently supported: %s",
+                  paste(supported.stock.genomes, collapse = ","))
+        msg <- sprintf("%s\n%s", s.1, s.2)
+        stop(msg)
+      }
+    } # if not common & always available
+    options[["genomeName"]] <- genomeName
+    options[["initialLocus"]] <- initialLocus
+    options[["fasta"]] <- NA
+    options[["fastaIndex"]] <- NA
+    options[["annotation"]] <- NA
+    options[["validated"]] <- TRUE
+  }# stockGenome requested
+  
+  if (!stockGenome) {
+    stopifnot(!is.na(dataMode))
+    stopifnot(!is.na(fasta))
+    stopifnot(!is.na(fastaIndex))
+    # genomeAnnotation is optional
+    
+    recognized.modes <-
+      c("localFiles", "http")  # "direct" for an in-memory R data structure, deferred
+    if (!dataMode %in% recognized.modes) {
+      msg <-
+        sprintf(
+          "dataMode '%s' should be one of %s",
+          dataMode,
+          paste(recognized.modes, collapse = ",")
+        )
+      stop(msg)
+    }
+    #---------------------------------------------------------------------
+    # dataMode determines how to check for the existence of each resource
+    #---------------------------------------------------------------------
+    
+    exists.function <- switch(dataMode,
+                              "localFiles" = file.exists,
+                              "http" = RCurl::url.exists)
+    stopifnot(exists.function(fasta))
+    stopifnot(exists.function(fastaIndex))
+    if (!is.na(genomeAnnotation))
+      stopifnot(exists.function(genomeAnnotation))
+    
+    options[["genomeName"]]  <- genomeName
+    options[["fasta"]] <- fasta
+    options[["fastaIndex"]] <- fastaIndex
+    options[["initialLocus"]] <- initialLocus
+    options[["annotation"]] <- genomeAnnotation
+    options[["validated"]] <- TRUE
+  } # if !stockGenome
+  
+  return(options)
+  
+} # parseAndValidateGenomeSpec
 #-------------------------------------------------------------------------------

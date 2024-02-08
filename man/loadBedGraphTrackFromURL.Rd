@@ -54,9 +54,9 @@ load a bedgraph track provided as a data.frame
 \examples{
 library(igvShiny)
 demo_app_file <-
-    system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+  system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
 if (interactive()) {
-    shiny::runApp(demo_app_file)
+  shiny::runApp(demo_app_file)
 }
 
 }

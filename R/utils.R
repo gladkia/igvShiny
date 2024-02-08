@@ -19,15 +19,15 @@
 #' 
 #' @export
 get_tracks_dir <- function(env_var = "TRACKS_DIR") {
-    checkmate::assert_string(env_var)
-    default_dir <- file.path(tempdir(), "tracks")
-    tracks_dir <- Sys.getenv(env_var, default_dir)
-    
-    checkmate::assert_access(dirname(tracks_dir), "rw")
-    
-    if (!dir.exists(tracks_dir)) {
-        dir.create(tracks_dir, recursive = TRUE)
-    }
-    tracks_dir
+  checkmate::assert_string(env_var)
+  default_dir <- file.path(tempdir(), "tracks")
+  tracks_dir <- Sys.getenv(env_var, default_dir)
+  
+  checkmate::assert_access(dirname(tracks_dir), "rw")
+  
+  if (!dir.exists(tracks_dir)) {
+    dir.create(tracks_dir, recursive = TRUE)
+  }
+  tracks_dir
 } # get_tracks_dir
 
