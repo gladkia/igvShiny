@@ -1,26 +1,3 @@
-#' @import BiocGenerics
-#' @import GenomicRanges
-#' @import GenomeInfoDbData
-#' @import shiny
-#' @importFrom randomcoloR distinctColorPalette
-#' @import httr
-#' @importFrom htmlwidgets createWidget shinyWidgetOutput shinyRenderWidget
-#'
-#' @name igvShiny
-#' @rdname igvShiny
-
-randomColors <- randomcoloR::distinctColorPalette(24)
-#-------------------------------------------------------------------------------
-verbose <- FALSE
-log <- function(...) {
-  if (verbose)
-    print(noquote(sprintf(...)))
-}
-
-#-------------------------------------------------------------------------------
-state <- new.env(parent = emptyenv())
-state[["userAddedTracks"]] <- list()
-
 # THE FOLLOWING WAS MOVED OUT OF doc section for igvShiny
 # param options a list, with required elements "genomeName" and "initialLocus".
 #   Local or remote custom genomes can be used by setting "genomeName" to 
@@ -35,6 +12,15 @@ state[["userAddedTracks"]] <- list()
 #'
 #' @rdname igvShiny
 #' @aliases igvShiny
+#' 
+#' @import BiocGenerics
+#' @import GenomicRanges
+#' @import GenomeInfoDbData
+#' @import shiny
+#' @importFrom randomcoloR distinctColorPalette
+#' @import httr
+#' @importFrom htmlwidgets createWidget shinyWidgetOutput shinyRenderWidget
+#' @importFrom futile.logger flog.debug
 #'
 #' @param genomeOptions a list with these fields: genomeName, initialLocus, 
 #' annotation, dataMode, fasta, fastaIndex, stockGenome, validated
@@ -108,9 +94,8 @@ igvShiny <- function(genomeOptions,
   
   state[["requestedHeight"]] <- height
   
-  log("--- ~/github/igvShiny/R/igvShiny ctor")
-  
-  log("  initial track count: %d", length(tracks))
+  flog.debug("---igvShiny ctor")
+  flog.debug(sprintf("--initial track count: %d", length(tracks)))
   
   #send namespace info in case widget is being called from a module
   session <- shiny::getDefaultReactiveDomain()
@@ -154,7 +139,7 @@ igvShinyOutput <- function(outputId,
                            width = "100%",
                            height = NULL) {
   if ("requestedHeight" %in% ls(state)) {
-    log("setting height from state")
+    flog.debug("setting height from state")
     height <- state[["requestedHeight"]]
   }
   
@@ -192,7 +177,7 @@ renderIgvShiny <- function(expr,
                                       igvShinyOutput,
                                       env,
                                       quoted = TRUE)
-  log("--- leaving igvShiny.R, renderIgvShiny")
+  flog.debug("--- leaving igvShiny.R, renderIgvShiny")
   return(x)
   
 }
@@ -272,10 +257,10 @@ getGenomicRegion <- function(session, id) {
 #' @export
 removeTracksByName <- function(session, id, trackNames) {
   message <- list(trackNames = trackNames, elementID = id)
-  log(
-    "--- igvShiny sending message to js, removeTracksByName, %s",
-    paste(trackNames, sep = ",")
-  )
+  lmsg <-
+    sprintf("--- igvShiny sending message to js, removeTracksByName, %s",
+            toString(trackNames))
+  flog.debug(lmsg)
   session$sendCustomMessage("removeTracksByName", message)
   
 } # removeTracksByName
@@ -356,9 +341,9 @@ loadBedTrack <-
         randomColors[sample(seq_len(length(randomColors)), 1)]
     
     if (!quiet) {
-      log("--- igvShiny::loadBedTrack")
+      flog.debug("--- igvShiny::loadBedTrack")
       
-      log("rows: %d  cols: %d", nrow(tbl), ncol(tbl))
+      flog.debug(sprintf("rows: %d  cols: %d", nrow(tbl), ncol(tbl)))
     }
     
     if (deleteTracksOfSameName) {
@@ -373,11 +358,12 @@ loadBedTrack <-
       colnames(tbl)[1] <- "chr"
     
     if (all(colnames(tbl)[c(1, 2, 3)] != c("chr", "start", "end"))) {
-      log("found these colnames: %s",
-          paste(colnames(tbl), collapse = ", "))
-      log("            required: %s",
-          paste(c("chr", "start", "end"),
-                collapse = ", "))
+      lmsg <- sprintf("found these colnames: %s",
+                      toString(colnames(tbl)))
+      lmsg2 <- sprintf("            required: %s",
+                       toString(c("chr", "start", "end")))
+      flog.debug(lmsg)
+      flog.debug(lmsg2)
       stop("improper columns in bed track data.frame")
     }
     
@@ -397,11 +383,12 @@ loadBedTrack <-
       quote = FALSE,
       file = temp.file
     )
-    log("--- igvShiny.R, loadBedTrack wrote %d,%d to %s",
-        nrow(tbl),
-        ncol(tbl),
-        temp.file)
-    log("exists? %s", file.exists(temp.file))
+    lmsg <- sprintf("--- igvShiny.R, loadBedTrack wrote %d,%d to %s",
+                    nrow(tbl),
+                    ncol(tbl),
+                    temp.file)
+    flog.debug(lmsg)
+    flog.debug(sprintf("exists? %s", file.exists(temp.file)))
     msg.to.igv <- list(
       elementID = id,
       trackName = trackName,
@@ -468,17 +455,19 @@ loadBedGraphTrackFromURL <-
         randomColors[sample(seq_len(length(randomColors)), 1)]
     
     if (!quiet) {
-      log("--- igvShiny::loadBedGraphTrackFromURL: %s",
-          trackName)
+      lmsg <- sprintf("--- igvShiny::loadBedGraphTrackFromURL: %s",
+                      trackName)
+      flog.debug(lmsg)
       
     }
     
     if (deleteTracksOfSameName) {
-      log(
+      lmsg <- sprintf(
         "--- igvShiny.R loadBedGraphTrackFromURL, calling removeTracksByName: %s, %s",
         id,
         trackName
       )
+      flog.debug(lmsg)
       removeTracksByName(session, id, trackName)
       
     }
@@ -500,11 +489,11 @@ loadBedGraphTrackFromURL <-
         autoscaleGroup = autoscaleGroup
       )  # -1 means no grouping
     
-    log("--- igvShiny.R loadBedGraphTrackFromURL, msg.to.igv: ")
-    print(msg.to.igv)
-    log("--- igvShiny.R loadBedGraphTrackFromURL, sendingCustomMessage")
+    flog.debug("--- igvShiny.R loadBedGraphTrackFromURL, msg.to.igv: ")
+    futile.logger::flog.info(jsonlite::toJSON(msg.to.igv))
+    flog.debug("--- igvShiny.R loadBedGraphTrackFromURL, sendingCustomMessage")
     session$sendCustomMessage("loadBedGraphTrackFromURL", msg.to.igv)
-    log("--- igvShiny.R loadBedGraphTrackFromURL, after sendingCustomMessage")
+    flog.debug("--- igvShiny.R loadBedGraphTrackFromURL, after sendingCustomMessage")
     
   } # loadBedGraphTrackFromURL
 
@@ -563,13 +552,13 @@ loadBedGraphTrack <-
         randomColors[sample(seq_len(length(randomColors)), 1)]
     
     if (!quiet) {
-      log("--- igvShiny::loadGenomeAnnotationTrack: %s",
-          trackName)
-      log("    %d rows, %d columns", nrow(tbl), ncol(tbl))
+      flog.debug("--- igvShiny::loadGenomeAnnotationTrack: %s",
+                 trackName)
+      flog.debug("    %d rows, %d columns", nrow(tbl), ncol(tbl))
     }
     
     if (deleteTracksOfSameName) {
-      log(
+      flog.debug(
         "--- igvShiny.R loadBedGraphTrack, calling removeTracksByName: %s, %s",
         id,
         trackName
@@ -587,12 +576,12 @@ loadBedGraphTrack <-
     colnames(tbl)[4] <- "value"
     
     if (all(colnames(tbl)[c(1, 2, 3)] != c("chr", "start", "end"))) {
-      log("found these colnames: %s",
-          paste(colnames(tbl)[c(1, 2, 3)],
-                collapse = ", "))
-      log("            required: %s",
-          paste(c("chr", "start", "end"),
-                collapse = ", "))
+      flog.debug("found these colnames: %s",
+                 paste(colnames(tbl)[c(1, 2, 3)],
+                       collapse = ", "))
+      flog.debug("            required: %s",
+                 paste(c("chr", "start", "end"),
+                       collapse = ", "))
       stop("improper columns in bed track data.frame")
     }
     
@@ -655,9 +644,9 @@ loadSegTrack <-
            trackName,
            tbl,
            deleteTracksOfSameName = TRUE) {
-    log("--- entering loadSegTrack %s with %d rows",
-        trackName,
-        nrow(tbl))
+    flog.debug("--- entering loadSegTrack %s with %d rows",
+               trackName,
+               nrow(tbl))
     
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
@@ -673,7 +662,7 @@ loadSegTrack <-
         trackName = trackName,
         tbl = jsonlite::toJSON(tbl)
       )
-    log("about to send loadSegTrack message")
+    flog.debug("about to send loadSegTrack message")
     session$sendCustomMessage("loadSegTrack", message)
     
   } # loadSegTrack
@@ -715,7 +704,7 @@ loadVcfTrack <- function(session,
   if (!requireNamespace("VariantAnnotation"))
     stop("install VariantAnnotation to use this function")
   
-  log("======== igvShiny.R, loadVcfTrack")
+  flog.debug("======== igvShiny.R, loadVcfTrack")
   if (deleteTracksOfSameName) {
     removeTracksByName(session, id, trackName)
     
@@ -724,11 +713,13 @@ loadVcfTrack <- function(session,
   state[["userAddedTracks"]] <-
     unique(c(state[["userAddedTracks"]], trackName))
   path <- file.path(get_tracks_dir(), "tmp.vcf")
-  log("igvShiny::loadVcfTrack, about to write to file '%s'", path)
+  lmsg <- sprintf("igvShiny::loadVcfTrack, about to write to file '%s'", path)
+  flog.debug(lmsg)
   VariantAnnotation::writeVcf(vcfData, path)
-  log("igvShiny::loadVcfTrack, file.exists(%s)? %s",
-      path,
-      file.exists(path))
+  lmsg2 <- sprintf("igvShiny::loadVcfTrack, file.exists(%s)? %s",
+                   path,
+                   file.exists(path))
+  flog.debug(lmsg2)
   
   message <-
     list(
@@ -777,7 +768,7 @@ loadGwasTrack <- function(session,
                           ymin = 0,
                           ymax = 35,
                           deleteTracksOfSameName = TRUE) {
-  log("======== entering igvShiny::loadGwasTrack")
+  flog.debug("======== entering igvShiny::loadGwasTrack")
   
   if (deleteTracksOfSameName) {
     removeTracksByName(session, id, trackName)
@@ -796,13 +787,14 @@ loadGwasTrack <- function(session,
     quote = FALSE,
     file = temp.file
   )
-  log(
+  lmsg <- sprintf(
     "--- igvShiny.R, loadGwasTrack wrote %d,%d to %s",
     nrow(tbl.gwas),
     ncol(tbl.gwas),
     temp.file
   )
-  log("exists? %s", file.exists(temp.file))
+  flog.debug(lmsg)
+  flog.debug(sprintf("exists? %s", file.exists(temp.file)))
   message <-
     list(
       elementID = id,
@@ -876,7 +868,7 @@ loadBamTrackFromURL <-
         displayMode = displayMode,
         showAllBases = showAllBases
       )
-    log("--- about to send message, loadBamTrack")
+    flog.debug("--- about to send message, loadBamTrack")
     session$sendCustomMessage("loadBamTrackFromURL", message)
     
   } # loadBamTrackFromURL
@@ -926,8 +918,10 @@ loadBamTrackFromLocalData <-
     t_dir <- get_tracks_dir()
     fpath <- tempfile(tmpdir = t_dir, fileext = ".bam")
     
-    log("igvShiny::load bam from local data, about to write to file '%s'",
-        file.path)
+    lmsg <-
+      sprintf("igvShiny::load bam from local data, about to write to file '%s'",
+              file.path)
+    flog.debug(lmsg)
     rtracklayer::export(data, fpath, format = "BAM")
     
     state[["userAddedTracks"]] <-
@@ -1127,7 +1121,7 @@ loadGFF3TrackFromLocalData <-
            trackHeight = 50,
            visibilityWindow,
            deleteTracksOfSameName = TRUE) {
-    log("--- entering loadGFF3TrackFromLocalDAta")
+    flog.debug("--- entering loadGFF3TrackFromLocalDAta")
     
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
@@ -1146,14 +1140,15 @@ loadGFF3TrackFromLocalData <-
       quote = FALSE,
       file = gff3.filePath
     )
-    log(
+    lmsg <- sprintf(
       "--- igvShiny.R, loadGFF3TrackFromLocalData wrote %d,%d to %s",
       nrow(tbl.gff3),
       ncol(tbl.gff3),
       gff3.filePath
     )
+    flog.debug(lmsg)
     
-    log("exists? %s", file.exists(gff3.filePath))
+    flog.debug(sprintf("exists? %s", file.exists(gff3.filePath)))
     
     message <-
       list(
