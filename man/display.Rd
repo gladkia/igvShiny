@@ -23,14 +23,11 @@ nothing
 display the already constructed and configured track
 }
 \examples{
-track <-
-  GWASTrack(
-    "gwas 5k",
-    tbl.gwas,
-    chrom.col = 12,
-    pos.col = 13,
-    pval.col = 28
-  )
-display(track)
+library(igvShiny)
+demo_app_file <-
+  system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+if (interactive()) {
+  shiny::runApp(demo_app_file)
+}
 
 }
