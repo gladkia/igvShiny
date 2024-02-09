@@ -8,5 +8,4 @@
 - make the first Bioconductor release
 
 
-## 0.99.2
 - reformatted code
