@@ -169,8 +169,8 @@ parseAndValidateGenomeSpec <- function(genomeName,
     stopifnot(!is.na(fastaIndex))
     # genomeAnnotation is optional
     
-    recognized.modes <-
-      c("localFiles", "http")  # "direct" for an in-memory R data structure, deferred
+    # "direct" for an in-memory R data structure, deferred
+    recognized.modes <- c("localFiles", "http")  
     if (!dataMode %in% recognized.modes) {
       msg <-
         sprintf(

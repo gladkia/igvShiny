@@ -60,7 +60,6 @@ setGeneric("getUrl",
 #' @return A GWASTrack object
 #'
 #' @examples
-#' 
 #' file <-
 #'   # a local gwas file
 #'   system.file(package = "igvShiny", "extdata", "gwas-5k.tsv.gz")
@@ -162,6 +161,17 @@ GWASTrack <- function(trackName,
 #' @param session a Shiny session object
 #' @param id character the identifier of the target igv object in the browser
 #' @param deleteTracksOfSameName logical to avoid duplications in track names
+#' 
+#' @examples
+#' track <-
+#'   GWASTrack(
+#'     "gwas 5k",
+#'     tbl.gwas,
+#'     chrom.col = 12,
+#'     pos.col = 13,
+#'     pval.col = 28
+#'   )
+#' display(track)
 #'
 #' @return nothing
 #'
@@ -217,6 +227,17 @@ setMethod("display",
 #' @aliases getUrl
 #'
 #' @param obj An object of class GWASTrack
+#' 
+#' @examples
+#' track <-
+#'   GWASTrack(
+#'     "gwas 5k",
+#'     tbl.gwas,
+#'     chrom.col = 12,
+#'     pos.col = 13,
+#'     pval.col = 28
+#'   )
+#' getUrl(track)
 #'
 #' @return character
 #'

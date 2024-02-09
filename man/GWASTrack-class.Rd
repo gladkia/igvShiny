@@ -47,7 +47,6 @@ A GWASTrack object
 \code{GWASTrack} creates an \code{IGV} manhattan track from GWAS data
 }
 \examples{
-
 file <-
   # a local gwas file
   system.file(package = "igvShiny", "extdata", "gwas-5k.tsv.gz")

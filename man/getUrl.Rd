@@ -16,3 +16,15 @@ character
 \description{
 the url of the gwas table
 }
+\examples{
+track <-
+  GWASTrack(
+    "gwas 5k",
+    tbl.gwas,
+    chrom.col = 12,
+    pos.col = 13,
+    pval.col = 28
+  )
+getUrl(track)
+
+}

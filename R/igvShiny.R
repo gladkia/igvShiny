@@ -162,6 +162,14 @@ igvShinyOutput <- function(outputId,
 #' @param env  the environment in which to evaluate expr
 #' @param quoted logical flag indicating if expr a quoted expression 
 #' 
+#' @examples
+#' library(igvShiny)
+#' demo_app_file <-
+#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#' if (interactive()) {
+#'   shiny::runApp(demo_app_file)
+#' }
+#'
 #' @return an output or render function that enables the use of the widget
 #' within Shiny applications
 #'
@@ -250,6 +258,14 @@ getGenomicRegion <- function(session, id) {
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
 #' @param trackNames a vector of character strings
+
+#' @examples
+#' library(igvShiny)
+#' demo_app_file <-
+#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#' if (interactive()) {
+#'   shiny::runApp(demo_app_file)
+#' }
 #'
 #' @return
 #' nothing
@@ -463,7 +479,7 @@ loadBedGraphTrackFromURL <-
     
     if (deleteTracksOfSameName) {
       lmsg <- sprintf(
-        "--- igvShiny.R loadBedGraphTrackFromURL, calling removeTracksByName: %s, %s",
+        "--- loadBedGraphTrackFromURL, calling removeTracksByName: %s, %s",
         id,
         trackName
       )
@@ -493,7 +509,7 @@ loadBedGraphTrackFromURL <-
     futile.logger::flog.info(jsonlite::toJSON(msg.to.igv))
     flog.debug("--- igvShiny.R loadBedGraphTrackFromURL, sendingCustomMessage")
     session$sendCustomMessage("loadBedGraphTrackFromURL", msg.to.igv)
-    flog.debug("--- igvShiny.R loadBedGraphTrackFromURL, after sendingCustomMessage")
+    flog.debug("--- loadBedGraphTrackFromURL, after sendingCustomMessage")
     
   } # loadBedGraphTrackFromURL
 

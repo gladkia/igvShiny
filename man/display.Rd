@@ -22,3 +22,15 @@ nothing
 \description{
 display the already constructed and configured track
 }
+\examples{
+track <-
+  GWASTrack(
+    "gwas 5k",
+    tbl.gwas,
+    chrom.col = 12,
+    pos.col = 13,
+    pval.col = 28
+  )
+display(track)
+
+}
