@@ -226,6 +226,13 @@ setMethod("display",
 #' @param obj An object of class GWASTrack
 #' 
 #' @examples
+#' file <-
+#'   # a local gwas file
+#'   system.file(package = "igvShiny", "extdata", "gwas-5k.tsv.gz")
+#' tbl.gwas <- read.table(file,
+#'                        sep = "\t",
+#'                        header = TRUE,
+#'                        quote = "")
 #' track <-
 #'   GWASTrack(
 #'     "gwas 5k",
