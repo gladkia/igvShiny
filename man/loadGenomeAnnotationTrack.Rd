@@ -29,7 +29,8 @@ loadBedGraphTrack(
 
 \item{tbl}{data.frame, with at least "chrom" "start" "end" "score" columns}
 
-\item{color}{character string, a legal CSS color, or "random", "gray" by default}
+\item{color}{character string, a legal CSS color, or "random", 
+"gray" by default}
 
 \item{trackHeight}{an integer, 30 (pixels) by default}
 
@@ -53,9 +54,10 @@ load a genome annotation track provided as a data.frame
 }
 \examples{
 library(igvShiny)
-demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+demo_app_file <-
+  system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
 if (interactive()) {
- shiny::runApp(demo_app_file)
+  shiny::runApp(demo_app_file)
 }
 
 }

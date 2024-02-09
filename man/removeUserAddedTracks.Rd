@@ -15,14 +15,15 @@ removeUserAddedTracks(session, id)
 nothing
 }
 \description{
-remove only those tracks explicitly added by your app.  stock tracks (i.e.,
-Refseq Genes) remain
+remove only those tracks explicitly added by your app.
+stock tracks (i.e., #' Refseq Genes) remain
 }
 \examples{
 library(igvShiny)
-demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+demo_app_file <-
+  system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
 if (interactive()) {
- shiny::runApp(demo_app_file)
+  shiny::runApp(demo_app_file)
 }
 
 }

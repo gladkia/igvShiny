@@ -14,27 +14,31 @@ getGenomicRegion(session, id)
 
 \item{id}{character string, the html element id of this widget instance}
 
-\item{region}{a character string, either e.g. "chr5:92,221,640-92,236,523" or "MEF2C"}
+\item{region}{a character string, either e.g. "chr5:92,221,640-92,236,523" 
+or "MEF2C"}
 }
 \value{
 a character string of format "chrom:start-end"
 }
 \description{
-zoom in or out to show the nominated region, by chromosome locus or gene symbol
+zoom in or out to show the nominated region, by chromosome locus
+or gene symbol
 
 return the current region displayed by your igv instance
 }
 \examples{
 library(igvShiny)
-demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+demo_app_file <-
+  system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
 if (interactive()) {
- shiny::runApp(demo_app_file)
+  shiny::runApp(demo_app_file)
 }
 
 library(igvShiny)
-demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+demo_app_file <-
+  system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
 if (interactive()) {
- shiny::runApp(demo_app_file)
+  shiny::runApp(demo_app_file)
 }
 
 }

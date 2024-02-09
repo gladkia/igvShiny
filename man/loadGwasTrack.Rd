@@ -2,7 +2,8 @@
 % Please edit documentation in R/igvShiny.R
 \name{loadGwasTrack}
 \alias{loadGwasTrack}
-\title{load a GWAS (genome-wide association study)  track provided as a data.frame}
+\title{load a GWAS (genome-wide association study) track 
+provided as a data.frame}
 \usage{
 loadGwasTrack(
   session,
@@ -33,13 +34,15 @@ loadGwasTrack(
 nothing
 }
 \description{
-load a GWAS (genome-wide association study)  track provided as a data.frame
+load a GWAS (genome-wide association study) track
+provided as a data.frame
 }
 \examples{
 library(igvShiny)
-demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+demo_app_file <-
+  system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
 if (interactive()) {
- shiny::runApp(demo_app_file)
+  shiny::runApp(demo_app_file)
 }
 
 }

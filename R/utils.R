@@ -14,9 +14,11 @@
 #'
 #' @return string with the path to the tracks directory.
 #' 
+#' @examples
+#' gtd <- get_tracks_dir(env_var = "TRACKS_DIR")
+#' 
 #' @export
 get_tracks_dir <- function(env_var = "TRACKS_DIR") {
-  
   checkmate::assert_string(env_var)
   default_dir <- file.path(tempdir(), "tracks")
   tracks_dir <- Sys.getenv(env_var, default_dir)

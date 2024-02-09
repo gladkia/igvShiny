@@ -20,9 +20,11 @@ loadCramTrackFromURL(
 
 \item{trackName}{character string}
 
-\item{cramURL}{character string http url for the bam file, typically very large}
+\item{cramURL}{character string http url for the bam file, 
+typically very large}
 
-\item{indexURL}{character string http url for the bam file index, typically small}
+\item{indexURL}{character string http url for the bam file index, 
+typically small}
 
 \item{deleteTracksOfSameName}{logical, default TRUE}
 }
@@ -34,9 +36,10 @@ load a remote cram track
 }
 \examples{
 library(igvShiny)
-demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+demo_app_file <-
+  system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
 if (interactive()) {
- shiny::runApp(demo_app_file)
+  shiny::runApp(demo_app_file)
 }
 
 }

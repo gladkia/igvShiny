@@ -10,3 +10,8 @@ BASIC_GENOMES <-
     "custom",
     "dm6",
     "sacCer3")
+
+randomColors <- randomcoloR::distinctColorPalette(24)
+
+state <- new.env(parent = emptyenv())
+state[["userAddedTracks"]] <- list()

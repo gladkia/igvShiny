@@ -24,7 +24,7 @@ loadBamTrackFromLocalData(
 
 \item{deleteTracksOfSameName}{logical, default TRUE}
 
-\item{displayMode}{character string, possible values are "EXPANDED" (default),
+\item{displayMode}{character string, possible values are "EXPANDED"(default),
 "SQUISHED" or "COLLAPSED"}
 }
 \value{
@@ -35,9 +35,10 @@ load GenomicAlignments data  as an igv.js alignment track
 }
 \examples{
 library(igvShiny)
-demo_app_file <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+demo_app_file <-
+  system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
 if (interactive()) {
- shiny::runApp(demo_app_file)
+  shiny::runApp(demo_app_file)
 }
 
 }
