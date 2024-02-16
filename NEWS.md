@@ -1,3 +1,6 @@
+## 0.99.3 (2024-02-16)
+- fix bug in function loadBamTrackFromLocalData
+
 ## 0.99.2 (2024-02-09)
 - fix some Bioconductor NOTEs
 

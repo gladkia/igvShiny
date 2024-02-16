@@ -930,13 +930,13 @@ loadBamTrackFromLocalData <-
       removeTracksByName(session, id, trackName)
       
     }
-    
+
     t_dir <- get_tracks_dir()
     fpath <- tempfile(tmpdir = t_dir, fileext = ".bam")
     
     lmsg <-
       sprintf("igvShiny::load bam from local data, about to write to file '%s'",
-              file.path)
+              fpath)
     flog.debug(lmsg)
     rtracklayer::export(data, fpath, format = "BAM")
     
