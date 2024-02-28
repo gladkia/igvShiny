@@ -1,0 +1,18 @@
+url: https://gladkia.github.io/igvShiny/
+template:
+  bootstrap: 5
+
+reference:
+- title: igvShiny
+- contents:
+  - has_keyword("igvShiny")
+- title: Track loaders
+- contents:
+  - has_keyword("track_loaders")
+- title: GWASTrack class
+- contents:
+  - has_keyword("GWASTrack_class")
+- title: Utils
+- contents:
+  - has_keyword("utils")
+

@@ -29,3 +29,4 @@ if (interactive()) {
 }
 
 }
+\keyword{igvShiny}

@@ -44,6 +44,7 @@
 #' 
 #' @return the created widget
 #'
+#' @keywords igvShiny
 #' @export
 #'
 igvShiny <- function(genomeOptions,
@@ -133,6 +134,7 @@ igvShiny <- function(genomeOptions,
 #' @examples
 #' io <- igvShinyOutput("igvOut")
 #'
+#' @keywords igvShiny
 #' @export
 #'
 igvShinyOutput <- function(outputId,
@@ -173,6 +175,7 @@ igvShinyOutput <- function(outputId,
 #' @return an output or render function that enables the use of the widget
 #' within Shiny applications
 #'
+#' @keywords igvShiny
 #' @export
 renderIgvShiny <- function(expr,
                            env = parent.frame(),
@@ -212,6 +215,7 @@ renderIgvShiny <- function(expr,
 #'   shiny::runApp(demo_app_file)
 #' }
 #'
+#' @keywords igvShiny
 #' @export
 showGenomicRegion <- function(session, id, region) {
   message <- list(region = region, elementID = id)
@@ -240,6 +244,7 @@ showGenomicRegion <- function(session, id, region) {
 #' @return
 #' a character string of format "chrom:start-end"
 #'
+#' @keywords igvShiny
 #' @export
 
 getGenomicRegion <- function(session, id) {
@@ -270,6 +275,7 @@ getGenomicRegion <- function(session, id) {
 #' @return
 #' nothing
 #'
+#' @keywords igvShiny
 #' @export
 removeTracksByName <- function(session, id, trackNames) {
   message <- list(trackNames = trackNames, elementID = id)
@@ -304,6 +310,7 @@ removeTracksByName <- function(session, id, trackNames) {
 #' @return
 #' nothing
 #'
+#' @keywords igvShiny
 #' @export
 
 removeUserAddedTracks <- function(session, id) {
@@ -341,6 +348,7 @@ removeUserAddedTracks <- function(session, id) {
 #' @return
 #' nothing
 #'
+#' @keywords track_loaders
 #' @export
 
 loadBedTrack <-
@@ -449,6 +457,7 @@ loadBedTrack <-
 #' @return
 #' nothing
 #'
+#' @keywords track_loaders
 #' @export
 
 loadBedGraphTrackFromURL <-
@@ -546,6 +555,7 @@ loadBedGraphTrackFromURL <-
 #' @return
 #' nothing
 #'
+#' @keywords track_loaders
 #' @export
 
 loadBedGraphTrack <-
@@ -653,6 +663,7 @@ loadBedGraphTrack <-
 #' @return
 #' nothing
 #'
+#' @keywords track_loaders
 #' @export
 loadSegTrack <-
   function(session,
@@ -710,6 +721,7 @@ loadSegTrack <-
 #' @return
 #' nothing
 #'
+#' @keywords track_loaders
 #' @export
 
 loadVcfTrack <- function(session,
@@ -776,6 +788,7 @@ loadVcfTrack <- function(session,
 #' @return
 #' nothing
 #'
+#' @keywords track_loaders
 #' @export
 loadGwasTrack <- function(session,
                           id,
@@ -857,6 +870,7 @@ loadGwasTrack <- function(session,
 #' @return
 #' nothing
 #'
+#' @keywords track_loaders
 #' @export
 
 loadBamTrackFromURL <-
@@ -915,6 +929,7 @@ loadBamTrackFromURL <-
 #' @return
 #' nothing
 #'
+#' @keywords track_loaders
 #' @export
 
 loadBamTrackFromLocalData <-
@@ -984,6 +999,7 @@ loadBamTrackFromLocalData <-
 #' @return
 #' nothing
 #'
+#' @keywords track_loaders
 #' @export
 
 loadCramTrackFromURL <-
@@ -1050,6 +1066,7 @@ loadCramTrackFromURL <-
 #' @return
 #' nothing
 #'
+#' @keywords track_loaders
 #' @export
 
 loadGFF3TrackFromURL <-
@@ -1125,6 +1142,7 @@ loadGFF3TrackFromURL <-
 #' @return
 #' nothing
 #'
+#' @keywords track_loaders
 #' @export
 
 loadGFF3TrackFromLocalData <-

@@ -35,3 +35,4 @@ can serve up files we write there, ultimately consumed by igv.js
 gtd <- get_tracks_dir(env_var = "TRACKS_DIR")
 
 }
+\keyword{utils}

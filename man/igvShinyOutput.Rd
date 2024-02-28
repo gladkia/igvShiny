@@ -25,3 +25,4 @@ This function is called in the ui function of your shiny app
 io <- igvShinyOutput("igvOut")
 
 }
+\keyword{igvShiny}

@@ -81,3 +81,4 @@ getUrl(track)
 
 
 }
+\keyword{GWASTrack_class}

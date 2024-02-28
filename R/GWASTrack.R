@@ -2,6 +2,7 @@
 #' @rdname GWASTrack-class
 #' @importFrom methods is new
 #' @importFrom utils write.table
+#' @keywords GWASTrack_class
 
 #' @exportClass GWASTrack
 
@@ -93,6 +94,7 @@ setGeneric("getUrl",
 #' getUrl(track)
 #'
 #'
+#' @keywords GWASTrack_class
 #' @export
 #'
 
@@ -172,6 +174,7 @@ GWASTrack <- function(trackName,
 #' 
 #' @return nothing
 #'
+#' @keywords GWASTrack_class
 #' @export
 #'
 setMethod("display",
@@ -245,6 +248,7 @@ setMethod("display",
 #'
 #' @return character
 #'
+#' @keywords GWASTrack_class
 #' @export
 #'
 setMethod("getUrl",

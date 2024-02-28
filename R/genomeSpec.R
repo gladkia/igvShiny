@@ -11,6 +11,7 @@
 #' @examples
 #' bs <- get_basic_genomes()
 #'
+#' @keywords utils
 #' @export
 #'
 get_basic_genomes <- function() {
@@ -30,6 +31,7 @@ get_basic_genomes <- function() {
 #' @examples
 #' cas <- get_cas_genomes()
 #'
+#' @keywords utils
 #' @export
 #'
 get_cas_genomes <- function() {
@@ -50,6 +52,7 @@ get_cas_genomes <- function() {
 #' @examples
 #' css <- get_css_genomes(test = TRUE)
 #'
+#' @keywords utils
 #' @export
 #'
 get_css_genomes <- function(test = FALSE) {
@@ -121,6 +124,7 @@ get_css_genomes <- function(test = FALSE) {
 #' @seealso [get_css_genomes()] for stock genomes we support.
 #'
 #' @return an options list directly usable by igvApp.js, and thus igv.js
+#' @keywords igvShiny
 #' @export
 #'
 parseAndValidateGenomeSpec <- function(genomeName,

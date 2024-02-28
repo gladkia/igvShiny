@@ -20,3 +20,4 @@ obtains the genome codes (e.g. 'hg38') supported by igv.js
 css <- get_css_genomes(test = TRUE)
 
 }
+\keyword{utils}
