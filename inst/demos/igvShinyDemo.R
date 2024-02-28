@@ -146,7 +146,7 @@ server = function(input, output, session) {
     printf("---- addBamLocalFileButton")
     showGenomicRegion(session, id="igvShiny_0", "chr21:10,397,614-10,423,341")
     bamFile <- system.file(package="igvShiny", "extdata", "tumor.bam")
-    x <- readGAlignments(bamFile)
+    x <- readGAlignments(bamFile, param = Rsamtools::ScanBamParam(what="seq"))
     loadBamTrackFromLocalData(session, id="igvShiny_0", trackName="tumor.bam", data=x)
   })
   
