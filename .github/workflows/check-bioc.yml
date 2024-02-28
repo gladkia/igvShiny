@@ -41,7 +41,7 @@ env:
   cache-version: 'cache-v1'
   run_docker: 'false'
   pkg_name: 'igvShiny'
-  gref_pkgdown: 'refs/heads/ci_test_pkgdown'
+  gref_pkgdown: 'refs/heads/test_ci_pkgdown'
 
 jobs:
   build-check:
