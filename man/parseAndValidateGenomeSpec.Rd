@@ -74,3 +74,4 @@ genomeOptions <-
 \seealso{
 [get_css_genomes()] for stock genomes we support.
 }
+\keyword{igvShiny}

@@ -17,6 +17,7 @@
 #' @examples
 #' gtd <- get_tracks_dir(env_var = "TRACKS_DIR")
 #' 
+#' @keywords utils
 #' @export
 get_tracks_dir <- function(env_var = "TRACKS_DIR") {
   checkmate::assert_string(env_var)

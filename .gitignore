@@ -32,4 +32,5 @@ vignettes/*.pdf
 .DS_Store
 # doc
 /doc/
+/docs/
 /Meta/

@@ -17,3 +17,4 @@ obtains the genome codes (e.g. 'hg38')
 cas <- get_cas_genomes()
 
 }
+\keyword{utils}

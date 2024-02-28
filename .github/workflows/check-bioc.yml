@@ -36,11 +36,12 @@ name: R-CMD-check-bioc
 env:
   has_testthat: 'false'
   run_covr: 'false'
-  run_pkgdown: 'false'
+  run_pkgdown: 'true'
   has_RUnit: 'true'
   cache-version: 'cache-v1'
   run_docker: 'false'
   pkg_name: 'igvShiny'
+  gref_pkgdown: 'refs/heads/master'
 
 jobs:
   build-check:
@@ -207,7 +208,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Install pkgdown
-        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: github.ref == env.gref_pkgdown && env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: |
           remotes::install_cran("pkgdown")
         shell: Rscript {0}
@@ -277,11 +278,11 @@ jobs:
         shell: Rscript {0}
 
       - name: Install package
-        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: github.ref == env.gref_pkgdown && env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: R CMD INSTALL .
 
       - name: Build pkgdown site
-        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: github.ref == env.gref_pkgdown && env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
         ## Note that you need to run pkgdown::deploy_to_branch(new_process = FALSE)
@@ -290,17 +291,18 @@ jobs:
         ## makes the git history recognizable by pkgdown.
 
       - name: Install deploy dependencies
-        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: github.ref == env.gref_pkgdown && env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: |
           apt-get update && apt-get -y install rsync
 
       - name: Deploy pkgdown site to GitHub pages 🚀
-        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
-        uses: JamesIves/github-pages-deploy-action@releases/v4
+        if: github.ref == env.gref_pkgdown && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        uses: JamesIves/github-pages-deploy-action@v4.5.0
         with:
-          clean: false
-          branch: gh-pages
+          clean: true
+          branch: pages
           folder: docs
+          target-folder: docs
 
       - name: Upload check results
         if: failure()

@@ -31,3 +31,4 @@ if (interactive()) {
 }
 
 }
+\keyword{GWASTrack_class}

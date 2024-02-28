@@ -17,3 +17,4 @@ obtains the genome codes (e.g. 'hg38')
 bs <- get_basic_genomes()
 
 }
+\keyword{utils}

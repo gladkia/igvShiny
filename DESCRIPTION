@@ -1,8 +1,8 @@
 Package: igvShiny
 Title: igvShiny: a wrapper of Integrative Genomics Viewer (IGV - an interactive
     tool for visualization and exploration integrated genomic data)
-Version: 0.99.3
-Date: 2024-02-08
+Version: 0.99.4
+Date: 2024-02-28
 Authors@R: c(
     person("Paul","Shannon", role = c("aut"), 
     email = "paul.thurmond.shannon@gmail.com"),
@@ -14,7 +14,7 @@ Authors@R: c(
 Description: This package is a wrapper of Integrative Genomics Viewer (IGV).
     It comprises an htmlwidget version of IGV. It can be used as a module 
     in Shiny apps. 
-URL: https://github.com/gladkia/igvShiny
+URL: https://github.com/gladkia/igvShiny, https://gladkia.github.io/igvShiny/
 BugReports: https://github.com/gladkia/igvShiny/issues
 Depends: 
     GenomicRanges,

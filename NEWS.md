@@ -1,3 +1,6 @@
+## igvShiny 0.99.4 - 2024-02-28
+* add pkgdown content
+
 ## igvShiny 0.99.3 - 2024-02-16
 * fix bug in function loadBamTrackFromLocalData
 * improvge way of loading BAM files - show mismatches
