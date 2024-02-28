@@ -926,6 +926,8 @@ loadBamTrackFromLocalData <-
            displayMode = "EXPANDED") {
     if (!requireNamespace("rtracklayer"))
       stop("install rtracklayer to use loadBamTrackFromLocalData")
+    if (!requireNamespace("Rsamtools"))
+      stop("install Rsamtools to use loadBamTrackFromLocalData")
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
       

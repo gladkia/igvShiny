@@ -20,14 +20,6 @@ Depends:
     GenomicRanges,
     methods,
     shiny
-Suggests: 
-    BiocStyle,
-    GenomicAlignments,
-    knitr,
-    rtracklayer,
-    RUnit,
-    shinytest2,
-    VariantAnnotation
 Imports: 
     BiocGenerics,
     checkmate,
@@ -39,6 +31,15 @@ Imports:
     randomcoloR,
     RCurl,
     utils
+Suggests: 
+    BiocStyle,
+    GenomicAlignments,
+    knitr,
+    Rsamtools,
+    rtracklayer,
+    RUnit,
+    shinytest2,
+    VariantAnnotation
 biocViews: Software, ShinyApps, Sequencing, Coverage
 License: MIT + file LICENSE
 Encoding: UTF-8
