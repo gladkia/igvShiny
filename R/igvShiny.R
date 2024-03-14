@@ -314,6 +314,7 @@ removeTracksByName <- function(session, id, trackNames) {
 #' @export
 
 removeUserAddedTracks <- function(session, id) {
+
   removeTracksByName(session, id, state[["userAddedTracks"]])
   state[["userAddedTracks"]] <- list()
   
@@ -1082,6 +1083,7 @@ loadGFF3TrackFromURL <-
            trackHeight = 50,
            visibilityWindow,
            deleteTracksOfSameName = TRUE) {
+
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
       
@@ -1190,7 +1192,7 @@ loadGFF3TrackFromLocalData <-
       list(
         elementID = id,
         trackName = trackName,
-        filePath = file.path("tracks", gff3.filePath),
+        filePath = file.path("tracks", basename(gff3.filePath)),
         color = color,
         colorTable = colorTable,
         colorByAttribute = colorByAttribute,

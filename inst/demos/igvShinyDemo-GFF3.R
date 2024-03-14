@@ -88,7 +88,7 @@ server = function(input, output, session) {
        colorByAttribute <- "biotype"
        loadGFF3TrackFromURL(session,
                             id="igvShiny_0",
-                            trackName="url gff3",
+                            trackName="url gff3 (colors)",
                             gff3URL=url,
                             indexURL=indexURL,
                             color="brown",
@@ -194,9 +194,7 @@ server = function(input, output, session) {
      genomeOptions <-
        parseAndValidateGenomeSpec(
          genomeName = "hg38",
-         initialLocus = loci[2],
-         dataMode = "localFile",
-         stockGenome = FALSE
+         initialLocus = loci[2]
        )
      igvShiny(genomeOptions)
      })
