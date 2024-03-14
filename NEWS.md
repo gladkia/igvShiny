@@ -1,3 +1,9 @@
+## igvShiny 0.99.5 - 2024-03-14
+* fix issues with GFF3 data
+  * make igvShiny demo app for GFF3 working
+  * update trackName of GFF3 (from URL)
+  * udpate path to local GFF3
+
 ## igvShiny 0.99.4 - 2024-02-28
 * add pkgdown content
 
