@@ -780,7 +780,7 @@ Shiny.addCustomMessageHandler("loadGFF3TrackFromURL",
        
        var config = {type: "annotation",
                      format: "gff3",
-                     name: message.name,
+                     name: message.trackName,
                      url: message.dataURL,
                      indexURL: message.indexURL,
                      indexed: indexedData,
