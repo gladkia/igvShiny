@@ -103,7 +103,7 @@ test_shinyAppDemoGFF3 <- function()
     checkTrue(
       .test_click_and_check(
         "addRemoteGFF3TrackButton",
-        "title=\"Homo_sapiens.GRCh38.94.chr.gff3.gz\"",
+        "title=\"url gff3\"",
         app
       )
     )
