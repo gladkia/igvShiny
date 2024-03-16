@@ -110,7 +110,14 @@ test_shinyAppDemoGFF3 <- function()
     checkTrue(
       .test_click_and_check(
         "addRemoteGFF3TrackButtonWithBiotypeColors",
-        "title=\"Homo_sapiens.GRCh38.94.chr.gff3.gz\"",
+        "title=\"url gff3 (colors)\"",
+        app
+      )
+    )
+    checkTrue(
+      .test_click_and_check(
+        "addLocalGFF3TrackButtonWithBiotypeColors",
+        "title=\"local gff3 (colors)\"",
         app
       )
     )
