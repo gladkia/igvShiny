@@ -35,12 +35,61 @@ runAppTests <- function()
 test_shinyAppDemo <- function()
 {
   message(sprintf("--- test_shinyAppDemo"))
+  options(chromote.timeout = 60)
+
+  test_that("{shinytest2} recording: test_app", {
+
+      sf <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+      app <- AppDriver$new(
+        app_dir = shiny::shinyAppFile(sf),
+        name = "test_app",
+        height = 695,
+        width = 1235,
+        load_timeout = 1e+6,
+        timeout = 1e+6
+      )
+      Sys.sleep(20)
+
+      checkTrue(
+        .test_click_and_check(
+          "addBedGraphTrackButton",
+          "title=\"wig/bedGraph/local\"",
+          app
+        )
+      )
+      checkTrue(
+        .test_click_and_check(
+          "addBedGraphTrackFromURLButton",
+          "title=\"bedGraph/remote\"",
+          app
+        )
+      )
+      checkTrue(
+        .test_click_and_check(
+          "addBamViaHttpButton",
+          "title=\"1kg.bam\"",
+          app
+          )
+        )
+      checkTrue(
+        .test_click_and_check(
+          "addCramViaHttpButton",
+          "title=\"CRAM\"",
+          app
+          )
+        )
+  })
+
+} # test_shinyAppDemo
+#----------------------------------------------------------------------------------------------------
+test_shinyAppDemoGFF3 <- function()
+{
+  message(sprintf("--- test_shinyAppDemo-GFF3"))
   options(chromote.timeout = 60)  
-  
   
   test_that("{shinytest2} recording: test_app", {
     
-    sf <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+    sf <- system.file(package = "igvShiny", "demos", "igvShinyDemo-GFF3.R")
     app <- AppDriver$new(
       app_dir = shiny::shinyAppFile(sf),
       name = "test_app",
@@ -50,10 +99,28 @@ test_shinyAppDemo <- function()
       timeout = 1e+6
     )
     Sys.sleep(20)
-    checkTrue(.test_click_and_check("addBedGraphTrackButton", "title=\"wig/bedGraph/local\"", app))
-    checkTrue(.test_click_and_check("addBedGraphTrackFromURLButton", "title=\"bedGraph/remote\"", app))
-    checkTrue(.test_click_and_check("addBamViaHttpButton", "title=\"1kg.bam\"", app))
-    checkTrue(.test_click_and_check("addCramViaHttpButton", "title=\"CRAM\"", app))
+    
+    checkTrue(
+      .test_click_and_check(
+        "addRemoteGFF3TrackButton",
+        "title=\"url gff3\"",
+        app
+      )
+    )
+    checkTrue(
+      .test_click_and_check(
+        "addRemoteGFF3TrackButtonWithBiotypeColors",
+        "title=\"url gff3 \\(colors)\\\"",
+        app
+      )
+    )
+    checkTrue(
+      .test_click_and_check(
+        "addLocalGFF3TrackButtonWithBiotypeColors",
+        "title=\"local gff3 \\(colors)\\\"",
+        app
+      )
+    )
   })
   
-} # test_shinyAppDemo
+} # test_shinyAppDemoGFF3

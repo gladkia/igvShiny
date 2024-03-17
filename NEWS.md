@@ -1,3 +1,6 @@
+## igvShiny 0.99.6 - 2024-03-16
+* add shinytest2 for igvShinyDemo-GFF3.R
+
 ## igvShiny 0.99.5 - 2024-03-14
 * fix issues with GFF3 data
   * make igvShiny demo app for GFF3 working
