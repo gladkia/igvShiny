@@ -38,7 +38,7 @@ test_shinyAppDemo <- function()
   options(chromote.timeout = 60)
 
   test_that("{shinytest2} recording: test_app", {
-    
+
       sf <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
       app <- AppDriver$new(
         app_dir = shiny::shinyAppFile(sf),
@@ -66,15 +66,15 @@ test_shinyAppDemo <- function()
       )
       checkTrue(
         .test_click_and_check(
-          "addBamViaHttpButton", 
-          "title=\"1kg.bam\"", 
+          "addBamViaHttpButton",
+          "title=\"1kg.bam\"",
           app
           )
         )
       checkTrue(
         .test_click_and_check(
-          "addCramViaHttpButton", 
-          "title=\"CRAM\"", 
+          "addCramViaHttpButton",
+          "title=\"CRAM\"",
           app
           )
         )
@@ -110,14 +110,14 @@ test_shinyAppDemoGFF3 <- function()
     checkTrue(
       .test_click_and_check(
         "addRemoteGFF3TrackButtonWithBiotypeColors",
-        "title=\"url gff3 (colors)\"",
+        "title=\"url gff3 \\(colors)\\\"",
         app
       )
     )
     checkTrue(
       .test_click_and_check(
         "addLocalGFF3TrackButtonWithBiotypeColors",
-        "title=\"local gff3 (colors)\"",
+        "title=\"local gff3 \\(colors)\\\"",
         app
       )
     )
