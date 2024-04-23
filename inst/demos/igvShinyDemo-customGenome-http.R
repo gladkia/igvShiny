@@ -5,7 +5,7 @@ library(htmlwidgets)
 
 #----------------------------------------------------------------------------------------------------
 
-  base.url <- "https://igv-data.systemsbiology.net/testFiles"
+  base.url <- "https://gladki.pl/igvr/testFiles"
   title <- "ribo remote"
   fasta.file <- sprintf("%s/%s", base.url, "ribosomal-RNA-gene.fasta")
   fastaIndex.file <- sprintf("%s/%s", base.url, "ribosomal-RNA-gene.fasta.fai")

@@ -90,7 +90,7 @@ test_parseAndValidateGenomeSpec.custom.http <- function()
 {
     message(sprintf("--- test_parseAndValidateGenomeSpec.custom.http"))
 
-    base.url <- "https://igv-data.systemsbiology.net/testFiles"
+    base.url <- "https://gladki.pl/igvr/testFiles"
     fasta.file <- sprintf("%s/%s", base.url, "ribosomal-RNA-gene.fasta")
     fastaIndex.file <- sprintf("%s/%s", base.url, "ribosomal-RNA-gene.fasta.fai")
     annotation.file <- sprintf("%s/%s", base.url, "ribosomal-RNA-gene.gff3")
@@ -256,15 +256,15 @@ test_parseAndValidateGenomeSpec.custom.localFiles.sarsWithGFF3 <- function()
 #    spec <- list(genomeName="customGenome",
 #                 name="ribosome RNA",
 #                 dataMode="http",
-#                 fasta="https://igv-data.systemsbiology.net/testFiles/ribosomal-RNA-gene.fasta",
-#                 fastaIndex="https://igv-data.systemsbiology.net/testFiles/ribosomal-RNA-gene.fasta.fai",
-#                 annotation="https://igv-data.systemsbiology.net/testFiles/ribosomal-RNA-gene.gff3")
+#                 fasta="https://gladki.pl/igvr/testFiles/ribosomal-RNA-gene.fasta",
+#                 fastaIndex="https://gladki.pl/igvr/testFiles/ribosomal-RNA-gene.fasta.fai",
+#                 annotation="https://gladki.pl/igvr/testFiles/ribosomal-RNA-gene.gff3")
 #
 #    options <- parseAndValidateGenomeSpec(spec)
 #    checkEquals(options$name, "ribosome RNA")
-#    checkEquals(options$fasta, "https://igv-data.systemsbiology.net/testFiles/ribosomal-RNA-gene.fasta")
-#    checkEquals(options$fastaIndex, "https://igv-data.systemsbiology.net/testFiles/ribosomal-RNA-gene.fasta.fai")
-#    checkEquals(options$annotation, "https://igv-data.systemsbiology.net/testFiles/ribosomal-RNA-gene.gff3")
+#    checkEquals(options$fasta, "https://gladki.pl/igvr/testFiles/ribosomal-RNA-gene.fasta")
+#    checkEquals(options$fastaIndex, "https://gladki.pl/igvr/testFiles/ribosomal-RNA-gene.fasta.fai")
+#    checkEquals(options$annotation, "https://gladki.pl/igvr/testFiles/ribosomal-RNA-gene.gff3")
 #
 #        #----------------------------------------------------------------------------
 #        # now an http explicit genomeSpec on our server, with a mis-spelled filename

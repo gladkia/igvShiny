@@ -1,3 +1,6 @@
+## igvShiny 0.99.7 - 2024-04-23
+* change file links from igv-data.systemsbiology.net to gladki.pl/igvr
+
 ## igvShiny 0.99.6 - 2024-03-16
 * add shinytest2 for igvShinyDemo-GFF3.R
 

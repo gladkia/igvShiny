@@ -49,7 +49,7 @@ to test their genome specification for validity
 genomeSpec <-
   parseAndValidateGenomeSpec("hg38", "APOE")  # the simplest case
 base.url <-
-  "https://igv-data.systemsbiology.net/testFiles/sarsGenome"
+  "https://gladki.pl/igvr/testFiles/sarsGenome"
 fasta.file <-
   sprintf("\%s/\%s", base.url, "Sars_cov_2.ASM985889v3.dna.toplevel.fa")
 fastaIndex.file <-
