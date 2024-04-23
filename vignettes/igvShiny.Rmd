@@ -103,7 +103,7 @@ The files can provided as local paths (`dataMode` = `localFiles` or via URLs
 library(igvShiny)
 
 # defining custom genome with data provided via URLs
-base_url <- "https://igv-data.systemsbiology.net/testFiles"
+base_url <- "https://gladki.pl/igvr/testFiles"
 title <- "ribo remote"
 fasta_file <- sprintf("%s/%s", base_url, "ribosomal-RNA-gene.fasta")
 fastaIndex_file <- sprintf("%s/%s", base_url, "ribosomal-RNA-gene.fasta.fai")

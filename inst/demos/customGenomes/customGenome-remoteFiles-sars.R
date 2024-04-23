@@ -4,7 +4,7 @@ library(htmlwidgets)
 # library(biomaRt)
 
 #----------------------------------------------------------------------------------------------------
-base.url <- "https://igv-data.systemsbiology.net/testFiles/sarsGenome"
+base.url <- "https://gladki.pl/igvr/testFiles/sarsGenome"
 fasta.file <- sprintf("%s/%s", base.url,"Sars_cov_2.ASM985889v3.dna.toplevel.fa")
 fastaIndex.file <-  sprintf("%s/%s", base.url, "Sars_cov_2.ASM985889v3.dna.toplevel.fa.fai")
 annotation.file <-  sprintf("%s/%s", base.url, "Sars_cov_2.ASM985889v3.101.gff3")
