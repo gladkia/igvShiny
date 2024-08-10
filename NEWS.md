@@ -1,3 +1,6 @@
+## igvShiny 1.0.0 - 2024-08-10
+* sync with Bioconductor (3_19 release)
+
 ## igvShiny 0.99.7 - 2024-04-23
 * change file links from igv-data.systemsbiology.net to gladki.pl/igvr
 
