@@ -84,13 +84,13 @@ igvShiny <- function(genomeOptions,
       destination <- file.path(directory.name, basename(gff3.file))
       file.copy(gff3.file, destination, overwrite = TRUE)
       genomeOptions[["annotation"]] <-
-        file.path(directory.name, basename(gff3.file))
+        file.path(basename(directory.name), basename(gff3.file))
     }
     # now that they have been copied, store the new paths
     genomeOptions[["fasta"]] <-
-      file.path(directory.name, basename(fasta.file))
+      file.path(basename(directory.name), basename(fasta.file))
     genomeOptions[["fastaIndex"]] <-
-      file.path(directory.name, basename(fasta.indexFile))
+      file.path(basename(directory.name), basename(fasta.indexFile))
   } # if custom genome, local files
   
   state[["requestedHeight"]] <- height

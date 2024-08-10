@@ -1,3 +1,6 @@
+## igvShiny 1.0.1 - 2024-08-10
+* fix issue with custom files not working properly
+
 ## igvShiny 1.0.0 - 2024-08-10
 * sync with Bioconductor (3_19 release)
 
