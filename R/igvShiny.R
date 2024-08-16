@@ -741,15 +741,16 @@ loadVcfTrack <- function(session,
   
   state[["userAddedTracks"]] <-
     unique(c(state[["userAddedTracks"]], trackName))
-  path <- file.path(get_tracks_dir(), "tmp.vcf")
-  lmsg <- sprintf("igvShiny::loadVcfTrack, about to write to file '%s'", path)
+  temp.file <- tempfile(tmpdir = get_tracks_dir(), fileext = ".vcf")
+  lmsg <- sprintf("igvShiny::loadVcfTrack, about to write to file '%s'", temp.file)
   flog.debug(lmsg)
-  VariantAnnotation::writeVcf(vcfData, path)
+  VariantAnnotation::writeVcf(vcfData, temp.file)
   lmsg2 <- sprintf("igvShiny::loadVcfTrack, file.exists(%s)? %s",
-                   path,
-                   file.exists(path))
+                   temp.file,
+                   file.exists(temp.file))
   flog.debug(lmsg2)
   
+  path <- file.path("tracks", basename(temp.file))
   message <-
     list(
       elementID = id,
