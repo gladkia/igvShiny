@@ -1,3 +1,6 @@
+## igvShiny 1.0.2 - 2024-08-16
+* fix issue with VCF files
+
 ## igvShiny 1.0.1 - 2024-08-10
 * fix issue with custom files not working properly
 
