@@ -61,7 +61,7 @@ get_css_genomes <- function(test = FALSE) {
   
   current.genomes.file <- "https://igv.org/genomes/genomes.json"
   
-  if (!RCurl::url.exists(current.genomes.file))
+  if (httr::http_error(current.genomes.file))
     return(get_basic_genomes())
   
   current.genomes.raw <-
@@ -189,7 +189,9 @@ parseAndValidateGenomeSpec <- function(genomeName,
     
     exists.function <- switch(dataMode,
                               "localFiles" = file.exists,
-                              "http" = RCurl::url.exists)
+                              "http" = function(x, ...) {
+                                !(httr::http_error(x, ...))
+                              })
     stopifnot(exists.function(fasta))
     stopifnot(exists.function(fastaIndex))
     if (!is.na(genomeAnnotation))

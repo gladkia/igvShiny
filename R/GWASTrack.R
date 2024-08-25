@@ -127,7 +127,7 @@ GWASTrack <- function(trackName,
   }
   
   if (data.class == "character") {
-    if (!RCurl::url.exists(data)) {
+    if (httr::http_error(data)) {
       # was a legitimate url provided?
       error.message <-
         sprintf("error: putative gwas file url unreachable: '%s'",
