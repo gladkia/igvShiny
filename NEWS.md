@@ -1,3 +1,6 @@
+## igvShiny 1.0.3 - 2024-08-25
+* stop using Amazon S3 URLs by default
+
 ## igvShiny 1.0.2 - 2024-08-16
 * fix issue with VCF files
 
