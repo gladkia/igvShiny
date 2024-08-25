@@ -1,3 +1,6 @@
+## igvShiny 1.1.4 - 2024-08-25
+* switch from Rcurl::url.exists to httr::http_error (Windows compatibility)
+
 ## igvShiny 1.1.3 - 2024-08-25
 * stop using Amazon S3 URLs by default
 
