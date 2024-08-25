@@ -79,7 +79,7 @@ setGeneric("getUrl",
 #'   )
 #' getUrl(track)
 #' 
-#' url <- "https://s3.amazonaws.com/igv.org.demo/gwas_sample.tsv.gz"
+#' url <- "https://gladki.pl/igvShiny/gwas_sample.tsv.gz"
 #' track <- GWASTrack(
 #'   "remote url gwas",
 #'   url,
