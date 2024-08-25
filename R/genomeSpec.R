@@ -59,8 +59,7 @@ get_css_genomes <- function(test = FALSE) {
   if (test)
     return(get_basic_genomes())
   
-  current.genomes.file <-
-    "https://s3.amazonaws.com/igv.org.genomes/genomes.json"
+  current.genomes.file <- "https://igv.org/genomes/genomes.json"
   
   if (!RCurl::url.exists(current.genomes.file))
     return(get_basic_genomes())

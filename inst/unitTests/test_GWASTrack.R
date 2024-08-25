@@ -31,7 +31,7 @@ test_urlConstructor <- function()
 {
     message(sprintf("--- test_urlConstructor"))
 
-    url <- "https://s3.amazonaws.com/igv.org.demo/gwas_sample.tsv.gz"
+    url <- "https://gladki.pl/igvShiny/gwas_sample.tsv.gz"
     gwasTrack <- GWASTrack("remote url gwas",
                            url,
                            chrom.col=3,
