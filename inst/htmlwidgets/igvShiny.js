@@ -456,7 +456,7 @@ Shiny.addCustomMessageHandler("loadBedTrackFromFile",
       var igvBrowser = document.getElementById(elementID).igvBrowser;
       var trackName = message.trackName;
       var bedFile = message.bedFilepath;
-      var dataURL = window.location.href + bedFile;
+      var dataURL = window.location.href.split('?')[0] + bedFile; // If a query string is present the url before that is used
       igvshiny_log("dataURL: " + dataURL);
 
       var color = message.color;
