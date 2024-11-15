@@ -1,16 +1,16 @@
-## igvShiny 1.0.5 - 2024-08-29
+## igvShiny 1.1.5 - 2024-08-29
 * fix issue with loading bed files when app is run with query strings
 
-## igvShiny 1.0.4 - 2024-08-25
+## igvShiny 1.1.4 - 2024-08-25
 * switch from Rcurl::url.exists to httr::http_error (Windows compatibility)
 
-## igvShiny 1.0.3 - 2024-08-25
+## igvShiny 1.1.3 - 2024-08-25
 * stop using Amazon S3 URLs by default
 
-## igvShiny 1.0.2 - 2024-08-16
+## igvShiny 1.1.2 - 2024-08-16
 * fix issue with VCF files
 
-## igvShiny 1.0.1 - 2024-08-10
+## igvShiny 1.1.1 - 2024-08-10
 * fix issue with custom files not working properly
 
 ## igvShiny 1.0.0 - 2024-08-10
