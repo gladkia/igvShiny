@@ -144,33 +144,10 @@ server = function(input, output, session) {
   
   observeEvent(input$addBamLocalFileButton, {
     printf("---- addBamLocalFileButton")
-    showGenomicRegion(session, id="igvShiny_0", "chr5:142,902,115-142,907,754")
-    bamFile <- system.file(package="igvShiny", "extdata", "stomach_subsample.taged.bam")
-    param <- Rsamtools::ScanBamParam(
-    what = "seq",
-    tag = c("pa", "gi"),
-    # mapqFilter = 1  # MAPQ > 0 需设置为 1（因参数是 >= 阈值）
-    )
-  
-    # 读取并过滤数据
-    message("Loading bam")
-    x <- readGAlignments(bamFile, param = param)
-    # message("[DEBUG] Class of x: ", class(x))
-    # message("[DEBUG] Length of x: ", length(x))
-    # message("[DEBUG] First 10 elements: ")
-    # print(x[1:10])
-    
-    message("Downsampling ...")
-    # # 下采样（例如抽取 20% 的读数）
-    if (length(x) > 0) {
-      subsample_rate <- 0.2
-      subsample_idx <- sample(length(x), size = subsample_rate * length(x))
-      x <- x[subsample_idx]
-    }
-    
-    # 加载到 igvShiny
-    message("Uploading to IGV")
-    loadBamTrackFromLocalData(session, id="igvShiny_0", trackName="tumor.bam", data=x, displayMode = "FULL")
+    showGenomicRegion(session, id="igvShiny_0", "chr21:10,397,614-10,423,341")
+    bamFile <- system.file(package="igvShiny", "extdata", "tumor.bam")
+    x <- readGAlignments(bamFile, param = Rsamtools::ScanBamParam(what="seq"))
+    loadBamTrackFromLocalData(session, id="igvShiny_0", trackName="tumor.bam", data=x)
   })
   
   observeEvent(input$addCramViaHttpButton, {
@@ -240,7 +217,7 @@ server = function(input, output, session) {
   
   output$igvShiny_0 <- renderIgvShiny({
     cat("--- starting renderIgvShiny\n");
-    genomeOptions <- parseAndValidateGenomeSpec(genomeName="mm10",  initialLocus=loci[7])
+    genomeOptions <- parseAndValidateGenomeSpec(genomeName="hg38",  initialLocus=loci[7])
     x <- igvShiny(genomeOptions,
                   displayMode="SQUISHED",
                   tracks=list()

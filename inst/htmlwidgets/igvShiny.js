@@ -737,6 +737,8 @@ Shiny.addCustomMessageHandler("loadBamTrackFromLocalData",
                     displayMode: displayMode,
                     url: dataURL,
                     type: "alignment",
+                     //   samplingWindowSize: 1000,
+                     samplingDepth: 200,
   		    order: Number.MAX_VALUE
                     };
       igvBrowser.loadTrack(config);
