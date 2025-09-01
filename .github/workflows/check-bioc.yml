@@ -50,13 +50,14 @@ jobs:
     container: ${{ matrix.config.cont }}
     ## Environment variables unique to this job.
 
+
     strategy:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-latest }
-          - { os: macOS-latest }
-          - { os: windows-latest }
+          - { os: ubuntu-latest, r: '4.5', bioc: '3.21', cont: "bioconductor/bioconductor_docker:RELEASE_3_21", rspm: "https://packagemanager.rstudio.com/cran/__linux__/jammy/latest" }
+          - { os: macOS-latest, r: '4.5', bioc: '3.21'}
+          - { os: windows-latest, r: '4.5', bioc: '3.21'}
           ## Check https://github.com/r-lib/actions/tree/master/examples
           ## for examples using the http-user-agent
     env:
