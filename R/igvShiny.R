@@ -1,10 +1,61 @@
 # THE FOLLOWING WAS MOVED OUT OF doc section for igvShiny
 # param options a list, with required elements "genomeName" and "initialLocus".
-#   Local or remote custom genomes can be used by setting "genomeName" to 
+#   Local or remote custom genomes can be used by setting "genomeName" to
 #   "local" or "remote". The necessary fasta and index files are provided via
 #   "fasta" and "index" arguments, either as path on disk or as URL.
 
+#-------------------------------------------------------------------------------
+# A list of safe, known igv.js track configuration parameters.
+# This allowlist prevents arbitrary code injection and invalid options.
+# Sourced from igv.js documentation.
+.validIgvTrackOptions <- c(
+    "name", "type", "format", "url", "indexURL", "indexed", "order", "displayMode",
+    "color", "altColor", "negColor", "posColor", "borderColor", "trait",
+    "height", "autoHeight", "minHeight", "maxHeight", "removable",
+    "visibilityWindow", "searchable", "autoScale", "autoscale", "autoScaleGroup",
+    "autoscaleGroup", "min", "max", "logScale", "graphType", "barChart",
+    "flipAxis", "stroke", "noStroke", "fill", "noFill", "featureHeight", "showLabels",
+    "font", "fontSize", "fontStyle", "fontWeight", "colorTable", "colorByAttribute",
+    "showAllBases", "samplingWindowSize", "samplingDepth", "maxRows",
+    "hideEmptyTracks", "oauthToken", "headers", "viewAsPairs", "pairsSupported",
+    "maxPanelHeight", "separateBam", "wholeGenomeView", "roi", "queryable"
+    # Add other valid igv.js track options here as needed in the future
+)
 
+#-------------------------------------------------------------------------------
+#' Sanitize and merge track configuration options
+#' @param baseOptions A list of default options set by the R function.
+#' @param userOptions A list of options provided by the user via trackConfig.
+#' @return A merged and sanitized list of options ready to be sent to JavaScript.
+.sanitizeAndMergeOptions <- function(baseOptions, userOptions) {
+    if (is.null(userOptions) || length(userOptions) == 0) {
+        return(baseOptions)
+    }
+
+    if (!is.list(userOptions) || is.null(names(userOptions)) || any(names(userOptions) == "")) {
+        warning("trackConfig must be a named list. Ignoring.")
+        return(baseOptions)
+    }
+
+    # Identify and warn about conflicting keys that would override explicit function arguments
+    conflictingKeys <- intersect(names(baseOptions), names(userOptions))
+    if (length(conflictingKeys) > 0) {
+        warning(sprintf("User-provided trackConfig options conflict with function arguments and will be ignored: %s",
+                        paste(conflictingKeys, collapse = ", ")))
+        userOptions[conflictingKeys] <- NULL # Prioritize base options for security and clarity
+    }
+
+    # Filter user options against the allowlist of valid igv.js parameters
+    invalidKeys <- setdiff(names(userOptions), .validIgvTrackOptions)
+    if (length(invalidKeys) > 0) {
+        warning(sprintf("Ignoring invalid or unsupported track options in trackConfig: %s",
+                        paste(invalidKeys, collapse = ", ")))
+        userOptions[invalidKeys] <- NULL
+    }
+
+    # Merge the sanitized user options with the base options
+    return(c(baseOptions, userOptions))
+}
 #-------------------------------------------------------------------------------
 #' Create an igvShiny instance
 #'
@@ -12,7 +63,7 @@
 #'
 #' @rdname igvShiny
 #' @aliases igvShiny
-#' 
+#'
 #' @import BiocGenerics
 #' @import GenomicRanges
 #' @import GenomeInfoDbData
@@ -22,18 +73,18 @@
 #' @importFrom htmlwidgets createWidget shinyWidgetOutput shinyRenderWidget
 #' @importFrom futile.logger flog.debug
 #'
-#' @param genomeOptions a list with these fields: genomeName, initialLocus, 
+#' @param genomeOptions a list with these fields: genomeName, initialLocus,
 #' annotation, dataMode, fasta, fastaIndex, stockGenome, validated
-#' @param width a character string, standard css notations, 
+#' @param width a character string, standard css notations,
 #' either e.g., "1000px" or "95\%"
-#' @param height a character string, needs to be an explicit pixel measure, 
+#' @param height a character string, needs to be an explicit pixel measure,
 #' e.g., "800px"
 #' @param elementId a character string, the html element id within which
 #' igv is created
 #' @param displayMode a character string, default "SQUISHED".
 #' @param tracks a list of track specifications to be created
 #' and displayed at startup
-#' 
+#'
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
@@ -41,7 +92,7 @@
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
-#' 
+#'
 #' @return the created widget
 #'
 #' @keywords igvShiny
@@ -67,8 +118,8 @@ igvShiny <- function(genomeOptions,
       )
   )
   stopifnot(genomeOptions[["validated"]])
-  
-  if (!genomeOptions[["stockGenome"]] && 
+
+  if (!genomeOptions[["stockGenome"]] &&
         genomeOptions[["dataMode"]] == "localFiles") {
     directory.name <- get_tracks_dir()
     fasta.file <- genomeOptions[["fasta"]]
@@ -92,19 +143,19 @@ igvShiny <- function(genomeOptions,
     genomeOptions[["fastaIndex"]] <-
       file.path(basename(directory.name), basename(fasta.indexFile))
   } # if custom genome, local files
-  
+
   state[["requestedHeight"]] <- height
-  
+
   flog.debug("---igvShiny ctor")
   flog.debug(sprintf("--initial track count: %d", length(tracks)))
-  
+
   #send namespace info in case widget is being called from a module
   session <- shiny::getDefaultReactiveDomain()
   genomeOptions$displayMode <- displayMode
   genomeOptions$trackHeight <-
     100      # todo: make this an igvShiny ctor argument
   genomeOptions$moduleNS <- session$ns("")
-  
+
   htmlwidgets::createWidget(
     name = "igvShiny",
     genomeOptions,
@@ -113,7 +164,7 @@ igvShiny <- function(genomeOptions,
     package = "igvShiny",
     elementId = elementId
   )
-  
+
 } # igvShiny constructor
 #-------------------------------------------------------------------------------
 #' create the UI for the widget
@@ -124,9 +175,9 @@ igvShiny <- function(genomeOptions,
 #' @aliases igvShinyOutput
 #'
 #' @param outputId a character string, specifies the html element id
-#' @param width a character string, standard css notations, 
+#' @param width a character string, standard css notations,
 #' either e.g., "1000px" or "95\%", "100\%" by default
-#' @param height a character string, needs to be an explicit pixel measure, 
+#' @param height a character string, needs to be an explicit pixel measure,
 #' e.g., "800px", "400px" by default
 #'
 #' @return the created widget's html
@@ -144,7 +195,7 @@ igvShinyOutput <- function(outputId,
     flog.debug("setting height from state")
     height <- state[["requestedHeight"]]
   }
-  
+
   htmlwidgets::shinyWidgetOutput(outputId,
                                  "igvShiny",
                                  width,
@@ -160,10 +211,10 @@ igvShinyOutput <- function(outputId,
 #' @rdname renderIgvShiny
 #' @aliases renderIgvShiny
 #'
-#' @param expr an expression that generates an HTML widget 
+#' @param expr an expression that generates an HTML widget
 #' @param env  the environment in which to evaluate expr
-#' @param quoted logical flag indicating if expr a quoted expression 
-#' 
+#' @param quoted logical flag indicating if expr a quoted expression
+#'
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
@@ -183,14 +234,14 @@ renderIgvShiny <- function(expr,
   if (!quoted) {
     expr <- substitute(expr)
   } # force quoted
-  
+
   x <- htmlwidgets::shinyRenderWidget(expr,
                                       igvShinyOutput,
                                       env,
                                       quoted = TRUE)
   flog.debug("--- leaving igvShiny.R, renderIgvShiny")
   return(x)
-  
+
 }
 
 #-------------------------------------------------------------------------------
@@ -204,9 +255,9 @@ renderIgvShiny <- function(expr,
 #'
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
-#' @param region a character string, either e.g. "chr5:92,221,640-92,236,523" 
+#' @param region a character string, either e.g. "chr5:92,221,640-92,236,523"
 #' or "MEF2C"
-#' 
+#'
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
@@ -232,7 +283,7 @@ showGenomicRegion <- function(session, id, region) {
 #'
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
-#' 
+#'
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
@@ -284,7 +335,7 @@ removeTracksByName <- function(session, id, trackNames) {
             toString(trackNames))
   flog.debug(lmsg)
   session$sendCustomMessage("removeTracksByName", message)
-  
+
 } # removeTracksByName
 
 #-------------------------------------------------------------------------------
@@ -298,7 +349,7 @@ removeTracksByName <- function(session, id, trackNames) {
 #'
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
-#' 
+#'
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
@@ -317,7 +368,7 @@ removeUserAddedTracks <- function(session, id) {
 
   removeTracksByName(session, id, state[["userAddedTracks"]])
   state[["userAddedTracks"]] <- list()
-  
+
 } # removeUserAddedTracks
 
 #-------------------------------------------------------------------------------
@@ -332,12 +383,13 @@ removeUserAddedTracks <- function(session, id) {
 #' @param id character string, the html element id of this widget instance
 #' @param trackName character string
 #' @param tbl data.frame, with at least "chrom" "start" "end" columns
-#' @param color character string, a legal CSS color, or "random", 
+#' @param color character string, a legal CSS color, or "random",
 #' "gray" by default
 #' @param trackHeight an integer, 50 (pixels) by default
 #' @param deleteTracksOfSameName logical, default TRUE
 #' @param quiet logical, default TRUE, controls verbosity
-#' 
+#' @param trackConfig a named list of additional igv.js track configuration options.
+#'
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
@@ -360,28 +412,28 @@ loadBedTrack <-
            color = "",
            trackHeight = 50,
            deleteTracksOfSameName = TRUE,
-           quiet = TRUE) {
+           quiet = TRUE,
+           trackConfig = list()) {
     if (color == "random")
       color <-
         randomColors[sample(seq_len(length(randomColors)), 1)]
-    
+
     if (!quiet) {
       flog.debug("--- igvShiny::loadBedTrack")
-      
+
       flog.debug(sprintf("rows: %d  cols: %d", nrow(tbl), ncol(tbl)))
     }
-    
+
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
-      
     }
-    
+
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
-    
+
     if (colnames(tbl)[1] == "chrom")
       colnames(tbl)[1] <- "chr"
-    
+
     if (all(colnames(tbl)[c(1, 2, 3)] != c("chr", "start", "end"))) {
       lmsg <- sprintf("found these colnames: %s",
                       toString(colnames(tbl)))
@@ -391,13 +443,13 @@ loadBedTrack <-
       flog.debug(lmsg2)
       stop("improper columns in bed track data.frame")
     }
-    
+
     stopifnot(is(tbl$chr, "character"))
     stopifnot(is(tbl$start, "numeric"))
     stopifnot(is(tbl$end, "numeric"))
     new.order <- order(tbl$start, decreasing = FALSE)
     tbl <- tbl[new.order, ]
-    
+
     temp.file <-
       tempfile(tmpdir = get_tracks_dir(), fileext = ".bed")
     write.table(
@@ -414,15 +466,18 @@ loadBedTrack <-
                     temp.file)
     flog.debug(lmsg)
     flog.debug(sprintf("exists? %s", file.exists(temp.file)))
-    msg.to.igv <- list(
+
+    base.msg.to.igv <- list(
       elementID = id,
       trackName = trackName,
       bedFilepath = file.path("tracks", basename(temp.file)),
       color = color,
       trackHeight = trackHeight
     )
+
+    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
     session$sendCustomMessage("loadBedTrackFromFile", msg.to.igv)
-    
+
   } # loadBedTrack
 
 #-------------------------------------------------------------------------------
@@ -437,7 +492,7 @@ loadBedTrack <-
 #' @param id character string, the html element id of this widget instance
 #' @param trackName character string
 #' @param url character
-#' @param color character string, a legal CSS color, or "random", 
+#' @param color character string, a legal CSS color, or "random",
 #' "gray" by default
 #' @param trackHeight an integer, 30 (pixels) by default
 #' @param autoscale logical
@@ -446,7 +501,8 @@ loadBedTrack <-
 #' @param quiet logical, default TRUE, controls verbosity
 #' @param autoscaleGroup numeric(1) defaults to -1
 #' @param deleteTracksOfSameName logical(1) defaults to TRUE
-#' 
+#' @param trackConfig a named list of additional igv.js track configuration options.
+#'
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
@@ -473,20 +529,20 @@ loadBedGraphTrackFromURL <-
            max = 1,
            autoscaleGroup = -1,
            deleteTracksOfSameName = TRUE,
-           quiet = TRUE) {
+           quiet = TRUE,
+           trackConfig = list()) {
     message("---- loadBedGraphTrackFromURL")
-    
+
     if (color == "random")
       color <-
         randomColors[sample(seq_len(length(randomColors)), 1)]
-    
+
     if (!quiet) {
       lmsg <- sprintf("--- igvShiny::loadBedGraphTrackFromURL: %s",
                       trackName)
       flog.debug(lmsg)
-      
     }
-    
+
     if (deleteTracksOfSameName) {
       lmsg <- sprintf(
         "--- loadBedGraphTrackFromURL, calling removeTracksByName: %s, %s",
@@ -495,14 +551,12 @@ loadBedGraphTrackFromURL <-
       )
       flog.debug(lmsg)
       removeTracksByName(session, id, trackName)
-      
     }
-    
+
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
-    
-    
-    msg.to.igv <-
+
+    base.msg.to.igv <-
       list(
         elementID = id,
         trackName = trackName,
@@ -513,14 +567,16 @@ loadBedGraphTrackFromURL <-
         min = min,
         max = max,
         autoscaleGroup = autoscaleGroup
-      )  # -1 means no grouping
-    
+      )
+
+    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+
     flog.debug("--- igvShiny.R loadBedGraphTrackFromURL, msg.to.igv: ")
     futile.logger::flog.info(jsonlite::toJSON(msg.to.igv))
     flog.debug("--- igvShiny.R loadBedGraphTrackFromURL, sendingCustomMessage")
     session$sendCustomMessage("loadBedGraphTrackFromURL", msg.to.igv)
     flog.debug("--- loadBedGraphTrackFromURL, after sendingCustomMessage")
-    
+
   } # loadBedGraphTrackFromURL
 
 #-------------------------------------------------------------------------------
@@ -535,7 +591,7 @@ loadBedGraphTrackFromURL <-
 #' @param id character string, the html element id of this widget instance
 #' @param trackName character string
 #' @param tbl data.frame, with at least "chrom" "start" "end" "score" columns
-#' @param color character string, a legal CSS color, or "random", 
+#' @param color character string, a legal CSS color, or "random",
 #' "gray" by default
 #' @param trackHeight an integer, 30 (pixels) by default
 #' @param autoscale logical
@@ -544,7 +600,8 @@ loadBedGraphTrackFromURL <-
 #' @param max numeric, consulted when autoscale is FALSE
 #' @param deleteTracksOfSameName logical, default TRUE
 #' @param quiet logical, default TRUE, controls verbosity
-#' 
+#' @param trackConfig a named list of additional igv.js track configuration options.
+#'
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
@@ -571,19 +628,20 @@ loadBedGraphTrack <-
            min = NA_real_,
            max = NA_real_,
            deleteTracksOfSameName = TRUE,
-           quiet = TRUE) {
+           quiet = TRUE,
+           trackConfig = list()) {
     stopifnot(ncol(tbl) >= 4)
-    
+
     if (color == "random")
       color <-
         randomColors[sample(seq_len(length(randomColors)), 1)]
-    
+
     if (!quiet) {
       flog.debug("--- igvShiny::loadGenomeAnnotationTrack: %s",
                  trackName)
       flog.debug("    %d rows, %d columns", nrow(tbl), ncol(tbl))
     }
-    
+
     if (deleteTracksOfSameName) {
       flog.debug(
         "--- igvShiny.R loadBedGraphTrack, calling removeTracksByName: %s, %s",
@@ -591,17 +649,16 @@ loadBedGraphTrack <-
         trackName
       )
       removeTracksByName(session, id, trackName)
-      
     }
-    
+
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
-    
+
     if (colnames(tbl)[1] == "chrom")
       colnames(tbl)[1] <- "chr"
-    
+
     colnames(tbl)[4] <- "value"
-    
+
     if (all(colnames(tbl)[c(1, 2, 3)] != c("chr", "start", "end"))) {
       flog.debug("found these colnames: %s",
                  paste(colnames(tbl)[c(1, 2, 3)],
@@ -611,16 +668,16 @@ loadBedGraphTrack <-
                        collapse = ", "))
       stop("improper columns in bed track data.frame")
     }
-    
+
     stopifnot(is(tbl$chr, "character"))
     stopifnot(is(tbl$start, "numeric"))
     stopifnot(is(tbl$end, "numeric"))
     stopifnot(is(tbl$value, "numeric"))
-    
+
     new.order <- order(tbl$start, decreasing = FALSE)
     tbl <- tbl[new.order, ]
-    
-    msg.to.igv <-
+
+    base.msg.to.igv <-
       list(
         elementID = id,
         trackName = trackName,
@@ -632,9 +689,10 @@ loadBedGraphTrack <-
         max = max,
         autoscaleGroup = autoscaleGroup
       )  # -1 means no grouping
-    
+
+    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
     session$sendCustomMessage("loadBedGraphTrack", msg.to.igv)
-    
+
   } # loadBedGraphTrack
 #-------------------------------------------------------------------------------
 #' load a seg track provided as a data.frame
@@ -652,7 +710,8 @@ loadBedGraphTrack <-
 #' @param trackName character string
 #' @param tbl data.frame, with at least "chrom" "start" "end" "score" columns
 #' @param deleteTracksOfSameName logical, default TRUE
-#' 
+#' @param trackConfig a named list of additional igv.js track configuration options.
+#'
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
@@ -671,35 +730,37 @@ loadSegTrack <-
            id,
            trackName,
            tbl,
-           deleteTracksOfSameName = TRUE) {
+           deleteTracksOfSameName = TRUE,
+           trackConfig = list()) {
     flog.debug("--- entering loadSegTrack %s with %d rows",
                trackName,
                nrow(tbl))
-    
+
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
-      
     }
-    
+
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
-    
-    message <-
+
+    base.message <-
       list(
         elementID = id,
         trackName = trackName,
         tbl = jsonlite::toJSON(tbl)
       )
+
+    message <- .sanitizeAndMergeOptions(base.message, trackConfig)
     flog.debug("about to send loadSegTrack message")
     session$sendCustomMessage("loadSegTrack", message)
-    
+
   } # loadSegTrack
 
 #-------------------------------------------------------------------------------
-#' load a VCF (variant) track provided as a Bioconductor 
+#' load a VCF (variant) track provided as a Bioconductor
 #' VariantAnnotation object
 #'
-#' @description load a VCF (variant) track provided as a Bioconductor 
+#' @description load a VCF (variant) track provided as a Bioconductor
 #' VariantAnnotation object
 #'
 #' @rdname loadVcfTrack
@@ -710,7 +771,8 @@ loadSegTrack <-
 #' @param trackName character string
 #' @param vcfData VariantAnnotation object
 #' @param deleteTracksOfSameName logical, default TRUE
-#' 
+#' @param trackConfig a named list of additional igv.js track configuration options.
+#'
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
@@ -729,16 +791,16 @@ loadVcfTrack <- function(session,
                          id,
                          trackName,
                          vcfData,
-                         deleteTracksOfSameName = TRUE) {
+                         deleteTracksOfSameName = TRUE,
+                         trackConfig = list()) {
   if (!requireNamespace("VariantAnnotation"))
     stop("install VariantAnnotation to use this function")
-  
+
   flog.debug("======== igvShiny.R, loadVcfTrack")
   if (deleteTracksOfSameName) {
     removeTracksByName(session, id, trackName)
-    
   }
-  
+
   state[["userAddedTracks"]] <-
     unique(c(state[["userAddedTracks"]], trackName))
   temp.file <- tempfile(tmpdir = get_tracks_dir(), fileext = ".vcf")
@@ -749,20 +811,22 @@ loadVcfTrack <- function(session,
                    temp.file,
                    file.exists(temp.file))
   flog.debug(lmsg2)
-  
+
   path <- file.path("tracks", basename(temp.file))
-  message <-
+  base.message <-
     list(
       elementID = id,
       trackName = trackName,
       vcfDataFilepath = path
     )
+
+  message <- .sanitizeAndMergeOptions(base.message, trackConfig)
   session$sendCustomMessage("loadVcfTrack", message)
-  
+
 } # loadVcfTrack
 
 #-------------------------------------------------------------------------------
-#' load a GWAS (genome-wide association study) track 
+#' load a GWAS (genome-wide association study) track
 #' provided as a data.frame
 #'
 #' @description load a GWAS (genome-wide association study) track
@@ -778,7 +842,8 @@ loadVcfTrack <- function(session,
 #' @param ymax numeric defaults to 35
 #' @param tbl.gwas data.frame, with at least "chrom" "start" "end" columns
 #' @param deleteTracksOfSameName logical, default TRUE
-#' 
+#' @param trackConfig a named list of additional igv.js track configuration options.
+#'
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
@@ -798,17 +863,17 @@ loadGwasTrack <- function(session,
                           tbl.gwas,
                           ymin = 0,
                           ymax = 35,
-                          deleteTracksOfSameName = TRUE) {
+                          deleteTracksOfSameName = TRUE,
+                          trackConfig = list()) {
   flog.debug("======== entering igvShiny::loadGwasTrack")
-  
+
   if (deleteTracksOfSameName) {
     removeTracksByName(session, id, trackName)
-    
   }
-  
+
   state[["userAddedTracks"]] <-
     unique(c(state[["userAddedTracks"]], trackName))
-  
+
   temp.file <-
     tempfile(tmpdir = get_tracks_dir(), fileext = ".gwas")
   write.table(
@@ -826,7 +891,7 @@ loadGwasTrack <- function(session,
   )
   flog.debug(lmsg)
   flog.debug(sprintf("exists? %s", file.exists(temp.file)))
-  message <-
+  base.message <-
     list(
       elementID = id,
       trackName = trackName,
@@ -837,8 +902,10 @@ loadGwasTrack <- function(session,
       min = ymin,
       max = ymax
     )
+
+  message <- .sanitizeAndMergeOptions(base.message, trackConfig)
   session$sendCustomMessage("loadGwasTrack", message)
-  
+
 } # loadGwasTrack
 
 #-------------------------------------------------------------------------------
@@ -852,15 +919,16 @@ loadGwasTrack <- function(session,
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
 #' @param trackName character string
-#' @param bamURL character string http url for the bam file, 
+#' @param bamURL character string http url for the bam file,
 #' typically very large
-#' @param indexURL character string http url for the bam file index, 
+#' @param indexURL character string http url for the bam file index,
 #' typically small
 #' @param deleteTracksOfSameName logical, default TRUE
 #' @param displayMode character string, possible values are "EXPANDED"(default),
 #' "SQUISHED" or "COLLAPSED"
 #' @param showAllBases logical, show all bases in the alignment, default FALSE
-#' 
+#' @param trackConfig a named list of additional igv.js track configuration options.
+#'
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
@@ -883,15 +951,15 @@ loadBamTrackFromURL <-
            indexURL,
            deleteTracksOfSameName = TRUE,
            displayMode = "EXPANDED",
-           showAllBases = FALSE) {
+           showAllBases = FALSE,
+           trackConfig = list()) {
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
-      
     }
-    
+
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
-    message <-
+    base.message <-
       list(
         elementID = id,
         trackName = trackName,
@@ -900,9 +968,11 @@ loadBamTrackFromURL <-
         displayMode = displayMode,
         showAllBases = showAllBases
       )
+
+    message <- .sanitizeAndMergeOptions(base.message, trackConfig)
     flog.debug("--- about to send message, loadBamTrack")
     session$sendCustomMessage("loadBamTrackFromURL", message)
-    
+
   } # loadBamTrackFromURL
 
 #-------------------------------------------------------------------------------
@@ -919,7 +989,8 @@ loadBamTrackFromURL <-
 #' @param deleteTracksOfSameName logical, default TRUE
 #' @param displayMode character string, possible values are "EXPANDED"(default),
 #' "SQUISHED" or "COLLAPSED"
-#' 
+#' @param trackConfig a named list of additional igv.js track configuration options.
+#'
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
@@ -940,37 +1011,38 @@ loadBamTrackFromLocalData <-
            trackName,
            data,
            deleteTracksOfSameName = TRUE,
-           displayMode = "EXPANDED") {
+           displayMode = "EXPANDED",
+           trackConfig = list()) {
     if (!requireNamespace("rtracklayer"))
       stop("install rtracklayer to use loadBamTrackFromLocalData")
     if (!requireNamespace("Rsamtools"))
       stop("install Rsamtools to use loadBamTrackFromLocalData")
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
-      
     }
 
     t_dir <- get_tracks_dir()
     fpath <- tempfile(tmpdir = t_dir, fileext = ".bam")
-    
+
     lmsg <-
       sprintf("igvShiny::load bam from local data, about to write to file '%s'",
               fpath)
     flog.debug(lmsg)
     rtracklayer::export(data, fpath, format = "BAM")
-    
+
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
-    
-    message <-
+
+    base.message <-
       list(
         elementID = id,
         trackName = trackName,
         bamDataFilepath = file.path("tracks", basename(fpath)),
         displayMode = displayMode
       )
+    message <- .sanitizeAndMergeOptions(base.message, trackConfig)
     session$sendCustomMessage("loadBamTrackFromLocalData", message)
-    
+
   } # loadBamTrackFromLocalData
 
 #-------------------------------------------------------------------------------
@@ -984,12 +1056,13 @@ loadBamTrackFromLocalData <-
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
 #' @param trackName character string
-#' @param cramURL character string http url for the bam file, 
+#' @param cramURL character string http url for the bam file,
 #' typically very large
-#' @param indexURL character string http url for the bam file index, 
+#' @param indexURL character string http url for the bam file index,
 #' typically small
 #' @param deleteTracksOfSameName logical, default TRUE
-#' 
+#' @param trackConfig a named list of additional igv.js track configuration options.
+#'
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
@@ -1010,24 +1083,25 @@ loadCramTrackFromURL <-
            trackName,
            cramURL,
            indexURL,
-           deleteTracksOfSameName = TRUE) {
+           deleteTracksOfSameName = TRUE,
+           trackConfig = list()) {
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
-      
     }
-    
+
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
-    
-    message <-
+
+    base.message <-
       list(
         elementID = id,
         trackName = trackName,
         cram = cramURL,
         index = indexURL
       )
+    message <- .sanitizeAndMergeOptions(base.message, trackConfig)
     session$sendCustomMessage("loadCramTrackFromURL", message)
-    
+
   } # loadCramTrackFromURL
 
 #-------------------------------------------------------------------------------
@@ -1042,21 +1116,22 @@ loadCramTrackFromURL <-
 #' @param id character string, the html element id of this widget instance
 #' @param trackName character string
 #' @param trackHeight numeric defaults to 50
-#' @param gff3URL character string http url for the bam file, 
+#' @param gff3URL character string http url for the bam file,
 #' typically very large
-#' @param indexURL character string http url for the bam file index, 
+#' @param indexURL character string http url for the bam file index,
 #' typically small
-#' @param color character #RGB or a recognized color name.  ignored if 
+#' @param color character #RGB or a recognized color name.  ignored if
 #' colorTable and colorByAttribute provided
-#' @param colorTable list, mapping a gff3 attribute, typically biotype, 
+#' @param colorTable list, mapping a gff3 attribute, typically biotype,
 #' to a color
 #' @param colorByAttribute character, name of a gff3 attribute in column 9,
 #' typically "biotype"
 #' @param displayMode character,  "EXPANDED",  "SQUISHED" or "COLLAPSED"
-#' @param visibilityWindow numeric, Maximum window size in base pairs 
+#' @param visibilityWindow numeric, Maximum window size in base pairs
 #' for which indexed annotations or variants are displayed
 #' @param deleteTracksOfSameName logical, default TRUE
-#' 
+#' @param trackConfig a named list of additional igv.js track configuration options.
+#'
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
@@ -1083,17 +1158,17 @@ loadGFF3TrackFromURL <-
            displayMode,
            trackHeight = 50,
            visibilityWindow,
-           deleteTracksOfSameName = TRUE) {
+           deleteTracksOfSameName = TRUE,
+           trackConfig = list()) {
 
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
-      
     }
-    
+
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
-    
-    message <-
+
+    base.message <-
       list(
         elementID = id,
         trackName = trackName,
@@ -1106,9 +1181,10 @@ loadGFF3TrackFromURL <-
         trackHeight = trackHeight,
         visibilityWindow = visibilityWindow
       )
-    
+
+    message <- .sanitizeAndMergeOptions(base.message, trackConfig)
     session$sendCustomMessage("loadGFF3TrackFromURL", message)
-    
+
   } # loadGFF3TrackFromURL
 #-------------------------------------------------------------------------------
 #' load a GFF3 track defined by local data
@@ -1123,17 +1199,18 @@ loadGFF3TrackFromURL <-
 #' @param trackName character string
 #' @param trackHeight numeric defaults to 50
 #' @param tbl.gff3 data.frame  in standard 9-column GFF3 format
-#' @param color character #RGB or a recognized color name.  ignored if 
+#' @param color character #RGB or a recognized color name.  ignored if
 #' colorTable and colorByAttribute provided
-#' @param colorTable list, mapping a gff3 attribute, typically biotype, 
+#' @param colorTable list, mapping a gff3 attribute, typically biotype,
 #' to a color
-#' @param colorByAttribute character, name of a gff3 attribute in column 9, 
+#' @param colorByAttribute character, name of a gff3 attribute in column 9,
 #' typically "biotype"
 #' @param displayMode character,  "EXPANDED",  "SQUISHED" or "COLLAPSED"
-#' @param visibilityWindow numeric, Maximum window size in base pairs 
+#' @param visibilityWindow numeric, Maximum window size in base pairs
 #' for which indexed annotations or variants are displayed
 #' @param deleteTracksOfSameName logical, default TRUE
-#' 
+#' @param trackConfig a named list of additional igv.js track configuration options.
+#'
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
@@ -1159,17 +1236,17 @@ loadGFF3TrackFromLocalData <-
            displayMode,
            trackHeight = 50,
            visibilityWindow,
-           deleteTracksOfSameName = TRUE) {
-    flog.debug("--- entering loadGFF3TrackFromLocalDAta")
-    
+           deleteTracksOfSameName = TRUE,
+           trackConfig = list()) {
+    flog.debug("--- entering loadGFF3TrackFromLocalData")
+
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
-      
     }
-    
+
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
-    
+
     gff3.filePath <-
       tempfile(tmpdir = get_tracks_dir(), fileext = ".gff3")
     write.table(
@@ -1186,10 +1263,10 @@ loadGFF3TrackFromLocalData <-
       gff3.filePath
     )
     flog.debug(lmsg)
-    
+
     flog.debug(sprintf("exists? %s", file.exists(gff3.filePath)))
-    
-    message <-
+
+    base.message <-
       list(
         elementID = id,
         trackName = trackName,
@@ -1201,8 +1278,11 @@ loadGFF3TrackFromLocalData <-
         trackHeight = trackHeight,
         visibilityWindow = visibilityWindow
       )
-    
+
+    message <- .sanitizeAndMergeOptions(base.message, trackConfig)
     session$sendCustomMessage("loadGFF3TrackFromLocalData", message)
-    
+
   } # loadGFF3TrackFromLocalData
 #-------------------------------------------------------------------------------
+
+
