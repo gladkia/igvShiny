@@ -9,17 +9,17 @@
 # This allowlist prevents arbitrary code injection and invalid options.
 # Sourced from igv.js documentation.
 .validIgvTrackOptions <- c(
-    "name", "type", "format", "url", "indexURL", "indexed", "order", "displayMode",
-    "color", "altColor", "negColor", "posColor", "borderColor", "trait",
-    "height", "autoHeight", "minHeight", "maxHeight", "removable",
-    "visibilityWindow", "searchable", "autoScale", "autoscale", "autoScaleGroup",
-    "autoscaleGroup", "min", "max", "logScale", "graphType", "barChart",
-    "flipAxis", "stroke", "noStroke", "fill", "noFill", "featureHeight", "showLabels",
-    "font", "fontSize", "fontStyle", "fontWeight", "colorTable", "colorByAttribute",
-    "showAllBases", "samplingWindowSize", "samplingDepth", "maxRows",
-    "hideEmptyTracks", "oauthToken", "headers", "viewAsPairs", "pairsSupported",
-    "maxPanelHeight", "separateBam", "wholeGenomeView", "roi", "queryable"
-    # Add other valid igv.js track options here as needed in the future
+  "name", "type", "format", "url", "indexURL", "indexed", "order", "displayMode",
+  "color", "altColor", "negColor", "posColor", "borderColor", "trait",
+  "height", "autoHeight", "minHeight", "maxHeight", "removable",
+  "visibilityWindow", "searchable", "autoScale", "autoscale", "autoScaleGroup",
+  "autoscaleGroup", "min", "max", "logScale", "graphType", "barChart",
+  "flipAxis", "stroke", "noStroke", "fill", "noFill", "featureHeight", "showLabels",
+  "font", "fontSize", "fontStyle", "fontWeight", "colorTable", "colorByAttribute",
+  "showAllBases", "samplingWindowSize", "samplingDepth", "maxRows",
+  "hideEmptyTracks", "oauthToken", "headers", "viewAsPairs", "pairsSupported",
+  "maxPanelHeight", "separateBam", "wholeGenomeView", "roi", "queryable"
+  # Add other valid igv.js track options here as needed in the future
 )
 
 #-------------------------------------------------------------------------------
@@ -27,34 +27,35 @@
 #' @param baseOptions A list of default options set by the R function.
 #' @param userOptions A list of options provided by the user via trackConfig.
 #' @return A merged and sanitized list of options ready to be sent to JavaScript.
+#' @keywords igvShiny
 .sanitizeAndMergeOptions <- function(baseOptions, userOptions) {
-    if (is.null(userOptions) || length(userOptions) == 0) {
-        return(baseOptions)
-    }
+  if (is.null(userOptions) || length(userOptions) == 0) {
+    return(baseOptions)
+  }
 
-    if (!is.list(userOptions) || is.null(names(userOptions)) || any(names(userOptions) == "")) {
-        warning("trackConfig must be a named list. Ignoring.")
-        return(baseOptions)
-    }
+  if (!is.list(userOptions) || is.null(names(userOptions)) || any(names(userOptions) == "")) {
+    warning("trackConfig must be a named list. Ignoring.")
+    return(baseOptions)
+  }
 
-    # Identify and warn about conflicting keys that would override explicit function arguments
-    conflictingKeys <- intersect(names(baseOptions), names(userOptions))
-    if (length(conflictingKeys) > 0) {
-        warning(sprintf("User-provided trackConfig options conflict with function arguments and will be ignored: %s",
-                        paste(conflictingKeys, collapse = ", ")))
-        userOptions[conflictingKeys] <- NULL # Prioritize base options for security and clarity
-    }
+  # Identify and warn about conflicting keys that would override explicit function arguments
+  conflictingKeys <- intersect(names(baseOptions), names(userOptions))
+  if (length(conflictingKeys) > 0) {
+    warning(sprintf("User-provided trackConfig options conflict with function arguments and will be ignored: %s",
+                    paste(conflictingKeys, collapse = ", ")))
+    userOptions[conflictingKeys] <- NULL # Prioritize base options for security and clarity
+  }
 
-    # Filter user options against the allowlist of valid igv.js parameters
-    invalidKeys <- setdiff(names(userOptions), .validIgvTrackOptions)
-    if (length(invalidKeys) > 0) {
-        warning(sprintf("Ignoring invalid or unsupported track options in trackConfig: %s",
-                        paste(invalidKeys, collapse = ", ")))
-        userOptions[invalidKeys] <- NULL
-    }
+  # Filter user options against the allowlist of valid igv.js parameters
+  invalidKeys <- setdiff(names(userOptions), .validIgvTrackOptions)
+  if (length(invalidKeys) > 0) {
+    warning(sprintf("Ignoring invalid or unsupported track options in trackConfig: %s",
+                    paste(invalidKeys, collapse = ", ")))
+    userOptions[invalidKeys] <- NULL
+  }
 
-    # Merge the sanitized user options with the base options
-    return(c(baseOptions, userOptions))
+  # Merge the sanitized user options with the base options
+  return(c(baseOptions, userOptions))
 }
 #-------------------------------------------------------------------------------
 #' Create an igvShiny instance
@@ -1284,5 +1285,4 @@ loadGFF3TrackFromLocalData <-
 
   } # loadGFF3TrackFromLocalData
 #-------------------------------------------------------------------------------
-
 

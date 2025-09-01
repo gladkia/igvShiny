@@ -17,3 +17,4 @@ A merged and sanitized list of options ready to be sent to JavaScript.
 \description{
 Sanitize and merge track configuration options
 }
+\keyword{igvShiny}
