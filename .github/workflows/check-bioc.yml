@@ -244,7 +244,7 @@ jobs:
           # - notes can be controlled
           # - linter checks
           # TODO: use BiocCheck with `bioc_check = TRUE`
-          gDRstyle::checkPackage(pkg_name, repoDir = ".", skip_lint = TRUE)
+          gDRstyle::checkPackage(pkg_name, repoDir = ".")
         shell: Rscript {0}
 
       ## Might need an to add this to the if:  && runner.os == 'Linux'
