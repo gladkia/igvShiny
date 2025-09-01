@@ -47,7 +47,6 @@ Collate:
     'GWASTrack.R'
     'igvShiny.R'
     'packages.R'
-    'test_igvShiny_package.R'
     'utils.R'
     'zzz.R'
 RoxygenNote: 7.3.1

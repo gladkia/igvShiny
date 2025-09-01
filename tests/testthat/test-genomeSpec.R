@@ -99,7 +99,7 @@ test_that("Parsing and validation of custom local file genome specs works", {
     expect_error({
        fasta.file.bogus <- sprintf("%s-bogus", fasta.file)
        parseAndValidateGenomeSpec(genomeName="ribo-willFail",
-                                  initialLocus="all", stockGenome=FALSE, dataMode="http",
+                                  initialLocus="all", stockGenome=FALSE, dataMode="localFiles",
                                   fasta=fasta.file.bogus, fastaIndex=fastaIndex.file,
                                   genomeAnnotation=annotation.file)
     })
