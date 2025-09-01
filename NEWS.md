@@ -1,3 +1,6 @@
+## igvShiny 1.5.1 - 2025-08-31
+* support passing additional track options to igv.js
+
 ## igvShiny 1.1.5 - 2024-08-29
 * fix issue with loading bed files when app is run with query strings
 
