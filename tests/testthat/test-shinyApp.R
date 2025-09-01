@@ -5,8 +5,8 @@ library(igvShiny)
 # Helper function for clicking a UI element and checking the resulting HTML
 .click_and_check <- function(app, button_id, expected_html_label, selector = "#igvShiny_0", sleep_time = 2) {
     app$click(button_id)
-    igv_html <- app$get_html(selector = selector)
     Sys.sleep(sleep_time) # allow time for UI to update
+    igv_html <- app$get_html(selector = selector)
     expect_true(grepl(expected_html_label, igv_html, fixed = TRUE))
 }
 
@@ -25,7 +25,8 @@ test_that("igvShinyDemo loads tracks correctly", {
     )
 
     # Wait for the app and genome to fully load
-    Sys.sleep(20)
+    app$wait_for_value(input = "igvReady")
+    Sys.sleep(5)
 
     .click_and_check(app, "addBedGraphTrackButton", 'title="wig/bedGraph/local"')
     .click_and_check(app, "addBedGraphTrackFromURLButton", 'title="bedGraph/remote"')
@@ -47,7 +48,8 @@ test_that("igvShinyDemo-GFF3 loads tracks correctly", {
       load_timeout = 1e+6,
       timeout = 1e+6
     )
-    Sys.sleep(20)
+    app$wait_for_value(input = "igvReady")
+    Sys.sleep(5)
 
     .click_and_check(app, "addRemoteGFF3TrackButton", 'title="url gff3"')
     .click_and_check(app, "addRemoteGFF3TrackButtonWithBiotypeColors", 'title="url gff3 (colors)"')

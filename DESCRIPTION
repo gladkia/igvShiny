@@ -21,7 +21,6 @@ Depends:
     methods,
     shiny
 Imports: 
-    BiocGenerics,
     checkmate,
     futile.logger,
     GenomeInfoDbData,
@@ -36,8 +35,8 @@ Suggests:
     knitr,
     Rsamtools,
     rtracklayer,
-    RUnit,
     shinytest2,
+    testthat,
     VariantAnnotation
 biocViews: Software, ShinyApps, Sequencing, Coverage
 License: MIT + file LICENSE
