@@ -87,12 +87,12 @@ server = function(input, output, session) {
   
   observeEvent(input$addBedTrackButton, {
     showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
-    loadBedTrack(session, id="igvShiny_0", trackName="bed5", tbl=tbl.bed5, color = "gray", trackConfig = list(altColor = "orange"));
+    loadBedTrack(session, id="igvShiny_0", trackName="bed5", tbl=tbl.bed5);
   })
   
   observeEvent(input$addBed9TrackButton, {
     showGenomicRegion(session, id="igvShiny_0", "chr1:161,199,757-161,201,277")
-    loadBedTrack(session, id="igvShiny_0", trackName="bed9", tbl=tbl.bed9, trackConfig = list(altColor = "yellow"))
+    loadBedTrack(session, id="igvShiny_0", trackName="bed9", tbl=tbl.bed9)
   })
   
   observeEvent(input$addBedGraphTrackButton, {
