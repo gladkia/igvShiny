@@ -26,6 +26,22 @@ function debounce(func, wait, immediate) {
    };
 } // debounce
 //----------------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------------
+// Generic helper function to merge extra parameters from R into the config object
+function mergeExtraParameters(config, message) {
+    var handledKeys = Object.keys(config);
+    handledKeys.push("elementID", "tbl", "trackName"); // also ignore these top-level message keys
+
+    for (var key in message) {
+        if (message.hasOwnProperty(key) && !handledKeys.includes(key)) {
+            config[key] = message[key];
+        }
+    }
+    return config;
+}
+//----------------------------------------------------------------------------------------------------
+
 HTMLWidgets.widget({
 
   name: 'igvShiny',
@@ -387,6 +403,7 @@ Shiny.addCustomMessageHandler("loadBedTrackFromFile",
                      color: "lightGreen",
 		     height: 50
                      };
+      config = mergeExtraParameters(config, message);
       igvBrowser.loadTrack(config);
       }
 
@@ -413,6 +430,7 @@ Shiny.addCustomMessageHandler("loadGenomeAnnotationTrackFromFile",
                      color: "lightGreen",
 		     height: 50
                      };
+      config = mergeExtraParameters(config, message);
       igvBrowser.loadTrack(config);
       }
 
@@ -441,6 +459,7 @@ Shiny.addCustomMessageHandler("loadBedTrack",
                     color: color,
                     height: trackHeight
                     };
+      config = mergeExtraParameters(config, message);
       igvBrowser.loadTrack(config);
       }
 
@@ -472,6 +491,7 @@ Shiny.addCustomMessageHandler("loadBedTrackFromFile",
                     color: color,
                     height: trackHeight
                     };
+      config = mergeExtraParameters(config, message);
       igvBrowser.loadTrack(config);
       }
 
@@ -508,6 +528,7 @@ Shiny.addCustomMessageHandler("loadBedGraphTrack",
                     min: min,
                     max: max
                     };
+      config = mergeExtraParameters(config, message);
       if(autoscaleGroup >= 0)
           config['autoscaleGroup'] = autoscaleGroup;
       console.log("--- loading bedGraphTrack");
@@ -554,6 +575,7 @@ Shiny.addCustomMessageHandler("loadBedGraphTrackFromURL",
 
       console.log("--- loading bedGraphTrackFromURL");
       console.log(config)
+      config = mergeExtraParameters(config, message);
       igvBrowser.loadTrack(config);
       }
 
@@ -581,6 +603,7 @@ Shiny.addCustomMessageHandler("loadSegTrack",
                     height: 50
                     };
       igvshiny_log("--- about to  loadTrack seg")
+      config = mergeExtraParameters(config, message);
       igvBrowser.loadTrack(config);
       }
 
@@ -616,6 +639,7 @@ Shiny.addCustomMessageHandler("loadVcfTrack",
                     };
 
 
+       config = mergeExtraParameters(config, message);
        igvBrowser.loadTrack(config);
        }
 
@@ -652,6 +676,7 @@ Shiny.addCustomMessageHandler("loadGwasTrack",
                     min: min,
                     max: max
                     };
+      config = mergeExtraParameters(config, message);
       igvBrowser.loadTrack(config);
       }
 
@@ -689,6 +714,7 @@ Shiny.addCustomMessageHandler("loadGwasTrackFlexibleSource",
                     min: min,
                     max: max
                     };
+      config = mergeExtraParameters(config, message);
       igvBrowser.loadTrack(config);
       }
 
@@ -716,6 +742,7 @@ Shiny.addCustomMessageHandler("loadBamTrackFromURL",
                     type: "alignment",
 		    order: Number.MAX_VALUE
                     };
+      config = mergeExtraParameters(config, message);
       igvBrowser.loadTrack(config);
       }
 
@@ -739,6 +766,7 @@ Shiny.addCustomMessageHandler("loadBamTrackFromLocalData",
                     type: "alignment",
   		    order: Number.MAX_VALUE
                     };
+      config = mergeExtraParameters(config, message);
       igvBrowser.loadTrack(config);
       }
 
@@ -763,6 +791,7 @@ Shiny.addCustomMessageHandler("loadCramTrackFromURL",
                     type: "alignment",
 		    order: Number.MAX_VALUE
                     };
+      config = mergeExtraParameters(config, message);
       igvBrowser.loadTrack(config);
       }
 
@@ -797,6 +826,7 @@ Shiny.addCustomMessageHandler("loadGFF3TrackFromURL",
          config.color=message.color;
          }
        
+       config = mergeExtraParameters(config, message);
        igvBrowser.loadTrack(config)
        igvshiny_log("=== after loadTrack, loadGFF3TrackFromURL")
      } // function
@@ -832,6 +862,7 @@ Shiny.addCustomMessageHandler("loadGFF3TrackFromLocalData",
          config.color=message.color;
          }
 
+       config = mergeExtraParameters(config, message);
        igvBrowser.loadTrack(config)
       } // function
 
