@@ -21,6 +21,7 @@ Depends:
     methods,
     shiny
 Imports: 
+    BiocGenerics,
     checkmate,
     futile.logger,
     GenomeInfoDbData,
