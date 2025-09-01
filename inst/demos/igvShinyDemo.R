@@ -48,6 +48,7 @@ ui = shinyUI(fluidPage(
       h5("One simple data.frame, three igv formats:"),
       actionButton("addBedTrackButton", "Add as Bed"),
       actionButton("addBedGraphTrackButton", "Add as BedGraph"),
+      actionButton("addBedGraphWithAltColorTrackButton", "Add as BedGraph (with AltColor)"),
       actionButton("addBedGraphTrackFromURLButton", "Add BedGraph from URL"),
       # actionButton("addAutoscaledGroupBedGraphTrackButton", "Add Autoscaled Group BedGraphs"),
       # data immediate seg track apparently abandoned with igv.js 2.10.4 or before
@@ -86,18 +87,24 @@ server = function(input, output, session) {
   
   observeEvent(input$addBedTrackButton, {
     showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
-    loadBedTrack(session, id="igvShiny_0", trackName="bed5", tbl=tbl.bed5);
+    loadBedTrack(session, id="igvShiny_0", trackName="bed5", tbl=tbl.bed5, color = "gray", trackConfig = list(altColor = "orange"));
   })
   
   observeEvent(input$addBed9TrackButton, {
     showGenomicRegion(session, id="igvShiny_0", "chr1:161,199,757-161,201,277")
-    loadBedTrack(session, id="igvShiny_0", trackName="bed9", tbl=tbl.bed9)
+    loadBedTrack(session, id="igvShiny_0", trackName="bed9", tbl=tbl.bed9, trackConfig = list(altColor = "yellow"))
   })
   
   observeEvent(input$addBedGraphTrackButton, {
     showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
     loadBedGraphTrack(session, id="igvShiny_0", trackName="wig/bedGraph/local", tbl=tbl.bed5,
                       color="blue", autoscale=TRUE)
+  })
+  
+  observeEvent(input$addBedGraphWithAltColorTrackButton, {
+    showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
+    loadBedGraphTrack(session, id="igvShiny_0", trackName="wig/bedGraph/local/alt", tbl=tbl.bed5,
+                      color="blue", trackConfig = list(altColor = "red"), autoscale=TRUE)
   })
   
   observeEvent(input$addAutoscaledGroupBedGraphTrackButton, {
