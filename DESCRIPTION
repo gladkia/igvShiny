@@ -1,8 +1,8 @@
 Package: igvShiny
 Title: igvShiny: a wrapper of Integrative Genomics Viewer (IGV - an interactive
     tool for visualization and exploration integrated genomic data)
-Version: 1.5.0
-Date: 2024-08-29
+Version: 1.5.1
+Date: 2025-09-01
 Authors@R: c(
     person("Paul","Shannon", role = c("aut"), 
     email = "paul.thurmond.shannon@gmail.com"),
@@ -36,8 +36,8 @@ Suggests:
     knitr,
     Rsamtools,
     rtracklayer,
-    RUnit,
     shinytest2,
+    testthat,
     VariantAnnotation
 biocViews: Software, ShinyApps, Sequencing, Coverage
 License: MIT + file LICENSE
@@ -48,7 +48,6 @@ Collate:
     'GWASTrack.R'
     'igvShiny.R'
     'packages.R'
-    'test_igvShiny_package.R'
     'utils.R'
     'zzz.R'
 RoxygenNote: 7.3.1
