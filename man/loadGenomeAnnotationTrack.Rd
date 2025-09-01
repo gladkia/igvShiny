@@ -17,7 +17,8 @@ loadBedGraphTrack(
   min = NA_real_,
   max = NA_real_,
   deleteTracksOfSameName = TRUE,
-  quiet = TRUE
+  quiet = TRUE,
+  trackConfig = list()
 )
 }
 \arguments{
@@ -29,7 +30,7 @@ loadBedGraphTrack(
 
 \item{tbl}{data.frame, with at least "chrom" "start" "end" "score" columns}
 
-\item{color}{character string, a legal CSS color, or "random", 
+\item{color}{character string, a legal CSS color, or "random",
 "gray" by default}
 
 \item{trackHeight}{an integer, 30 (pixels) by default}
@@ -45,6 +46,8 @@ loadBedGraphTrack(
 \item{deleteTracksOfSameName}{logical, default TRUE}
 
 \item{quiet}{logical, default TRUE, controls verbosity}
+
+\item{trackConfig}{a named list of additional igv.js track configuration options.}
 }
 \value{
 nothing

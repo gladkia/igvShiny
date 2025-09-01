@@ -14,13 +14,13 @@ igvShiny(
 )
 }
 \arguments{
-\item{genomeOptions}{a list with these fields: genomeName, initialLocus, 
+\item{genomeOptions}{a list with these fields: genomeName, initialLocus,
 annotation, dataMode, fasta, fastaIndex, stockGenome, validated}
 
-\item{width}{a character string, standard css notations, 
+\item{width}{a character string, standard css notations,
 either e.g., "1000px" or "95\%"}
 
-\item{height}{a character string, needs to be an explicit pixel measure, 
+\item{height}{a character string, needs to be an explicit pixel measure,
 e.g., "800px"}
 
 \item{elementId}{a character string, the html element id within which

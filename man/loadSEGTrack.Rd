@@ -5,7 +5,14 @@
 \alias{loadSEGTrack}
 \title{load a seg track provided as a data.frame}
 \usage{
-loadSegTrack(session, id, trackName, tbl, deleteTracksOfSameName = TRUE)
+loadSegTrack(
+  session,
+  id,
+  trackName,
+  tbl,
+  deleteTracksOfSameName = TRUE,
+  trackConfig = list()
+)
 }
 \arguments{
 \item{session}{an environment or list, provided and managed by shiny}
@@ -17,6 +24,8 @@ loadSegTrack(session, id, trackName, tbl, deleteTracksOfSameName = TRUE)
 \item{tbl}{data.frame, with at least "chrom" "start" "end" "score" columns}
 
 \item{deleteTracksOfSameName}{logical, default TRUE}
+
+\item{trackConfig}{a named list of additional igv.js track configuration options.}
 }
 \value{
 nothing

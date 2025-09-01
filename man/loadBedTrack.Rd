@@ -12,7 +12,8 @@ loadBedTrack(
   color = "",
   trackHeight = 50,
   deleteTracksOfSameName = TRUE,
-  quiet = TRUE
+  quiet = TRUE,
+  trackConfig = list()
 )
 }
 \arguments{
@@ -24,7 +25,7 @@ loadBedTrack(
 
 \item{tbl}{data.frame, with at least "chrom" "start" "end" columns}
 
-\item{color}{character string, a legal CSS color, or "random", 
+\item{color}{character string, a legal CSS color, or "random",
 "gray" by default}
 
 \item{trackHeight}{an integer, 50 (pixels) by default}
@@ -32,6 +33,8 @@ loadBedTrack(
 \item{deleteTracksOfSameName}{logical, default TRUE}
 
 \item{quiet}{logical, default TRUE, controls verbosity}
+
+\item{trackConfig}{a named list of additional igv.js track configuration options.}
 }
 \value{
 nothing
