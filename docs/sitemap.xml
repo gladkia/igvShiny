@@ -1,105 +1,37 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/404.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/articles/igvShiny.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/index.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/GWASTrack-class.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/display.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/getUrl.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/get_basic_genomes.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/get_cas_genomes.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/get_css_genomes.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/get_tracks_dir.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/igvShiny.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/igvShinyOutput.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/loadBamTrackFromLocalData.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/loadBamTrackFromURL.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/loadBedGraphTrackFromURL.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/loadBedTrack.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/loadCramTrackFromURL.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/loadGFF3TrackFromLocalData.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/loadGFF3TrackFromURL.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/loadGenomeAnnotationTrack.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/loadGwasTrack.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/loadSEGTrack.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/loadVcfTrack.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/parseAndValidateGenomeSpec.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/removeTracksByName.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/removeUserAddedTracks.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/renderIgvShiny.html</loc>
-  </url>
-  <url>
-    <loc>https://gladkia.github.io/igvShiny/reference/showGenomicRegion.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://gladkia.github.io/igvShiny/404.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/LICENSE-text.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/LICENSE.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/articles/igvShiny.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/articles/index.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/authors.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/index.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/news/index.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/GWASTrack-class.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/display.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/getUrl.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/get_basic_genomes.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/get_cas_genomes.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/get_css_genomes.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/get_tracks_dir.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/igvShiny.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/igvShinyOutput.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/index.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/loadBamTrackFromLocalData.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/loadBamTrackFromURL.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/loadBedGraphTrackFromURL.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/loadBedTrack.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/loadCramTrackFromURL.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/loadGFF3TrackFromLocalData.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/loadGFF3TrackFromURL.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/loadGenomeAnnotationTrack.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/loadGwasTrack.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/loadSEGTrack.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/loadVcfTrack.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/parseAndValidateGenomeSpec.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/removeTracksByName.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/removeUserAddedTracks.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/renderIgvShiny.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/showGenomicRegion.html</loc></url>
 </urlset>
+
