@@ -744,16 +744,16 @@ loadSegTrack <-
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
 
-    base.message <-
+    base.msg.to.igv <-
       list(
         elementID = id,
         trackName = trackName,
         tbl = jsonlite::toJSON(tbl)
       )
 
-    message <- .sanitizeAndMergeOptions(base.message, trackConfig)
+    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
     flog.debug("about to send loadSegTrack message")
-    session$sendCustomMessage("loadSegTrack", message)
+    session$sendCustomMessage("loadSegTrack", msg.to.igv)
 
   } # loadSegTrack
 
@@ -814,15 +814,15 @@ loadVcfTrack <- function(session,
   flog.debug(lmsg2)
 
   path <- file.path("tracks", basename(temp.file))
-  base.message <-
+  base.msg.to.igv <-
     list(
       elementID = id,
       trackName = trackName,
       vcfDataFilepath = path
     )
 
-  message <- .sanitizeAndMergeOptions(base.message, trackConfig)
-  session$sendCustomMessage("loadVcfTrack", message)
+  msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+  session$sendCustomMessage("loadVcfTrack", msg.to.igv)
 
 } # loadVcfTrack
 
@@ -892,7 +892,7 @@ loadGwasTrack <- function(session,
   )
   flog.debug(lmsg)
   flog.debug(sprintf("exists? %s", file.exists(temp.file)))
-  base.message <-
+  base.msg.to.igv <-
     list(
       elementID = id,
       trackName = trackName,
@@ -904,8 +904,8 @@ loadGwasTrack <- function(session,
       max = ymax
     )
 
-  message <- .sanitizeAndMergeOptions(base.message, trackConfig)
-  session$sendCustomMessage("loadGwasTrack", message)
+  msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+  session$sendCustomMessage("loadGwasTrack", msg.to.igv)
 
 } # loadGwasTrack
 
@@ -960,7 +960,7 @@ loadBamTrackFromURL <-
 
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
-    base.message <-
+    base.msg.to.igv <-
       list(
         elementID = id,
         trackName = trackName,
@@ -970,9 +970,9 @@ loadBamTrackFromURL <-
         showAllBases = showAllBases
       )
 
-    message <- .sanitizeAndMergeOptions(base.message, trackConfig)
+    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
     flog.debug("--- about to send message, loadBamTrack")
-    session$sendCustomMessage("loadBamTrackFromURL", message)
+    session$sendCustomMessage("loadBamTrackFromURL", msg.to.igv)
 
   } # loadBamTrackFromURL
 
@@ -1034,15 +1034,15 @@ loadBamTrackFromLocalData <-
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
 
-    base.message <-
+    base.msg.to.igv <-
       list(
         elementID = id,
         trackName = trackName,
         bamDataFilepath = file.path("tracks", basename(fpath)),
         displayMode = displayMode
       )
-    message <- .sanitizeAndMergeOptions(base.message, trackConfig)
-    session$sendCustomMessage("loadBamTrackFromLocalData", message)
+    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    session$sendCustomMessage("loadBamTrackFromLocalData", msg.to.igv)
 
   } # loadBamTrackFromLocalData
 
@@ -1093,15 +1093,15 @@ loadCramTrackFromURL <-
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
 
-    base.message <-
+    base.msg.to.igv <-
       list(
         elementID = id,
         trackName = trackName,
         cram = cramURL,
         index = indexURL
       )
-    message <- .sanitizeAndMergeOptions(base.message, trackConfig)
-    session$sendCustomMessage("loadCramTrackFromURL", message)
+    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    session$sendCustomMessage("loadCramTrackFromURL", msg.to.igv)
 
   } # loadCramTrackFromURL
 
@@ -1169,7 +1169,7 @@ loadGFF3TrackFromURL <-
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
 
-    base.message <-
+    base.msg.to.igv <-
       list(
         elementID = id,
         trackName = trackName,
@@ -1183,8 +1183,8 @@ loadGFF3TrackFromURL <-
         visibilityWindow = visibilityWindow
       )
 
-    message <- .sanitizeAndMergeOptions(base.message, trackConfig)
-    session$sendCustomMessage("loadGFF3TrackFromURL", message)
+    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    session$sendCustomMessage("loadGFF3TrackFromURL", msg.to.igv)
 
   } # loadGFF3TrackFromURL
 #-------------------------------------------------------------------------------
@@ -1267,7 +1267,7 @@ loadGFF3TrackFromLocalData <-
 
     flog.debug(sprintf("exists? %s", file.exists(gff3.filePath)))
 
-    base.message <-
+    base.msg.to.igv <-
       list(
         elementID = id,
         trackName = trackName,
@@ -1280,8 +1280,8 @@ loadGFF3TrackFromLocalData <-
         visibilityWindow = visibilityWindow
       )
 
-    message <- .sanitizeAndMergeOptions(base.message, trackConfig)
-    session$sendCustomMessage("loadGFF3TrackFromLocalData", message)
+    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    session$sendCustomMessage("loadGFF3TrackFromLocalData", msg.to.igv)
 
   } # loadGFF3TrackFromLocalData
 #-------------------------------------------------------------------------------
