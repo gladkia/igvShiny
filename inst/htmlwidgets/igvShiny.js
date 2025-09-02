@@ -383,33 +383,6 @@ Shiny.addCustomMessageHandler("removeTracksByName",
 
 })  // removeTrackByName
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("loadBedTrackFromFile",
-
-   function(message){
-       igvshiny_log("=== loadBedTrackFile");
-       igvshiny_log(message);
-       var elementID = message.elementID;
-       var igvBrowser = document.getElementById(elementID).igvBrowser;
-
-       var uri = window.location.href + "tracks/" + message.filename;
-       var config = {format: "bed",
-                     name: "feature test",
-                     url: uri,
-                     type: "annotation",
-                     order: Number.MAX_VALUE,
-                     indexed: false,
-                     displayMode: "EXPANDED",
-                     sourceType: "file",
-                     color: "lightGreen",
-		     height: 50
-                     };
-      config = mergeExtraParameters(config, message);
-      igvBrowser.loadTrack(config);
-      }
-
-
-);
-//------------------------------------------------------------------------------------------------------------------------
 Shiny.addCustomMessageHandler("loadGenomeAnnotationTrackFromFile",
 
    function(message){
