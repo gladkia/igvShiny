@@ -9,7 +9,7 @@ VariantAnnotation object"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +43,14 @@ VariantAnnotation object</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">loadVcfTrack</span><span class="op">(</span><span class="va">session</span>, <span class="va">id</span>, <span class="va">trackName</span>, <span class="va">vcfData</span>, deleteTracksOfSameName <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">loadVcfTrack</span><span class="op">(</span></span>
+<span>  <span class="va">session</span>,</span>
+<span>  <span class="va">id</span>,</span>
+<span>  <span class="va">trackName</span>,</span>
+<span>  <span class="va">vcfData</span>,</span>
+<span>  deleteTracksOfSameName <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  trackConfig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -68,6 +75,10 @@ VariantAnnotation object</p>
 
 <dt id="arg-deletetracksofsamename">deleteTracksOfSameName<a class="anchor" aria-label="anchor" href="#arg-deletetracksofsamename"></a></dt>
 <dd><p>logical, default TRUE</p></dd>
+
+
+<dt id="arg-trackconfig">trackConfig<a class="anchor" aria-label="anchor" href="#arg-trackconfig"></a></dt>
+<dd><p>a named list of additional igv.js track configuration options.</p></dd>
 
 </dl></div>
     <div class="section level2">
