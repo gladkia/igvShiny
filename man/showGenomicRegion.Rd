@@ -14,7 +14,7 @@ getGenomicRegion(session, id)
 
 \item{id}{character string, the html element id of this widget instance}
 
-\item{region}{a character string, either e.g. "chr5:92,221,640-92,236,523" 
+\item{region}{a character string, either e.g. "chr5:92,221,640-92,236,523"
 or "MEF2C"}
 }
 \value{

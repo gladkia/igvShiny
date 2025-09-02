@@ -16,7 +16,8 @@ loadGFF3TrackFromURL(
   displayMode,
   trackHeight = 50,
   visibilityWindow,
-  deleteTracksOfSameName = TRUE
+  deleteTracksOfSameName = TRUE,
+  trackConfig = list()
 )
 }
 \arguments{
@@ -26,16 +27,16 @@ loadGFF3TrackFromURL(
 
 \item{trackName}{character string}
 
-\item{gff3URL}{character string http url for the bam file, 
+\item{gff3URL}{character string http url for the bam file,
 typically very large}
 
-\item{indexURL}{character string http url for the bam file index, 
+\item{indexURL}{character string http url for the bam file index,
 typically small}
 
-\item{color}{character #RGB or a recognized color name.  ignored if 
+\item{color}{character #RGB or a recognized color name.  ignored if
 colorTable and colorByAttribute provided}
 
-\item{colorTable}{list, mapping a gff3 attribute, typically biotype, 
+\item{colorTable}{list, mapping a gff3 attribute, typically biotype,
 to a color}
 
 \item{colorByAttribute}{character, name of a gff3 attribute in column 9,
@@ -45,10 +46,12 @@ typically "biotype"}
 
 \item{trackHeight}{numeric defaults to 50}
 
-\item{visibilityWindow}{numeric, Maximum window size in base pairs 
+\item{visibilityWindow}{numeric, Maximum window size in base pairs
 for which indexed annotations or variants are displayed}
 
 \item{deleteTracksOfSameName}{logical, default TRUE}
+
+\item{trackConfig}{a named list of additional igv.js track configuration options.}
 }
 \value{
 nothing

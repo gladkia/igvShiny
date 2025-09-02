@@ -48,6 +48,7 @@ ui = shinyUI(fluidPage(
       h5("One simple data.frame, three igv formats:"),
       actionButton("addBedTrackButton", "Add as Bed"),
       actionButton("addBedGraphTrackButton", "Add as BedGraph"),
+      actionButton("addBedGraphWithAltColorTrackButton", "Add as BedGraph (with AltColor)"),
       actionButton("addBedGraphTrackFromURLButton", "Add BedGraph from URL"),
       # actionButton("addAutoscaledGroupBedGraphTrackButton", "Add Autoscaled Group BedGraphs"),
       # data immediate seg track apparently abandoned with igv.js 2.10.4 or before
@@ -98,6 +99,12 @@ server = function(input, output, session) {
     showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
     loadBedGraphTrack(session, id="igvShiny_0", trackName="wig/bedGraph/local", tbl=tbl.bed5,
                       color="blue", autoscale=TRUE)
+  })
+  
+  observeEvent(input$addBedGraphWithAltColorTrackButton, {
+    showGenomicRegion(session, id="igvShiny_0", "chr1:7,426,231-7,453,241")
+    loadBedGraphTrack(session, id="igvShiny_0", trackName="wig/bedGraph/local/alt", tbl=tbl.bed5,
+                      color="blue", trackConfig = list(altColor = "red"), autoscale=TRUE)
   })
   
   observeEvent(input$addAutoscaledGroupBedGraphTrackButton, {

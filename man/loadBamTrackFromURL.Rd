@@ -12,7 +12,8 @@ loadBamTrackFromURL(
   indexURL,
   deleteTracksOfSameName = TRUE,
   displayMode = "EXPANDED",
-  showAllBases = FALSE
+  showAllBases = FALSE,
+  trackConfig = list()
 )
 }
 \arguments{
@@ -22,10 +23,10 @@ loadBamTrackFromURL(
 
 \item{trackName}{character string}
 
-\item{bamURL}{character string http url for the bam file, 
+\item{bamURL}{character string http url for the bam file,
 typically very large}
 
-\item{indexURL}{character string http url for the bam file index, 
+\item{indexURL}{character string http url for the bam file index,
 typically small}
 
 \item{deleteTracksOfSameName}{logical, default TRUE}
@@ -34,6 +35,8 @@ typically small}
 "SQUISHED" or "COLLAPSED"}
 
 \item{showAllBases}{logical, show all bases in the alignment, default FALSE}
+
+\item{trackConfig}{a named list of additional igv.js track configuration options.}
 }
 \value{
 nothing

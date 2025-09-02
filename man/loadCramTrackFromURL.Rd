@@ -10,7 +10,8 @@ loadCramTrackFromURL(
   trackName,
   cramURL,
   indexURL,
-  deleteTracksOfSameName = TRUE
+  deleteTracksOfSameName = TRUE,
+  trackConfig = list()
 )
 }
 \arguments{
@@ -20,13 +21,15 @@ loadCramTrackFromURL(
 
 \item{trackName}{character string}
 
-\item{cramURL}{character string http url for the bam file, 
+\item{cramURL}{character string http url for the bam file,
 typically very large}
 
-\item{indexURL}{character string http url for the bam file index, 
+\item{indexURL}{character string http url for the bam file index,
 typically small}
 
 \item{deleteTracksOfSameName}{logical, default TRUE}
+
+\item{trackConfig}{a named list of additional igv.js track configuration options.}
 }
 \value{
 nothing

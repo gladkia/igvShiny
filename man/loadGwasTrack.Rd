@@ -2,7 +2,7 @@
 % Please edit documentation in R/igvShiny.R
 \name{loadGwasTrack}
 \alias{loadGwasTrack}
-\title{load a GWAS (genome-wide association study) track 
+\title{load a GWAS (genome-wide association study) track
 provided as a data.frame}
 \usage{
 loadGwasTrack(
@@ -12,7 +12,8 @@ loadGwasTrack(
   tbl.gwas,
   ymin = 0,
   ymax = 35,
-  deleteTracksOfSameName = TRUE
+  deleteTracksOfSameName = TRUE,
+  trackConfig = list()
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ loadGwasTrack(
 \item{ymax}{numeric defaults to 35}
 
 \item{deleteTracksOfSameName}{logical, default TRUE}
+
+\item{trackConfig}{a named list of additional igv.js track configuration options.}
 }
 \value{
 nothing

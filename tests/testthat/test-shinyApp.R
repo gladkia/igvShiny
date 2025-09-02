@@ -26,7 +26,7 @@ test_that("igvShinyDemo loads tracks correctly", {
 
     # Wait for the app and genome to fully load
     app$wait_for_value(input = "igvReady")
-    Sys.sleep(5)
+    Sys.sleep(2)
 
     .click_and_check(app, "addBedGraphTrackButton", 'title="wig/bedGraph/local"')
     .click_and_check(app, "addBedGraphTrackFromURLButton", 'title="bedGraph/remote"')
@@ -49,7 +49,7 @@ test_that("igvShinyDemo-GFF3 loads tracks correctly", {
       timeout = 1e+6
     )
     app$wait_for_value(input = "igvReady")
-    Sys.sleep(5)
+    Sys.sleep(2)
 
     .click_and_check(app, "addRemoteGFF3TrackButton", 'title="url gff3"')
     .click_and_check(app, "addRemoteGFF3TrackButtonWithBiotypeColors", 'title="url gff3 (colors)"')

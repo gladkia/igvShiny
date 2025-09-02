@@ -1,3 +1,6 @@
+## igvShiny 1.5.2 - 2025-09-02
+* support passing additional track options to igv.js
+
 ## igvShiny 1.5.1 - 2025-09-01
 * migrate from RUnit to testthat
 

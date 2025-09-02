@@ -2,10 +2,17 @@
 % Please edit documentation in R/igvShiny.R
 \name{loadVcfTrack}
 \alias{loadVcfTrack}
-\title{load a VCF (variant) track provided as a Bioconductor 
+\title{load a VCF (variant) track provided as a Bioconductor
 VariantAnnotation object}
 \usage{
-loadVcfTrack(session, id, trackName, vcfData, deleteTracksOfSameName = TRUE)
+loadVcfTrack(
+  session,
+  id,
+  trackName,
+  vcfData,
+  deleteTracksOfSameName = TRUE,
+  trackConfig = list()
+)
 }
 \arguments{
 \item{session}{an environment or list, provided and managed by shiny}
@@ -17,12 +24,14 @@ loadVcfTrack(session, id, trackName, vcfData, deleteTracksOfSameName = TRUE)
 \item{vcfData}{VariantAnnotation object}
 
 \item{deleteTracksOfSameName}{logical, default TRUE}
+
+\item{trackConfig}{a named list of additional igv.js track configuration options.}
 }
 \value{
 nothing
 }
 \description{
-load a VCF (variant) track provided as a Bioconductor 
+load a VCF (variant) track provided as a Bioconductor
 VariantAnnotation object
 }
 \examples{

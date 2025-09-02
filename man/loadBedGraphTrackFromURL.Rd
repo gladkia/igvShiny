@@ -16,7 +16,8 @@ loadBedGraphTrackFromURL(
   max = 1,
   autoscaleGroup = -1,
   deleteTracksOfSameName = TRUE,
-  quiet = TRUE
+  quiet = TRUE,
+  trackConfig = list()
 )
 }
 \arguments{
@@ -28,7 +29,7 @@ loadBedGraphTrackFromURL(
 
 \item{url}{character}
 
-\item{color}{character string, a legal CSS color, or "random", 
+\item{color}{character string, a legal CSS color, or "random",
 "gray" by default}
 
 \item{trackHeight}{an integer, 30 (pixels) by default}
@@ -44,6 +45,8 @@ loadBedGraphTrackFromURL(
 \item{deleteTracksOfSameName}{logical(1) defaults to TRUE}
 
 \item{quiet}{logical, default TRUE, controls verbosity}
+
+\item{trackConfig}{a named list of additional igv.js track configuration options.}
 }
 \value{
 nothing
