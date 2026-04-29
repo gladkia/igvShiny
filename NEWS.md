@@ -1,3 +1,6 @@
+## igvShiny 1.8.0
+* Version bump due to Bioconductor 3.23 RELEASE synchronization.
+
 ## igvShiny 1.1.5 - 2024-08-29
 * fix issue with loading bed files when app is run with query strings
 
