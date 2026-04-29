@@ -1,3 +1,6 @@
+## igvShiny 1.9.0
+* Version bump due to Bioconductor 3.23 devel synchronization.
+
 ## igvShiny 1.5.2 - 2025-09-02
 * support passing additional track options to igv.js
 
