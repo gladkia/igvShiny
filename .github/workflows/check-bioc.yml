@@ -210,7 +210,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Install pkgdown
-        if: github.ref == env.gref_pkgdown && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: env.run_pkgdown == 'true'
         run: |
           remotes::install_cran("pkgdown")
         shell: Rscript {0}
