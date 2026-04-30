@@ -1,3 +1,6 @@
+## igvShiny 1.8.2
+* fix(ci): remove test_igvShiny_package.R from filesystem
+
 ## igvShiny 1.8.1
 * fix(ci): remove missing test_igvShiny_package.R from Collate field to fix build error
 
