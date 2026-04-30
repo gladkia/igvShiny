@@ -300,9 +300,9 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#> [1] igvShiny_1.9.2       shiny_1.13.0         GenomicRanges_1.60.0
-#> [4] GenomeInfoDb_1.44.3  IRanges_2.42.0       S4Vectors_0.46.0    
-#> [7] BiocGenerics_0.54.1  generics_0.1.4       BiocStyle_2.36.0    
+#> [1] igvShiny_1.9.2       shiny_1.13.0         GenomicRanges_1.62.1
+#> [4] Seqinfo_1.0.0        IRanges_2.44.0       S4Vectors_0.48.1    
+#> [7] BiocGenerics_0.56.0  generics_0.1.4       BiocStyle_2.38.0    
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] sass_0.4.10             futile.options_1.0.1    stringi_1.8.7          
@@ -310,19 +310,18 @@ sessionInfo()
 #>  [7] evaluate_1.0.5          bookdown_0.46           fastmap_1.2.0          
 #> [10] jsonlite_2.0.0          backports_1.5.1         formatR_1.14           
 #> [13] promises_1.5.0          BiocManager_1.30.27     httr_1.4.8             
-#> [16] scales_1.4.0            UCSC.utils_1.4.0        randomcoloR_1.1.0.1    
-#> [19] textshaping_1.0.5       jquerylib_0.1.4         cli_3.6.6              
-#> [22] rlang_1.2.0             XVector_0.48.0          futile.logger_1.4.9    
-#> [25] cachem_1.1.0            yaml_2.3.12             otel_0.2.0             
-#> [28] Rtsne_0.17              tools_4.5.2             checkmate_2.3.4        
-#> [31] colorspace_2.1-2        httpuv_1.6.17           GenomeInfoDbData_1.2.14
-#> [34] lambda.r_1.2.4          curl_7.1.0              R6_2.6.1               
-#> [37] mime_0.13               lifecycle_1.0.5         stringr_1.6.0          
-#> [40] fs_2.1.0                V8_8.2.0                htmlwidgets_1.6.4      
-#> [43] cluster_2.1.8.2         ragg_1.5.2              desc_1.4.3             
-#> [46] pkgdown_2.2.0           bslib_0.10.0            later_1.4.8            
-#> [49] glue_1.8.1              Rcpp_1.1.1-1.1          systemfonts_1.3.2      
-#> [52] xfun_0.57               knitr_1.51              farver_2.1.2           
-#> [55] xtable_1.8-8            htmltools_0.5.9         rmarkdown_2.31         
-#> [58] compiler_4.5.2
+#> [16] scales_1.4.0            randomcoloR_1.1.0.1     textshaping_1.0.5      
+#> [19] jquerylib_0.1.4         cli_3.6.6               rlang_1.2.0            
+#> [22] futile.logger_1.4.9     cachem_1.1.0            yaml_2.3.12            
+#> [25] otel_0.2.0              Rtsne_0.17              tools_4.5.2            
+#> [28] checkmate_2.3.4         colorspace_2.1-2        httpuv_1.6.17          
+#> [31] GenomeInfoDbData_1.2.15 lambda.r_1.2.4          curl_7.1.0             
+#> [34] R6_2.6.1                mime_0.13               lifecycle_1.0.5        
+#> [37] stringr_1.6.0           fs_2.1.0                V8_8.2.0               
+#> [40] htmlwidgets_1.6.4       cluster_2.1.8.2         ragg_1.5.2             
+#> [43] desc_1.4.3              pkgdown_2.2.0           bslib_0.10.0           
+#> [46] later_1.4.8             glue_1.8.1              Rcpp_1.1.1-1.1         
+#> [49] systemfonts_1.3.2       xfun_0.57               knitr_1.51             
+#> [52] farver_2.1.2            xtable_1.8-8            htmltools_0.5.9        
+#> [55] rmarkdown_2.31          compiler_4.5.2
 ```
