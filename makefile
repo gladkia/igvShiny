@@ -31,3 +31,9 @@ moduleDemo:
 
 rstudio:
 	open -a Rstudio  inst/demos/customGenome-localFiles-sars.R
+
+check-podman:
+	podman run --rm -v $$(pwd):/pkg igvshiny-test-env /bin/bash -c "Rscript -e \"gDRstyle::checkPackage('igvShiny', repoDir='.')\""
+
+build-test-env:
+	podman build -t igvshiny-test-env -f Containerfile .
