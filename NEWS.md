@@ -1,3 +1,6 @@
+## igvShiny 1.9.2
+* fix(ci): add testthat to Suggests field in DESCRIPTION to fix warning
+
 ## igvShiny 1.9.1
 * fix(ci): remove missing test_igvShiny_package.R from Collate field to fix build error
 
