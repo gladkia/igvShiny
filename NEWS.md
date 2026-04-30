@@ -1,3 +1,6 @@
+## igvShiny 1.9.1
+* fix(ci): remove missing test_igvShiny_package.R from Collate field to fix build error
+
 ## igvShiny 1.9.0
 * Version bump due to Bioconductor 3.23 devel synchronization.
 
