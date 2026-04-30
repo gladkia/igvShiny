@@ -36,7 +36,7 @@ Suggests:
     knitr,
     Rsamtools,
     rtracklayer,
-    RUnit,
+    testthat,
     shinytest2,
     VariantAnnotation
 biocViews: Software, ShinyApps, Sequencing, Coverage

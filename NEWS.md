@@ -1,4 +1,7 @@
 ## igvShiny 1.8.2
+* fix(ci): add testthat to Suggests field in DESCRIPTION to fix warning
+
+## igvShiny 1.8.2
 * fix(ci): remove test_igvShiny_package.R from filesystem
 
 ## igvShiny 1.8.1
