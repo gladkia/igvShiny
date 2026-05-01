@@ -1,3 +1,6 @@
+## igvShiny 1.8.3
+* fix: migrate from RUnit to testthat to fix R CMD check failure
+
 ## igvShiny 1.8.2
 * fix(ci): add testthat to Suggests field in DESCRIPTION to fix warning
 
