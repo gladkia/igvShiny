@@ -1,0 +1,32 @@
+on:
+  push:
+    branches:
+      - master
+
+name: Push to Bioconductor
+
+jobs:
+  push-to-bioc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.BIOC_GIT_SSH_KEY }}" > ~/.ssh/id_bioc
+          chmod 600 ~/.ssh/id_bioc
+          ssh-keyscan git.bioconductor.org >> ~/.ssh/known_hosts
+          cat >> ~/.ssh/config <<EOF
+          Host git.bioconductor.org
+            IdentityFile ~/.ssh/id_bioc
+            StrictHostKeyChecking no
+          EOF
+
+      - name: Push to Bioconductor devel
+        run: |
+          git remote add bioc git@git.bioconductor.org:packages/igvShiny.git
+          git push bioc HEAD:devel
