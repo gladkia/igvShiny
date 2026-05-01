@@ -1,5 +1,10 @@
 # Changelog
 
+## igvShiny 1.9.3
+
+- ci: fix Windows/macOS CI failures (install pkgload alongside pkgdown)
+- ci: add automated push to Bioconductor devel on merge to master
+
 ## igvShiny 1.9.2
 
 - fix(ci): add testthat to Suggests field in DESCRIPTION to fix warning
