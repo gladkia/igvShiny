@@ -300,14 +300,14 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#> [1] igvShiny_1.9.3       shiny_1.13.0         GenomicRanges_1.62.1
+#> [1] igvShiny_1.9.3       shiny_1.14.0         GenomicRanges_1.62.1
 #> [4] Seqinfo_1.0.0        IRanges_2.44.0       S4Vectors_0.48.1    
 #> [7] BiocGenerics_0.56.0  generics_0.1.4       BiocStyle_2.38.0    
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] sass_0.4.10             futile.options_1.0.1    stringi_1.8.7          
 #>  [4] digest_0.6.39           magrittr_2.0.5          RColorBrewer_1.1-3     
-#>  [7] evaluate_1.0.5          bookdown_0.46           fastmap_1.2.0          
+#>  [7] evaluate_1.0.5          bookdown_0.47           fastmap_1.2.0          
 #> [10] jsonlite_2.0.0          backports_1.5.1         formatR_1.14           
 #> [13] promises_1.5.0          BiocManager_1.30.27     httr_1.4.8             
 #> [16] scales_1.4.0            randomcoloR_1.1.0.1     textshaping_1.0.5      
@@ -319,9 +319,9 @@ sessionInfo()
 #> [34] R6_2.6.1                mime_0.13               lifecycle_1.0.5        
 #> [37] stringr_1.6.0           fs_2.1.0                V8_8.2.0               
 #> [40] htmlwidgets_1.6.4       cluster_2.1.8.2         ragg_1.5.2             
-#> [43] desc_1.4.3              pkgdown_2.2.0           bslib_0.10.0           
+#> [43] desc_1.4.3              pkgdown_2.2.0           bslib_0.11.0           
 #> [46] later_1.4.8             glue_1.8.1              Rcpp_1.1.1-1.1         
-#> [49] systemfonts_1.3.2       xfun_0.57               knitr_1.51             
+#> [49] systemfonts_1.3.2       xfun_0.59               knitr_1.51             
 #> [52] farver_2.1.2            xtable_1.8-8            htmltools_0.5.9        
 #> [55] rmarkdown_2.31          compiler_4.5.2
 ```
