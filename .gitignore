@@ -34,3 +34,7 @@ vignettes/*.pdf
 /doc/
 /docs/
 /Meta/
+# exploratory / dev notes, mirrored to GDrive instead of git
+/explore
+# Containerfile build log
+build_log.txt
