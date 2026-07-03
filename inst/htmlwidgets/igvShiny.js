@@ -330,7 +330,9 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
           }
        } // switch on dataMode, for a non-stock (custom) genome
 
-    igvOptions.tracks = tracks;
+    if (igvOptions) {
+        igvOptions.tracks = tracks;
+    }
     return(igvOptions)
 
 } // genomeSpecificOptions

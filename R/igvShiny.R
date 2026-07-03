@@ -69,7 +69,7 @@
   }
 
   Filter(Negate(is.null), lapply(tracks, function(track) {
-    if (!is.list(track) || is.null(names(track)) || any(names(track) == "")) {
+    if (!is.list(track) || is.null(names(track)) || any(is.na(names(track))) || any(names(track) == "")) {
       warning("Ignoring invalid entry in 'tracks': each entry must be a named list.")
       return(NULL)
     }
