@@ -78,7 +78,8 @@ HTMLWidgets.widget({
                                                  options.fasta,
                                                  options.fastaIndex,
                                                  options.annotation,
-                                                 options.moduleNS)
+                                                 options.moduleNS,
+                                                 options.tracks)
 
          igvshiny_log("about to createBrowser, trackHeight: " + fullOptions.height)
          igv.createBrowser(igvDiv, fullOptions)
@@ -151,7 +152,7 @@ function moduleNamespace(ns, nameEvent)
 }
 //------------------------------------------------------------------------------------------------------------
 function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, displayMode, trackHeight,
-                               fasta, fastaIndex, annotation, moduleNS)
+                               fasta, fastaIndex, annotation, moduleNS, tracks)
 {
     if(stockGenome){
        igvOptions = {
@@ -161,8 +162,9 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
          flanking: 1000,
 	       name: genomeName,
          showRuler: true,
-         genome: genomeName
-         }; 
+         genome: genomeName,
+         tracks: tracks
+         };
        return(igvOptions)
        }
        
@@ -327,7 +329,8 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
           break;
           }
        } // switch on dataMode, for a non-stock (custom) genome
-    
+
+    igvOptions.tracks = tracks;
     return(igvOptions)
 
 } // genomeSpecificOptions

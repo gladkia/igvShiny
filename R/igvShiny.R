@@ -58,6 +58,35 @@
   return(c(baseOptions, userOptions))
 }
 #-------------------------------------------------------------------------------
+#' Sanitize a list of startup track specifications
+#' @param tracks A list of named lists, each an igv.js track configuration.
+#' @return A sanitized list of track configurations; invalid entries or keys
+#' are dropped with a warning.
+#' @keywords igvShiny
+.sanitizeTracks <- function(tracks) {
+  if (is.null(tracks) || length(tracks) == 0) {
+    return(list())
+  }
+
+  Filter(Negate(is.null), lapply(tracks, function(track) {
+    if (!is.list(track) || is.null(names(track)) || any(names(track) == "")) {
+      warning("Ignoring invalid entry in 'tracks': each entry must be a named list.")
+      return(NULL)
+    }
+    invalidKeys <- setdiff(names(track), .validIgvTrackOptions)
+    if (length(invalidKeys) > 0) {
+      warning(sprintf("Ignoring invalid or unsupported track options in 'tracks': %s",
+                      paste(invalidKeys, collapse = ", ")))
+      track[invalidKeys] <- NULL
+    }
+    if (is.null(track[["url"]])) {
+      warning("Dropping entry in 'tracks' with no valid 'url' after removing unsupported options.")
+      return(NULL)
+    }
+    track
+  }))
+}
+#-------------------------------------------------------------------------------
 #' Create an igvShiny instance
 #'
 #' @description This function is called in the server function of your shiny app
@@ -83,8 +112,12 @@
 #' @param elementId a character string, the html element id within which
 #' igv is created
 #' @param displayMode a character string, default "SQUISHED".
-#' @param tracks a list of track specifications to be created
-#' and displayed at startup
+#' @param tracks a list of track specifications to be created and displayed
+#' at startup. Each element is itself a named list of igv.js track options
+#' (e.g. \code{name}, \code{type}, \code{format}, \code{url}), for example:
+#' \code{list(list(name="genes", type="annotation", format="gff3",
+#' url="https://.../genes.gff3"))}. Unrecognized keys are dropped with a
+#' warning; see \code{.validIgvTrackOptions} for the full allowlist.
 #'
 #' @examples
 #' library(igvShiny)
@@ -156,6 +189,7 @@ igvShiny <- function(genomeOptions,
   genomeOptions$trackHeight <-
     100      # todo: make this an igvShiny ctor argument
   genomeOptions$moduleNS <- session$ns("")
+  genomeOptions$tracks <- .sanitizeTracks(tracks)
 
   htmlwidgets::createWidget(
     name = "igvShiny",
