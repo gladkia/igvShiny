@@ -549,6 +549,8 @@ Shiny.addCustomMessageHandler("loadBedGraphTrackFromURL",
       console.log("--- loading bedGraphTrackFromURL");
       console.log(config)
       config = mergeExtraParameters(config, message);
+      if(autoscaleGroup >= 0)
+          config['autoscaleGroup'] = autoscaleGroup;
       igvBrowser.loadTrack(config);
       }
 
