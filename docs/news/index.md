@@ -1,5 +1,13 @@
 # Changelog
 
+## igvShiny 1.9.4
+
+- fix: pass `autoscaleGroup` through in `loadBedGraphTrackFromURL`
+  ([\#105](https://github.com/gladkia/igvShiny/issues/105), thanks
+  [@M4teuszzGl4dki](https://github.com/M4teuszzGl4dki))
+- fix: support string-based `autoscaleGroup` values in both bedGraph
+  handlers
+
 ## igvShiny 1.9.3
 
 - ci: fix Windows/macOS CI failures (install pkgload alongside pkgdown)
