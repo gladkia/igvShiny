@@ -162,9 +162,11 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
          flanking: 1000,
 	       name: genomeName,
          showRuler: true,
-         genome: genomeName,
-         tracks: tracks
+         genome: genomeName
          };
+       if (tracks && tracks.length > 0) {
+          igvOptions.tracks = tracks;
+       }
        return(igvOptions)
        }
        
@@ -330,7 +332,7 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
           }
        } // switch on dataMode, for a non-stock (custom) genome
 
-    if (igvOptions) {
+    if (igvOptions && tracks && tracks.length > 0) {
         igvOptions.tracks = tracks;
     }
     return(igvOptions)
