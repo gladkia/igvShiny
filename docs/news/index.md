@@ -1,5 +1,11 @@
 # Changelog
 
+## igvShiny 1.9.5
+
+- fix: pass `tracks` startup option through to igv.js
+  ([\#36](https://github.com/gladkia/igvShiny/issues/36), thanks
+  [@M4teuszzGl4dki](https://github.com/M4teuszzGl4dki))
+
 ## igvShiny 1.9.4
 
 - fix: pass `autoscaleGroup` through in `loadBedGraphTrackFromURL`

@@ -8,6 +8,8 @@ Shiny apps.
 
 - [`.sanitizeAndMergeOptions()`](https://gladkia.github.io/igvShiny/reference/dot-sanitizeAndMergeOptions.md)
   : Sanitize and merge track configuration options
+- [`.sanitizeTracks()`](https://gladkia.github.io/igvShiny/reference/dot-sanitizeTracks.md)
+  : Sanitize a list of startup track specifications
 - [`igvShiny()`](https://gladkia.github.io/igvShiny/reference/igvShiny.md)
   : Create an igvShiny instance
 - [`igvShinyOutput()`](https://gladkia.github.io/igvShiny/reference/igvShinyOutput.md)

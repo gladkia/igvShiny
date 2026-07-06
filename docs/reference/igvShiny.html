@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,8 +79,12 @@ igv is created</p></dd>
 
 
 <dt id="arg-tracks">tracks<a class="anchor" aria-label="anchor" href="#arg-tracks"></a></dt>
-<dd><p>a list of track specifications to be created
-and displayed at startup</p></dd>
+<dd><p>a list of track specifications to be created and displayed
+at startup. Each element is itself a named list of igv.js track options
+(e.g. <code>name</code>, <code>type</code>, <code>format</code>, <code>url</code>), for example:
+<code>list(list(name="genes", type="annotation", format="gff3",
+url="https://.../genes.gff3"))</code>. Unrecognized keys are dropped with a
+warning; see <code>.validIgvTrackOptions</code> for the full allowlist.</p></dd>
 
 </dl></div>
     <div class="section level2">

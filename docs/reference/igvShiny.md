@@ -42,7 +42,12 @@ igvShiny(
 
 - tracks:
 
-  a list of track specifications to be created and displayed at startup
+  a list of track specifications to be created and displayed at startup.
+  Each element is itself a named list of igv.js track options (e.g.
+  `name`, `type`, `format`, `url`), for example:
+  `list(list(name="genes", type="annotation", format="gff3", url="https://.../genes.gff3"))`.
+  Unrecognized keys are dropped with a warning; see
+  `.validIgvTrackOptions` for the full allowlist.
 
 ## Value
 
