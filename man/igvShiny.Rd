@@ -28,8 +28,12 @@ igv is created}
 
 \item{displayMode}{a character string, default "SQUISHED".}
 
-\item{tracks}{a list of track specifications to be created
-and displayed at startup}
+\item{tracks}{a list of track specifications to be created and displayed
+at startup. Each element is itself a named list of igv.js track options
+(e.g. \code{name}, \code{type}, \code{format}, \code{url}), for example:
+\code{list(list(name="genes", type="annotation", format="gff3",
+url="https://.../genes.gff3"))}. Unrecognized keys are dropped with a
+warning; see \code{.validIgvTrackOptions} for the full allowlist.}
 }
 \value{
 the created widget

@@ -1,3 +1,6 @@
+## igvShiny 1.9.5
+* fix: pass `tracks` startup option through to igv.js (#36, thanks @M4teuszzGl4dki)
+
 ## igvShiny 1.9.4
 * fix: pass `autoscaleGroup` through in `loadBedGraphTrackFromURL` (#105, thanks @M4teuszzGl4dki)
 * fix: support string-based `autoscaleGroup` values in both bedGraph handlers
