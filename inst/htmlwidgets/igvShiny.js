@@ -164,6 +164,27 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
          showRuler: true,
          genome: genomeName
          };
+       // Work around broken upstream genomes.json fasta index URLs (issue #107).
+       // For these stock genomes igv.js resolves the sequence from the live
+       // https://igv.org/genomes/genomes.json, whose fasta indexURLs currently
+       // 404, so the genome never displays. Supply an explicit, verified
+       // reference with working fastaURL/indexURL instead of the bare id.
+       // Temporary: to be removed once igv.js is upgraded to 3.x (issue #107 / C).
+       // rn6 is intentionally not covered here: it has no working plain fasta
+       // index available upstream, and igv.js 2.13.1 does not support twoBitURL;
+       // it will be fixed by the igv.js 3.x upgrade.
+       var brokenStockGenomeReference = {
+          mm10: {id: "mm10",
+                 fastaURL: "https://igv.org/genomes/data/mm10/mm10.fa",
+                 indexURL: "https://igv.org/genomes/data/mm10/mm10.fa.fai"},
+          danRer11: {id: "danRer11",
+                     fastaURL: "https://s3.amazonaws.com/igv.org.genomes/danRer11/danRer11.fa",
+                     indexURL: "https://s3.amazonaws.com/igv.org.genomes/danRer11/danRer11.fa.fai"}
+          };
+       if (brokenStockGenomeReference.hasOwnProperty(genomeName)) {
+          delete igvOptions.genome;
+          igvOptions.reference = brokenStockGenomeReference[genomeName];
+          }
        if (tracks && tracks.length > 0) {
           igvOptions.tracks = tracks;
        }
