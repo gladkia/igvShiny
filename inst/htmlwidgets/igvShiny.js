@@ -170,16 +170,37 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
        // 404, so the genome never displays. Supply an explicit, verified
        // reference with working fastaURL/indexURL instead of the bare id.
        // Temporary: to be removed once igv.js is upgraded to 3.x (issue #107 / C).
+       //
+       // The reference below must repeat everything the genomes.json entry
+       // carries, not just the sequence URLs: a config with both id and
+       // fastaURL is returned as-is by expandReference(), so igv.js never
+       // looks the id up in KNOWN_GENOMES and anything omitted here is simply
+       // lost (loadGenome falls back to `genomeConfig.tracks || []`).
+       //
        // rn6 is intentionally not covered here: it has no working plain fasta
        // index available upstream, and igv.js 2.13.1 does not support twoBitURL;
        // it will be fixed by the igv.js 3.x upgrade.
        var brokenStockGenomeReference = {
           mm10: {id: "mm10",
                  fastaURL: "https://igv.org/genomes/data/mm10/mm10.fa",
-                 indexURL: "https://igv.org/genomes/data/mm10/mm10.fa.fai"},
+                 indexURL: "https://igv.org/genomes/data/mm10/mm10.fa.fai",
+                 cytobandURL: "https://hgdownload.soe.ucsc.edu/goldenPath/mm10/database/cytoBandIdeo.txt.gz",
+                 chromosomeOrder: "chr1,chr2,chr3,chr4,chr5,chr6,chr7,chr8,chr9,chr10,chr11,chr12,chr13,chr14,chr15,chr16,chr17,chr18,chr19,chrX,chrY",
+                 tracks: [{name: "Refseq Curated",
+                           format: "refgene",
+                           url: "https://hgdownload.soe.ucsc.edu/goldenPath/mm10/database/ncbiRefSeqCurated.txt.gz",
+                           indexed: false,
+                           order: 1000000}]},
           danRer11: {id: "danRer11",
                      fastaURL: "https://s3.amazonaws.com/igv.org.genomes/danRer11/danRer11.fa",
-                     indexURL: "https://s3.amazonaws.com/igv.org.genomes/danRer11/danRer11.fa.fai"}
+                     indexURL: "https://s3.amazonaws.com/igv.org.genomes/danRer11/danRer11.fa.fai",
+                     cytobandURL: "https://hgdownload.soe.ucsc.edu/goldenPath/danRer11/database/cytoBandIdeo.txt.gz",
+                     aliasURL: "https://hgdownload.soe.ucsc.edu/goldenPath/danRer11/bigZips/danRer11.chromAlias.txt",
+                     chromosomeOrder: "chr1,chr2,chr3,chr4,chr5,chr6,chr7,chr8,chr9,chr10,chr11,chr12,chr13,chr14,chr15,chr16,chr17,chr18,chr19,chr20,chr21,chr22,chr23,chr24,chr25",
+                     tracks: [{name: "Refseq Curated",
+                               format: "refgene",
+                               url: "https://hgdownload.soe.ucsc.edu/goldenPath/danRer11/database/ncbiRefSeqCurated.txt.gz",
+                               order: 1000000}]}
           };
        if (brokenStockGenomeReference.hasOwnProperty(genomeName)) {
           delete igvOptions.genome;
