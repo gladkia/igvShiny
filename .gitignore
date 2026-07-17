@@ -36,5 +36,7 @@ vignettes/*.pdf
 /Meta/
 # exploratory / dev notes, mirrored to GDrive instead of git
 /explore
+# serena MCP language-server cache/config (local dev tooling)
+/.serena
 # Containerfile build log
 build_log.txt
