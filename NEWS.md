@@ -1,3 +1,8 @@
+## igvShiny 1.9.6
+* docs: credit past contributors in `DESCRIPTION` — Carolina Heimann, Steffen
+  Klasberg, Vincent Carey, Parv Sachdeva and Mateusz Gladki are now listed as
+  `ctb`
+
 ## igvShiny 1.9.5
 * fix: pass `tracks` startup option through to igv.js (#36, thanks @M4teuszzGl4dki)
 

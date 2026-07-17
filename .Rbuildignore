@@ -7,3 +7,5 @@
 ^Meta$
 ^AGENTS\.md$
 ^Containerfile$
+^\.serena$
+^CLAUDE\.md$
