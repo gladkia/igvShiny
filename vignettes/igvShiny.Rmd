@@ -12,7 +12,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>"
@@ -27,7 +27,7 @@ It can be used as a module in Shiny apps.
 
 # Installation
 
-```{r,eval=FALSE}
+```{r install, eval=FALSE}
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
@@ -36,7 +36,7 @@ BiocManager::install("igvShiny")
 
 # Loading the package
 
-```{r,include=TRUE,results="hide",message=FALSE,warning=FALSE}
+```{r load-package, include=TRUE, results="hide", message=FALSE, warning=FALSE}
 library(igvShiny)
 ```
 
@@ -50,7 +50,7 @@ Running the minimal Shiny app with igvShiny is as simple as:
 
 The he minimal Shiny app make look like: 
 
-```{r,eval=FALSE}
+```{r minimal-app, eval=FALSE}
 library(igvShiny)
 options <- parseAndValidateGenomeSpec(genomeName="hg38",  initialLocus="NDUFS2")
 if (interactive()) {
@@ -74,18 +74,18 @@ One can select any stock genome easily by running `parseAndValidateGenomeSpec`
 with single `genomeName` value properly assigned.
 For example to use the most popular mouse genome one need to run:
 
-```{r,echo=TRUE}
+```{r stock-genome-spec, echo=TRUE}
 igvShiny::parseAndValidateGenomeSpec("mm10")
 ```
 
 The list of available stock genomes in igvShiny can be found with:
-```{r,echo=TRUE}
+```{r list-stock-genomes, echo=TRUE}
 igvShiny::get_css_genomes()
 ```
 
 See also demo app for stock genomes when one can select genome of interest 
 and familiarize with the basic functionalities provided via igvShiny:
-```{r,echo=TRUE}
+```{r stock-genomes-demo, echo=TRUE}
 library(igvShiny)
 demo_app_file <- system.file(package= "igvShiny", "demos", "stockGenomesDemo.R")
     if (interactive()) {
@@ -99,7 +99,7 @@ In such cases  one has to provide data for:
 The files can provided as local paths (`dataMode` = `localFiles` or via URLs
 (`dataMode = http`). See below the examples for both cases.
 
-```{r,echo=TRUE}
+```{r custom-genome-spec, echo=TRUE}
 library(igvShiny)
 
 # defining custom genome with data provided via URLs
@@ -138,11 +138,11 @@ genomeOptions2
 ```
 
 See also demo apps for custom genomes with data provided via URLs:
-```{r,echo=TRUE}
+```{r custom-genome-http-demo, echo=TRUE}
 library(igvShiny)
 demo_app_file <- system.file(
-    package = "igvShiny", 
-    "demos", 
+    package = "igvShiny",
+    "demos",
     "igvShinyDemo-customGenome-http.R"
     )
 if (interactive()) {
@@ -150,7 +150,7 @@ if (interactive()) {
     }
 ```
 as well as data provided via local files:
-```{r,echo=TRUE}
+```{r custom-genome-local-demo, echo=TRUE}
 library(igvShiny)
 demo_app_file <-
     system.file(
@@ -186,7 +186,7 @@ added during the session by the user)
 
 See also demo app to familiarize with the basic functionalities 
 provided by igvShiny:
-```{r,echo=TRUE}
+```{r main-demo, echo=TRUE}
 library(igvShiny)
 demo_app_file <- system.file(package= "igvShiny", "demos", "igvShinyDemo.R")
 if (interactive()) {
@@ -196,6 +196,6 @@ if (interactive()) {
 
 # Session Info
 
-```{r}
+```{r session-info}
 sessionInfo()
 ```

@@ -1,3 +1,8 @@
+## igvShiny 1.9.8
+* Add labels to all vignette code chunks (BiocCheck)
+* Add the R Consortium `fnd` (funder) role to `Authors@R` — the ISC grant
+  funding this work (BiocCheck)
+
 ## igvShiny 1.9.7
 * demo: add a public, clickable demo app deployed on Posit Connect Cloud, plus
   the repository's first `README` (#117, #118)
