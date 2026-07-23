@@ -291,7 +291,7 @@ setMethod("show",
                 " pval=", object@pval.col, "\n", sep = "")
             cat("  trackHeight:", object@trackHeight, "\n")
             cat("  autoscale:  ", object@autoscale, "\n", sep = "")
-            if (!object@autoscale) {
+            if (isFALSE(object@autoscale)) {
               cat("  yRange:     [", object@minY, ", ", object@maxY, "]\n",
                   sep = "")
             }
