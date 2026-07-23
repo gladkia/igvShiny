@@ -87,4 +87,4 @@ follows Bioconductor coding and review standards (see [`AGENTS.md`](AGENTS.md)).
 ## License
 
 MIT © the igvShiny authors (see [`LICENSE.md`](LICENSE.md) / [`DESCRIPTION`](DESCRIPTION)).
-Originally created by Paul Shannon; now developed and maintained by Arkadiusz Gladki.
+Originally created by Paul Shannon; lead developer and maintainer: Arkadiusz Gladki.
