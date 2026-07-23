@@ -42,7 +42,7 @@
   conflictingKeys <- intersect(names(baseOptions), names(userOptions))
   if (length(conflictingKeys) > 0) {
     warning(sprintf("User-provided trackConfig options conflict with function arguments and will be ignored: %s",
-                    paste(conflictingKeys, collapse = ", ")))
+                    toString(conflictingKeys)))
     userOptions[conflictingKeys] <- NULL # Prioritize base options for security and clarity
   }
 
@@ -50,7 +50,7 @@
   invalidKeys <- setdiff(names(userOptions), .validIgvTrackOptions)
   if (length(invalidKeys) > 0) {
     warning(sprintf("Ignoring invalid or unsupported track options in trackConfig: %s",
-                    paste(invalidKeys, collapse = ", ")))
+                    toString(invalidKeys)))
     userOptions[invalidKeys] <- NULL
   }
 
@@ -76,7 +76,7 @@
     invalidKeys <- setdiff(names(track), .validIgvTrackOptions)
     if (length(invalidKeys) > 0) {
       warning(sprintf("Ignoring invalid or unsupported track options in 'tracks': %s",
-                      paste(invalidKeys, collapse = ", ")))
+                      toString(invalidKeys)))
       track[invalidKeys] <- NULL
     }
     if (is.null(track[["url"]])) {
@@ -451,12 +451,12 @@ loadBedTrack <-
            trackConfig = list()) {
     if (color == "random")
       color <-
-        randomColors[sample(seq_len(length(randomColors)), 1)]
+        randomColors[sample(seq_along(randomColors), 1)]
 
     if (!quiet) {
       flog.debug("--- igvShiny::loadBedTrack")
 
-      flog.debug(sprintf("rows: %d  cols: %d", nrow(tbl), ncol(tbl)))
+      flog.debug(sprintf("rows: %d  cols: %d", NROW(tbl), NCOL(tbl)))
     }
 
     if (deleteTracksOfSameName) {
@@ -496,8 +496,8 @@ loadBedTrack <-
       file = temp.file
     )
     lmsg <- sprintf("--- igvShiny.R, loadBedTrack wrote %d,%d to %s",
-                    nrow(tbl),
-                    ncol(tbl),
+                    NROW(tbl),
+                    NCOL(tbl),
                     temp.file)
     flog.debug(lmsg)
     flog.debug(sprintf("exists? %s", file.exists(temp.file)))
@@ -570,7 +570,7 @@ loadBedGraphTrackFromURL <-
 
     if (color == "random")
       color <-
-        randomColors[sample(seq_len(length(randomColors)), 1)]
+        randomColors[sample(seq_along(randomColors), 1)]
 
     if (!quiet) {
       lmsg <- sprintf("--- igvShiny::loadBedGraphTrackFromURL: %s",
@@ -665,16 +665,16 @@ loadBedGraphTrack <-
            deleteTracksOfSameName = TRUE,
            quiet = TRUE,
            trackConfig = list()) {
-    stopifnot(ncol(tbl) >= 4)
+    stopifnot(NCOL(tbl) >= 4)
 
     if (color == "random")
       color <-
-        randomColors[sample(seq_len(length(randomColors)), 1)]
+        randomColors[sample(seq_along(randomColors), 1)]
 
     if (!quiet) {
       flog.debug("--- igvShiny::loadGenomeAnnotationTrack: %s",
                  trackName)
-      flog.debug("    %d rows, %d columns", nrow(tbl), ncol(tbl))
+      flog.debug("    %d rows, %d columns", NROW(tbl), NCOL(tbl))
     }
 
     if (deleteTracksOfSameName) {
@@ -696,11 +696,9 @@ loadBedGraphTrack <-
 
     if (all(colnames(tbl)[c(1, 2, 3)] != c("chr", "start", "end"))) {
       flog.debug("found these colnames: %s",
-                 paste(colnames(tbl)[c(1, 2, 3)],
-                       collapse = ", "))
+                 toString(colnames(tbl)[c(1, 2, 3)]))
       flog.debug("            required: %s",
-                 paste(c("chr", "start", "end"),
-                       collapse = ", "))
+                 toString(c("chr", "start", "end")))
       stop("improper columns in bed track data.frame")
     }
 
@@ -769,7 +767,7 @@ loadSegTrack <-
            trackConfig = list()) {
     flog.debug("--- entering loadSegTrack %s with %d rows",
                trackName,
-               nrow(tbl))
+               NROW(tbl))
 
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
@@ -920,8 +918,8 @@ loadGwasTrack <- function(session,
   )
   lmsg <- sprintf(
     "--- igvShiny.R, loadGwasTrack wrote %d,%d to %s",
-    nrow(tbl.gwas),
-    ncol(tbl.gwas),
+    NROW(tbl.gwas),
+    NCOL(tbl.gwas),
     temp.file
   )
   flog.debug(lmsg)
@@ -1293,8 +1291,8 @@ loadGFF3TrackFromLocalData <-
     )
     lmsg <- sprintf(
       "--- igvShiny.R, loadGFF3TrackFromLocalData wrote %d,%d to %s",
-      nrow(tbl.gff3),
-      ncol(tbl.gff3),
+      NROW(tbl.gff3),
+      NCOL(tbl.gff3),
       gff3.filePath
     )
     flog.debug(lmsg)
@@ -1319,4 +1317,3 @@ loadGFF3TrackFromLocalData <-
 
   } # loadGFF3TrackFromLocalData
 #-------------------------------------------------------------------------------
-

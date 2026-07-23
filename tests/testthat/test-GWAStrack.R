@@ -4,7 +4,7 @@ library(igvShiny)
 test_that("GWASTrack constructor works with a data.frame", {
   f <- system.file(package = "igvShiny", "extdata", "gwas.RData")
   tbl.gwas <- get(load(f))
-  
+
   gwasTrack <- GWASTrack(
     "data.frame gwas",
     tbl.gwas,
@@ -43,7 +43,7 @@ test_that("GWASTrack constructor fails with illegal arguments", {
       trackHeight = 100
     )
   )
-  
+
   expect_error(
     GWASTrack(
       "bogus data type",

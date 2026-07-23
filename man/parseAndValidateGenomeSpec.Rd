@@ -15,21 +15,21 @@ parseAndValidateGenomeSpec(
 )
 }
 \arguments{
-\item{genomeName}{character usually one short code of a supported ("stock") 
-genome (e.g., "hg38") or for a user-supplied custom genome, 
+\item{genomeName}{character usually one short code of a supported ("stock")
+genome (e.g., "hg38") or for a user-supplied custom genome,
 the name you wish to use}
 
-\item{initialLocus}{character default "all", otherwise "chrN:start-end" 
+\item{initialLocus}{character default "all", otherwise "chrN:start-end"
 or a recognized gene symbol}
 
 \item{stockGenome}{logical default TRUE}
 
 \item{dataMode}{character either "stock", "localFile" or "http"}
 
-\item{fasta}{character when supplying a custom (non-stock) genome, 
+\item{fasta}{character when supplying a custom (non-stock) genome,
 either a file path or a URL}
 
-\item{fastaIndex}{character when supplying a custom (non-stock) genome, 
+\item{fastaIndex}{character when supplying a custom (non-stock) genome,
 either a file path or a URL,
 essential for all but the very small custom genomes.}
 
@@ -41,8 +41,8 @@ a gff3 format}
 an options list directly usable by igvApp.js, and thus igv.js
 }
 \description{
-a helper function for internal use by the igvShiny constructor, 
-but possible also of use to those building an igvShiny app, 
+a helper function for internal use by the igvShiny constructor,
+but possible also of use to those building an igvShiny app,
 to test their genome specification for validity
 }
 \examples{

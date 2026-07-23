@@ -10,7 +10,7 @@ get_basic_genomes()
 an list of short genome codes, e.g., "hg38", "dm6"
 }
 \description{
-a helper function for basic genomes, 
+a helper function for basic genomes,
 obtains the genome codes (e.g. 'hg38')
 }
 \examples{
