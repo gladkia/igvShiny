@@ -36,6 +36,7 @@
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
+<li class="nav-item"><a class="external-link nav-link" href="https://gladkia-igvshiny-demo.share.connect.posit.cloud" aria-label="Live igvShiny demo on Posit Connect Cloud">Live demo</a></li>
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
@@ -47,8 +48,90 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9">
-This package is a wrapper of Integrative Genomics Viewer (IGV). It comprises an htmlwidget version of IGV. It can be used as a module in Shiny apps.
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header"><h1 id="igvshiny">igvShiny<a class="anchor" aria-label="anchor" href="#igvshiny"></a>
+</h1></div>
+<!-- badges: start -->
+
+<p>An <a href="https://www.htmlwidgets.org/" class="external-link">htmlwidget</a> wrapper of the <a href="https://igv.org/" class="external-link">Integrative Genomics Viewer (IGV)</a> — embed an interactive genome browser in your <a href="https://shiny.posit.co/" class="external-link">Shiny</a> apps, and drive it from R. One of only two Bioconductor packages bridging IGV to R.</p>
+<div class="section level2">
+<h2 id="microscope-live-demo">🔬 Live demo<a class="anchor" aria-label="anchor" href="#microscope-live-demo"></a>
+</h2>
+<p><strong><a href="https://gladkia-igvshiny-demo.share.connect.posit.cloud" class="external-link">gladkia-igvshiny-demo.share.connect.posit.cloud</a></strong></p>
+<p>Click through BED / BedGraph / GWAS / BAM / CRAM tracks in a running app — no install required. (Hosted on <a href="https://connect.posit.cloud/" class="external-link">Posit Connect Cloud</a>; source in <a href="demo/posit-connect/"><code>demo/posit-connect/</code></a>.)</p>
+<div class="float">
+<img src="reference/figures/demo-gwas.png" alt="igvShiny demo — a GWAS Manhattan track over chr19 in the embedded IGV browser"><div class="figcaption">igvShiny demo — a GWAS Manhattan track over chr19 in the embedded IGV browser</div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>Release version from <a href="https://bioconductor.org/packages/igvShiny" class="external-link">Bioconductor</a>:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://bioconductor.github.io/BiocManager/" class="external-link">"BiocManager"</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"igvShiny"</span><span class="op">)</span></span></code></pre></div>
+<p>Development version from GitHub:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"gladkia/igvShiny"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
+</h2>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/gladkia/igvShiny" class="external-link">igvShiny</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">options</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parseAndValidateGenomeSpec.html">parseAndValidateGenomeSpec</a></span><span class="op">(</span>genomeName <span class="op">=</span> <span class="st">"hg38"</span>, initialLocus <span class="op">=</span> <span class="st">"NDUFS2"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="reference/igvShinyOutput.html">igvShinyOutput</a></span><span class="op">(</span><span class="st">"igv"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">output</span><span class="op">$</span><span class="va">igv</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/renderIgvShiny.html">renderIgvShiny</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>    <span class="fu"><a href="reference/igvShiny.html">igvShiny</a></span><span class="op">(</span><span class="va">options</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
+<p>From there, load tracks reactively with the <code>load*Track*</code> functions (<code>loadBedTrack</code>, <code>loadBedGraphTrack</code>, <code>loadGwasTrack</code>, <code>loadBamTrackFromURL</code>, <code>loadCramTrackFromURL</code>, …) and move the view with <code><a href="reference/showGenomicRegion.html">showGenomicRegion()</a></code>.</p>
+</div>
+<div class="section level2">
+<h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
+</h2>
+<ul>
+<li>Interactive IGV genome browser as a Shiny <code>htmlwidget</code>, usable as a Shiny module.</li>
+<li>Stock genomes (hg38, hg19, mm10, tair10, …) and custom genomes from local or remote FASTA.</li>
+<li>Track loaders for BED, BedGraph, bed9, GWAS, SEG, VCF, BAM (URL / local), and CRAM (URL).</li>
+<li>Navigate and query the current view from R (<code><a href="reference/showGenomicRegion.html">showGenomicRegion()</a></code>, <code><a href="reference/showGenomicRegion.html">getGenomicRegion()</a></code>).</li>
+<li>Track-click events surfaced back to the Shiny server.</li>
+</ul>
+<p>More examples live in <a href="inst/demos/"><code>inst/demos/</code></a>.</p>
+</div>
+<div class="section level2">
+<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
+</h2>
+<ul>
+<li>📦 Reference &amp; articles: <a href="https://gladkia.github.io/igvShiny/" class="uri">https://gladkia.github.io/igvShiny/</a>
+</li>
+<li>📖 Vignette: <code><a href="articles/igvShiny.html">vignette("igvShiny")</a></code>
+</li>
+<li>🐛 Issues / feature requests: <a href="https://github.com/gladkia/igvShiny/issues" class="external-link uri">https://github.com/gladkia/igvShiny/issues</a>
+</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
+</h2>
+<p>Contributions are welcome — please open an issue or pull request. The package follows Bioconductor coding and review standards (see <a href="AGENTS.html"><code>AGENTS.md</code></a>).</p>
+</div>
+<div class="section level2">
+<h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
+</h2>
+<p>MIT © the igvShiny authors (see <a href="LICENSE.html"><code>LICENSE.md</code></a> / <a href="DESCRIPTION"><code>DESCRIPTION</code></a>). Originally created by Paul Shannon; lead developer and maintainer: Arkadiusz Gladki.</p>
+</div>
+</div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
@@ -84,7 +167,15 @@ This package is a wrapper of Integrative Genomics Viewer (IGV). It comprises an 
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://bioconductor.org/packages/release/bioc/html/igvShiny.html" class="external-link"><img src="https://bioconductor.org/shields/build/release/bioc/igvShiny.svg" alt="Bioconductor build"></a></li>
+<li><a href="https://github.com/gladkia/igvShiny/actions/workflows/check-bioc.yml" class="external-link"><img src="https://github.com/gladkia/igvShiny/actions/workflows/check-bioc.yml/badge.svg" alt="R-CMD-check (BiocCheck)"></a></li>
+<li><a href="https://bioconductor.org/packages/stats/bioc/igvShiny/" class="external-link"><img src="https://bioconductor.org/shields/downloads/release/igvShiny.svg" alt="Bioconductor downloads"></a></li>
+<li><a href="LICENSE.html"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>
