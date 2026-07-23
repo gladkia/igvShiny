@@ -1,5 +1,15 @@
 # Changelog
 
+## igvShiny 1.9.7
+
+- demo: add a public, clickable demo app deployed on Posit Connect
+  Cloud, plus the repository’s first `README`
+  ([\#117](https://github.com/gladkia/igvShiny/issues/117),
+  [\#118](https://github.com/gladkia/igvShiny/issues/118))
+- demo: modern `bslib` (Bootstrap 5) UI for the Connect demo — grouped
+  controls, themed layout, IGV viewer in a full-screen-able card
+  ([\#119](https://github.com/gladkia/igvShiny/issues/119))
+
 ## igvShiny 1.9.6
 
 - docs: credit past contributors in `DESCRIPTION` — Carolina Heimann,
