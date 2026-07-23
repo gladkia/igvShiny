@@ -1,6 +1,6 @@
 
 #' @title get_basic_genomes
-#' @description a helper function for basic genomes, 
+#' @description a helper function for basic genomes,
 #' obtains the genome codes (e.g. 'hg38')
 #'
 #' @rdname get_basic_genomes
@@ -16,7 +16,7 @@
 #'
 get_basic_genomes <- function() {
   BASIC_GENOMES
-  
+
 } # get_basic_genomes
 #-------------------------------------------------------------------------------
 #' @title get_cas_genomes
@@ -36,11 +36,11 @@ get_basic_genomes <- function() {
 #'
 get_cas_genomes <- function() {
   CAS_GENOMES
-  
+
 } # get_cas_genomes
 #-------------------------------------------------------------------------------
 #' @title get_css_genomes
-#' @description a helper function for mostly internal use, 
+#' @description a helper function for mostly internal use,
 #' obtains the genome codes (e.g. 'hg38') supported by igv.js
 #'
 #' @rdname get_css_genomes
@@ -58,37 +58,37 @@ get_cas_genomes <- function() {
 get_css_genomes <- function(test = FALSE) {
   if (test)
     return(get_basic_genomes())
-  
+
   current.genomes.file <- "https://igv.org/genomes/genomes.json"
-  
+
   if (httr::http_error(current.genomes.file))
     return(get_basic_genomes())
-  
+
   current.genomes.raw <-
     readLines(current.genomes.file, warn = FALSE, skipNul = TRUE)
   tbl.genomes <- jsonlite::fromJSON(current.genomes.raw)
   tbl.genomes$id
-  
+
 } # get_css_genomes
 #-------------------------------------------------------------------------------
 #' @title parseAndValidateGenomeSpec
-#' @description a helper function for internal use by the igvShiny constructor, 
-#' but possible also of use to those building an igvShiny app, 
+#' @description a helper function for internal use by the igvShiny constructor,
+#' but possible also of use to those building an igvShiny app,
 #' to test their genome specification for validity
 #'
 #' @rdname  parseAndValidateGenomeSpec
 #' @aliases parseAndValidateGenomeSpec
 #'
-#' @param genomeName character usually one short code of a supported ("stock") 
-#' genome (e.g., "hg38") or for a user-supplied custom genome, 
+#' @param genomeName character usually one short code of a supported ("stock")
+#' genome (e.g., "hg38") or for a user-supplied custom genome,
 #' the name you wish to use
-#' @param initialLocus character default "all", otherwise "chrN:start-end" 
+#' @param initialLocus character default "all", otherwise "chrN:start-end"
 #' or a recognized gene symbol
 #' @param stockGenome logical default TRUE
 #' @param dataMode character either "stock", "localFile" or "http"
-#' @param fasta character when supplying a custom (non-stock) genome, 
+#' @param fasta character when supplying a custom (non-stock) genome,
 #' either a file path or a URL
-#' @param fastaIndex character when supplying a custom (non-stock) genome, 
+#' @param fastaIndex character when supplying a custom (non-stock) genome,
 #' either a file path or a URL,
 #' essential for all but the very small custom genomes.
 #' @param genomeAnnotation character when supplying a custom (non-stock) genome,
@@ -137,13 +137,13 @@ parseAndValidateGenomeSpec <- function(genomeName,
   options[["stockGenome"]] <- stockGenome
   options[["dataMode"]] <- dataMode
   options[["validated"]] <- FALSE
-  
-  
+
+
   #--------------------------------------------------
   # first: is this a stock genome?  if so, we need
   # only check if the genomeName is recognized
   #--------------------------------------------------
-  
+
   if (stockGenome) {
     if (!genomeName %in% get_cas_genomes()) {
       supported.stock.genomes <- get_css_genomes()
@@ -165,15 +165,15 @@ parseAndValidateGenomeSpec <- function(genomeName,
     options[["annotation"]] <- NA
     options[["validated"]] <- TRUE
   }# stockGenome requested
-  
+
   if (!stockGenome) {
     stopifnot(!is.na(dataMode))
     stopifnot(!is.na(fasta))
     stopifnot(!is.na(fastaIndex))
     # genomeAnnotation is optional
-    
+
     # "direct" for an in-memory R data structure, deferred
-    recognized.modes <- c("localFiles", "http")  
+    recognized.modes <- c("localFiles", "http")
     if (!dataMode %in% recognized.modes) {
       msg <-
         sprintf(
@@ -186,7 +186,7 @@ parseAndValidateGenomeSpec <- function(genomeName,
     #---------------------------------------------------------------------
     # dataMode determines how to check for the existence of each resource
     #---------------------------------------------------------------------
-    
+
     exists.function <- switch(dataMode,
                               "localFiles" = file.exists,
                               "http" = function(x, ...) {
@@ -196,7 +196,7 @@ parseAndValidateGenomeSpec <- function(genomeName,
     stopifnot(exists.function(fastaIndex))
     if (!is.na(genomeAnnotation))
       stopifnot(exists.function(genomeAnnotation))
-    
+
     options[["genomeName"]]  <- genomeName
     options[["fasta"]] <- fasta
     options[["fastaIndex"]] <- fastaIndex
@@ -204,8 +204,8 @@ parseAndValidateGenomeSpec <- function(genomeName,
     options[["annotation"]] <- genomeAnnotation
     options[["validated"]] <- TRUE
   } # if !stockGenome
-  
+
   return(options)
-  
+
 } # parseAndValidateGenomeSpec
 #-------------------------------------------------------------------------------

@@ -46,9 +46,9 @@ setGeneric("getUrl",
 #' @name GWASTrack
 #' @rdname GWASTrack-class
 #'
-#' @param trackName A character string, used as track label by igv, 
+#' @param trackName A character string, used as track label by igv,
 #' we recommend unique names per track.
-#' @param data a data.frame or a url pointing to one, 
+#' @param data a data.frame or a url pointing to one,
 #' whose structure is described by chrom.col, pos.col, pval.col
 #' @param chrom.col numeric, the column number of the chromosome column
 #' @param pos.col numeric, the column number of the position column
@@ -78,7 +78,7 @@ setGeneric("getUrl",
 #'     pval.col = 28
 #'   )
 #' getUrl(track)
-#' 
+#'
 #' url <- "https://gladki.pl/igvShiny/gwas_sample.tsv.gz"
 #' track <- GWASTrack(
 #'   "remote url gwas",
@@ -110,7 +110,7 @@ GWASTrack <- function(trackName,
                       maxY = 30) {
   data.class <- class(data)
   stopifnot(data.class %in% c("data.frame", "character"))
-  
+
   if (data.class == "data.frame") {
     mode <- "local.url"
     tdir <- get_tracks_dir()
@@ -125,7 +125,7 @@ GWASTrack <- function(trackName,
       file = url
     )
   }
-  
+
   if (data.class == "character") {
     if (httr::http_error(data)) {
       # was a legitimate url provided?
@@ -137,7 +137,7 @@ GWASTrack <- function(trackName,
     mode <- "remote.url"
     url <- data
   }
-  
+
   obj <- .GWASTrack(
     trackName = trackName,
     data.mode = mode,
@@ -151,7 +151,7 @@ GWASTrack <- function(trackName,
     maxY = maxY
   )
   obj
-  
+
 } # GWASTrack
 #-------------------------------------------------------------------------------
 #' display the already constructed and configured track
@@ -163,7 +163,7 @@ GWASTrack <- function(trackName,
 #' @param session a Shiny session object
 #' @param id character the identifier of the target igv object in the browser
 #' @param deleteTracksOfSameName logical to avoid duplications in track names
-#' 
+#'
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
@@ -171,7 +171,7 @@ GWASTrack <- function(trackName,
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
-#' 
+#'
 #' @return nothing
 #'
 #' @keywords GWASTrack_class
@@ -179,7 +179,7 @@ GWASTrack <- function(trackName,
 #'
 setMethod("display",
           "GWASTrack",
-          
+
           function(obj,
                    session,
                    id,
@@ -187,10 +187,10 @@ setMethod("display",
             if (deleteTracksOfSameName) {
               removeTracksByName(session, id, obj@trackName)
             }
-            
+
             state[["userAddedTracks"]] <-
               unique(c(state[["userAddedTracks"]], obj@trackName))
-            
+
             # javascript function consults dataMode,
             # modifies dataUrl if local.url,
             # prepending the http host of the modest RStudio/Shiny webserver
@@ -199,7 +199,7 @@ setMethod("display",
             #   pointing to the typically long and cryptic actual local host
             #   temporary directory
             #   - adjusting message$dataUrl to use that shorthand directory name
-            
+
             message <- list(
               elementID = id,
               trackName = obj@trackName,
@@ -210,15 +210,15 @@ setMethod("display",
               min = obj@minY,
               max = obj@maxY
             )
-            
+
             if (obj@data.mode == "local.url") {
               directory.name <- dirname(obj@url)
               file.name      <-  basename(obj@url)
               message$dataUrl <- file.path("tracks", file.name)
             }
-            
+
             session$sendCustomMessage("loadGwasTrackFlexibleSource", message)
-            
+
           }) # display
 #-------------------------------------------------------------------------------
 #' the url of the gwas table
@@ -227,7 +227,7 @@ setMethod("display",
 #' @aliases getUrl
 #'
 #' @param obj An object of class GWASTrack
-#' 
+#'
 #' @examples
 #' file <-
 #'   # a local gwas file

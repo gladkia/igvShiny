@@ -57,4 +57,3 @@ test_that("igvShinyDemo-GFF3 loads tracks correctly", {
 
     app$stop()
 })
-
