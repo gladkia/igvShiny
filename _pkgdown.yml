@@ -2,6 +2,15 @@ url: https://gladkia.github.io/igvShiny/
 template:
   bootstrap: 5
 
+navbar:
+  structure:
+    right: [demo, search, github]
+  components:
+    demo:
+      text: Live demo
+      href: https://gladkia-igvshiny-demo.share.connect.posit.cloud
+      aria-label: Live igvShiny demo on Posit Connect Cloud
+
 reference:
 - title: igvShiny
 - contents:
