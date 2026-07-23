@@ -214,8 +214,8 @@ See also demo apps for custom genomes with data provided via URLs:
 
 library(igvShiny)
 demo_app_file <- system.file(
-    package = "igvShiny", 
-    "demos", 
+    package = "igvShiny",
+    "demos",
     "igvShinyDemo-customGenome-http.R"
     )
 if (interactive()) {
@@ -300,7 +300,7 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#> [1] igvShiny_1.9.7       shiny_1.14.0         GenomicRanges_1.62.1
+#> [1] igvShiny_1.9.8       shiny_1.14.0         GenomicRanges_1.62.1
 #> [4] Seqinfo_1.0.0        IRanges_2.44.0       S4Vectors_0.48.1    
 #> [7] BiocGenerics_0.56.0  generics_0.1.4       BiocStyle_2.38.0    
 #> 
