@@ -6,11 +6,13 @@
 #   - BAM-from-URL / CRAM-from-URL kept: igv.js fetches these client-side,
 #     so they demo alignment tracks with zero server-side dependency.
 #
-# Everything the server does at runtime is tiny: a 74K gwas.RData at startup
-# plus small in-memory data.frames on button clicks. igv.js does the heavy
-# rendering in the browser.
+# UI uses bslib (Bootstrap 5): a page_sidebar layout with the IGV viewer in a
+# full-screen-able card and the track/navigation controls grouped into an
+# accordion. The server logic is unchanged from the classic demo — same input
+# ids — only the UI layer is restyled.
 
 library(shiny)
+library(bslib)
 library(igvShiny)
 library(htmlwidgets)
 
@@ -49,37 +51,91 @@ tbl.wig <- data.frame(chr = rep("1", wig.size),
                       value = values.100,
                       stringsAsFactors = FALSE)
 #----------------------------------------------------------------------------------------------------
-ui <- shinyUI(fluidPage(
+# a full-width action button with a leading icon, styled consistently
+demoButton <- function(id, label, icon_name, class = "btn-outline-primary") {
+  actionButton(id, label, icon = icon(icon_name),
+               class = paste("w-100 mb-2 text-start", class))
+}
 
-  sidebarLayout(
-    sidebarPanel(
-      actionButton("searchButton", "Search"),
-      textInput("roi", label = ""),
-      h5("One simple data.frame, three igv formats:"),
-      actionButton("addBedTrackButton", "Add as Bed"),
-      actionButton("addBedGraphTrackButton", "Add as BedGraph"),
-      actionButton("addBedGraphWithAltColorTrackButton", "Add as BedGraph (with AltColor)"),
-      actionButton("addBedGraphTrackFromURLButton", "Add BedGraph from URL"),
-      br(),
-      actionButton("addBed9TrackButton", "bed9 track"),
-      actionButton("addGwasTrackButton", "Add GWAS Track"),
-      actionButton("addBamViaHttpButton", "BAM from URL"),
-      actionButton("addCramViaHttpButton", "CRAM from URL"),
-      actionButton("removeUserTracksButton", "Remove User Tracks"),
-      actionButton("getChromLocButton", "Get Region"),
-      actionButton("clearChromLocButton", "Clear Region"),
-      div(style = "background-color: white; width: 200px; height:30px; padding-left: 5px;
-                   margin-top: 10px; border: 1px solid blue;",
-          htmlOutput("chromLocDisplay")),
-      hr(),
-      width = 2
+theme <- bs_theme(
+  version = 5,
+  primary = "#2c6faa",
+  base_font = font_google("Inter", local = FALSE),
+  heading_font = font_google("Inter", local = FALSE)
+)
+
+ui <- page_sidebar(
+  title = "igvShiny — interactive genome browser",
+  theme = theme,
+  fillable = TRUE,
+
+  sidebar = sidebar(
+    width = 300,
+    title = "Controls",
+
+    # keep the search box always visible above the accordion
+    div(
+      class = "mb-3",
+      textInput("roi", label = "Search locus / gene", placeholder = "e.g. MEF2C or chr1:7,426,231-7,453,241"),
+      actionButton("searchButton", "Search", icon = icon("magnifying-glass"),
+                   class = "btn-primary w-100")
     ),
-    mainPanel(
-      igvShinyOutput('igvShiny_0'),
-      width = 10
+
+    accordion(
+      open = c("Sample-data tracks", "Tracks from URL"),
+
+      accordion_panel(
+        "Sample-data tracks", icon = icon("table"),
+        demoButton("addBedTrackButton", "BED", "align-left"),
+        demoButton("addBedGraphTrackButton", "BedGraph", "chart-area"),
+        demoButton("addBedGraphWithAltColorTrackButton", "BedGraph (AltColor)", "palette"),
+        demoButton("addBed9TrackButton", "bed9", "grip-lines"),
+        demoButton("addGwasTrackButton", "GWAS", "chart-column")
+      ),
+
+      accordion_panel(
+        "Tracks from URL", icon = icon("cloud-arrow-down"),
+        demoButton("addBedGraphTrackFromURLButton", "BedGraph (URL)", "chart-area", "btn-outline-secondary"),
+        demoButton("addBamViaHttpButton", "BAM (URL)", "dna", "btn-outline-secondary"),
+        demoButton("addCramViaHttpButton", "CRAM (URL)", "dna", "btn-outline-secondary")
+      ),
+
+      accordion_panel(
+        "Region tools", icon = icon("location-crosshairs"),
+        demoButton("getChromLocButton", "Get region", "crosshairs", "btn-outline-dark"),
+        demoButton("clearChromLocButton", "Clear region", "eraser", "btn-outline-dark"),
+        demoButton("removeUserTracksButton", "Remove user tracks", "trash-can", "btn-outline-danger"),
+        div(class = "small text-muted mt-1 mb-1", "Current region:"),
+        div(class = "border rounded p-2 small bg-body-tertiary font-monospace",
+            htmlOutput("chromLocDisplay"))
+      )
+    ),
+
+    # footer: quick links back to the project
+    tags$div(
+      class = "mt-auto pt-2 small",
+      tags$a(href = "https://github.com/gladkia/igvShiny", target = "_blank",
+             class = "link-secondary text-decoration-none me-3",
+             icon("github"), " GitHub"),
+      tags$a(href = "https://gladkia.github.io/igvShiny/", target = "_blank",
+             class = "link-secondary text-decoration-none",
+             icon("book"), " Docs")
     )
-  ) # sidebarLayout
-))
+  ),
+
+  card(
+    full_screen = TRUE,
+    card_header(
+      class = "d-flex align-items-center gap-2",
+      icon("dna"), "Genome viewer",
+      tags$span(class = "badge text-bg-light ms-auto", "hg38")
+    ),
+    card_body(
+      class = "p-0",
+      igvShinyOutput('igvShiny_0', height = "100%")
+    )
+  )
+)
 #----------------------------------------------------------------------------------------------------
 server <- function(input, output, session) {
 
