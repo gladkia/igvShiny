@@ -1,8 +1,8 @@
 Package: igvShiny
 Title: igvShiny: a wrapper of Integrative Genomics Viewer (IGV - an interactive
     tool for visualization and exploration integrated genomic data)
-Version: 1.9.6
-Date: 2026-07-17
+Version: 1.9.7
+Date: 2026-07-23
 Authors@R: c(
     person("Paul","Shannon", role = c("aut"), 
     email = "paul.thurmond.shannon@gmail.com"),
