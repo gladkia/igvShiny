@@ -256,3 +256,43 @@ setMethod("getUrl",
           function(obj) {
             obj@url
           })
+#-------------------------------------------------------------------------------
+#' Display a short summary of a GWASTrack object
+#'
+#' @rdname show
+#' @aliases show,GWASTrack-method
+#'
+#' @importFrom methods show
+#'
+#' @param object An object of class GWASTrack
+#'
+#' @examples
+#' file <-
+#'   system.file(package = "igvShiny", "extdata", "gwas-5k.tsv.gz")
+#' tbl.gwas <- read.table(file, sep = "\t", header = TRUE, quote = "")
+#' track <-
+#'   GWASTrack("gwas 5k", tbl.gwas, chrom.col = 12, pos.col = 13, pval.col = 28)
+#' track
+#'
+#' @return nothing; called for the side effect of printing a summary
+#'
+#' @keywords GWASTrack_class
+#' @export
+#'
+setMethod("show",
+          "GWASTrack",
+          function(object) {
+            cat("GWASTrack object\n")
+            cat("  trackName:  ", object@trackName, "\n", sep = "")
+            cat("  dataMode:   ", object@data.mode, "\n", sep = "")
+            cat("  url:        ", object@url, "\n", sep = "")
+            cat("  columns:    chrom=", object@chrom.col,
+                " pos=", object@pos.col,
+                " pval=", object@pval.col, "\n", sep = "")
+            cat("  trackHeight:", object@trackHeight, "\n")
+            cat("  autoscale:  ", object@autoscale, "\n", sep = "")
+            if (!object@autoscale) {
+              cat("  yRange:     [", object@minY, ", ", object@maxY, "]\n",
+                  sep = "")
+            }
+          })

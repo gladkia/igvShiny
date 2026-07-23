@@ -20,10 +20,10 @@ GWASTrack(
 )
 }
 \arguments{
-\item{trackName}{A character string, used as track label by igv, 
+\item{trackName}{A character string, used as track label by igv,
 we recommend unique names per track.}
 
-\item{data}{a data.frame or a url pointing to one, 
+\item{data}{a data.frame or a url pointing to one,
 whose structure is described by chrom.col, pos.col, pval.col}
 
 \item{chrom.col}{numeric, the column number of the chromosome column}
