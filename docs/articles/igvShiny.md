@@ -276,9 +276,9 @@ if (interactive()) {
 ``` r
 
 sessionInfo()
-#> R version 4.5.2 (2025-10-31)
+#> R version 4.6.1 (2026-06-24)
 #> Platform: x86_64-pc-linux-gnu
-#> Running under: Ubuntu 24.04.3 LTS
+#> Running under: Ubuntu 24.04.4 LTS
 #> 
 #> Matrix products: default
 #> BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
@@ -300,9 +300,9 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#> [1] igvShiny_1.9.8       shiny_1.14.0         GenomicRanges_1.62.1
-#> [4] Seqinfo_1.0.0        IRanges_2.44.0       S4Vectors_0.48.1    
-#> [7] BiocGenerics_0.56.0  generics_0.1.4       BiocStyle_2.38.0    
+#> [1] igvShiny_1.9.8       shiny_1.14.0         GenomicRanges_1.65.1
+#> [4] Seqinfo_1.3.0        IRanges_2.47.2       S4Vectors_0.51.5    
+#> [7] BiocGenerics_0.59.10 generics_0.1.4       BiocStyle_2.41.0    
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] sass_0.4.10             futile.options_1.0.1    stringi_1.8.7          
@@ -313,7 +313,7 @@ sessionInfo()
 #> [16] scales_1.4.0            randomcoloR_1.1.0.1     textshaping_1.0.5      
 #> [19] jquerylib_0.1.4         cli_3.6.6               rlang_1.3.0            
 #> [22] futile.logger_1.4.9     cachem_1.1.0            yaml_2.3.12            
-#> [25] otel_0.2.0              Rtsne_0.17              tools_4.5.2            
+#> [25] otel_0.2.0              Rtsne_0.17              tools_4.6.1            
 #> [28] checkmate_2.3.4         colorspace_2.1-3        httpuv_1.6.17          
 #> [31] GenomeInfoDbData_1.2.15 lambda.r_1.2.4          curl_7.1.0             
 #> [34] R6_2.6.1                mime_0.13               lifecycle_1.0.5        
@@ -323,5 +323,5 @@ sessionInfo()
 #> [46] later_1.4.8             glue_1.8.1              Rcpp_1.1.2             
 #> [49] systemfonts_1.3.2       xfun_0.60               knitr_1.51             
 #> [52] farver_2.1.2            xtable_1.8-8            htmltools_0.5.9        
-#> [55] rmarkdown_2.31          compiler_4.5.2
+#> [55] rmarkdown_2.31          compiler_4.6.1
 ```
