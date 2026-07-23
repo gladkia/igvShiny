@@ -86,5 +86,5 @@ follows Bioconductor coding and review standards (see [`AGENTS.md`](AGENTS.md)).
 
 ## License
 
-MIT © the igvShiny authors (see [`LICENSE`](LICENSE) / [`DESCRIPTION`](DESCRIPTION)).
+MIT © the igvShiny authors (see [`LICENSE.md`](LICENSE.md) / [`DESCRIPTION`](DESCRIPTION)).
 Original author: Paul Shannon. Maintainer: Arkadiusz Gladki.

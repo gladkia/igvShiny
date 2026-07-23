@@ -35,7 +35,7 @@ tbl.bed9 <- data.frame(chrom = rep("chr1", 3),
                        score = round(runif(3), 2),
                        strand = c("+", "-", "+"),
                        thickStart = c(base.loc + 10, base.loc + 110, base.loc + 260),
-                       thickEnd = c(base.loc + 20, base.loc + 130, base.loc + 250),
+                       thickEnd = c(base.loc + 20, base.loc + 130, base.loc + 280),
                        itemRgb = c("255,0,128", "0,255,0", "0,0,255"),
                        stringsAsFactors = FALSE)
 
