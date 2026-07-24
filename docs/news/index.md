@@ -1,5 +1,14 @@
 # Changelog
 
+## igvShiny 1.9.10
+
+- Wrap the 25 over-long lines in `R/igvShiny.R` at 80 characters
+  (BiocCheck)
+- Move [`paste()`](https://rdrr.io/r/base/paste.html) out of
+  [`warning()`](https://rdrr.io/r/base/warning.html) calls, keeping the
+  message text unchanged
+- Exclude local `*.BiocCheck/` output folders from git
+
 ## igvShiny 1.9.9
 
 - Bump the bundled igv.js from 2.13.1 to 3.8.4 (minified) and update the

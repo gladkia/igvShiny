@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.10</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,6 +34,12 @@
       <small>Source: <a href="https://github.com/gladkia/igvShiny/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.9.10" id="igvshiny-1910">igvShiny 1.9.10<a class="anchor" aria-label="anchor" href="#igvshiny-1910"></a></h2>
+<ul><li>Wrap the 25 over-long lines in <code>R/igvShiny.R</code> at 80 characters (BiocCheck)</li>
+<li>Move <code><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste()</a></code> out of <code><a href="https://rdrr.io/r/base/warning.html" class="external-link">warning()</a></code> calls, keeping the message text unchanged</li>
+<li>Exclude local <code>*.BiocCheck/</code> output folders from git</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.9.9" id="igvshiny-199">igvShiny 1.9.9<a class="anchor" aria-label="anchor" href="#igvshiny-199"></a></h2>
 <ul><li>Bump the bundled igv.js from 2.13.1 to 3.8.4 (minified) and update the <code>locuschange</code> handler for the 3.x event payload — it now reads the locus from the <code>referenceFrameList</code> and keeps the whole-genome “all” view working (<a href="https://github.com/gladkia/igvShiny/issues/116" class="external-link">#116</a>)</li>
