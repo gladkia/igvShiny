@@ -28,7 +28,8 @@ loadBamTrackFromLocalData(
 \item{displayMode}{character string, possible values are "EXPANDED"(default),
 "SQUISHED" or "COLLAPSED"}
 
-\item{trackConfig}{a named list of additional igv.js track configuration options.}
+\item{trackConfig}{a named list of additional igv.js track configuration
+options.}
 }
 \value{
 nothing

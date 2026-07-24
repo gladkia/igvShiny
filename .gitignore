@@ -40,3 +40,6 @@ vignettes/*.pdf
 /.serena
 # Containerfile build log
 build_log.txt
+
+# BiocCheck artifacts
+*.BiocCheck/

@@ -1,11 +1,16 @@
 ## igvShiny 1.9.12
 * Add unit tests for the track loaders, driven by a fake Shiny session (M3)
 * Replace the gladki.pl test fixtures with a local httpuv static server
-* Extend test coverage from 16% to 85%
+* Extend test coverage from 16% to 92% (M3)
 
 ## igvShiny 1.9.11
 * Enable the covr coverage step on every Linux CI build (M3)
 * Add `covr` to Suggests
+
+## igvShiny 1.9.10
+* Wrap the 25 over-long lines in `R/igvShiny.R` at 80 characters (BiocCheck)
+* Move `paste()` out of `warning()` calls, keeping the message text unchanged
+* Exclude local `*.BiocCheck/` output folders from git
 
 ## igvShiny 1.9.9
 * Bump the bundled igv.js from 2.13.1 to 3.8.4 (minified) and update the
