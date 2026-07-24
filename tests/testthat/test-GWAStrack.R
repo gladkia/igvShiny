@@ -18,7 +18,10 @@ test_that("GWASTrack constructor works with a data.frame", {
 })
 
 test_that("GWASTrack constructor works with a remote URL", {
-  url <- "https://gladki.pl/igvShiny/gwas_sample.tsv.gz"
+  # Local static server instead of gladki.pl - same http code path (the
+  # constructor runs httr::http_error on the url), no third-party dependency.
+  port <- local_server()
+  url <- local_url(port, "gwas-5k.tsv.gz")
   gwasTrack <- GWASTrack(
     "remote url gwas",
     url,
@@ -32,10 +35,13 @@ test_that("GWASTrack constructor works with a remote URL", {
 })
 
 test_that("GWASTrack constructor fails with illegal arguments", {
+  # A url the server answers with 404, so the http-error path is tested
+  # without reaching out to a real external host.
+  port <- local_server()
   expect_error(
     GWASTrack(
       "bogus url",
-      data = "https://bogus.org/nonexistent.gwas",
+      data = local_url(port, "does-not-exist.gwas"),
       chrom.col = 3,
       pos.col = 4,
       pval.col = 10,

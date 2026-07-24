@@ -34,8 +34,8 @@ name: R-CMD-check-bioc
 ## Note that you can always run a GHA test without the cache by using the word
 ## "/nocache" in the commit message.
 env:
-  has_testthat: 'false'
-  run_covr: 'false'
+  has_testthat: 'true'
+  run_covr: 'true'
   run_pkgdown: 'true'
   has_RUnit: 'true'
   cache-version: 'cache-v1'
@@ -267,10 +267,26 @@ jobs:
           )
         shell: Rscript {0}
 
+      ## Coverage runs on every Linux build, not just one branch, so PRs show
+      ## the delta. Note that shinytest2 tests launch the app in a separate
+      ## process, so covr does not see the code they exercise — the number
+      ## here reflects unit tests and examples only.
       - name: Test coverage
-        if: github.ref == 'refs/heads/devel' && env.run_covr == 'true' && runner.os == 'Linux'
+        if: env.run_covr == 'true' && runner.os == 'Linux'
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
-          covr::codecov(coverage = covr::package_coverage(type = "all"))
+          remotes::install_cran("covr")
+          cov <- covr::package_coverage(type = "all")
+          print(cov)
+          cat(sprintf("TOTAL COVERAGE: %.2f%%\n", covr::percent_coverage(cov)))
+          ## Upload only when the repository has a Codecov token configured;
+          ## without it the upload fails and would take the whole job down.
+          if (nzchar(Sys.getenv("CODECOV_TOKEN"))) {
+            covr::codecov(coverage = cov)
+          } else {
+            message("CODECOV_TOKEN not set - skipping upload, printed summary only")
+          }
         shell: Rscript {0}
 
       - name: Install package

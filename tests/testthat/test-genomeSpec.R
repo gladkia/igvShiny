@@ -88,10 +88,12 @@ test_that("Parsing and validation of stock genome specs works", {
 })
 
 test_that("Parsing and validation of custom HTTP genome specs works", {
-  base.url <- "https://gladki.pl/igvr/testFiles"
-  fasta.file <- file.path(base.url, "ribosomal-RNA-gene.fasta")
-  fastaIndex.file <- file.path(base.url, "ribosomal-RNA-gene.fasta.fai")
-  annotation.file <- file.path(base.url, "ribosomal-RNA-gene.gff3")
+  # Served from 127.0.0.1 rather than gladki.pl: the http code path is still
+  # exercised for real, but CI no longer depends on a third-party host.
+  port <- local_server()
+  fasta.file <- local_url(port, "ribosomal-RNA-gene.fasta")
+  fastaIndex.file <- local_url(port, "ribosomal-RNA-gene.fasta.fai")
+  annotation.file <- local_url(port, "ribosomal-RNA-gene.gff3")
 
   options <- parseAndValidateGenomeSpec(
     genomeName = "ribo",
