@@ -31,6 +31,21 @@ test_that("a non-character startup track url is rejected", {
   expect_length(out, 0L)
 })
 
+test_that("a multi-valued startup track url is rejected", {
+  expect_warning(
+    out <- sanitizeTracks(list(list(name = "t",
+                                    url = c("https://a.bed", "https://b.bed")))),
+    "no valid 'url'"
+  )
+  expect_length(out, 0L)
+})
+
+test_that("a startup track with no url field is dropped", {
+  expect_warning(out <- sanitizeTracks(list(list(name = "t"))),
+                 "no valid 'url'")
+  expect_length(out, 0L)
+})
+
 test_that("a valid scalar url is still kept", {
   out <- sanitizeTracks(list(list(name = "t",
                                   url = "https://example.org/x.bed")))
