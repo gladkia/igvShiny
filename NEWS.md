@@ -1,3 +1,7 @@
+## igvShiny 1.9.11
+* Enable the covr coverage step on every Linux CI build (M3)
+* Add `covr` to Suggests
+
 ## igvShiny 1.9.9
 * Bump the bundled igv.js from 2.13.1 to 3.8.4 (minified) and update the
   `locuschange` handler for the 3.x event payload — it now reads the locus from
