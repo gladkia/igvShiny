@@ -1,5 +1,12 @@
 # Changelog
 
+## igvShiny 1.9.9
+
+- Bump the bundled igv.js from 2.13.1 to 3.8.4 (minified) and update the
+  `locuschange` handler for the 3.x event payload — it now reads the
+  locus from the `referenceFrameList` and keeps the whole-genome “all”
+  view working ([\#116](https://github.com/gladkia/igvShiny/issues/116))
+
 ## igvShiny 1.9.8
 
 - Add labels to all vignette code chunks (BiocCheck)
