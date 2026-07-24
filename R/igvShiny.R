@@ -35,8 +35,10 @@
     return(baseOptions)
   }
 
+  # anyNA guards the NA-name case: without it, `any(names == "")` evaluates to
+  # NA when a name is NA and the `if` errors instead of warning and ignoring.
   if (!is.list(userOptions) || is.null(names(userOptions)) ||
-      any(names(userOptions) == "")) {
+      anyNA(names(userOptions)) || any(names(userOptions) == "")) {
     warning("trackConfig must be a named list. Ignoring.")
     return(baseOptions)
   }
@@ -90,7 +92,12 @@
       warning(sprintf(fmt, toString(invalidKeys)))
       track[invalidKeys] <- NULL
     }
-    if (is.null(track[["url"]])) {
+    # A usable url is a single non-empty, non-NA character string. is.null()
+    # alone let NA, "", character(0) and non-character values through to
+    # igv.js as broken tracks.
+    url <- track[["url"]]
+    if (!is.character(url) || length(url) != 1L || is.na(url) ||
+        !nzchar(url)) {
       msg <- paste("Dropping entry in 'tracks' with no valid 'url' after",
                    "removing unsupported options.")
       warning(msg)

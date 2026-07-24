@@ -1,3 +1,7 @@
+## igvShiny 1.9.11
+* Reject NA or empty names in `trackConfig`, warning instead of erroring
+* Require a startup track `url` to be a non-empty scalar string
+
 ## igvShiny 1.9.10
 * Wrap the 25 over-long lines in `R/igvShiny.R` at 80 characters (BiocCheck)
 * Move `paste()` out of `warning()` calls, keeping the message text unchanged
