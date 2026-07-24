@@ -18,7 +18,10 @@ test_that("GWASTrack constructor works with a data.frame", {
 })
 
 test_that("GWASTrack constructor works with a remote URL", {
-  url <- "https://gladki.pl/igvShiny/gwas_sample.tsv.gz"
+  # Local static server instead of gladki.pl - same http code path (the
+  # constructor runs httr::http_error on the url), no third-party dependency.
+  port <- local_server()
+  url <- local_url(port, "gwas-5k.tsv.gz")
   gwasTrack <- GWASTrack(
     "remote url gwas",
     url,
