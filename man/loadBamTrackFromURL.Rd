@@ -36,7 +36,8 @@ typically small}
 
 \item{showAllBases}{logical, show all bases in the alignment, default FALSE}
 
-\item{trackConfig}{a named list of additional igv.js track configuration options.}
+\item{trackConfig}{a named list of additional igv.js track configuration
+options.}
 }
 \value{
 nothing

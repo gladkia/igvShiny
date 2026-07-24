@@ -29,7 +29,8 @@ typically small}
 
 \item{deleteTracksOfSameName}{logical, default TRUE}
 
-\item{trackConfig}{a named list of additional igv.js track configuration options.}
+\item{trackConfig}{a named list of additional igv.js track configuration
+options.}
 }
 \value{
 nothing

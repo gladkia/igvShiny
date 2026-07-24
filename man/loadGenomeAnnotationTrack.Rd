@@ -47,7 +47,8 @@ loadBedGraphTrack(
 
 \item{quiet}{logical, default TRUE, controls verbosity}
 
-\item{trackConfig}{a named list of additional igv.js track configuration options.}
+\item{trackConfig}{a named list of additional igv.js track configuration
+options.}
 }
 \value{
 nothing
