@@ -1,3 +1,8 @@
+## igvShiny 1.9.12
+* Add unit tests for the track loaders, driven by a fake Shiny session (M3)
+* Replace the gladki.pl test fixtures with a local httpuv static server
+* Extend test coverage from 16% to 85%
+
 ## igvShiny 1.9.11
 * Enable the covr coverage step on every Linux CI build (M3)
 * Add `covr` to Suggests
