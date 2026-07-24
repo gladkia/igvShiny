@@ -97,13 +97,17 @@ HTMLWidgets.widget({
                    igvRoots[0].remove()
                    }
                 igvshiny_log(" count: " + igvRoots.length);
-                igvWidget.on('locuschange', debounce(function (referenceFrame){
-                   igvshiny_log("---- locuschange, referenceFrame: ")
-                   igvshiny_log(referenceFrame);
-                   var chrom = referenceFrame[0].chr
-                   var start = Math.round(referenceFrame[0].start)
-		   var end = Math.round(referenceFrame[0].end)
-                   var chromLocString = chrom + ":" + start + "-" + end;
+                igvWidget.on('locuschange', debounce(function (referenceFrameList){
+                   igvshiny_log("---- locuschange, referenceFrameList: ")
+                   igvshiny_log(referenceFrameList);
+                   // igv.js 3.x fires locuschange with the referenceFrameList; read the
+                   // first frame and rebuild the comma-free "chr:start-end" string that
+                   // currentGenomicRegion has always emitted, guarding the whole-genome
+                   // "all" view (raw start/end are meaningless there).
+                   var refFrame = referenceFrameList[0];
+                   var chromLocString = (refFrame.chr === "all")
+                      ? "all"
+                      : refFrame.chr + ":" + Math.round(refFrame.start) + "-" + Math.round(refFrame.end);
                    
                    document.getElementById(htmlContainerID).chromLocString = chromLocString;
                    var eventName = "currentGenomicRegion." + htmlContainerID
