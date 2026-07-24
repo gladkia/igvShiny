@@ -9,13 +9,14 @@
 # This allowlist prevents arbitrary code injection and invalid options.
 # Sourced from igv.js documentation.
 .validIgvTrackOptions <- c(
-  "name", "type", "format", "url", "indexURL", "indexed", "order", "displayMode",
-  "color", "altColor", "negColor", "posColor", "borderColor", "trait",
-  "height", "autoHeight", "minHeight", "maxHeight", "removable",
+  "name", "type", "format", "url", "indexURL", "indexed", "order",
+  "displayMode", "color", "altColor", "negColor", "posColor", "borderColor",
+  "trait", "height", "autoHeight", "minHeight", "maxHeight", "removable",
   "visibilityWindow", "searchable", "autoScale", "autoscale", "autoScaleGroup",
   "autoscaleGroup", "min", "max", "logScale", "graphType", "barChart",
-  "flipAxis", "stroke", "noStroke", "fill", "noFill", "featureHeight", "showLabels",
-  "font", "fontSize", "fontStyle", "fontWeight", "colorTable", "colorByAttribute",
+  "flipAxis", "stroke", "noStroke", "fill", "noFill", "featureHeight",
+  "showLabels", "font", "fontSize", "fontStyle", "fontWeight", "colorTable",
+  "colorByAttribute",
   "showAllBases", "samplingWindowSize", "samplingDepth", "maxRows",
   "hideEmptyTracks", "oauthToken", "headers", "viewAsPairs", "pairsSupported",
   "maxPanelHeight", "separateBam", "wholeGenomeView", "roi", "queryable"
@@ -26,31 +27,37 @@
 #' Sanitize and merge track configuration options
 #' @param baseOptions A list of default options set by the R function.
 #' @param userOptions A list of options provided by the user via trackConfig.
-#' @return A merged and sanitized list of options ready to be sent to JavaScript.
+#' @return A merged and sanitized list of options ready to be sent to
+#' JavaScript.
 #' @keywords igvShiny
 .sanitizeAndMergeOptions <- function(baseOptions, userOptions) {
   if (is.null(userOptions) || length(userOptions) == 0) {
     return(baseOptions)
   }
 
-  if (!is.list(userOptions) || is.null(names(userOptions)) || any(names(userOptions) == "")) {
+  if (!is.list(userOptions) || is.null(names(userOptions)) ||
+      any(names(userOptions) == "")) {
     warning("trackConfig must be a named list. Ignoring.")
     return(baseOptions)
   }
 
-  # Identify and warn about conflicting keys that would override explicit function arguments
+  # Identify and warn about conflicting keys that would override explicit
+  # function arguments
   conflictingKeys <- intersect(names(baseOptions), names(userOptions))
   if (length(conflictingKeys) > 0) {
-    warning(sprintf("User-provided trackConfig options conflict with function arguments and will be ignored: %s",
-                    toString(conflictingKeys)))
-    userOptions[conflictingKeys] <- NULL # Prioritize base options for security and clarity
+    fmt <- paste("User-provided trackConfig options conflict with function",
+                 "arguments and will be ignored: %s")
+    warning(sprintf(fmt, toString(conflictingKeys)))
+    # Prioritize base options for security and clarity
+    userOptions[conflictingKeys] <- NULL
   }
 
   # Filter user options against the allowlist of valid igv.js parameters
   invalidKeys <- setdiff(names(userOptions), .validIgvTrackOptions)
   if (length(invalidKeys) > 0) {
-    warning(sprintf("Ignoring invalid or unsupported track options in trackConfig: %s",
-                    toString(invalidKeys)))
+    fmt <- paste("Ignoring invalid or unsupported track options in",
+                 "trackConfig: %s")
+    warning(sprintf(fmt, toString(invalidKeys)))
     userOptions[invalidKeys] <- NULL
   }
 
@@ -69,18 +76,24 @@
   }
 
   Filter(Negate(is.null), lapply(tracks, function(track) {
-    if (!is.list(track) || is.null(names(track)) || any(is.na(names(track))) || any(names(track) == "")) {
-      warning("Ignoring invalid entry in 'tracks': each entry must be a named list.")
+    if (!is.list(track) || is.null(names(track)) || any(is.na(names(track))) ||
+        any(names(track) == "")) {
+      msg <- paste("Ignoring invalid entry in 'tracks': each entry must be",
+                   "a named list.")
+      warning(msg)
       return(NULL)
     }
     invalidKeys <- setdiff(names(track), .validIgvTrackOptions)
     if (length(invalidKeys) > 0) {
-      warning(sprintf("Ignoring invalid or unsupported track options in 'tracks': %s",
-                      toString(invalidKeys)))
+      fmt <- paste("Ignoring invalid or unsupported track options in",
+                   "'tracks': %s")
+      warning(sprintf(fmt, toString(invalidKeys)))
       track[invalidKeys] <- NULL
     }
     if (is.null(track[["url"]])) {
-      warning("Dropping entry in 'tracks' with no valid 'url' after removing unsupported options.")
+      msg <- paste("Dropping entry in 'tracks' with no valid 'url' after",
+                   "removing unsupported options.")
+      warning(msg)
       return(NULL)
     }
     track
@@ -423,7 +436,8 @@ removeUserAddedTracks <- function(session, id) {
 #' @param trackHeight an integer, 50 (pixels) by default
 #' @param deleteTracksOfSameName logical, default TRUE
 #' @param quiet logical, default TRUE, controls verbosity
-#' @param trackConfig a named list of additional igv.js track configuration options.
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options.
 #'
 #' @examples
 #' library(igvShiny)
@@ -536,7 +550,8 @@ loadBedTrack <-
 #' @param quiet logical, default TRUE, controls verbosity
 #' @param autoscaleGroup numeric(1) defaults to -1
 #' @param deleteTracksOfSameName logical(1) defaults to TRUE
-#' @param trackConfig a named list of additional igv.js track configuration options.
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options.
 #'
 #' @examples
 #' library(igvShiny)
@@ -635,7 +650,8 @@ loadBedGraphTrackFromURL <-
 #' @param max numeric, consulted when autoscale is FALSE
 #' @param deleteTracksOfSameName logical, default TRUE
 #' @param quiet logical, default TRUE, controls verbosity
-#' @param trackConfig a named list of additional igv.js track configuration options.
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options.
 #'
 #' @examples
 #' library(igvShiny)
@@ -743,7 +759,8 @@ loadBedGraphTrack <-
 #' @param trackName character string
 #' @param tbl data.frame, with at least "chrom" "start" "end" "score" columns
 #' @param deleteTracksOfSameName logical, default TRUE
-#' @param trackConfig a named list of additional igv.js track configuration options.
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options.
 #'
 #' @examples
 #' library(igvShiny)
@@ -804,7 +821,8 @@ loadSegTrack <-
 #' @param trackName character string
 #' @param vcfData VariantAnnotation object
 #' @param deleteTracksOfSameName logical, default TRUE
-#' @param trackConfig a named list of additional igv.js track configuration options.
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options.
 #'
 #' @examples
 #' library(igvShiny)
@@ -837,7 +855,8 @@ loadVcfTrack <- function(session,
   state[["userAddedTracks"]] <-
     unique(c(state[["userAddedTracks"]], trackName))
   temp.file <- tempfile(tmpdir = get_tracks_dir(), fileext = ".vcf")
-  lmsg <- sprintf("igvShiny::loadVcfTrack, about to write to file '%s'", temp.file)
+  lmsg <- sprintf("igvShiny::loadVcfTrack, about to write to file '%s'",
+                  temp.file)
   flog.debug(lmsg)
   VariantAnnotation::writeVcf(vcfData, temp.file)
   lmsg2 <- sprintf("igvShiny::loadVcfTrack, file.exists(%s)? %s",
@@ -875,7 +894,8 @@ loadVcfTrack <- function(session,
 #' @param ymax numeric defaults to 35
 #' @param tbl.gwas data.frame, with at least "chrom" "start" "end" columns
 #' @param deleteTracksOfSameName logical, default TRUE
-#' @param trackConfig a named list of additional igv.js track configuration options.
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options.
 #'
 #' @examples
 #' library(igvShiny)
@@ -960,7 +980,8 @@ loadGwasTrack <- function(session,
 #' @param displayMode character string, possible values are "EXPANDED"(default),
 #' "SQUISHED" or "COLLAPSED"
 #' @param showAllBases logical, show all bases in the alignment, default FALSE
-#' @param trackConfig a named list of additional igv.js track configuration options.
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options.
 #'
 #' @examples
 #' library(igvShiny)
@@ -1022,7 +1043,8 @@ loadBamTrackFromURL <-
 #' @param deleteTracksOfSameName logical, default TRUE
 #' @param displayMode character string, possible values are "EXPANDED"(default),
 #' "SQUISHED" or "COLLAPSED"
-#' @param trackConfig a named list of additional igv.js track configuration options.
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options.
 #'
 #' @examples
 #' library(igvShiny)
@@ -1094,7 +1116,8 @@ loadBamTrackFromLocalData <-
 #' @param indexURL character string http url for the bam file index,
 #' typically small
 #' @param deleteTracksOfSameName logical, default TRUE
-#' @param trackConfig a named list of additional igv.js track configuration options.
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options.
 #'
 #' @examples
 #' library(igvShiny)
@@ -1163,7 +1186,8 @@ loadCramTrackFromURL <-
 #' @param visibilityWindow numeric, Maximum window size in base pairs
 #' for which indexed annotations or variants are displayed
 #' @param deleteTracksOfSameName logical, default TRUE
-#' @param trackConfig a named list of additional igv.js track configuration options.
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options.
 #'
 #' @examples
 #' library(igvShiny)
@@ -1242,7 +1266,8 @@ loadGFF3TrackFromURL <-
 #' @param visibilityWindow numeric, Maximum window size in base pairs
 #' for which indexed annotations or variants are displayed
 #' @param deleteTracksOfSameName logical, default TRUE
-#' @param trackConfig a named list of additional igv.js track configuration options.
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options.
 #'
 #' @examples
 #' library(igvShiny)

@@ -12,7 +12,8 @@
 \item{userOptions}{A list of options provided by the user via trackConfig.}
 }
 \value{
-A merged and sanitized list of options ready to be sent to JavaScript.
+A merged and sanitized list of options ready to be sent to
+JavaScript.
 }
 \description{
 Sanitize and merge track configuration options
