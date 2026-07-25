@@ -1,5 +1,9 @@
 # Changelog
 
+## igvShiny 1.9.15
+
+- Fix the 404 on locally written tracks when the tracks directory moves
+
 ## igvShiny 1.9.14
 
 - Allow
