@@ -1,3 +1,7 @@
+## igvShiny 1.9.13
+* Prevent NA or empty names in `trackConfig`, warning instead of erroring
+* Enforce a non-empty scalar string for the startup track `url`
+
 ## igvShiny 1.9.12
 * Add unit tests for the track loaders, driven by a fake Shiny session (M3)
 * Replace the gladki.pl test fixtures with a local httpuv static server
