@@ -175,7 +175,7 @@ igvShiny <- function(genomeOptions,
 
   if (!genomeOptions[["stockGenome"]] &&
         genomeOptions[["dataMode"]] == "localFiles") {
-    directory.name <- get_tracks_dir()
+    directory.name <- .tracksDir()
     fasta.file <- genomeOptions[["fasta"]]
     fasta.indexFile <- genomeOptions[["fastaIndex"]]
     gff3.file <- genomeOptions[["annotation"]]
@@ -510,7 +510,7 @@ loadBedTrack <-
     tbl <- tbl[new.order, ]
 
     temp.file <-
-      tempfile(tmpdir = get_tracks_dir(), fileext = ".bed")
+      tempfile(tmpdir = .tracksDir(), fileext = ".bed")
     write.table(
       tbl,
       sep = "\t",
@@ -864,7 +864,7 @@ loadVcfTrack <- function(session,
 
   state[["userAddedTracks"]] <-
     unique(c(state[["userAddedTracks"]], trackName))
-  temp.file <- tempfile(tmpdir = get_tracks_dir(), fileext = ".vcf")
+  temp.file <- tempfile(tmpdir = .tracksDir(), fileext = ".vcf")
   lmsg <- sprintf("igvShiny::loadVcfTrack, about to write to file '%s'",
                   temp.file)
   flog.debug(lmsg)
@@ -938,7 +938,7 @@ loadGwasTrack <- function(session,
     unique(c(state[["userAddedTracks"]], trackName))
 
   temp.file <-
-    tempfile(tmpdir = get_tracks_dir(), fileext = ".gwas")
+    tempfile(tmpdir = .tracksDir(), fileext = ".gwas")
   write.table(
     tbl.gwas,
     sep = "\t",
@@ -1086,7 +1086,7 @@ loadBamTrackFromLocalData <-
       removeTracksByName(session, id, trackName)
     }
 
-    t_dir <- get_tracks_dir()
+    t_dir <- .tracksDir()
     fpath <- tempfile(tmpdir = t_dir, fileext = ".bam")
 
     lmsg <-
@@ -1316,7 +1316,7 @@ loadGFF3TrackFromLocalData <-
       unique(c(state[["userAddedTracks"]], trackName))
 
     gff3.filePath <-
-      tempfile(tmpdir = get_tracks_dir(), fileext = ".gff3")
+      tempfile(tmpdir = .tracksDir(), fileext = ".gff3")
     write.table(
       tbl.gff3,
       sep = "\t",

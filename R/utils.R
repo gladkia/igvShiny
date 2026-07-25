@@ -31,3 +31,42 @@ get_tracks_dir <- function(env_var = "TRACKS_DIR") {
   }
   tracks_dir
 } # get_tracks_dir
+#-------------------------------------------------------------------------------
+#' Get the tracks directory and make sure shiny serves that very directory
+#'
+#' @description The "tracks" resource path is registered once, when the package
+#' is loaded. The default directory lives under \code{tempdir()}, which is not
+#' guaranteed to stay put for the life of the process: when it moves, files are
+#' written to the new directory while shiny still serves the old one, and igv.js
+#' gets a 404 for a file that exists on disk. Re-registering the path before
+#' each write keeps the served directory and the written directory the same.
+#'
+#' @return string with the path to the tracks directory.
+#'
+#' @keywords internal
+.tracksDir <- function() {
+  tracks_dir <- get_tracks_dir()
+  # resourcePaths() is an atomic vector, so [["tracks"]] errors when the path is
+  # not registered yet - which is the case the first time this runs (.onLoad)
+  registered <- shiny::resourcePaths()
+  served <- if ("tracks" %in% names(registered)) {
+    registered[["tracks"]]
+  } else {
+    NULL
+  }
+
+  # normalizePath so that /var/... and its /private/var/... realpath (macOS)
+  # do not look like two different directories
+  canonical <- function(path) {
+    normalizePath(path, winslash = "/", mustWork = FALSE)
+  }
+
+  if (is.null(served) || !identical(canonical(served), canonical(tracks_dir))) {
+    if (!is.null(served)) {
+      shiny::removeResourcePath("tracks")
+    }
+    shiny::addResourcePath("tracks", tracks_dir)
+  }
+
+  tracks_dir
+} # .tracksDir
