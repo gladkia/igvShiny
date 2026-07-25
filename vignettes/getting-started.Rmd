@@ -92,8 +92,7 @@ genomeOptions <- parseAndValidateGenomeSpec(
 
 ui <- fluidPage(
     titlePanel("igvShiny"),
-    igvShinyOutput("igv"),
-    width = 10
+    igvShinyOutput("igv")
     )
 
 server <- function(input, output, session) {
