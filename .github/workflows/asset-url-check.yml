@@ -1,0 +1,88 @@
+name: asset-url-check
+
+# The genomes, fasta indices and demo tracks igvShiny points at live on hosts we
+# do not control. When one disappears the test suite stays green — it serves its
+# fixtures locally on purpose — and the breakage only surfaces as a user bug
+# report (#107). Check the real URLs on a schedule instead. See issue #115.
+
+on:
+  schedule:
+    # Mondays, 06:17 UTC. Off the hour so we are not queued with everyone else.
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/asset-url-check.yml"
+      - ".github/scripts/check-asset-urls.sh"
+  # A PR that adds or edits a URL should learn it is dead before merge, not on
+  # the following Monday.
+  pull_request:
+    paths:
+      - ".github/workflows/asset-url-check.yml"
+      - ".github/scripts/check-asset-urls.sh"
+      - "R/**"
+      - "inst/demos/**"
+      - "inst/htmlwidgets/igvShiny.js"
+      - "vignettes/**"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Needed only by the reporting step below, which runs on the schedule.
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Check external asset URLs
+        id: check
+        env:
+          ASSET_REPORT: ${{ runner.temp }}/asset-url-report.md
+        run: |
+          set +e
+          .github/scripts/check-asset-urls.sh --markdown | tee "${{ runner.temp }}/asset-url-log.txt"
+          status=${PIPESTATUS[0]}
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          {
+            echo "## External asset URLs"
+            echo
+            echo '```'
+            cat "${{ runner.temp }}/asset-url-log.txt"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
+      # Only the scheduled run files issues. A push that edits the checker
+      # itself should fail loudly in the log without opening a ticket.
+      - name: Report unreachable assets
+        if: steps.check.outputs.status != '0' && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPORT: ${{ runner.temp }}/asset-url-report.md
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          TITLE: "Broken external asset URLs"
+        run: |
+          body=$(
+            printf 'The scheduled asset check found URLs the package points at that no longer resolve.\n\n'
+            cat "$REPORT"
+            printf '\nRun: %s\n\nRe-run locally with `.github/scripts/check-asset-urls.sh`.\n' "$RUN_URL"
+          )
+          existing=$(gh issue list --state open --search "$TITLE in:title" --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            echo "Issue #$existing is already open for this; not commenting again."
+          else
+            gh issue create --title "$TITLE" --body "$body"
+          fi
+
+      # Pull requests get the table in the job summary but stay green: assets
+      # already dead before the PR was opened are not that PR's problem, and a
+      # check that is red for everyone is a check nobody reads.
+      - name: Fail the job when assets are unreachable
+        if: steps.check.outputs.status != '0' && github.event_name != 'pull_request'
+        run: exit 1
