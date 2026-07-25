@@ -1,0 +1,58 @@
+# CodeRabbit configuration for igvShiny.
+# Rationale and rejected alternatives: issue #115.
+language: en-GB
+
+reviews:
+  # Default is "chill", which produced zero inline comments on #114 without
+  # telling us whether it was correctly silent or simply not looking. There is
+  # no second human reviewer here, so prefer the noisier profile and discard
+  # what does not apply.
+  profile: assertive
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  auto_review:
+    enabled: true
+    drafts: false
+
+  path_filters:
+    # Vendored igv.js (~8.7 MB minified) is third-party code we only bump as a
+    # whole; reviewing its diff is pure noise. See inst/htmlwidgets/igvShiny.yaml
+    # for the version actually in use.
+    - "!inst/htmlwidgets/lib/**"
+    - "!man/**"
+    - "!NAMESPACE"
+
+  path_instructions:
+    - path: "R/**"
+      instructions: >
+        R package released through Bioconductor. Every exported function needs
+        Roxygen2 documentation with @examples; man/*.Rd and NAMESPACE are
+        generated, never hand-edited. Flag missing tests in tests/testthat for
+        new behaviour. Do not propose tidyverse-style rewrites: the codebase
+        uses base R plus Bioconductor idioms deliberately.
+    - path: "inst/htmlwidgets/igvShiny.js"
+      instructions: >
+        Browser side of the R <-> JS bridge. Options crossing the bridge are
+        filtered in R by .sanitizeAndMergeOptions() against an allowlist and
+        merged in JS by mergeExtraParameters(); a new option is only reachable
+        if both sides know about it. The bundled igv.js version is pinned in
+        inst/htmlwidgets/igvShiny.yaml — verify the vendored library supports a
+        config key before suggesting it, rather than assuming the latest
+        upstream API.
+    - path: "tests/testthat/**"
+      instructions: >
+        testthat. Loader tests drive a fake Shiny session (helper-fake-session.R)
+        that records sendCustomMessage payloads; HTTP fixtures are served by a
+        local httpuv server (helper-local-server.R). Flag any new dependency on
+        an external host — remote fixtures have broken CI before (#129).
+    - path: "NEWS.md"
+      instructions: >
+        Linted by gDRstyle::lintNewsEntries before R CMD check runs. Each bullet
+        starts with an imperative verb from the gDRstyle whitelist, is at most
+        120 characters, has no trailing full stop, and there are at most three
+        bullets per version section.
+
+chat:
+  auto_reply: true
