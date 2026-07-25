@@ -34,7 +34,9 @@ wraps.
 For the complete API — every track type and the options each one accepts — see
 the *Track options reference* vignette. For a live app you can click through
 before installing anything, see the
-[demo on Posit Connect Cloud](https://gladkia-igvshiny-demo.share.connect.posit.cloud).
+[demo on Posit Connect Cloud][live-demo].
+
+[live-demo]: https://gladkia-igvshiny-demo.share.connect.posit.cloud
 
 # Install
 
@@ -58,7 +60,7 @@ genome to display *before* it is created.
 
 | Part | Function | Where |
 |------|----------|-------|
-| Genome specification | `parseAndValidateGenomeSpec()` | anywhere, usually at the top of the app |
+| Genome specification | `parseAndValidateGenomeSpec()` | top of the app |
 | Placeholder in the layout | `igvShinyOutput()` | UI |
 | The widget itself | `renderIgvShiny()` + `igvShiny()` | server |
 
@@ -149,12 +151,17 @@ ignored. The other loaders follow the same shape — `loadBedGraphTrack()`,
 that already lives on a web server:
 
 ```{r url-track, eval=FALSE}
+gff3 <- paste0(
+    "https://s3.amazonaws.com/igv.org.genomes/hg38/",
+    "Homo_sapiens.GRCh38.94.chr.gff3.gz"
+    )
+
 loadGFF3TrackFromURL(
     session,
     id = "igv",
     trackName = "genes",
-    gff3URL = "https://s3.amazonaws.com/igv.org.genomes/hg38/Homo_sapiens.GRCh38.94.chr.gff3.gz",
-    indexURL = "https://s3.amazonaws.com/igv.org.genomes/hg38/Homo_sapiens.GRCh38.94.chr.gff3.gz.tbi",
+    gff3URL = gff3,
+    indexURL = paste0(gff3, ".tbi"),
     color = "darkgreen",
     trackHeight = 100
     )
@@ -202,7 +209,11 @@ To drive the browser from R, use `showGenomicRegion()`:
 
 ```{r navigate, eval=FALSE}
 observeEvent(input$goto, {
-    showGenomicRegion(session, id = "igv", region = "chr5:88,700,000-88,800,000")
+    showGenomicRegion(
+        session,
+        id = "igv",
+        region = "chr5:88,700,000-88,800,000"
+        )
     })
 ```
 
