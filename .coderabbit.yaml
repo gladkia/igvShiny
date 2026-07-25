@@ -38,9 +38,10 @@ reviews:
         filtered in R by .sanitizeAndMergeOptions() against an allowlist and
         merged in JS by mergeExtraParameters(); a new option is only reachable
         if both sides know about it. The bundled igv.js version is pinned in
-        inst/htmlwidgets/igvShiny.yaml — verify the vendored library supports a
-        config key before suggesting it, rather than assuming the latest
-        upstream API.
+        inst/htmlwidgets/igvShiny.yaml and the library itself is out of review
+        scope, so do not assume the latest upstream API: when a suggestion
+        depends on igv.js supporting a config key, say so and ask the author to
+        confirm it against the pinned version.
     - path: "tests/testthat/**"
       instructions: >
         testthat. Loader tests drive a fake Shiny session (helper-fake-session.R)

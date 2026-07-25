@@ -14,16 +14,31 @@ on:
     paths:
       - ".github/workflows/asset-url-check.yml"
       - ".github/scripts/check-asset-urls.sh"
+  # A PR that adds or edits a URL should learn it is dead before merge, not on
+  # the following Monday.
+  pull_request:
+    paths:
+      - ".github/workflows/asset-url-check.yml"
+      - ".github/scripts/check-asset-urls.sh"
+      - "R/**"
+      - "inst/demos/**"
+      - "inst/htmlwidgets/igvShiny.js"
+      - "vignettes/**"
 
 permissions:
   contents: read
-  issues: write
 
 jobs:
   check:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Needed only by the reporting step below, which runs on the schedule.
+      issues: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Check external asset URLs
         id: check
@@ -60,11 +75,14 @@ jobs:
           )
           existing=$(gh issue list --state open --search "$TITLE in:title" --json number --jq '.[0].number')
           if [ -n "$existing" ]; then
-            gh issue comment "$existing" --body "$body"
+            echo "Issue #$existing is already open for this; not commenting again."
           else
             gh issue create --title "$TITLE" --body "$body"
           fi
 
+      # Pull requests get the table in the job summary but stay green: assets
+      # already dead before the PR was opened are not that PR's problem, and a
+      # check that is red for everyone is a check nobody reads.
       - name: Fail the job when assets are unreachable
-        if: steps.check.outputs.status != '0'
+        if: steps.check.outputs.status != '0' && github.event_name != 'pull_request'
         run: exit 1

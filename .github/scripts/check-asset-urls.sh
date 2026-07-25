@@ -15,8 +15,8 @@
 
 set -uo pipefail
 
-repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-cd "$repo_root"
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)" || exit 1
+cd "$repo_root" || exit 1
 
 markdown=false
 [[ "${1:-}" == "--markdown" ]] && markdown=true
@@ -41,6 +41,9 @@ composed_urls=(
   https://gladki.pl/igvr/testFiles/sarsGenome/Sars_cov_2.ASM985889v3.dna.toplevel.fa
   https://gladki.pl/igvr/testFiles/sarsGenome/Sars_cov_2.ASM985889v3.dna.toplevel.fa.fai
   https://gladki.pl/igvr/testFiles/sarsGenome/Sars_cov_2.ASM985889v3.101.gff3
+  https://gladki.pl/igvr/testFiles/ribosomal-RNA-gene.fasta
+  https://gladki.pl/igvr/testFiles/ribosomal-RNA-gene.fasta.fai
+  https://gladki.pl/igvr/testFiles/ribosomal-RNA-gene.gff3
   https://1000genomes.s3.amazonaws.com/phase3/data/HG02450/alignment/HG02450.mapped.ILLUMINA.bwa.ACB.low_coverage.20120522.bam
   https://1000genomes.s3.amazonaws.com/phase3/data/HG02450/alignment/HG02450.mapped.ILLUMINA.bwa.ACB.low_coverage.20120522.bam.bai
   https://s3.amazonaws.com/1000genomes/1000G_2504_high_coverage/additional_698_related/data/ERR3989250/HG04160.final.cram
