@@ -67,6 +67,9 @@ HTMLWidgets.widget({
          igvshiny_log(el);
          igvshiny_log(el.id)
          var htmlContainerID = el.id;
+         // the custom message handlers below live outside this factory and never
+         // see `options`, so park the namespace on the element itself (#134)
+         el.moduleNS = options.moduleNS || "";
          igvshiny_log("fasta: " + options.fasta)
          igvshiny_log("index: " + options.fastaIndex)
          var fullOptions = genomeSpecificOptions(options.genomeName,
@@ -110,7 +113,8 @@ HTMLWidgets.widget({
                       : refFrame.chr + ":" + Math.round(refFrame.start) + "-" + Math.round(refFrame.end);
                    
                    document.getElementById(htmlContainerID).chromLocString = chromLocString;
-                   var eventName = "currentGenomicRegion." + htmlContainerID
+                   var eventNames = currentGenomicRegionEventNames(htmlContainerID);
+                   var eventName = eventNames.plain;
                    igvshiny_log("--- calling Shiny.setInputValue:");
    		   igvshiny_log("eventName: " + eventName);
                    igvshiny_log("chromLocString:        " + chromLocString);
@@ -120,7 +124,7 @@ HTMLWidgets.widget({
                    if(newRegion){
                       igvshiny_log("--- generating currentGenomicRegion event: " + chromLocString)
                       Shiny.setInputValue(eventName, chromLocString, {priority: "event"});
-                      var moduleEventName = moduleNamespace(options.moduleNS, "currentGenomicRegion.") + htmlContainerID.replace(options.moduleNS, "");
+                      var moduleEventName = eventNames.scoped;
                       if(moduleEventName != eventName){
                          igvshiny_log("moduleEventName: " + moduleEventName);
                          Shiny.setInputValue(moduleEventName, chromLocString, {priority: "event"});
@@ -153,6 +157,20 @@ HTMLWidgets.widget({
 function moduleNamespace(ns, nameEvent)
 {
   return(ns + nameEvent)
+}
+//------------------------------------------------------------------------------------------------------------
+// the region is announced from two places - the locuschange listener and the
+// getGenomicRegion handler - and they used to build the module-scoped name
+// differently, so a module named anything but "igv" never received the reply
+// (#134). Build both names here so the two paths cannot drift again.
+function currentGenomicRegionEventNames(elementID)
+{
+  var el = document.getElementById(elementID);
+  var ns = (el && el.moduleNS) ? el.moduleNS : "";
+  return {
+     plain: "currentGenomicRegion." + elementID,
+     scoped: moduleNamespace(ns, "currentGenomicRegion.") + elementID.replace(ns, "")
+     }
 }
 //------------------------------------------------------------------------------------------------------------
 function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, displayMode, trackHeight,
@@ -401,14 +419,15 @@ Shiny.addCustomMessageHandler("getGenomicRegion",
        var elementID = message.elementID;
        var currentValue = document.getElementById(elementID).chromLocString;
        igvshiny_log("current chromLocString: " + currentValue)
-       var eventName = "currentGenomicRegion." + elementID;
+       var eventNames = currentGenomicRegionEventNames(elementID);
        igvshiny_log("--- calling Shiny.setInputValue:");
-       igvshiny_log("eventName: " + eventName);
+       igvshiny_log("eventName: " + eventNames.plain);
        igvshiny_log("chromLocString: " + currentValue)
-       Shiny.setInputValue(eventName, currentValue, {priority: "event"});
-       var moduleEventName = "igv-currentGenomicRegion." + elementID.replace("igv-", "");
-       igvshiny_log("moduleEventName: " + moduleEventName);
-       Shiny.setInputValue(moduleEventName, currentValue, {priority: "event"});
+       Shiny.setInputValue(eventNames.plain, currentValue, {priority: "event"});
+       if(eventNames.scoped != eventNames.plain){
+          igvshiny_log("moduleEventName: " + eventNames.scoped);
+          Shiny.setInputValue(eventNames.scoped, currentValue, {priority: "event"});
+          }
        })
 
 //------------------------------------------------------------------------------------------------------------------------

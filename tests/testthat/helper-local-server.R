@@ -13,7 +13,14 @@ local_server_start <- function() {
   port <- httpuv::randomPort()
   server <- httpuv::startServer(
     "127.0.0.1", port,
-    list(staticPaths = list("/" = dir))
+    # the R-side checks (httr::HEAD) do not care about CORS, but a browser
+    # test does: the shiny app and this server sit on different ports, so
+    # igv.js fetching a genome from here is a cross-origin request and is
+    # refused without this header - silently, as a promise that never settles
+    list(staticPaths = list("/" = httpuv::staticPath(
+      dir,
+      headers = list("Access-Control-Allow-Origin" = "*")
+    )))
   )
   list(server = server, port = port)
 }

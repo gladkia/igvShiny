@@ -102,3 +102,91 @@ test_that("igvShinyDemo-GFF3 loads tracks correctly", {
 
     app$stop()
 })
+
+test_that("getGenomicRegion replies to a module named anything but 'igv'", {
+    # #134: the reply event name was built as
+    # "igv-currentGenomicRegion." + elementID.replace("igv-", ""), so only a
+    # module whose id happened to be "igv" (as every demo uses) received it.
+    # The app below names the module "browser" and fails on the old JS.
+    options(chromote.timeout = 120)
+
+    port <- local_server()
+    app_file <- tempfile(fileext = ".R")
+    writeLines(sprintf('
+        library(shiny)
+        library(igvShiny)
+
+        igvUI <- function(id) {
+            ns <- NS(id)
+            fluidPage(
+                actionButton(ns("getRegionButton"), "Get Region"),
+                verbatimTextOutput(ns("regionDisplay")),
+                igvShinyOutput(ns("igvShiny_0"))
+            )
+        }
+
+        igvServer <- function(id) {
+            moduleServer(id, function(input, output, session) {
+                ns <- session$ns
+                output$igvShiny_0 <- renderIgvShiny({
+                    igvShiny(parseAndValidateGenomeSpec(
+                        genomeName = "ribo",
+                        initialLocus = "all",
+                        stockGenome = FALSE,
+                        dataMode = "http",
+                        fasta = "%s",
+                        fastaIndex = "%s",
+                        genomeAnnotation = "%s"
+                    ))
+                })
+                observeEvent(input$getRegionButton, {
+                    getGenomicRegion(session, id = ns("igvShiny_0"))
+                })
+                observeEvent(input[["currentGenomicRegion.igvShiny_0"]], {
+                    output$regionDisplay <- renderText({
+                        input[["currentGenomicRegion.igvShiny_0"]]
+                    })
+                })
+            })
+        }
+
+        shinyApp(
+            ui = fluidPage(igvUI("browser")),
+            server = function(input, output, session) igvServer("browser")
+        )',
+        local_url(port, "ribosomal-RNA-gene.fasta"),
+        local_url(port, "ribosomal-RNA-gene.fasta.fai"),
+        local_url(port, "ribosomal-RNA-gene.gff3")
+    ), app_file)
+
+    app <- AppDriver$new(
+        app_dir = shiny::shinyAppFile(app_file),
+        name = "igv-shiny-module-region",
+        height = 695,
+        width = 1235,
+        load_timeout = 1e+6,
+        timeout = 1e+6
+    )
+    app$wait_for_value(input = "igvReady")
+    Sys.sleep(2)
+
+    app$click("browser-getRegionButton")
+
+    # the reply travels browser -> shiny as an input event, so poll rather than
+    # read once; an empty display after the deadline is the #134 failure
+    deadline <- Sys.time() + 30
+    region <- ""
+    repeat {
+        region <- app$get_value(output = "browser-regionDisplay")
+        if (!is.null(region) && nzchar(region)) {
+            break
+        }
+        if (Sys.time() > deadline) {
+            break
+        }
+        Sys.sleep(0.5)
+    }
+    expect_equal(region, "all")
+
+    app$stop()
+})
