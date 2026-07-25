@@ -113,7 +113,7 @@ GWASTrack <- function(trackName,
 
   if (data.class == "data.frame") {
     mode <- "local.url"
-    tdir <- get_tracks_dir()
+    tdir <- .tracksDir()
     x <- NULL
     url <-
       tempfile(tmpdir = tdir, fileext = ".gwas") # expanded in javascript
