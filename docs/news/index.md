@@ -1,5 +1,10 @@
 # Changelog
 
+## igvShiny 1.9.16
+
+- Add a getting-started vignette covering the widget, track loaders,
+  navigation and modules
+
 ## igvShiny 1.9.15
 
 - Fix the 404 on locally written tracks when the tracks directory moves
