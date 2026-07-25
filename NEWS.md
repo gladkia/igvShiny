@@ -1,6 +1,6 @@
 ## igvShiny 1.9.13
-* Reject NA or empty names in `trackConfig`, warning instead of erroring
-* Require a startup track `url` to be a non-empty scalar string
+* Prevent NA or empty names in `trackConfig`, warning instead of erroring
+* Enforce a non-empty scalar string for the startup track `url`
 
 ## igvShiny 1.9.12
 * Add unit tests for the track loaders, driven by a fake Shiny session (M3)
