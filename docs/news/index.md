@@ -1,5 +1,11 @@
 # Changelog
 
+## igvShiny 1.9.14
+
+- Allow
+  [`igvShiny()`](https://gladkia.github.io/igvShiny/reference/igvShiny.md)
+  to build outside a shiny session, for scripts and vignettes
+
 ## igvShiny 1.9.13
 
 - Prevent NA or empty names in `trackConfig`, warning instead of
