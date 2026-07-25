@@ -1,3 +1,7 @@
+## igvShiny 1.9.19
+* Reduce bioconductor.org round trips in CI and cancel superseded pull request runs
+* Avoid BiocCheck failures during bioconductor.org outages by keeping its file cache
+
 ## igvShiny 1.9.17
 * Enforce green CI on macOS and Windows by dropping the allow-failure matrix flags
 
