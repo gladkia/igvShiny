@@ -52,9 +52,17 @@
 <li>
 <strong>General Make Targets</strong>: The <code>makefile</code> provides useful targets: <code>make roxy</code> (document), <code>make test</code> (run testthat tests), <code>make demo</code> (run the shiny demo app), and <code>make all</code>.</li>
 </ol></div>
+<div class="section level2">
+<h2 id="automated-review--what-it-does-and-does-not-catch">Automated review — what it does and does not catch<a class="anchor" aria-label="anchor" href="#automated-review--what-it-does-and-does-not-catch"></a></h2>
+<p>Pull requests are reviewed by <strong>CodeRabbit</strong> (<code>.coderabbit.yaml</code>, profile <code>assertive</code>). Treat it as editorial review: style, obvious logic slips, missing tests and docs. It reads the diff, so it cannot catch the class of bug that has actually hurt this package — the semantics of the bundled <code>igv.js</code>. Finding those means reading <code>inst/htmlwidgets/lib/igv-*.js</code> directly, and that path is filtered out of review on purpose (~8.7 MB of third-party code).</p>
+<p>Two conventions exist for the bot’s benefit:</p>
+<ul><li>PRs use <code>Related: #NNN</code>, not <code>Fixes #NNN</code> — see <code>.github/pull_request_template.md</code>. Auto-closing has hidden partly-finished work before (#36), but the reference still has to be there or CodeRabbit’s linked-issue checks silently skip.</li>
+<li>Broken external assets are checked deterministically, not by an AI reviewer: <code>.github/workflows/asset-url-check.yml</code> runs <code>.github/scripts/check-asset-urls.sh</code> weekly and files an issue when a genome, index or demo track URL stops resolving. Run the script by hand after touching any URL in <code>R/</code>, <code>inst/demos/</code> or <code>inst/htmlwidgets/igvShiny.js</code>.</li>
+</ul></div>
 </div>
 
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
