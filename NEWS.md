@@ -1,3 +1,6 @@
+## igvShiny 1.9.14
+* Allow `igvShiny()` to build outside a shiny session, for scripts and vignettes
+
 ## igvShiny 1.9.13
 * Prevent NA or empty names in `trackConfig`, warning instead of erroring
 * Enforce a non-empty scalar string for the startup track `url`

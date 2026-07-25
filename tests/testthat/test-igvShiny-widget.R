@@ -6,8 +6,8 @@ library(igvShiny)
 # output/render wrappers can all be checked here.
 #
 # igvShiny() reads the module namespace off the current reactive domain
-# (`shiny::getDefaultReactiveDomain()$ns("")`), so it has to be called inside
-# one - a MockShinySession provides that without starting an app.
+# (`shiny::getDefaultReactiveDomain()$ns("")`); a MockShinySession provides one
+# without starting an app. Outside a session the namespace is "" (#128).
 
 with_domain <- function(code) {
   shiny::withReactiveDomain(shiny::MockShinySession$new(), code)
@@ -69,6 +69,17 @@ test_that("igvShiny copies local genome files into the tracks directory", {
   expect_match(widget$x$fastaIndex, "^tracks/")
   expect_true(file.exists(file.path(get_tracks_dir(),
                                     basename(widget$x$fasta))))
+})
+
+test_that("igvShiny builds outside a reactive domain (#128)", {
+  expect_null(shiny::getDefaultReactiveDomain())
+
+  opts <- parseAndValidateGenomeSpec(genomeName = "hg38", initialLocus = "all")
+  widget <- igvShiny(opts)
+
+  expect_s3_class(widget, "htmlwidget")
+  # the JS side concatenates moduleNS with the event name, so no module means ""
+  expect_identical(widget$x$moduleNS, "")
 })
 
 test_that("igvShinyOutput and renderIgvShiny return Shiny bindings", {

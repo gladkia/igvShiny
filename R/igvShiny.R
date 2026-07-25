@@ -208,7 +208,10 @@ igvShiny <- function(genomeOptions,
   genomeOptions$displayMode <- displayMode
   genomeOptions$trackHeight <-
     100      # todo: make this an igvShiny ctor argument
-  genomeOptions$moduleNS <- session$ns("")
+  # outside a shiny session (script, vignette) there is no namespace to
+  # prepend; the JS side concatenates moduleNS with the event name, so the
+  # no-module case is the empty string
+  genomeOptions$moduleNS <- if (is.null(session)) "" else session$ns("")
   genomeOptions$tracks <- .sanitizeTracks(tracks)
 
   htmlwidgets::createWidget(
