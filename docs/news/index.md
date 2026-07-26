@@ -1,5 +1,11 @@
 # Changelog
 
+## igvShiny 1.9.20
+
+- Fix
+  [`getGenomicRegion()`](https://gladkia.github.io/igvShiny/reference/showGenomicRegion.md)
+  in a shiny module whose id is not `igv`
+
 ## igvShiny 1.9.19
 
 - Reduce bioconductor.org round trips in CI and cancel superseded pull
