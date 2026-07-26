@@ -1,3 +1,6 @@
+## igvShiny 1.9.20
+* Fix `getGenomicRegion()` in a shiny module whose id is not `igv`
+
 ## igvShiny 1.9.19
 * Reduce bioconductor.org round trips in CI and cancel superseded pull request runs
 * Disable the BiocCheck deprecation lookup, the last CI step reaching bioconductor.org
