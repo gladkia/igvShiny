@@ -200,10 +200,21 @@ jobs:
       ## The bioconductor_docker:devel container is already pinned to devel, so
       ## on Linux this step reinstalls BiocVersion to reach the version it is
       ## already at - 23 minutes of it on 2026-07-25
+      ## Called without pkgs, install() defaults to update = TRUE, meaning "bring
+      ## every installed package up to this version's repositories". Bioc devel
+      ## ships no macOS or Windows binaries, so that compiles the world from
+      ## source on every run - 52 of the job's 84 minutes on 2026-07-25, undoing
+      ## the package cache that was just restored. The dependencies this package
+      ## actually needs are installed by the two passes below
       - name: Set BiocVersion
         if: runner.os != 'Linux' || matrix.config.bioc != 'devel'
         run: |
-          BiocManager::install(version = "${{ matrix.config.bioc }}", ask = FALSE, force = TRUE)
+          BiocManager::install(
+              version = "${{ matrix.config.bioc }}",
+              ask = FALSE,
+              force = TRUE,
+              update = FALSE
+          )
         shell: Rscript {0}
 
       ## ... which is only true as long as the image stays devel-pinned, so say
