@@ -216,10 +216,11 @@ jobs:
           ## step exists to survive that host being down - so a failed lookup
           ## warns, only a real mismatch stops the build
           want <- try(as.character(BiocManager:::.version_bioc("devel")), silent = TRUE)
-          if (inherits(want, "try-error"))
+          if (inherits(want, "try-error")) {
               warning("could not reach bioconductor.org to confirm; container reports ", have)
-          else if (!identical(have, want))
+          } else if (!identical(have, want)) {
               stop("container is on Bioc ", have, ", expected devel (", want, ")")
+          }
           message("container Bioc version: ", have)
         shell: Rscript {0}
 
