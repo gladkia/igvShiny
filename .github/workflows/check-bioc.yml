@@ -23,11 +23,24 @@
 ## Pushes to a branch with an open pull request used to run the whole matrix
 ## twice on the same commit - once for the push, once for the pull_request -
 ## doubling both the wait and the load on bioconductor.org
+## The macOS and Windows jobs spend most of their 80 minutes compiling the Bioc
+## devel dependency tree from source - devel ships no binaries for either, and it
+## moves daily, so the package cache can never fully cover it. Linux runs in the
+## Bioconductor container and finishes in a fraction of that. Pull requests
+## therefore check Linux only, and the full matrix runs where a slow answer still
+## arrives in time to matter: on master, nightly, and on any pull request carrying
+## the full-ci label
 on:
   push:
     branches:
       - master
+  ## labeled is on the list so that adding full-ci to an open pull request
+  ## starts a run - the default types fire only on open, push and reopen
   pull_request:
+    types: [opened, synchronize, reopened, labeled]
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
 
 name: R-CMD-check-bioc
 
@@ -75,12 +88,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config:
-          - { os: ubuntu-latest, r: '4.5', bioc: 'devel', cont: "bioconductor/bioconductor_docker:devel", rspm: "https://packagemanager.rstudio.com/cran/__linux__/jammy/latest" }
-          - { os: macOS-latest, r: '4.6', bioc: 'devel' }
-          - { os: windows-latest, r: '4.6', bioc: 'devel' }
-          ## Check https://github.com/r-lib/actions/tree/master/examples
-          ## for examples using the http-user-agent
+        ## Linux always; macOS and Windows unless this is a plain pull request.
+        ## Keep the two lists in step - the Linux entry is repeated verbatim
+        config: ${{ (github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'full-ci')) && fromJSON('[{"os":"ubuntu-latest","r":"4.5","bioc":"devel","cont":"bioconductor/bioconductor_docker:devel","rspm":"https://packagemanager.rstudio.com/cran/__linux__/jammy/latest"}]') || fromJSON('[{"os":"ubuntu-latest","r":"4.5","bioc":"devel","cont":"bioconductor/bioconductor_docker:devel","rspm":"https://packagemanager.rstudio.com/cran/__linux__/jammy/latest"},{"os":"macOS-latest","r":"4.6","bioc":"devel"},{"os":"windows-latest","r":"4.6","bioc":"devel"}]') }}
+        ## Check https://github.com/r-lib/actions/tree/master/examples
+        ## for examples using the http-user-agent
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       RSPM: ${{ matrix.config.rspm }}
