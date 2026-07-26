@@ -1,3 +1,7 @@
+## igvShiny 1.9.22
+* Reduce the pull request matrix to Linux, running macOS and Windows on master and nightly
+* Enable a full-ci label to force the whole matrix on a pull request
+
 ## igvShiny 1.9.21
 * Bump the GitHub Actions used in CI to their current major versions
 * Replace the mutable `upload-artifact@master` reference with a released version
