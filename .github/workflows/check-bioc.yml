@@ -20,11 +20,23 @@
 ## * GHA: GitHub Action
 ## * OS: operating system
 
+## Pushes to a branch with an open pull request used to run the whole matrix
+## twice on the same commit - once for the push, once for the pull_request -
+## doubling both the wait and the load on bioconductor.org
 on:
   push:
+    branches:
+      - master
   pull_request:
 
 name: R-CMD-check-bioc
+
+## A new commit makes the previous run's result irrelevant, so stop it and free
+## the runner. Only for pull requests: a master run also deploys pkgdown and
+## pushes to Bioconductor, and those must be allowed to finish
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 ## These environment variables control whether to run GHA code later on that is
 ## specific to testthat, covr, and pkgdown.
@@ -42,12 +54,21 @@ env:
   run_docker: 'false'
   pkg_name: 'igvShiny'
   gref_pkgdown: 'refs/heads/master'
+  ## Set to a mirror (e.g. 'https://ftp.gwdg.de/pub/misc/bioconductor') to take
+  ## package downloads off bioconductor.org while it is unwell - on 2026-07-25 it
+  ## served 504s for over an hour and 'Set BiocVersion' alone took 23-53 minutes.
+  ## Left empty by default: mirrors sync once a day, and a package tracking Bioc
+  ## devel wants today's devel, not yesterday's
+  bioc_mirror: ''
 
 jobs:
   build-check:
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
     container: ${{ matrix.config.cont }}
+    ## A healthy run takes well under 30 minutes; anything past two hours is a
+    ## stuck download, not slow work
+    timeout-minutes: 120
     ## Environment variables unique to this job.
 
 
@@ -164,9 +185,54 @@ jobs:
           remotes::install_cran("BiocManager")
         shell: Rscript {0}
 
-      - name: Set BiocVersion
+      - name: Point BiocManager at a mirror
+        if: env.bioc_mirror != ''
         run: |
-          BiocManager::install(version = "${{ matrix.config.bioc }}", ask = FALSE, force = TRUE)
+          ## BiocManager reads no environment variable for this - only the
+          ## option - so it goes into the profile the later steps will load
+          cat(
+              sprintf('options(BioC_mirror = "%s")\n', Sys.getenv("bioc_mirror")),
+              file = file.path(Sys.getenv("HOME"), ".Rprofile"),
+              append = TRUE
+          )
+        shell: Rscript {0}
+
+      ## The bioconductor_docker:devel container is already pinned to devel, so
+      ## on Linux this step reinstalls BiocVersion to reach the version it is
+      ## already at - 23 minutes of it on 2026-07-25
+      ## Called without pkgs, install() defaults to update = TRUE, meaning "bring
+      ## every installed package up to this version's repositories". Bioc devel
+      ## ships no macOS or Windows binaries, so that compiles the world from
+      ## source on every run - 52 of the job's 84 minutes on 2026-07-25, undoing
+      ## the package cache that was just restored. The dependencies this package
+      ## actually needs are installed by the two passes below
+      - name: Set BiocVersion
+        if: runner.os != 'Linux' || matrix.config.bioc != 'devel'
+        run: |
+          BiocManager::install(
+              version = "${{ matrix.config.bioc }}",
+              ask = FALSE,
+              force = TRUE,
+              update = FALSE
+          )
+        shell: Rscript {0}
+
+      ## ... which is only true as long as the image stays devel-pinned, so say
+      ## so out loud rather than checking a version nobody asked for
+      - name: Verify the container's Bioc version
+        if: runner.os == 'Linux' && matrix.config.bioc == 'devel'
+        run: |
+          have <- as.character(BiocManager::version())
+          ## resolving what "devel" means today needs bioconductor.org, and this
+          ## step exists to survive that host being down - so a failed lookup
+          ## warns, only a real mismatch stops the build
+          want <- try(as.character(BiocManager:::.version_bioc("devel")), silent = TRUE)
+          if (inherits(want, "try-error")) {
+              warning("could not reach bioconductor.org to confirm; container reports ", have)
+          } else if (!identical(have, want)) {
+              stop("container is on Bioc ", have, ", expected devel (", want, ")")
+          }
+          message("container Bioc version: ", have)
         shell: Rscript {0}
 
       - name: Install dependencies pass 1
@@ -257,12 +323,18 @@ jobs:
           DISPLAY: 99.0
         run: |
           build_file <- pkgbuild::build(".")
+          ## The deprecation check is the one BiocCheck step that reaches out to
+          ## bioconductor.org (checkResults/*/meat-index.dcf). That endpoint
+          ## served 504s for hours on 2026-07-25 and 2026-07-26, failing the whole
+          ## run on all three systems, and it only reports whether a package is
+          ## deprecated in Bioc - which this one is not
           BiocCheck::BiocCheck(
               #dir('check', 'tar.gz$', full.names = TRUE),
               build_file,
               `quit-with-status` = TRUE,
               `no-check-R-ver` = TRUE,
-              `no-check-bioc-help` = TRUE
+              `no-check-bioc-help` = TRUE,
+              `no-check-deprecated` = TRUE
           )
         shell: Rscript {0}
 

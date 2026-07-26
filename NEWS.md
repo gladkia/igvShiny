@@ -1,3 +1,8 @@
+## igvShiny 1.9.19
+* Reduce bioconductor.org round trips in CI and cancel superseded pull request runs
+* Disable the BiocCheck deprecation lookup, the last CI step reaching bioconductor.org
+* Prevent the macOS and Windows jobs from rebuilding every package on each run
+
 ## igvShiny 1.9.17
 * Enforce green CI on macOS and Windows by dropping the allow-failure matrix flags
 
