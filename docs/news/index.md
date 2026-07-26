@@ -1,5 +1,11 @@
 # Changelog
 
+## igvShiny 1.9.21
+
+- Bump the GitHub Actions used in CI to their current major versions
+- Replace the mutable `upload-artifact@master` reference with a released
+  version
+
 ## igvShiny 1.9.20
 
 - Fix
