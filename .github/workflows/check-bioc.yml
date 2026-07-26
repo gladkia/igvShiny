@@ -307,40 +307,23 @@ jobs:
         if:  env.has_testthat == 'true'
         run: find . -name testthat.Rout -exec cat '{}' ';'
 
-      ## BiocCheck fetches the deprecated-package list from
-      ## bioconductor.org/checkResults/<ver>/bioc-LATEST/meat-index.dcf through
-      ## BiocFileCache. On a cold cache that is a bfcadd(), which is fatal when
-      ## the host is unreachable - it took down this job on 2026-07-25. Warm, the
-      ## failed refresh is survivable and BiocCheck reads the stored copy. The
-      ## list changes rarely, so a day-old one costs nothing
-      - name: Locate the BiocCheck cache
-        run: |
-          path <- tools::R_user_dir("BiocCheck", "cache")
-          dir.create(path, recursive = TRUE, showWarnings = FALSE)
-          cat(
-              "bioccheck_cache=", gsub("\\\\", "/", path), "\n",
-              file = Sys.getenv("GITHUB_ENV"), sep = "", append = TRUE
-          )
-        shell: Rscript {0}
-
-      - name: Cache the BiocCheck deprecated-package list
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.bioccheck_cache }}
-          key: ${{ env.cache-version }}-${{ runner.os }}-bioccheck-${{ matrix.config.bioc }}-${{ github.run_id }}
-          restore-keys: ${{ env.cache-version }}-${{ runner.os }}-bioccheck-${{ matrix.config.bioc }}-
-
       - name: Run BiocCheck
         env:
           DISPLAY: 99.0
         run: |
           build_file <- pkgbuild::build(".")
+          ## The deprecation check is the one BiocCheck step that reaches out to
+          ## bioconductor.org (checkResults/*/meat-index.dcf). That endpoint
+          ## served 504s for hours on 2026-07-25 and 2026-07-26, failing the whole
+          ## run on all three systems, and it only reports whether a package is
+          ## deprecated in Bioc - which this one is not
           BiocCheck::BiocCheck(
               #dir('check', 'tar.gz$', full.names = TRUE),
               build_file,
               `quit-with-status` = TRUE,
               `no-check-R-ver` = TRUE,
-              `no-check-bioc-help` = TRUE
+              `no-check-bioc-help` = TRUE,
+              `no-check-deprecated` = TRUE
           )
         shell: Rscript {0}
 
