@@ -1,3 +1,6 @@
+## igvShiny 1.9.17
+* Enforce green CI on macOS and Windows by dropping the allow-failure matrix flags
+
 ## igvShiny 1.9.16
 * Add a getting-started vignette covering the widget, track loaders, navigation and modules
 
