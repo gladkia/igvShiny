@@ -287,12 +287,27 @@ unless the module id happens to be `"igv"` — see
 
 A runnable version is in `inst/demos/igvShinyDemo-withModules.R`.
 
-# Custom genomes
+# Stock genomes
 
 Any genome igv.js knows can be requested by name — `get_css_genomes()` lists
-them. For anything else, supply the sequence yourself: a FASTA file, its index,
-and optionally an annotation, either as local paths (`dataMode = "localFiles"`)
-or URLs (`dataMode = "http"`). The package ships a small example genome:
+them, reading the same registry the bundled igv.js does
+([genomes3.json](https://igv.org/genomes/genomes3.json)).
+
+Naming a stock genome means igvShiny fetches nothing itself: the browser reads
+the registry entry and streams the sequence from wherever it points. Since
+igv.js 3.x that is a `.2bit` file, preferred over the entry's FASTA when both
+are listed, and for the genomes igvShiny offers those `.2bit` files are hosted
+by UCSC (`hgdownload.soe.ucsc.edu`). A UCSC outage therefore leaves a stock
+genome blank, with 403s or timeouts in the JavaScript console — the package
+itself is fine, and custom genomes (below) are unaffected because they carry
+their own URLs.
+
+# Custom genomes
+
+For a genome outside the registry, supply the sequence yourself: a FASTA file,
+its index, and optionally an annotation, either as local paths
+(`dataMode = "localFiles"`) or URLs (`dataMode = "http"`). The package ships a
+small example genome:
 
 ```{r custom-genome}
 data_directory <- system.file(package = "igvShiny", "extdata")
