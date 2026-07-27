@@ -90,7 +90,9 @@ ui <- page_sidebar(
         demoButton("addBedGraphTrackButton", "BedGraph", "chart-area"),
         demoButton("addBedGraphWithAltColorTrackButton", "BedGraph (AltColor)", "palette"),
         demoButton("addBed9TrackButton", "bed9", "grip-lines"),
-        demoButton("addGwasTrackButton", "GWAS", "chart-column")
+        demoButton("addGwasTrackButton", "GWAS", "chart-column"),
+        demoButton("addGwasCustomTrackButton", "GWAS (columns + colors)",
+                   "palette")
       ),
 
       accordion_panel(
@@ -180,6 +182,20 @@ server <- function(input, output, session) {
     printf("---- addGWASTrack")
     showGenomicRegion(session, id = "igvShiny_0", "chr19:45,248,108-45,564,645")
     loadGwasTrack(session, id = "igvShiny_0", trackName = "gwas", tbl = tbl.gwas, deleteTracksOfSameName = FALSE)
+  })
+
+  observeEvent(input$addGwasCustomTrackButton, {
+    printf("---- addGWASTrack, custom columns and colors")
+    showGenomicRegion(session, id = "igvShiny_0", "chr19:45,248,108-45,564,645")
+    # headers igv.js has no chance of guessing: the same table draws an empty
+    # track unless the column numbers are spelled out
+    tbl <- tbl.gwas
+    names(tbl)[c(3, 4, 10)] <- c("chromosome_label", "bp_location", "significance")
+    track <- GWASTrack("gwas, custom columns", tbl,
+                       chrom.col = 3, pos.col = 4, pval.col = 10,
+                       trackHeight = 200,
+                       chromosomeColorMap = list("19" = "purple", "*" = "gray"))
+    display(track, session, id = "igvShiny_0", deleteTracksOfSameName = FALSE)
   })
 
   observeEvent(input$addBamViaHttpButton, {

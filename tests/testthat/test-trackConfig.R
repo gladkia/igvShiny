@@ -23,6 +23,13 @@ test_that("valid igv.js options are merged in", {
   expect_equal(merged$trackName, "t")
 })
 
+test_that("a gwas column mapping reaches igv.js through trackConfig", {
+  base <- list(elementID = "igvShiny_0", trackName = "t")
+  columns <- list(chromosome = 3, position = 4, value = 10)
+  merged <- sanitizeAndMergeOptions(base, list(columns = columns))
+  expect_equal(merged$columns, columns)
+})
+
 test_that("options outside the allowlist are dropped with a warning", {
   base <- list(elementID = "igvShiny_0")
   expect_warning(

@@ -1,3 +1,7 @@
+## igvShiny 1.9.25
+* Allow a gwas column mapping through trackConfig, for loadGwasTrack callers
+* Extend the Connect Cloud demo with a gwas track using custom columns and colors
+
 ## igvShiny 1.9.24
 * Send the gwas column mapping to igv.js, so any data frame layout works (#32)
 * Support a chromosomeColorMap argument coloring gwas points per chromosome (#46)
