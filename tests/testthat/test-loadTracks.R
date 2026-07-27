@@ -101,6 +101,22 @@ test_that("loadGwasTrack writes the table and sets the y-axis limits", {
   expect_false(msg$autoscale)
 })
 
+test_that("loadGwasTrack carries a column mapping and color table through", {
+  session <- fake_session()
+  f <- system.file(package = "igvShiny", "extdata", "gwas.RData")
+  tbl.gwas <- get(load(f))
+  columns <- list(chromosome = 3, position = 4, value = 10)
+  colors <- list("19" = "purple", "*" = "gray")
+  # the documented way for a loadGwasTrack caller to reach what GWASTrack takes
+  # as arguments, so the allowlist and the loader have to agree
+  loadGwasTrack(session, ELEMENT_ID, "gwas", tbl.gwas,
+                trackConfig = list(columns = columns, colorTable = colors))
+
+  msg <- last_message(session, "loadGwasTrack")
+  expect_equal(msg$columns, columns)
+  expect_equal(msg$colorTable, colors)
+})
+
 test_that("loadBamTrackFromURL sends both the bam and the index url", {
   session <- fake_session()
   loadBamTrackFromURL(session, ELEMENT_ID, "bam",
