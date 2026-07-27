@@ -1,3 +1,8 @@
+## igvShiny 1.9.29
+* Resolve tair10 through the igv.js registry, dropping the self-hosted fasta (#143)
+* Read the rhos sequence and genes from the UCSC assembly hub instead of gladki.pl (#143)
+* Remove the hg19 Gencode v18 track, whose s3 bucket answers 403 (#143)
+
 ## igvShiny 1.9.28
 * Fix a second igvShiny widget staying silent at a locus another one already reports (#126)
 * Add a headless test moving two widgets on one page to the same region

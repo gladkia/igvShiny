@@ -8,7 +8,9 @@ library(GenomicAlignments)
 # zero pvalues, which when transformed by -log10, become
 # infinite, not conducive to autoscaled display.
 #----------------------------------------------------------------
-url <- "https://s3.amazonaws.com/igv.org.demo/gwas_sample.tsv.gz"
+# the igv.org.demo bucket dropped this file; the same table is the one the
+# GWASTrack examples already use (issue #143)
+url <- "https://gladki.pl/igvShiny/gwas_sample.tsv.gz"
 url.gwasTrack <- GWASTrack("remote url gwas",
                            url,
                            chrom.col=3,

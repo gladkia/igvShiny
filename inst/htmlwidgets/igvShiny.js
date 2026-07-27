@@ -242,20 +242,16 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
            }
         } // if annotation (gff3) supplied
     
+    // The Gencode v18 track this used to carry came from the
+    // igv.broadinstitute.org s3 bucket, which now answers 403. The registry
+    // entry for hg19 ships a RefSeq All track, so the annotation comes with the
+    // bare id and there is nothing left for us to pin (issue #143)
     var hg19_options = {
         locus: initialLocus,
         flanking: 1000,
         showRuler: true,
         minimumBases: 5,
-        
-        reference: {id: "hg19"},
-        tracks: [
-            {name: 'Gencode v18',
-             url: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.collapsed.bed",
-             indexURL: "https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.collapsed.bed.idx",
-             visibilityWindow: 2000000,
-             displayMode: displayMode
-            }]
+        genome: "hg19"
         }; // hg19_options
     
     
@@ -279,6 +275,11 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
         genome: "mm10"
         }; // mm10_options
     
+    // tair10 is in the igv.js registry, sequence and RefSeq annotation included,
+    // so the bare id replaces the fasta we used to host ourselves - it has been
+    // answering 404 since the igvr paths were cleared (issue #143). Chromosomes
+    // arrive under their RefSeq accessions (NC_003070.9 ...) rather than the
+    // lowered chr names of the old GFF3
     var tair10_options = {
         locus: initialLocus,
         flanking: 2000,
@@ -286,24 +287,14 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
         showNavigation: true,
         minimumBases: 5,
         showRuler: true,
-        reference: {id: "TAIR10",
-                    fastaURL: "https://gladki.pl/igvr/static/tair10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa",
-                    indexURL: "https://gladki.pl/igvr/static/tair10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.fai",
-                    aliasURL: "https://gladki.pl/igvr/static/tair10/chromosomeAliases.txt"
-                   },
-        tracks: [
-            {name: 'Genes TAIR10',
-             type: 'annotation',
-             visibilityWindow: 500000,
-             url: "https://gladki.pl/igvr/static/tair10/TAIR10_genes.sorted.chrLowered.gff3.gz",
-             color: "darkred",
-             indexed: true,
-             height: trackHeight,
-             displayMode: displayMode
-            },
-        ]
+        genome: "tair10"
     }; // tair10_options
-    
+
+    // rhos is in no igv.js registry, but UCSC publishes the same assembly as an
+    // assembly hub, so the sequence and the genes come from there instead of
+    // from us. GCF_000012905.2 is ASM1290v2, the accession the old self-hosted
+    // filenames already carried (issue #143)
+    var rhos_hub = "https://hgdownload.soe.ucsc.edu/hubs/GCF/000/012/905/GCF_000012905.2";
     var rhos_options = {
         locus: initialLocus,
         flanking: 2000,
@@ -311,17 +302,18 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
         showNavigation: true,
         minimumBases: 5,
         showRuler: true,
-        reference: {id: "Rhodobacter sphaeroides",
-                    fastaURL: "https://gladki.pl/igvr/static/rhos/GCF_000012905.2_ASM1290v2_genomic.fna",
-                    indexURL: "https://gladki.pl/igvr/static/rhos/GCF_000012905.2_ASM1290v2_genomic.fna.fai"
+        reference: {id: "GCF_000012905.2",
+                    name: "R. sphaeroides 2.4.1 (ASM1290v2)",
+                    twoBitURL: rhos_hub + "/GCF_000012905.2.2bit",
+                    aliasURL: rhos_hub + "/GCF_000012905.2.chromAlias.txt",
+                    chromSizesURL: rhos_hub + "/GCF_000012905.2.chrom.sizes.txt"
                    },
         tracks: [
             {name: 'Genes',
-             type: 'annotation',
+             format: 'bigbed',
              visibilityWindow: 500000,
-             url: "https://gladki.pl/igvr/static/rhos/GCF_000012905.2_ASM1290v2_genomic.gff.gz",
+             url: rhos_hub + "/bbi/GCF_000012905.2_ASM1290v2.ncbiGene.bb",
              color: "darkred",
-             indexed: true,
              height: trackHeight,
              displayMode: displayMode
             }
