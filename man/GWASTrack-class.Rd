@@ -13,6 +13,7 @@ GWASTrack(
   chrom.col,
   pos.col,
   pval.col,
+  chromosomeColorMap = list(),
   trackHeight = 50,
   autoscale = TRUE,
   minY = 0,
@@ -31,6 +32,12 @@ whose structure is described by chrom.col, pos.col, pval.col}
 \item{pos.col}{numeric, the column number of the position column}
 
 \item{pval.col}{numeric, the column number of the GWAS pvalue column}
+
+\item{chromosomeColorMap}{a named list or character vector mapping
+chromosome names, as they are spelled in the data, to colors,
+e.g. \code{list("1" = "red", "2" = "blue")}. A \code{"*"} entry colors every
+chromosome not named explicitly. Empty by default, which leaves the igv.js
+chromosome palette in place}
 
 \item{trackHeight}{numeric in pixels}
 
@@ -78,6 +85,16 @@ track <- GWASTrack(
   trackHeight = 100
 )
 getUrl(track)
+
+# colors picked per chromosome, with "*" covering the rest
+track <- GWASTrack(
+  "gwas 5k, custom colors",
+  tbl.gwas,
+  chrom.col = 12,
+  pos.col = 13,
+  pval.col = 28,
+  chromosomeColorMap = list("1" = "red", "2" = "blue", "*" = "gray")
+)
 
 
 }
