@@ -1,3 +1,7 @@
+## igvShiny 1.9.28
+* Fix a second igvShiny widget staying silent at a locus another one already reports (#126)
+* Add a headless test moving two widgets on one page to the same region
+
 ## igvShiny 1.9.27
 * Remove the mm10 and danRer11 reference workaround, unneeded with igv.js 3.x (#107)
 * Drop four unused igv.js builds and the unreferenced stylesheet from the package

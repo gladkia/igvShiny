@@ -89,7 +89,6 @@ HTMLWidgets.widget({
              .then(function (browser) {
                 igvshiny_log("createBrowser promise fulfilled");
                 igvWidget = browser;
-                window.chromLocString = "";
                 igvshiny_log("about to save igv browser");
                 document.getElementById(htmlContainerID).igvBrowser = browser;
                 document.getElementById(htmlContainerID).chromLocString = options.initialLocus;
@@ -112,14 +111,19 @@ HTMLWidgets.widget({
                       ? "all"
                       : refFrame.chr + ":" + Math.round(refFrame.start) + "-" + Math.round(refFrame.end);
                    
-                   document.getElementById(htmlContainerID).chromLocString = chromLocString;
+                   // Compare against this widget's own last locus, not a global:
+                   // two widgets sitting at the same locus would otherwise
+                   // suppress each other's currentGenomicRegion event (#126).
+                   var container = document.getElementById(htmlContainerID);
+                   var previousLocString = container.chromLocString;
+                   container.chromLocString = chromLocString;
                    var eventNames = currentGenomicRegionEventNames(htmlContainerID);
                    var eventName = eventNames.plain;
                    igvshiny_log("--- calling Shiny.setInputValue:");
    		   igvshiny_log("eventName: " + eventName);
-                   igvshiny_log("chromLocString:        " + chromLocString);
-                   igvshiny_log("window.chromLocString: " + window.chromLocString);
-                   var newRegion = chromLocString != window.chromLocString;
+                   igvshiny_log("chromLocString:          " + chromLocString);
+                   igvshiny_log("previous chromLocString: " + previousLocString);
+                   var newRegion = chromLocString != previousLocString;
                    igvshiny_log("--- new.loc? " + newRegion);
                    if(newRegion){
                       igvshiny_log("--- generating currentGenomicRegion event: " + chromLocString)
@@ -129,7 +133,6 @@ HTMLWidgets.widget({
                          igvshiny_log("moduleEventName: " + moduleEventName);
                          Shiny.setInputValue(moduleEventName, chromLocString, {priority: "event"});
                          }
-                   window.chromLocString = chromLocString;
                       } // if new chromLocString
                  }, 250, false));
                 igvWidget.on('trackclick', function (track, popoverData){
