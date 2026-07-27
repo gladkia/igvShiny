@@ -38,5 +38,5 @@ track <-
     pval.col = 28
   )
 getUrl(track)
-#> [1] "/tmp/RtmpW4RH56/tracks/file15551ee25560.gwas"
+#> [1] "/tmp/RtmpIdtHbh/tracks/file15636f130738.gwas"
 ```
