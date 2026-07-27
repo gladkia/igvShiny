@@ -5,6 +5,11 @@ test_that("Supported genomes can be retrieved correctly", {
   cg <- get_css_genomes()
   expect_true(length(cg) > 30)
 
+  # the list has to come from the registry the bundled igv.js reads, so that
+  # every id it reports resolves by bare name; mm10, danRer11 and rn6 are the
+  # genomes #107 was about
+  expect_true(all(c("hg38", "mm10", "danRer11", "rn6") %in% cg))
+
   cg.minimal <- get_css_genomes(test = TRUE)
   expect_equal(cg.minimal,
                c(

@@ -293,8 +293,9 @@ Any genome igv.js knows can be requested by name — `get_css_genomes()` lists
 them, reading the same registry the bundled igv.js does
 ([genomes3.json](https://igv.org/genomes/genomes3.json)).
 
-Naming a stock genome means igvShiny fetches nothing itself: the browser reads
-the registry entry and streams the sequence from wherever it points. Since
+Naming a stock genome means R fetches no sequence data: it reads the registry
+only to validate the name, and the user's browser streams the sequence from
+wherever the registry entry points. Since
 igv.js 3.x that is a `.2bit` file, preferred over the entry's FASTA when both
 are listed, and for the genomes igvShiny offers those `.2bit` files are hosted
 by UCSC (`hgdownload.soe.ucsc.edu`). A UCSC outage therefore leaves a stock
