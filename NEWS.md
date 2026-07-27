@@ -1,6 +1,6 @@
 ## igvShiny 1.9.26
 * Update the Connect Cloud manifest, which pinned a commit older than the demo
-* Show the installed igvShiny version in the demo sidebar
+* Expose the installed igvShiny version in the demo sidebar
 
 ## igvShiny 1.9.25
 * Allow a gwas column mapping through trackConfig, for loadGwasTrack callers

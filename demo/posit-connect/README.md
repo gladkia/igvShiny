@@ -21,9 +21,9 @@ Server-side runtime footprint is tiny: a 74 KB `gwas.RData` loaded at startup
 Connect Cloud publishes from a public GitHub repo and needs `manifest.json` in
 the content directory to know which packages to install.
 
-The manifest pins `igvShiny` to the **development version from GitHub**
-(`gladkia/igvShiny@master`), not the Bioconductor release — so the demo tracks
-the newest code.
+The manifest pins `igvShiny` to a **development build from GitHub**
+(`gladkia/igvShiny`), not the Bioconductor release — so the demo can show work
+that has not been released yet.
 
 > **The pin is a commit, not a branch.** `writeManifest` records
 > `GithubSHA1`/`RemoteSha` of the build installed at the time, and Connect Cloud
