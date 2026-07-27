@@ -121,7 +121,11 @@ ui <- page_sidebar(
              icon("github"), " GitHub"),
       tags$a(href = "https://gladkia.github.io/igvShiny/", target = "_blank",
              class = "link-secondary text-decoration-none",
-             icon("book"), " Docs")
+             icon("book"), " Docs"),
+      # manifest.json pins the package to one commit, so a redeploy can serve
+      # this app.R against an older igvShiny - printing the version says which
+      tags$div(class = "text-muted mt-1 font-monospace",
+               sprintf("igvShiny %s", utils::packageVersion("igvShiny")))
     )
   ),
 

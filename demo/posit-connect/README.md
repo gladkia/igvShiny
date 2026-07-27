@@ -21,11 +21,23 @@ Server-side runtime footprint is tiny: a 74 KB `gwas.RData` loaded at startup
 Connect Cloud publishes from a public GitHub repo and needs `manifest.json` in
 the content directory to know which packages to install.
 
-The manifest pins `igvShiny` to the **development version from GitHub**
-(`gladkia/igvShiny@master`), not the Bioconductor release — so the demo tracks
-the newest code. Regenerate it whenever `app.R` or its dependencies change, and
-make sure the locally installed `igvShiny` is the GitHub build first, so the
-manifest records the GitHub source rather than Bioconductor:
+The manifest pins `igvShiny` to a **development build from GitHub**
+(`gladkia/igvShiny`), not the Bioconductor release — so the demo can show work
+that has not been released yet.
+
+> **The pin is a commit, not a branch.** `writeManifest` records
+> `GithubSHA1`/`RemoteSha` of the build installed at the time, and Connect Cloud
+> installs *that commit* — `GithubRef: master` is decoration. A republish
+> therefore serves the current `app.R` against a possibly much older package.
+> When `app.R` starts using something new, bump the two SHA fields (or
+> regenerate) in the same commit, or the app dies on the first click: an error
+> inside `observeEvent` ends the Shiny session, and the page just greys out with
+> nothing in the UI to explain it. The sidebar footer prints the installed
+> `igvShiny` version — check it there first.
+
+Regenerate the manifest whenever `app.R` or its dependencies change, and make
+sure the locally installed `igvShiny` is the GitHub build first, so the manifest
+records the GitHub source rather than Bioconductor:
 
 ```r
 # install the dev version so writeManifest records source = github:
