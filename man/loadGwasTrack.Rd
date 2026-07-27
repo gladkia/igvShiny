@@ -32,7 +32,11 @@ loadGwasTrack(
 \item{deleteTracksOfSameName}{logical, default TRUE}
 
 \item{trackConfig}{a named list of additional igv.js track configuration
-options.}
+options. A table whose headers igv.js does not recognize needs its layout
+spelled out, 1-based, as
+\code{columns = list(chromosome = 3, position = 4, value = 10)};
+\code{colorTable} takes a chromosome-to-color map, see
+\code{\link{GWASTrack}}}
 }
 \value{
 nothing

@@ -17,6 +17,9 @@
   "flipAxis", "stroke", "noStroke", "fill", "noFill", "featureHeight",
   "showLabels", "font", "fontSize", "fontStyle", "fontWeight", "colorTable",
   "colorByAttribute",
+  ## the gwas parser reads these 1-based; without them it guesses the layout
+  ## from the header names it knows, and any other spelling draws nothing
+  "columns",
   "showAllBases", "samplingWindowSize", "samplingDepth", "maxRows",
   "hideEmptyTracks", "oauthToken", "headers", "viewAsPairs", "pairsSupported",
   "maxPanelHeight", "separateBam", "wholeGenomeView", "roi", "queryable"
@@ -905,7 +908,11 @@ loadVcfTrack <- function(session,
 #' @param tbl.gwas data.frame, with at least "chrom" "start" "end" columns
 #' @param deleteTracksOfSameName logical, default TRUE
 #' @param trackConfig a named list of additional igv.js track configuration
-#' options.
+#' options. A table whose headers igv.js does not recognize needs its layout
+#' spelled out, 1-based, as
+#' \code{columns = list(chromosome = 3, position = 4, value = 10)};
+#' \code{colorTable} takes a chromosome-to-color map, see
+#' \code{\link{GWASTrack}}
 #'
 #' @examples
 #' library(igvShiny)
