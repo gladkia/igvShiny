@@ -53,6 +53,12 @@ test_that("GWASTrack constructor rejects impossible column numbers", {
               pval.col = NCOL(tbl.gwas) + 1),
     sprintf("beyond the %d columns", NCOL(tbl.gwas))
   )
+  # all three share one check, so the message has to name the guilty one
+  expect_error(
+    GWASTrack("bad col", tbl.gwas, chrom.col = NCOL(tbl.gwas) + 1, pos.col = 4,
+              pval.col = 10),
+    "chrom.col beyond"
+  )
 })
 
 sanitizeColorMap <- igvShiny:::.sanitizeChromosomeColorMap
