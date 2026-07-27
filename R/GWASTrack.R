@@ -60,12 +60,19 @@ setGeneric("getUrl",
     stop("error: every chromosomeColorMap color needs a chromosome name")
   }
 
+  # a colorTable is a JSON object, so a repeated chromosome keeps whichever
+  # color happens to be written last - better to say so than to pick one
+  if (anyDuplicated(names(map))) {
+    stop(sprintf("error: chromosomeColorMap names one chromosome twice: %s",
+                 toString(unique(names(map)[duplicated(names(map))]))))
+  }
+
   valid <- vapply(map, function(color) {
     is.character(color) && length(color) == 1L && !is.na(color)
   }, logical(1))
   if (!all(valid)) {
     stop(sprintf("error: chromosomeColorMap colors must be single strings: %s",
-                 paste(names(map)[!valid], collapse = ", ")))
+                 toString(names(map)[!valid])))
   }
 
   map
@@ -174,11 +181,11 @@ GWASTrack <- function(trackName,
   if (data.class == "data.frame") {
     # a column number past the end of the table silently yields an empty track,
     # so it is worth catching here, where the table is still in hand
-    too.big <- vapply(columns, function(value) value > ncol(data), logical(1))
+    too.big <- vapply(columns, function(value) value > NCOL(data), logical(1))
     if (any(too.big)) {
       stop(sprintf(
         "error: %s beyond the %d columns of the gwas table",
-        paste(names(columns)[too.big], collapse = ", "), ncol(data)
+        toString(names(columns)[too.big]), NCOL(data)
       ))
     }
 

@@ -84,4 +84,14 @@ test_that("show() prints the track summary", {
   expect_match(paste(out, collapse = "\n"), "GWASTrack object")
   expect_match(paste(out, collapse = "\n"), "trackName:  gwas")
   expect_match(paste(out, collapse = "\n"), "chrom=3")
+  # the color line is printed only for a track that carries a map
+  expect_false(any(grepl("colors:", out)))
+
+  f <- system.file(package = "igvShiny", "extdata", "gwas.RData")
+  tbl.gwas <- get(load(f))
+  track <- GWASTrack("gwas", tbl.gwas, chrom.col = 3, pos.col = 4,
+                     pval.col = 10,
+                     chromosomeColorMap = list("1" = "red", "*" = "gray"))
+  expect_match(paste(capture.output(show(track)), collapse = "\n"),
+               "colors:     2 chromosomes")
 })

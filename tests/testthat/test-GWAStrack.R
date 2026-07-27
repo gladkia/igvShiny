@@ -50,23 +50,28 @@ test_that("GWASTrack constructor rejects impossible column numbers", {
   # a column past the end of the table would otherwise yield an empty track
   expect_error(
     GWASTrack("bad col", tbl.gwas, chrom.col = 3, pos.col = 4,
-              pval.col = ncol(tbl.gwas) + 1),
-    sprintf("beyond the %d columns", ncol(tbl.gwas))
+              pval.col = NCOL(tbl.gwas) + 1),
+    sprintf("beyond the %d columns", NCOL(tbl.gwas))
   )
 })
 
+sanitizeColorMap <- igvShiny:::.sanitizeChromosomeColorMap
+
 test_that("chromosomeColorMap keeps only named, single-string colors", {
-  expect_equal(igvShiny:::.sanitizeChromosomeColorMap(NULL), list())
-  expect_equal(igvShiny:::.sanitizeChromosomeColorMap(list()), list())
-  expect_equal(igvShiny:::.sanitizeChromosomeColorMap(c("1" = "red")), list("1" = "red"))
-  expect_error(igvShiny:::.sanitizeChromosomeColorMap(list("red", "blue")),
+  expect_equal(sanitizeColorMap(NULL), list())
+  expect_equal(sanitizeColorMap(list()), list())
+  expect_equal(sanitizeColorMap(c("1" = "red")), list("1" = "red"))
+  expect_error(sanitizeColorMap(list("red", "blue")),
                "needs a chromosome name")
-  expect_error(igvShiny:::.sanitizeChromosomeColorMap(list("1" = "red", "blue")),
+  expect_error(sanitizeColorMap(list("1" = "red", "blue")),
                "needs a chromosome name")
-  expect_error(igvShiny:::.sanitizeChromosomeColorMap(list("1" = c("red", "blue"))),
+  expect_error(sanitizeColorMap(list("1" = c("red", "blue"))),
                "single strings")
-  expect_error(igvShiny:::.sanitizeChromosomeColorMap(list("1" = 42)), "single strings")
-  expect_error(igvShiny:::.sanitizeChromosomeColorMap(42), "named list or character")
+  expect_error(sanitizeColorMap(list("1" = 42)), "single strings")
+  expect_error(sanitizeColorMap(42), "named list or character")
+  # JSON keeps one value per key, so a repeated chromosome loses a color
+  expect_error(sanitizeColorMap(list("1" = "red", "1" = "blue")),
+               "one chromosome twice")
 })
 
 test_that("GWASTrack constructor fails with illegal arguments", {
