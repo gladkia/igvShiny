@@ -16,6 +16,7 @@
       chrom.col = "numeric",
       pos.col = "numeric",
       pval.col = "numeric",
+      chromosomeColorMap = "list",
       trackHeight = "numeric",
       autoscale = "logical",
       minY = "numeric",
@@ -39,6 +40,37 @@ setGeneric("getUrl",
            })
 
 #-------------------------------------------------------------------------------
+#' Check a chromosome color map before it reaches igv.js
+#'
+#' @param map a named list or character vector of colors, possibly empty
+#' @return the map as a named list, empty if nothing was supplied
+#' @keywords GWASTrack_class
+.sanitizeChromosomeColorMap <- function(map) {
+  if (is.null(map) || length(map) == 0) {
+    return(list())
+  }
+
+  if (!is.list(map) && !is.character(map)) {
+    stop("error: chromosomeColorMap must be a named list or character vector")
+  }
+
+  map <- as.list(map)
+  # anyNA first: with an NA name, any(names == "") is NA and `if` errors
+  if (is.null(names(map)) || anyNA(names(map)) || any(names(map) == "")) {
+    stop("error: every chromosomeColorMap color needs a chromosome name")
+  }
+
+  valid <- vapply(map, function(color) {
+    is.character(color) && length(color) == 1L && !is.na(color)
+  }, logical(1))
+  if (!all(valid)) {
+    stop(sprintf("error: chromosomeColorMap colors must be single strings: %s",
+                 paste(names(map)[!valid], collapse = ", ")))
+  }
+
+  map
+}
+#-------------------------------------------------------------------------------
 #' Constructor for GWASTrack
 #'
 #' \code{GWASTrack} creates an \code{IGV} manhattan track from GWAS data
@@ -53,6 +85,11 @@ setGeneric("getUrl",
 #' @param chrom.col numeric, the column number of the chromosome column
 #' @param pos.col numeric, the column number of the position column
 #' @param pval.col numeric, the column number of the GWAS pvalue column
+#' @param chromosomeColorMap a named list or character vector mapping
+#' chromosome names, as they are spelled in the data, to colors,
+#' e.g. \code{list("1" = "red", "2" = "blue")}. A \code{"*"} entry colors every
+#' chromosome not named explicitly. Empty by default, which leaves the igv.js
+#' chromosome palette in place
 #' @param trackHeight numeric in pixels
 #' @param autoscale logical
 #' @param minY numeric for explicit (non-auto) scaling
@@ -93,6 +130,16 @@ setGeneric("getUrl",
 #' )
 #' getUrl(track)
 #'
+#' # colors picked per chromosome, with "*" covering the rest
+#' track <- GWASTrack(
+#'   "gwas 5k, custom colors",
+#'   tbl.gwas,
+#'   chrom.col = 12,
+#'   pos.col = 13,
+#'   pval.col = 28,
+#'   chromosomeColorMap = list("1" = "red", "2" = "blue", "*" = "gray")
+#' )
+#'
 #'
 #' @keywords GWASTrack_class
 #' @export
@@ -104,6 +151,7 @@ GWASTrack <- function(trackName,
                       chrom.col,
                       pos.col,
                       pval.col,
+                      chromosomeColorMap = list(),
                       trackHeight = 50,
                       autoscale = TRUE,
                       minY = 0,
@@ -111,7 +159,29 @@ GWASTrack <- function(trackName,
   data.class <- class(data)
   stopifnot(data.class %in% c("data.frame", "character"))
 
+  chromosomeColorMap <- .sanitizeChromosomeColorMap(chromosomeColorMap)
+  columns <- list(chrom.col = chrom.col, pos.col = pos.col,
+                  pval.col = pval.col)
+  for (name in names(columns)) {
+    value <- columns[[name]]
+    if (!is.numeric(value) || length(value) != 1L || is.na(value) ||
+        value != round(value) || value < 1) {
+      stop(sprintf("error: %s must be a single column number, at least 1",
+                   name))
+    }
+  }
+
   if (data.class == "data.frame") {
+    # a column number past the end of the table silently yields an empty track,
+    # so it is worth catching here, where the table is still in hand
+    too.big <- vapply(columns, function(value) value > ncol(data), logical(1))
+    if (any(too.big)) {
+      stop(sprintf(
+        "error: %s beyond the %d columns of the gwas table",
+        paste(names(columns)[too.big], collapse = ", "), ncol(data)
+      ))
+    }
+
     mode <- "local.url"
     tdir <- .tracksDir()
     x <- NULL
@@ -145,6 +215,7 @@ GWASTrack <- function(trackName,
     chrom.col = chrom.col,
     pos.col = pos.col,
     pval.col = pval.col,
+    chromosomeColorMap = chromosomeColorMap,
     trackHeight = trackHeight,
     autoscale = autoscale,
     minY = minY,
@@ -205,11 +276,22 @@ setMethod("display",
               trackName = obj@trackName,
               dataMode = obj@data.mode,
               dataUrl = obj@url,
+              # without an explicit mapping igv.js guesses the columns from the
+              # header names, which only works for tables spelled its way
+              columns = list(
+                chromosome = obj@chrom.col,
+                position = obj@pos.col,
+                value = obj@pval.col
+              ),
               trackHeight = obj@trackHeight,
               autoscale = obj@autoscale,
               min = obj@minY,
               max = obj@maxY
             )
+
+            if (length(obj@chromosomeColorMap) > 0) {
+              message$colorTable <- obj@chromosomeColorMap
+            }
 
             if (obj@data.mode == "local.url") {
               directory.name <- dirname(obj@url)
@@ -289,6 +371,10 @@ setMethod("show",
             cat("  columns:    chrom=", object@chrom.col,
                 " pos=", object@pos.col,
                 " pval=", object@pval.col, "\n", sep = "")
+            if (length(object@chromosomeColorMap) > 0) {
+              cat("  colors:     ", length(object@chromosomeColorMap),
+                  " chromosomes\n", sep = "")
+            }
             cat("  trackHeight:", object@trackHeight, "\n")
             cat("  autoscale:  ", object@autoscale, "\n", sep = "")
             if (isFALSE(object@autoscale)) {

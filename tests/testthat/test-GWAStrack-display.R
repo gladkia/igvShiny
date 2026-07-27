@@ -26,6 +26,35 @@ test_that("display() sends the track and rewrites a local url into tracks/", {
   expect_equal(msg$trackHeight, 100)
 })
 
+test_that("display() sends the column mapping igv.js needs", {
+  session <- fake_session()
+  display(gwas_from_data_frame(), session, id = "igvShiny_0")
+
+  msg <- last_message(session, "loadGwasTrackFlexibleSource")
+  # igv.js reads these 1-based, exactly as the constructor takes them; without
+  # them it falls back to guessing the columns from the header names
+  expect_equal(msg$columns, list(chromosome = 3, position = 4, value = 10))
+})
+
+test_that("display() sends a chromosome color map only when there is one", {
+  session <- fake_session()
+  display(gwas_from_data_frame(), session, id = "igvShiny_0")
+  msg <- last_message(session, "loadGwasTrackFlexibleSource")
+  # an empty colorTable would replace the igv.js palette with nothing
+  expect_null(msg$colorTable)
+
+  f <- system.file(package = "igvShiny", "extdata", "gwas.RData")
+  tbl.gwas <- get(load(f))
+  colors <- list("1" = "red", "*" = "gray")
+  track <- GWASTrack("gwas", tbl.gwas, chrom.col = 3, pos.col = 4,
+                     pval.col = 10, chromosomeColorMap = colors)
+  session <- fake_session()
+  display(track, session, id = "igvShiny_0")
+
+  msg <- last_message(session, "loadGwasTrackFlexibleSource")
+  expect_equal(msg$colorTable, colors)
+})
+
 test_that("display() removes same-named tracks unless told otherwise", {
   session <- fake_session()
   display(gwas_from_data_frame(), session, id = "igvShiny_0")

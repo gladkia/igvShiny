@@ -34,6 +34,41 @@ test_that("GWASTrack constructor works with a remote URL", {
   expect_equal(url, url.retrieved)
 })
 
+test_that("GWASTrack constructor rejects impossible column numbers", {
+  f <- system.file(package = "igvShiny", "extdata", "gwas.RData")
+  tbl.gwas <- get(load(f))
+
+  expect_error(
+    GWASTrack("bad col", tbl.gwas, chrom.col = 3, pos.col = 4, pval.col = 0),
+    "at least 1"
+  )
+  expect_error(
+    GWASTrack("bad col", tbl.gwas, chrom.col = c(3, 4), pos.col = 4,
+              pval.col = 10),
+    "single column number"
+  )
+  # a column past the end of the table would otherwise yield an empty track
+  expect_error(
+    GWASTrack("bad col", tbl.gwas, chrom.col = 3, pos.col = 4,
+              pval.col = ncol(tbl.gwas) + 1),
+    sprintf("beyond the %d columns", ncol(tbl.gwas))
+  )
+})
+
+test_that("chromosomeColorMap keeps only named, single-string colors", {
+  expect_equal(igvShiny:::.sanitizeChromosomeColorMap(NULL), list())
+  expect_equal(igvShiny:::.sanitizeChromosomeColorMap(list()), list())
+  expect_equal(igvShiny:::.sanitizeChromosomeColorMap(c("1" = "red")), list("1" = "red"))
+  expect_error(igvShiny:::.sanitizeChromosomeColorMap(list("red", "blue")),
+               "needs a chromosome name")
+  expect_error(igvShiny:::.sanitizeChromosomeColorMap(list("1" = "red", "blue")),
+               "needs a chromosome name")
+  expect_error(igvShiny:::.sanitizeChromosomeColorMap(list("1" = c("red", "blue"))),
+               "single strings")
+  expect_error(igvShiny:::.sanitizeChromosomeColorMap(list("1" = 42)), "single strings")
+  expect_error(igvShiny:::.sanitizeChromosomeColorMap(42), "named list or character")
+})
+
 test_that("GWASTrack constructor fails with illegal arguments", {
   # A url the server answers with 404, so the http-error path is tested
   # without reaching out to a real external host.
