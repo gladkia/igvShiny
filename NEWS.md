@@ -1,6 +1,7 @@
 ## igvShiny 1.9.23
 * Restore the full three-system matrix on every pull request
 * Remove the full-ci label, redundant once macOS and Windows finish in minutes
+* Correct the macOS libxml2 config path, wrong since the runners moved to arm64
 
 ## igvShiny 1.9.22
 * Reduce the pull request matrix to Linux, running macOS and Windows on master and nightly
