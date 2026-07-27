@@ -1,5 +1,14 @@
 # Changelog
 
+## igvShiny 1.9.24
+
+- Send the gwas column mapping to igv.js, so any data frame layout works
+  ([\#32](https://github.com/gladkia/igvShiny/issues/32))
+- Support a chromosomeColorMap argument coloring gwas points per
+  chromosome ([\#46](https://github.com/gladkia/igvShiny/issues/46))
+- Prevent out-of-range gwas column numbers from yielding a silently
+  empty track
+
 ## igvShiny 1.9.23
 
 - Restore the full three-system matrix on every pull request

@@ -55,6 +55,8 @@
   : Constructor for GWASTrack
 - [`display(`*`<GWASTrack>`*`)`](https://gladkia.github.io/igvShiny/reference/display.md)
   : display the already constructed and configured track
+- [`.sanitizeChromosomeColorMap()`](https://gladkia.github.io/igvShiny/reference/dot-sanitizeChromosomeColorMap.md)
+  : Check a chromosome color map before it reaches igv.js
 - [`getUrl(`*`<GWASTrack>`*`)`](https://gladkia.github.io/igvShiny/reference/getUrl.md)
   : the url of the gwas table
 - [`show(`*`<GWASTrack>`*`)`](https://gladkia.github.io/igvShiny/reference/show.md)
