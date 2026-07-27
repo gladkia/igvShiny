@@ -50,7 +50,12 @@ loadGwasTrack(
 
 - trackConfig:
 
-  a named list of additional igv.js track configuration options.
+  a named list of additional igv.js track configuration options. A table
+  whose headers igv.js does not recognize needs its layout spelled out,
+  1-based, as
+  `columns = list(chromosome = 3, position = 4, value = 10)`;
+  `colorTable` takes a chromosome-to-color map, see
+  [`GWASTrack`](https://gladkia.github.io/igvShiny/reference/GWASTrack-class.md)
 
 ## Value
 
