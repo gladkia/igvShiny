@@ -18,6 +18,13 @@ bed_tbl <- function() {
   )
 }
 
+# igv.js sorts an alignment track from this object at load time. Each loader
+# builds its own payload, so a dropped trackConfig is a per-loader regression.
+sort_by_hp <- function() {
+  list(chr = "chr1", position = 155160540, option = "TAG", tag = "HP",
+       direction = "ASC")
+}
+
 test_that("loadBedTrack sends a bed file path and honours colour and height", {
   session <- fake_session()
   loadBedTrack(session, ELEMENT_ID, "bed", bed_tbl(),
@@ -195,22 +202,27 @@ test_that("loadBamTrackFromLocalData exports the alignments to the tracks dir", 
   session <- fake_session()
   f <- system.file(package = "igvShiny", "extdata", "tumor.bam")
   ga <- GenomicAlignments::readGAlignments(f, use.names = TRUE)
-  loadBamTrackFromLocalData(session, ELEMENT_ID, "local bam", ga)
+  loadBamTrackFromLocalData(session, ELEMENT_ID, "local bam", ga,
+                            trackConfig = list(sort = sort_by_hp()))
 
   msg <- last_message(session, "loadBamTrackFromLocalData")
   expect_match(msg$bamDataFilepath, "^tracks/.*\\.bam$")
+  expect_equal(msg$sort, sort_by_hp())
 })
 
-test_that("loadBamTrackFromURL passes a sort-by-tag object through (#104)", {
+test_that("the alignment loaders pass a sort-by-tag object through (#104)", {
   session <- fake_session()
-  sortByHP <- list(chr = "chr1", position = 155160540, option = "TAG",
-                   tag = "HP", direction = "ASC")
   loadBamTrackFromURL(session, ELEMENT_ID, "bam",
                       "https://example.org/a.bam", "https://example.org/a.bai",
-                      trackConfig = list(sort = sortByHP))
+                      trackConfig = list(sort = sort_by_hp()))
+  expect_equal(last_message(session, "loadBamTrackFromURL")$sort, sort_by_hp())
 
-  msg <- last_message(session, "loadBamTrackFromURL")
-  expect_equal(msg$sort, sortByHP)
+  session <- fake_session()
+  loadCramTrackFromURL(session, ELEMENT_ID, "cram",
+                       "https://example.org/a.cram",
+                       "https://example.org/a.crai",
+                       trackConfig = list(sort = sort_by_hp()))
+  expect_equal(last_message(session, "loadCramTrackFromURL")$sort, sort_by_hp())
 })
 
 test_that("the navigation and removal helpers send their own messages", {
