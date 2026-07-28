@@ -45,7 +45,9 @@ loadBamTrackFromLocalData(
 
 - trackConfig:
 
-  a named list of additional igv.js track configuration options.
+  a named list of additional igv.js track configuration options, `sort`
+  among them; see
+  [`loadBamTrackFromURL`](https://gladkia.github.io/igvShiny/reference/loadBamTrackFromURL.md).
 
 ## Value
 

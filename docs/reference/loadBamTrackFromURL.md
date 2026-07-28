@@ -56,6 +56,11 @@ loadBamTrackFromURL(
 - trackConfig:
 
   a named list of additional igv.js track configuration options.
+  Alignment tracks read `sort`:
+  `list(sort = list(chr = "chr1", position = 155160540, option = "TAG", tag = "HP"))`
+  sorts the reads at that 1-based position by the HP tag. Any igv.js
+  sort option works (BASE, STRAND, INSERT_SIZE, ...); reads sort
+  descending unless `direction = "ASC"`.
 
 ## Value
 

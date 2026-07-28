@@ -1,5 +1,11 @@
 # Changelog
 
+## igvShiny 1.9.30
+
+- Allow alignment tracks to sort their reads by a bam tag through
+  trackConfig ([\#104](https://github.com/gladkia/igvShiny/issues/104))
+- Add a test pinning the sort object sent to igv.js
+
 ## igvShiny 1.9.29
 
 - Resolve tair10 through the igv.js registry, dropping the self-hosted
