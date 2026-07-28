@@ -1,3 +1,8 @@
+## igvShiny 1.9.27
+* Remove the mm10 and danRer11 reference workaround, unneeded with igv.js 3.x (#107)
+* Drop four unused igv.js builds and the unreferenced stylesheet from the package
+* Read the genome registry igv.js 3.x uses and document the UCSC dependency it carries
+
 ## igvShiny 1.9.26
 * Update the Connect Cloud manifest, which pinned a commit older than the demo
 * Expose the installed igvShiny version in the demo sidebar

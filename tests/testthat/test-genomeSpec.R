@@ -2,9 +2,6 @@ library(testthat)
 library(igvShiny)
 
 test_that("Supported genomes can be retrieved correctly", {
-  cg <- get_css_genomes()
-  expect_true(length(cg) > 30)
-
   cg.minimal <- get_css_genomes(test = TRUE)
   expect_equal(cg.minimal,
                c(
@@ -17,6 +14,21 @@ test_that("Supported genomes can be retrieved correctly", {
                  "dm6",
                  "sacCer3"
                ))
+
+  cg <- get_css_genomes()
+
+  # With igv.org unreachable get_css_genomes() falls back to the eight ids
+  # above, so the two assertions below would fail on someone else's outage and
+  # read as a code regression
+  skip_if(identical(cg, get_basic_genomes()),
+          "genome registry unreachable, fell back to the built-in list")
+
+  expect_true(length(cg) > 30)
+
+  # the list has to come from the registry the bundled igv.js reads, so that
+  # every id it reports resolves by bare name; mm10, danRer11 and rn6 are the
+  # genomes #107 was about
+  expect_true(all(c("hg38", "mm10", "danRer11", "rn6") %in% cg))
 })
 
 test_that("Cached (caas) genomes are retrieved quickly", {

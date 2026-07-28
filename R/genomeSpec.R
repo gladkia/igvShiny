@@ -59,7 +59,9 @@ get_css_genomes <- function(test = FALSE) {
   if (test)
     return(get_basic_genomes())
 
-  current.genomes.file <- "https://igv.org/genomes/genomes.json"
+  # The registry the bundled igv.js 3.x reads (DEFAULT_GENOMES_URL). The 2.x
+  # file, genomes.json, still exists and lists ids 3.x cannot resolve by name.
+  current.genomes.file <- "https://igv.org/genomes/genomes3.json"
 
   if (httr::http_error(current.genomes.file))
     return(get_basic_genomes())

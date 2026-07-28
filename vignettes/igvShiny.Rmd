@@ -68,7 +68,7 @@ if (interactive()) {
 # Providing genome details
 
 Multiple genomes are currently supported by IGV:
-[link](https://s3.amazonaws.com/igv.org.genomes/genomes.json). 
+[link](https://igv.org/genomes/genomes3.json).
 In igvShiny  this set of genomes is called stock genomes.
 One can select any stock genome easily by running `parseAndValidateGenomeSpec`
 with single `genomeName` value properly assigned.
