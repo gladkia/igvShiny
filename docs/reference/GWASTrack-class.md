@@ -92,7 +92,7 @@ track <-
     pval.col = 28
   )
 getUrl(track)
-#> [1] "/tmp/RtmpDsa0pG/tracks/file156d16378c27.gwas"
+#> [1] "/tmp/Rtmpi2csic/tracks/file15c76f3db53e.gwas"
 
 url <- "https://gladki.pl/igvShiny/gwas_sample.tsv.gz"
 track <- GWASTrack(

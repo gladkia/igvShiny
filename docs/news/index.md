@@ -1,5 +1,12 @@
 # Changelog
 
+## igvShiny 1.9.28
+
+- Fix a second igvShiny widget staying silent at a locus another one
+  already reports
+  ([\#126](https://github.com/gladkia/igvShiny/issues/126))
+- Add a headless test moving two widgets on one page to the same region
+
 ## igvShiny 1.9.27
 
 - Remove the mm10 and danRer11 reference workaround, unneeded with
