@@ -22,7 +22,10 @@
   "columns",
   "showAllBases", "samplingWindowSize", "samplingDepth", "maxRows",
   "hideEmptyTracks", "oauthToken", "headers", "viewAsPairs", "pairsSupported",
-  "maxPanelHeight", "separateBam", "wholeGenomeView", "roi", "queryable"
+  "maxPanelHeight", "separateBam", "wholeGenomeView", "roi", "queryable",
+  ## alignment tracks sort their reads at load time from this object, the same
+  ## one the igv.js right-click menu builds; "TAG" plus a tag covers #104
+  "sort"
   # Add other valid igv.js track options here as needed in the future
 )
 
@@ -998,7 +1001,11 @@ loadGwasTrack <- function(session,
 #' "SQUISHED" or "COLLAPSED"
 #' @param showAllBases logical, show all bases in the alignment, default FALSE
 #' @param trackConfig a named list of additional igv.js track configuration
-#' options.
+#' options. Alignment tracks read \code{sort}: \code{list(sort =
+#' list(chr = "chr1", position = 155160540, option = "TAG", tag = "HP"))}
+#' sorts the reads at that 1-based position by the HP tag. Any igv.js sort
+#' option works (BASE, STRAND, INSERT_SIZE, ...); reads sort descending
+#' unless \code{direction = "ASC"}.
 #'
 #' @examples
 #' library(igvShiny)
@@ -1061,7 +1068,7 @@ loadBamTrackFromURL <-
 #' @param displayMode character string, possible values are "EXPANDED"(default),
 #' "SQUISHED" or "COLLAPSED"
 #' @param trackConfig a named list of additional igv.js track configuration
-#' options.
+#' options, \code{sort} among them; see \code{\link{loadBamTrackFromURL}}.
 #'
 #' @examples
 #' library(igvShiny)
@@ -1134,7 +1141,7 @@ loadBamTrackFromLocalData <-
 #' typically small
 #' @param deleteTracksOfSameName logical, default TRUE
 #' @param trackConfig a named list of additional igv.js track configuration
-#' options.
+#' options, \code{sort} among them; see \code{\link{loadBamTrackFromURL}}.
 #'
 #' @examples
 #' library(igvShiny)

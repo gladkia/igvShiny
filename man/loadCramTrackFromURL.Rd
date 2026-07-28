@@ -30,7 +30,7 @@ typically small}
 \item{deleteTracksOfSameName}{logical, default TRUE}
 
 \item{trackConfig}{a named list of additional igv.js track configuration
-options.}
+options, \code{sort} among them; see \code{\link{loadBamTrackFromURL}}.}
 }
 \value{
 nothing
