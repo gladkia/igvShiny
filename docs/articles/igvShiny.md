@@ -52,11 +52,11 @@ if (interactive()) {
 ## Providing genome details
 
 Multiple genomes are currently supported by IGV:
-[link](https://s3.amazonaws.com/igv.org.genomes/genomes.json). In
-igvShiny this set of genomes is called stock genomes. One can select any
-stock genome easily by running `parseAndValidateGenomeSpec` with single
-`genomeName` value properly assigned. For example to use the most
-popular mouse genome one need to run:
+[link](https://igv.org/genomes/genomes3.json). In igvShiny this set of
+genomes is called stock genomes. One can select any stock genome easily
+by running `parseAndValidateGenomeSpec` with single `genomeName` value
+properly assigned. For example to use the most popular mouse genome one
+need to run:
 
 ``` r
 
@@ -91,17 +91,15 @@ The list of available stock genomes in igvShiny can be found with:
 ``` r
 
 igvShiny::get_css_genomes()
-#>  [1] "hs1"             "chm13v1.1"       "hg38"            "hg38_1kg"       
-#>  [5] "hg19"            "hg18"            "mm39"            "mm10"           
-#>  [9] "mm9"             "rn7"             "rn6"             "gorGor6"        
-#> [13] "gorGor4"         "panTro6"         "panTro5"         "panTro4"        
-#> [17] "macFas5"         "GCA_011100615.1" "panPan2"         "canFam6"        
-#> [21] "canFam5"         "canFam4"         "canFam3"         "bosTau9"        
-#> [25] "bosTau8"         "susScr11"        "galGal6"         "GCF_016699485.2"
-#> [29] "danRer11"        "danRer10"        "ce11"            "dm6"            
-#> [33] "dm3"             "dmel_r5.9"       "sacCer3"         "ASM294v2"       
-#> [37] "ASM985889v3"     "tair10"          "GCA_003086295.2" "GCF_001433935.1"
-#> [41] "NC_016856.1"     "GCA_000182895.1"
+#>  [1] "hs1"             "hg38"            "hg38_1kg"        "hg19"           
+#>  [5] "hg18"            "mm39"            "mm10"            "mm9"            
+#>  [9] "rn7"             "rn6"             "gorGor6"         "gorGor4"        
+#> [13] "panTro6"         "panTro5"         "panTro4"         "macFas5"        
+#> [17] "panPan2"         "canFam6"         "canFam5"         "canFam4"        
+#> [21] "canFam3"         "bosTau9"         "bosTau8"         "susScr11"       
+#> [25] "galGal6"         "danRer11"        "danRer10"        "ce11"           
+#> [29] "dm6"             "dm3"             "sacCer3"         "GCF_000002945.1"
+#> [33] "GCF_009858895.2" "tair10"
 ```
 
 See also demo app for stock genomes when one can select genome of
@@ -300,7 +298,7 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#> [1] igvShiny_1.9.26      shiny_1.14.0         GenomicRanges_1.65.1
+#> [1] igvShiny_1.9.27      shiny_1.14.0         GenomicRanges_1.65.1
 #> [4] Seqinfo_1.3.0        IRanges_2.47.2       S4Vectors_0.51.5    
 #> [7] BiocGenerics_0.59.10 generics_0.1.4       BiocStyle_2.41.0    
 #> 

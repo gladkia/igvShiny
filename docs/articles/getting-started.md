@@ -303,11 +303,26 @@ be `"igv"` — see [issue
 
 A runnable version is in `inst/demos/igvShinyDemo-withModules.R`.
 
-## Custom genomes
+## Stock genomes
 
 Any genome igv.js knows can be requested by name —
 [`get_css_genomes()`](https://gladkia.github.io/igvShiny/reference/get_css_genomes.md)
-lists them. For anything else, supply the sequence yourself: a FASTA
+lists them, reading the same registry the bundled igv.js does
+([genomes3.json](https://igv.org/genomes/genomes3.json)).
+
+Naming a stock genome means R fetches no sequence data: it reads the
+registry only to validate the name, and the user’s browser streams the
+sequence from wherever the registry entry points. Since igv.js 3.x that
+is a `.2bit` file, preferred over the entry’s FASTA when both are
+listed, and for the genomes igvShiny offers those `.2bit` files are
+hosted by UCSC (`hgdownload.soe.ucsc.edu`). A UCSC outage therefore
+leaves a stock genome blank, with 403s or timeouts in the JavaScript
+console — the package itself is fine, and custom genomes (below) are
+unaffected because they carry their own URLs.
+
+## Custom genomes
+
+For a genome outside the registry, supply the sequence yourself: a FASTA
 file, its index, and optionally an annotation, either as local paths
 (`dataMode = "localFiles"`) or URLs (`dataMode = "http"`). The package
 ships a small example genome:
@@ -402,7 +417,7 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#> [1] igvShiny_1.9.26      shiny_1.14.0         GenomicRanges_1.65.1
+#> [1] igvShiny_1.9.27      shiny_1.14.0         GenomicRanges_1.65.1
 #> [4] Seqinfo_1.3.0        IRanges_2.47.2       S4Vectors_0.51.5    
 #> [7] BiocGenerics_0.59.10 generics_0.1.4       BiocStyle_2.41.0    
 #> 

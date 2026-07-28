@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.26</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.27</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -364,14 +364,29 @@ unreliable inside a module unless the module id happens to be
 <code>inst/demos/igvShinyDemo-withModules.R</code>.</p>
 </div>
 <div class="section level2">
-<h2 id="custom-genomes">Custom genomes<a class="anchor" aria-label="anchor" href="#custom-genomes"></a>
+<h2 id="stock-genomes">Stock genomes<a class="anchor" aria-label="anchor" href="#stock-genomes"></a>
 </h2>
 <p>Any genome igv.js knows can be requested by name —
-<code><a href="../reference/get_css_genomes.html">get_css_genomes()</a></code> lists them. For anything else, supply the
-sequence yourself: a FASTA file, its index, and optionally an
-annotation, either as local paths (<code>dataMode = "localFiles"</code>)
-or URLs (<code>dataMode = "http"</code>). The package ships a small
-example genome:</p>
+<code><a href="../reference/get_css_genomes.html">get_css_genomes()</a></code> lists them, reading the same registry the
+bundled igv.js does (<a href="https://igv.org/genomes/genomes3.json" class="external-link">genomes3.json</a>).</p>
+<p>Naming a stock genome means R fetches no sequence data: it reads the
+registry only to validate the name, and the user’s browser streams the
+sequence from wherever the registry entry points. Since igv.js 3.x that
+is a <code>.2bit</code> file, preferred over the entry’s FASTA when both
+are listed, and for the genomes igvShiny offers those <code>.2bit</code>
+files are hosted by UCSC (<code>hgdownload.soe.ucsc.edu</code>). A UCSC
+outage therefore leaves a stock genome blank, with 403s or timeouts in
+the JavaScript console — the package itself is fine, and custom genomes
+(below) are unaffected because they carry their own URLs.</p>
+</div>
+<div class="section level2">
+<h2 id="custom-genomes">Custom genomes<a class="anchor" aria-label="anchor" href="#custom-genomes"></a>
+</h2>
+<p>For a genome outside the registry, supply the sequence yourself: a
+FASTA file, its index, and optionally an annotation, either as local
+paths (<code>dataMode = "localFiles"</code>) or URLs
+(<code>dataMode = "http"</code>). The package ships a small example
+genome:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data_directory</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"igvShiny"</span>, <span class="st">"extdata"</span><span class="op">)</span></span>
 <span></span>
@@ -462,7 +477,7 @@ option this package passes through but does not document itself</li>
 <span><span class="co">#&gt; [8] base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt; [1] igvShiny_1.9.26      shiny_1.14.0         GenomicRanges_1.65.1</span></span>
+<span><span class="co">#&gt; [1] igvShiny_1.9.27      shiny_1.14.0         GenomicRanges_1.65.1</span></span>
 <span><span class="co">#&gt; [4] Seqinfo_1.3.0        IRanges_2.47.2       S4Vectors_0.51.5    </span></span>
 <span><span class="co">#&gt; [7] BiocGenerics_0.59.10 generics_0.1.4       BiocStyle_2.41.0    </span></span>
 <span><span class="co">#&gt; </span></span>
