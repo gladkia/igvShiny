@@ -37,7 +37,11 @@ typically small}
 \item{showAllBases}{logical, show all bases in the alignment, default FALSE}
 
 \item{trackConfig}{a named list of additional igv.js track configuration
-options.}
+options. Alignment tracks read \code{sort}: \code{list(sort =
+list(chr = "chr1", position = 155160540, option = "TAG", tag = "HP"))}
+sorts the reads at that 1-based position by the HP tag. Any igv.js sort
+option works (BASE, STRAND, INSERT_SIZE, ...); reads sort descending
+unless \code{direction = "ASC"}.}
 }
 \value{
 nothing

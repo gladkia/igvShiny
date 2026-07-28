@@ -201,6 +201,18 @@ test_that("loadBamTrackFromLocalData exports the alignments to the tracks dir", 
   expect_match(msg$bamDataFilepath, "^tracks/.*\\.bam$")
 })
 
+test_that("loadBamTrackFromURL passes a sort-by-tag object through (#104)", {
+  session <- fake_session()
+  sortByHP <- list(chr = "chr1", position = 155160540, option = "TAG",
+                   tag = "HP", direction = "ASC")
+  loadBamTrackFromURL(session, ELEMENT_ID, "bam",
+                      "https://example.org/a.bam", "https://example.org/a.bai",
+                      trackConfig = list(sort = sortByHP))
+
+  msg <- last_message(session, "loadBamTrackFromURL")
+  expect_equal(msg$sort, sortByHP)
+})
+
 test_that("the navigation and removal helpers send their own messages", {
   session <- fake_session()
   showGenomicRegion(session, ELEMENT_ID, "chr1:1-1000")
