@@ -103,6 +103,107 @@ test_that("igvShinyDemo-GFF3 loads tracks correctly", {
     app$stop()
 })
 
+test_that("two widgets at the same locus both report it", {
+    # #126: the handler compared the new locus against window.chromLocString,
+    # one global for the whole page, so whichever widget fired first claimed the
+    # value and the other one's currentGenomicRegion event was dropped as a
+    # duplicate. Each widget now compares against its own last locus.
+    options(chromote.timeout = 120)
+
+    port <- local_server()
+    app_file <- tempfile(fileext = ".R")
+    writeLines(sprintf('
+        library(shiny)
+        library(igvShiny)
+
+        riboSpec <- function()
+            parseAndValidateGenomeSpec(
+                genomeName = "ribo",
+                initialLocus = "all",
+                stockGenome = FALSE,
+                dataMode = "http",
+                fasta = "%s",
+                fastaIndex = "%s",
+                genomeAnnotation = "%s"
+            )
+
+        ui <- fluidPage(
+            actionButton("moveBothButton", "Move both"),
+            verbatimTextOutput("regionOne"),
+            verbatimTextOutput("regionTwo"),
+            igvShinyOutput("igvShiny_0"),
+            igvShinyOutput("igvShiny_1")
+        )
+
+        server <- function(input, output, session) {
+            output$igvShiny_0 <- renderIgvShiny(igvShiny(riboSpec()))
+            output$igvShiny_1 <- renderIgvShiny(igvShiny(riboSpec()))
+
+            observeEvent(input$moveBothButton, {
+                showGenomicRegion(session, "igvShiny_0", "U13369.1:7,276-8,225")
+                showGenomicRegion(session, "igvShiny_1", "U13369.1:7,276-8,225")
+            })
+            observeEvent(input[["currentGenomicRegion.igvShiny_0"]], {
+                output$regionOne <- renderText({
+                    input[["currentGenomicRegion.igvShiny_0"]]
+                })
+            })
+            observeEvent(input[["currentGenomicRegion.igvShiny_1"]], {
+                output$regionTwo <- renderText({
+                    input[["currentGenomicRegion.igvShiny_1"]]
+                })
+            })
+        }
+
+        shinyApp(ui = ui, server = server)',
+        local_url(port, "ribosomal-RNA-gene.fasta"),
+        local_url(port, "ribosomal-RNA-gene.fasta.fai"),
+        local_url(port, "ribosomal-RNA-gene.gff3")
+    ), app_file)
+
+    app <- AppDriver$new(
+        app_dir = shiny::shinyAppFile(app_file),
+        name = "igv-shiny-two-widgets-region",
+        height = 695,
+        width = 1235,
+        load_timeout = 1e+6,
+        timeout = 1e+6
+    )
+    app$wait_for_value(input = "igvReady")
+    Sys.sleep(2)
+
+    app$click("moveBothButton")
+
+    # both widgets move to the same region, so on the old JS the second one is
+    # silenced; poll until both outputs are filled or the deadline passes.
+    # An output whose renderText has not run yet reads back as NULL.
+    .region <- function(name) {
+        value <- app$get_value(output = name)
+        if (is.null(value)) "" else value
+    }
+
+    deadline <- Sys.time() + 30
+    regions <- c("", "")
+    repeat {
+        regions <- c(.region("regionOne"), .region("regionTwo"))
+        if (all(nzchar(regions))) {
+            break
+        }
+        if (Sys.time() > deadline) {
+            break
+        }
+        Sys.sleep(0.5)
+    }
+
+    # each widget reports the chromosome it was sent to; the exact span is left
+    # out of the assertion because igv.js fits the range to the viewport
+    expect_true(nzchar(regions[1]))
+    expect_true(nzchar(regions[2]))
+    expect_true(all(startsWith(regions, "U13369.1:")))
+
+    app$stop()
+})
+
 test_that("getGenomicRegion replies to a module named anything but 'igv'", {
     # #134: the reply event name was built as
     # "igv-currentGenomicRegion." + elementID.replace("igv-", ""), so only a
