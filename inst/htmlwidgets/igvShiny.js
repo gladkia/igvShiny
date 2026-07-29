@@ -106,10 +106,15 @@ HTMLWidgets.widget({
                    // first frame and rebuild the comma-free "chr:start-end" string that
                    // currentGenomicRegion has always emitted, guarding the whole-genome
                    // "all" view (raw start/end are meaningless there).
+                   //
+                   // The frame start is 0-based internally, while browser.search() reads
+                   // its input as 1-based and subtracts one. Emitting the raw value cost
+                   // a base per round trip, so an app that reported a region and later
+                   // sent it back crept left one step at a time (#126).
                    var refFrame = referenceFrameList[0];
                    var chromLocString = (refFrame.chr === "all")
                       ? "all"
-                      : refFrame.chr + ":" + Math.round(refFrame.start) + "-" + Math.round(refFrame.end);
+                      : refFrame.chr + ":" + (Math.floor(refFrame.start) + 1) + "-" + Math.round(refFrame.end);
                    
                    // Compare against this widget's own last locus, not a global:
                    // two widgets sitting at the same locus would otherwise
