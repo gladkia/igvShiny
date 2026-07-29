@@ -1185,6 +1185,76 @@ loadCramTrackFromURL <-
   } # loadCramTrackFromURL
 
 #-------------------------------------------------------------------------------
+#' load a cram file sitting on the same machine as the shiny app
+#'
+#' @description load a local cram track. Unlike \code{loadBamTrackFromLocalData}
+#' this loader takes file paths, not an R object: no bioconductor package parses
+#' cram, so the file and its index are handed to igv.js untouched, through the
+#' directory shiny serves as "tracks".
+#'
+#' @rdname loadCramTrackFromLocalData
+#' @aliases loadCramTrackFromLocalData
+#'
+#' @param session an environment or list, provided and managed by shiny
+#' @param id character string, the html element id of this widget instance
+#' @param trackName character string
+#' @param cramFile character string, path to a cram file
+#' @param indexFile character string, path to its crai index,
+#' by default the cram file with ".crai" appended
+#' @param deleteTracksOfSameName logical, default TRUE
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options, \code{sort} among them; see \code{\link{loadBamTrackFromURL}}.
+#'
+#' @examples
+#' library(igvShiny)
+#' demo_app_file <-
+#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#' if (interactive()) {
+#'   shiny::runApp(demo_app_file)
+#' }
+#'
+#' @return
+#' nothing
+#'
+#' @keywords track_loaders
+#' @export
+
+loadCramTrackFromLocalData <-
+  function(session,
+           id,
+           trackName,
+           cramFile,
+           indexFile = paste0(cramFile, ".crai"),
+           deleteTracksOfSameName = TRUE,
+           trackConfig = list()) {
+    checkmate::assert_file_exists(cramFile, access = "r")
+    checkmate::assert_file_exists(indexFile, access = "r")
+    if (deleteTracksOfSameName) {
+      removeTracksByName(session, id, trackName)
+    }
+
+    cramPath <- .stageTrackFile(cramFile, ".cram")
+    indexPath <- .stageTrackFile(indexFile, ".crai")
+    flog.debug(sprintf("igvShiny::load local cram, serving '%s'", cramPath))
+
+    state[["userAddedTracks"]] <-
+      unique(c(state[["userAddedTracks"]], trackName))
+
+    base.msg.to.igv <-
+      list(
+        elementID = id,
+        trackName = trackName,
+        cram = cramPath,
+        index = indexPath
+      )
+    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    # the payload is what the remote loader sends, only with app-relative urls,
+    # so the browser side needs no handler of its own
+    session$sendCustomMessage("loadCramTrackFromURL", msg.to.igv)
+
+  } # loadCramTrackFromLocalData
+
+#-------------------------------------------------------------------------------
 #' load a GFF3 track which, with index, is served up by http
 #'
 #' @description load a remote GFF3 track

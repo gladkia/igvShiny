@@ -210,6 +210,30 @@ test_that("loadBamTrackFromLocalData exports the alignments to the tracks dir", 
   expect_equal(msg$sort, sort_by_hp())
 })
 
+test_that("loadCramTrackFromLocalData serves the cram and its index (#102)", {
+  session <- fake_session()
+  cram <- tempfile(fileext = ".cram")
+  writeBin(charToRaw("CRAM"), cram)
+  file.create(paste0(cram, ".crai"))
+  loadCramTrackFromLocalData(session, ELEMENT_ID, "local cram", cram,
+                             trackConfig = list(sort = sort_by_hp()))
+
+  msg <- last_message(session, "loadCramTrackFromURL")
+  expect_match(msg$cram, "^tracks/.*\\.cram$")
+  expect_match(msg$index, "^tracks/.*\\.crai$")
+  # whether the file was linked or copied, the served path must reach the bytes
+  served <- file.path(get_tracks_dir(), basename(msg$cram))
+  expect_equal(readBin(served, "raw", 4L), charToRaw("CRAM"))
+  expect_equal(msg$sort, sort_by_hp())
+})
+
+test_that("loadCramTrackFromLocalData rejects a file that is not there (#102)", {
+  session <- fake_session()
+  expect_error(
+    loadCramTrackFromLocalData(session, ELEMENT_ID, "gone",
+                               tempfile(fileext = ".cram")))
+})
+
 test_that("the alignment loaders pass a sort-by-tag object through (#104)", {
   session <- fake_session()
   loadBamTrackFromURL(session, ELEMENT_ID, "bam",
