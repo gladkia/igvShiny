@@ -1508,6 +1508,18 @@ loadSpliceJunctionTrackFromURL <-
            displayMode = "COLLAPSED",
            deleteTracksOfSameName = TRUE,
            trackConfig = list()) {
+    # A usable index is a single non-empty, non-NA character string; anything
+    # else means "no index". NULL is the trap: list() keeps it, shiny sends it
+    # as JSON null, and the handler reads .length off it. That throws, so the
+    # track never loads and R sees nothing at all - the failure shows up only
+    # in the browser console.
+    if (!is.character(indexURL) || length(indexURL) != 1L || is.na(indexURL)) {
+      if (length(indexURL) > 0L) {
+        warning("indexURL must be a single character string. Ignoring it.")
+      }
+      indexURL <- ""
+    }
+
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
     }

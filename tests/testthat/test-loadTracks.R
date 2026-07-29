@@ -300,6 +300,33 @@ test_that("loadSpliceJunctionTrackFromURL carries a tabix index when given one",
   expect_length(sent_messages(session, "removeTracksByName"), 0L)
 })
 
+test_that("loadSpliceJunctionTrackFromURL treats an unusable indexURL as no index", {
+  # NULL survives list() and reaches the browser as JSON null, where the
+  # handler's message.indexURL.length throws and the track silently never
+  # loads. Normalising in R keeps that off the wire.
+  session <- fake_session()
+  loadSpliceJunctionTrackFromURL(session, ELEMENT_ID, "j",
+                                 "https://example.org/a.bed", indexURL = NULL)
+  expect_equal(last_message(session, "loadSpliceJunctionTrackFromURL")$indexURL, "")
+
+  session <- fake_session()
+  expect_warning(
+    loadSpliceJunctionTrackFromURL(session, ELEMENT_ID, "j",
+                                   "https://example.org/a.bed",
+                                   indexURL = c("a.tbi", "b.tbi")),
+    "single character string"
+  )
+  expect_equal(last_message(session, "loadSpliceJunctionTrackFromURL")$indexURL, "")
+
+  session <- fake_session()
+  expect_warning(
+    loadSpliceJunctionTrackFromURL(session, ELEMENT_ID, "j",
+                                   "https://example.org/a.bed", indexURL = NA),
+    "single character string"
+  )
+  expect_equal(last_message(session, "loadSpliceJunctionTrackFromURL")$indexURL, "")
+})
+
 test_that("the label options from the bundled example are not igv.js 3.x options", {
   # spliceJunctionTrack.html still sets labelUniqueReadCount and friends; the
   # library dropped them for labelWith/labelWithInParen, so allowlisting them
