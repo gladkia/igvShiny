@@ -14,6 +14,7 @@
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-sanitizeAndMergeOptions.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-sanitizeChromosomeColorMap.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-sanitizeTracks.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/dot-stageTrackFile.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-tracksDir.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/getUrl.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/get_basic_genomes.html</loc></url>
@@ -27,6 +28,7 @@
 <url><loc>https://gladkia.github.io/igvShiny/reference/loadBamTrackFromURL.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/loadBedGraphTrackFromURL.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/loadBedTrack.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/loadCramTrackFromLocalData.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/loadCramTrackFromURL.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/loadGFF3TrackFromLocalData.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/loadGFF3TrackFromURL.html</loc></url>

@@ -32,6 +32,8 @@
   : load a bedgraph track from a URL
 - [`loadBedTrack()`](https://gladkia.github.io/igvShiny/reference/loadBedTrack.md)
   : load a bed track provided as a data.frame
+- [`loadCramTrackFromLocalData()`](https://gladkia.github.io/igvShiny/reference/loadCramTrackFromLocalData.md)
+  : load a cram file sitting on the same machine as the shiny app
 - [`loadCramTrackFromURL()`](https://gladkia.github.io/igvShiny/reference/loadCramTrackFromURL.md)
   : load a cram track which, with index, is served up by http
 - [`loadGFF3TrackFromLocalData()`](https://gladkia.github.io/igvShiny/reference/loadGFF3TrackFromLocalData.md)
