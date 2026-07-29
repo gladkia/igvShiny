@@ -1,3 +1,7 @@
+## igvShiny 1.9.31
+* Add loadCramTrackFromLocalData, serving a cram file and its index to igv.js (#102)
+* Extend the loader tests with the local cram payload and the staged files
+
 ## igvShiny 1.9.30
 * Allow alignment tracks to sort their reads by a bam tag through trackConfig (#104)
 * Add a test pinning the sort object sent to igv.js

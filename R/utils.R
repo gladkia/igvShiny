@@ -70,3 +70,29 @@ get_tracks_dir <- function(env_var = "TRACKS_DIR") {
 
   tracks_dir
 } # .tracksDir
+#-------------------------------------------------------------------------------
+#' Make a file on disk reachable by igv.js
+#'
+#' @description Files igv.js reads by url have to sit in the directory shiny
+#' serves as "tracks". Alignment files run to gigabytes, so the file is linked
+#' rather than copied where the filesystem allows it (windows, and any mount
+#' refusing links, falls back to a copy). The name is randomized: two loaders
+#' may be handed same-named files from different directories.
+#'
+#' @param path character string, an existing file
+#' @param ext character string, the extension of the served file
+#'
+#' @return string with the path to the file, relative to the shiny app
+#'
+#' @keywords internal
+.stageTrackFile <- function(path, ext) {
+  dest <- tempfile(tmpdir = .tracksDir(), fileext = ext)
+  ok <- suppressWarnings(file.symlink(normalizePath(path), dest))
+  if (!ok) {
+    ok <- file.copy(path, dest)
+  }
+  if (!ok) {
+    stop(sprintf("igvShiny: could not stage '%s' for serving", path))
+  }
+  file.path("tracks", basename(dest))
+} # .stageTrackFile
