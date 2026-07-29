@@ -1,3 +1,6 @@
+## igvShiny 1.9.33
+* Fix the off-by-one start in currentGenomicRegion, closing its round trip through showGenomicRegion (#126)
+
 ## igvShiny 1.9.32
 * Add loadSpliceJunctionTrackFromURL, drawing STAR splice junctions from a bed file (#103)
 * Extend the track option allowlist with the igv.js splice junction filters and labels (#103)

@@ -195,11 +195,17 @@ test_that("two widgets at the same locus both report it", {
         Sys.sleep(0.5)
     }
 
-    # each widget reports the chromosome it was sent to; the exact span is left
-    # out of the assertion because igv.js fits the range to the viewport
+    # each widget reports the chromosome it was sent to; the end is left out of
+    # the assertion because igv.js fits the range to the viewport
     expect_true(nzchar(regions[1]))
     expect_true(nzchar(regions[2]))
     expect_true(all(startsWith(regions, "U13369.1:")))
+
+    # the reported start matches the one sent, rather than trailing it by a
+    # base: the frame start is 0-based and showGenomicRegion reads 1-based, so
+    # emitting it raw made every round trip creep one to the left (#126)
+    starts <- as.integer(sub("^[^:]+:([0-9]+)-.*$", "\\1", regions))
+    expect_equal(starts, c(7276L, 7276L))
 
     app$stop()
 })
