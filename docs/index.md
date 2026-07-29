@@ -82,8 +82,13 @@ From there, load tracks reactively with the `load*Track*` functions
   [`getGenomicRegion()`](https://gladkia.github.io/igvShiny/reference/showGenomicRegion.md)).
 - Track-click events surfaced back to the Shiny server.
 
-More examples live in
-[`inst/demos/`](https://gladkia.github.io/igvShiny/inst/demos/).
+Runnable apps live in
+[`inst/demos/`](https://gladkia.github.io/igvShiny/inst/demos/), one per
+topic: `igvShinyDemo.R` (most of the API — this is what the [live
+demo](https://gladkia-igvshiny-demo.share.connect.posit.cloud) serves),
+`tiny.R`, `genomes.R`, `gwas.R`, `local-data.R`, `modules.R`,
+`two-instances.R`. Run one with
+`shiny::runApp(system.file("demos", "tiny.R", package = "igvShiny"))`.
 
 ## Documentation
 

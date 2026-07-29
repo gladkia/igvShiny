@@ -109,7 +109,7 @@ igvShiny:
 ``` r
 
 library(igvShiny)
-demo_app_file <- system.file(package= "igvShiny", "demos", "stockGenomesDemo.R")
+demo_app_file <- system.file(package = "igvShiny", "demos", "genomes.R")
     if (interactive()) {
         shiny::runApp(demo_app_file)
         }
@@ -206,31 +206,13 @@ genomeOptions2
 #> [1] "/__w/_temp/Library/igvShiny/extdata/ribosomal-RNA-gene.gff3"
 ```
 
-See also demo apps for custom genomes with data provided via URLs:
+The same demo app shows both variants side by side — pick the genome
+source with the radio buttons:
 
 ``` r
 
 library(igvShiny)
-demo_app_file <- system.file(
-    package = "igvShiny",
-    "demos",
-    "igvShinyDemo-customGenome-http.R"
-    )
-if (interactive()) {
-    shiny::runApp(demo_app_file)
-    }
-```
-
-as well as data provided via local files:
-
-``` r
-
-library(igvShiny)
-demo_app_file <-
-    system.file(
-        package = "igvShiny", 
-        "demos", 
-        "igvShinyDemo-customGenome-localFiles.R")
+demo_app_file <- system.file(package = "igvShiny", "demos", "genomes.R")
 if (interactive()) {
     shiny::runApp(demo_app_file)
     }
@@ -298,7 +280,7 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#> [1] igvShiny_1.9.34      shiny_1.14.0         GenomicRanges_1.65.1
+#> [1] igvShiny_1.9.35      shiny_1.14.0         GenomicRanges_1.65.1
 #> [4] Seqinfo_1.3.0        IRanges_2.47.2       S4Vectors_0.51.5    
 #> [7] BiocGenerics_0.59.10 generics_0.1.4       BiocStyle_2.41.0    
 #> 
