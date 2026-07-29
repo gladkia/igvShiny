@@ -1,5 +1,11 @@
 # Changelog
 
+## igvShiny 1.9.33
+
+- Fix the off-by-one start in currentGenomicRegion, closing its round
+  trip through showGenomicRegion
+  ([\#126](https://github.com/gladkia/igvShiny/issues/126))
+
 ## igvShiny 1.9.32
 
 - Add loadSpliceJunctionTrackFromURL, drawing STAR splice junctions from
