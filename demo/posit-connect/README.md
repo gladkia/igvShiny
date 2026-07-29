@@ -42,24 +42,64 @@ that has not been released yet.
 > the page just greys out, with nothing in the UI to explain it. The sidebar
 > footer prints the installed `igvShiny` version — check it there first.
 
-Regenerate the manifest whenever the demo or its dependencies change, and make
-sure the locally installed `igvShiny` is the GitHub build first, so the manifest
-records the GitHub source rather than Bioconductor:
+### Routine: publish what is on master
 
-```r
-# install the dev version so writeManifest records source = github:
-remotes::install_github("gladkia/igvShiny", ref = "master")
+Connect Cloud watches `master` and republishes on its own — **but republishing
+does not move the pin.** It rebuilds from the repo and then installs `igvShiny`
+from the SHA recorded in `manifest.json`, so an automatic republish against a
+stale pin faithfully redeploys the old app. The pin is the manual part.
 
-# then, from repo root, with rsconnect installed:
-rsconnect::writeManifest("demo/posit-connect")
+Six fields have to stay in step (two SHAs, the recorded version, the two file
+checksums), so use the script rather than editing the manifest by hand:
+
+```bash
+./demo/posit-connect/bump-pin.sh --check   # is the manifest behind master?
+./demo/posit-connect/bump-pin.sh           # re-pin to origin/master
+./demo/posit-connect/bump-pin.sh <sha>     # or to one specific commit
 ```
 
-Then in the Connect Cloud UI:
+Run it **last**, after any edit to `app.R` or this README — it records their
+checksums, so editing either one afterwards invalidates the manifest again.
+
+Best done **in the same PR as the demo change**, pinning to the commit the demo
+landed in. Merging then triggers the republish, which picks the new pin up, and
+nothing is left to remember. Confirm it took: the sidebar footer must read the
+version the script printed.
+
+`--check` reads the manifest against `gladkia/igvShiny`'s master — it cannot see
+what Connect actually has deployed, only whether the manifest still describes
+master. It compares what the pinned commit would *install* (`R/`, `inst/`,
+`DESCRIPTION` — the only paths that reach the served package) and verifies the
+manifest's own invariants: both SHA fields agreeing, the recorded version, and
+the two file checksums. It deliberately does not require the pin to equal
+`HEAD`, which is false after every merge, including the merge that moves it.
+
+The deployment itself is verified in one place only: the version in the app's
+sidebar footer.
+
+### When dependencies change
+
+The script only moves the pin. If the demo starts using a *new package*, the
+`packages` block has to be rebuilt — install the GitHub build first, so the
+manifest records the GitHub source rather than Bioconductor:
+
+```r
+remotes::install_github("gladkia/igvShiny", ref = "master")
+rsconnect::writeManifest("demo/posit-connect")   # from repo root
+```
+
+Note that `writeManifest` reformats the whole file; check the diff is only what
+you meant to change.
+
+### First-time setup (already done)
 
 1. **New content → from GitHub**, pick `gladkia/igvShiny`.
 2. Primary file: `demo/posit-connect/app.R`.
 3. Publish. Connect Cloud installs from `manifest.json` — CRAN via PPM for most
-   packages, and `igvShiny` straight from GitHub master — then serves the app.
+   packages, and `igvShiny` straight from GitHub — then serves the app.
+
+The source branch must be **master**: a feature branch disappears when the PR
+merges, and the next republish fails with nothing to point at.
 
 ## Caveat — external URL buttons
 
