@@ -282,9 +282,12 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
     
     // tair10 is in the igv.js registry, sequence and RefSeq annotation included,
     // so the bare id replaces the fasta we used to host ourselves - it has been
-    // answering 404 since the igvr paths were cleared (issue #143). Chromosomes
-    // arrive under their RefSeq accessions (NC_003070.9 ...) rather than the
-    // lowered chr names of the old GFF3
+    // answering 404 since the igvr paths were cleared (issue #143). The registry
+    // entry carries an aliasURL, so data named chr1 or 1 still resolves; what
+    // changes is the displayed name, the RefSeq accession (NC_003070.9 ...).
+    // The annotation now comes from the registry as "RefSeq All" rather than the
+    // "Genes TAIR10" track this config used to carry, so code addressing it by
+    // the old name - removeTracksByName above all - no longer matches anything
     var tair10_options = {
         locus: initialLocus,
         flanking: 2000,
