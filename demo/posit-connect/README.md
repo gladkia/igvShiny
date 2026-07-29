@@ -44,19 +44,29 @@ that has not been released yet.
 
 ### Routine: publish what is on master
 
-After a demo change lands on master, move the pin — six fields have to stay in
-step (two SHAs, the recorded version, the file checksums), so use the script:
+Connect Cloud watches `master` and republishes on its own — **but republishing
+does not move the pin.** It rebuilds from the repo and then installs `igvShiny`
+from the SHA recorded in `manifest.json`, so an automatic republish against a
+stale pin faithfully redeploys the old app. The pin is the manual part.
+
+Six fields have to stay in step (two SHAs, the recorded version, the two file
+checksums), so use the script rather than editing the manifest by hand:
 
 ```bash
-./demo/posit-connect/bump-pin.sh --check   # is the live demo behind master?
+./demo/posit-connect/bump-pin.sh --check   # would the live demo differ from master?
 ./demo/posit-connect/bump-pin.sh           # re-pin to origin/master
 ./demo/posit-connect/bump-pin.sh <sha>     # or to one specific commit
 ```
 
-Then commit the manifest, push to master, and hit republish in Connect Cloud.
-Confirm it took: the sidebar footer must read the version the script printed.
+Best done **in the same PR as the demo change**, pinning to the commit the demo
+landed in. Merging then triggers the republish, which picks the new pin up, and
+nothing is left to remember. Confirm it took: the sidebar footer must read the
+version the script printed.
 
-`--check` exits non-zero on drift, so it also works as a post-merge reminder.
+`--check` compares what the pinned commit would *install* against master — only
+`R/`, `inst/` and `DESCRIPTION` reach the served app. It deliberately does not
+require the pin to equal `HEAD`: that is false after every merge, including the
+merge that moves the pin.
 
 ### When dependencies change
 

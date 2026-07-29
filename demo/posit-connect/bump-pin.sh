@@ -53,11 +53,26 @@ old_ver="$(jq -r '.packages.igvShiny.description.Version' "$manifest")"
 echo "pinned:  $old_ver  ${old_sha:0:7}"
 echo "target:  $version  ${sha:0:7}"
 
-if [[ "$old_sha" == "$sha" ]]; then
-  echo "manifest already pinned to this commit"
-  $check_only && exit 0
+# Drift is not "the pin differs from HEAD" - that is true right after every
+# merge, including the merge that moves the pin, and a check that cries wolf
+# once a week is a check nobody reads. What matters is whether the pinned
+# commit would install a different app: only R/, inst/ and DESCRIPTION reach
+# the served package.
+stale_files=""
+if [[ "$old_sha" != "$sha" ]]; then
+  stale_files="$(gh api "repos/$repo/compare/$old_sha...$sha" \
+                   --jq '.files[].filename' 2>/dev/null \
+                 | grep -E '^(R/|inst/|DESCRIPTION$)' || true)"
 fi
-$check_only && { echo "DRIFT: the live demo serves ${old_sha:0:7}, not ${sha:0:7}"; exit 1; }
+
+if [[ -z "$stale_files" ]]; then
+  echo "the pinned commit installs the same app as master"
+  $check_only && exit 0
+else
+  echo "the pinned commit predates these changes to the served app:"
+  echo "$stale_files" | sed 's/^/  /' | head -20
+  $check_only && { echo "DRIFT: the live demo runs ${old_sha:0:7}, not ${sha:0:7}"; exit 1; }
+fi
 
 app_md5="$(md5of "$dir/app.R")"
 readme_md5="$(md5of "$dir/README.md")"
