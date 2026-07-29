@@ -285,7 +285,7 @@ explicitly with `getGenomicRegion()` is currently unreliable inside a module
 unless the module id happens to be `"igv"` — see
 [issue #134](https://github.com/gladkia/igvShiny/issues/134).
 
-A runnable version is in `inst/demos/igvShinyDemo-withModules.R`.
+A runnable version is in `inst/demos/modules.R`.
 
 # Stock genomes
 

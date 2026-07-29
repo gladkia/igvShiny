@@ -1,3 +1,8 @@
+## igvShiny 1.9.35
+* Rewrite the demo apps on bslib, replacing 15 legacy apps with 7 single-topic ones (#64)
+* Remove the forked Connect app, which now runs the package demo itself (#64)
+* Extend the flagship demo with the splice junction and removeTracksByName calls (#64)
+
 ## igvShiny 1.9.34
 * Rename the tair10 gene track to the registry name, breaking removeTracksByName on the old label (#143)
 
