@@ -47,6 +47,8 @@
   data.frame
 - [`loadSegTrack()`](https://gladkia.github.io/igvShiny/reference/loadSEGTrack.md)
   : load a seg track provided as a data.frame
+- [`loadSpliceJunctionTrackFromURL()`](https://gladkia.github.io/igvShiny/reference/loadSpliceJunctionTrackFromURL.md)
+  : load a splice junction track served up by http
 - [`loadVcfTrack()`](https://gladkia.github.io/igvShiny/reference/loadVcfTrack.md)
   : load a VCF (variant) track provided as a Bioconductor
   VariantAnnotation object
