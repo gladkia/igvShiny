@@ -1,0 +1,8 @@
+U13369.1	6100	7280	motif=GT/AG;uniquely_mapped=42;multi_mapped=3;maximum_spliced_alignment_overhang=35;annotated_junction=true	42	+
+U13369.1	6100	8230	motif=GT/AG;uniquely_mapped=8;multi_mapped=1;maximum_spliced_alignment_overhang=28;annotated_junction=true	8	+
+U13369.1	7276	8225	motif=GT/AG;uniquely_mapped=117;multi_mapped=6;maximum_spliced_alignment_overhang=37;annotated_junction=true	117	+
+U13369.1	7276	9540	motif=CT/AC;uniquely_mapped=3;multi_mapped=9;maximum_spliced_alignment_overhang=12;annotated_junction=false	3	-
+U13369.1	8225	9540	motif=GT/AG;uniquely_mapped=64;multi_mapped=2;maximum_spliced_alignment_overhang=33;annotated_junction=true	64	+
+U13369.1	8600	9540	motif=GC/AG;uniquely_mapped=1;multi_mapped=4;maximum_spliced_alignment_overhang=6;annotated_junction=false	1	+
+U13369.1	9540	11300	motif=GT/AG;uniquely_mapped=25;multi_mapped=0;maximum_spliced_alignment_overhang=31;annotated_junction=true	25	+
+U13369.1	9540	12480	motif=non-canonical;uniquely_mapped=0;multi_mapped=7;maximum_spliced_alignment_overhang=4;annotated_junction=false	0	+

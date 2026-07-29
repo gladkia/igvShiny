@@ -24,6 +24,7 @@ on:
       - "inst/demos/**"
       - "inst/htmlwidgets/igvShiny.js"
       - "vignettes/**"
+      - "igv.js.examples/**"
 
 permissions:
   contents: read

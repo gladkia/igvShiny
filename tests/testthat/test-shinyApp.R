@@ -204,6 +204,72 @@ test_that("two widgets at the same locus both report it", {
     app$stop()
 })
 
+test_that("a splice junction track renders from a url (#103)", {
+    # #103 asked for sashimi plots. igv.js has no such feature - it has a
+    # junction track drawn from a bed file - so what has to be proven here is
+    # that the type string, the bed and the unindexed flag reach igv.js and
+    # produce a track. The bed is our own fixture on 127.0.0.1: the upstream
+    # example files sat on s3.amazonaws.com/igv.org.demo and 404 today.
+    options(chromote.timeout = 120)
+
+    port <- local_server()
+    app_file <- tempfile(fileext = ".R")
+    writeLines(sprintf('
+        library(shiny)
+        library(igvShiny)
+
+        ui <- fluidPage(
+            actionButton("addJunctionsButton", "Add junctions"),
+            igvShinyOutput("igvShiny_0")
+        )
+
+        server <- function(input, output, session) {
+            output$igvShiny_0 <- renderIgvShiny({
+                igvShiny(parseAndValidateGenomeSpec(
+                    genomeName = "ribo",
+                    initialLocus = "U13369.1:6,000-13,000",
+                    stockGenome = FALSE,
+                    dataMode = "http",
+                    fasta = "%s",
+                    fastaIndex = "%s",
+                    genomeAnnotation = "%s"
+                ))
+            })
+            observeEvent(input$addJunctionsButton, {
+                loadSpliceJunctionTrackFromURL(
+                    session,
+                    id = "igvShiny_0",
+                    trackName = "junctions",
+                    url = "%s",
+                    trackConfig = list(minUniquelyMappedReads = 1,
+                                       colorBy = "isAnnotatedJunction")
+                )
+            })
+        }
+
+        shinyApp(ui = ui, server = server)',
+        local_url(port, "ribosomal-RNA-gene.fasta"),
+        local_url(port, "ribosomal-RNA-gene.fasta.fai"),
+        local_url(port, "ribosomal-RNA-gene.gff3"),
+        local_url(port, "ribosomal-RNA-gene.SJ.out.bed")
+    ), app_file)
+
+    app <- AppDriver$new(
+        app_dir = shiny::shinyAppFile(app_file),
+        name = "igv-shiny-splice-junctions",
+        height = 695,
+        width = 1235,
+        load_timeout = 1e+6,
+        timeout = 1e+6
+    )
+    app$wait_for_value(input = "igvReady")
+    Sys.sleep(2)
+
+    .click_and_check(app, "addJunctionsButton", 'title="junctions"')
+
+    app$stop()
+})
+
 test_that("getGenomicRegion replies to a module named anything but 'igv'", {
     # #134: the reply event name was built as
     # "igv-currentGenomicRegion." + elementID.replace("igv-", ""), so only a
