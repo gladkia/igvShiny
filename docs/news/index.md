@@ -1,5 +1,11 @@
 # Changelog
 
+## igvShiny 1.9.34
+
+- Rename the tair10 gene track to the registry name, breaking
+  removeTracksByName on the old label
+  ([\#143](https://github.com/gladkia/igvShiny/issues/143))
+
 ## igvShiny 1.9.33
 
 - Fix the off-by-one start in currentGenomicRegion, closing its round
