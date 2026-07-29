@@ -1,0 +1,78 @@
+name: connect-pin-check
+
+# demo/posit-connect/app.R runs the demo out of the *installed* package, so the
+# commit pinned in manifest.json decides what the public demo shows. Merging a
+# demo change to master therefore changes nothing until the pin moves - and the
+# gap is invisible: CI is green, the repo is right, only the live app is stale.
+# It sat ten versions behind (1.9.25 vs 1.9.35) before anyone noticed.
+#
+# This does not deploy. Republishing is a click in Connect Cloud; all this does
+# is refuse to let the drift go unnoticed.
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "inst/demos/**"
+      - "demo/posit-connect/**"
+      - ".github/workflows/connect-pin-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pin:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TITLE: "Connect demo is behind master"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Check the pinned commit
+        id: check
+        run: |
+          set +e
+          ./demo/posit-connect/bump-pin.sh --check | tee "${{ runner.temp }}/pin.txt"
+          echo "status=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Connect Cloud pin"
+            echo
+            echo '```'
+            cat "${{ runner.temp }}/pin.txt"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
+      - name: Open a reminder when the pin is behind
+        if: steps.check.outputs.status != '0'
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          body=$(
+            printf 'A demo change reached master, but `manifest.json` still pins an older commit, so the [public demo](https://gladkia-igvshiny-demo.share.connect.posit.cloud) does not show it yet.\n\n'
+            printf '```\n%s\n```\n\n' "$(cat "${{ runner.temp }}/pin.txt")"
+            printf 'To publish it:\n\n```bash\n./demo/posit-connect/bump-pin.sh\n```\n\nCommit the manifest, push to master, then republish in Connect Cloud. The sidebar footer must then read the version the script printed.\n\nRun: %s\n' "$RUN_URL"
+          )
+          existing=$(gh issue list --state open --search "$TITLE in:title" --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            echo "Issue #$existing already open; not filing another."
+          else
+            gh issue create --title "$TITLE" --body "$body"
+          fi
+
+      # Bumping the pin in the same PR as the demo change is the normal path, so
+      # a green run here usually means there was never a reminder to close.
+      - name: Close the reminder once the pin catches up
+        if: steps.check.outputs.status == '0'
+        run: |
+          existing=$(gh issue list --state open --search "$TITLE in:title" --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue close "$existing" --comment "The manifest now pins the current master; remember to republish in Connect Cloud."
+          fi
