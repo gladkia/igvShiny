@@ -78,10 +78,10 @@ test_that("igvShinyDemo loads a remote bigWig", {
     app$stop()
 })
 
-test_that("igvShinyDemo-GFF3 loads tracks correctly", {
+test_that("the local-data demo loads its GFF3 tracks correctly", {
     options(chromote.timeout = 120)
 
-    sf <- system.file(package = "igvShiny", "demos", "igvShinyDemo-GFF3.R")
+    sf <- system.file(package = "igvShiny", "demos", "local-data.R")
     app <- AppDriver$new(
       app_dir = shiny::shinyAppFile(sf),
       name = "test_app",

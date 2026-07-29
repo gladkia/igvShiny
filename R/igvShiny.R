@@ -856,7 +856,7 @@ loadSegTrack <-
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo-withVCF.R")
+#'   system.file(package = "igvShiny", "demos", "local-data.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
@@ -1299,7 +1299,7 @@ loadCramTrackFromLocalData <-
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo-GFF3.R")
+#'   system.file(package = "igvShiny", "demos", "local-data.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
@@ -1379,7 +1379,7 @@ loadGFF3TrackFromURL <-
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo-GFF3.R")
+#'   system.file(package = "igvShiny", "demos", "local-data.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }

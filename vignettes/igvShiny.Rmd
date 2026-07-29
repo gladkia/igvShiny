@@ -87,7 +87,7 @@ See also demo app for stock genomes when one can select genome of interest
 and familiarize with the basic functionalities provided via igvShiny:
 ```{r stock-genomes-demo, echo=TRUE}
 library(igvShiny)
-demo_app_file <- system.file(package= "igvShiny", "demos", "stockGenomesDemo.R")
+demo_app_file <- system.file(package = "igvShiny", "demos", "genomes.R")
     if (interactive()) {
         shiny::runApp(demo_app_file)
         }
@@ -137,26 +137,11 @@ genomeOptions2 <- parseAndValidateGenomeSpec(
 genomeOptions2
 ```
 
-See also demo apps for custom genomes with data provided via URLs:
-```{r custom-genome-http-demo, echo=TRUE}
+The same demo app shows both variants side by side — pick the genome source
+with the radio buttons:
+```{r custom-genome-demo, echo=TRUE}
 library(igvShiny)
-demo_app_file <- system.file(
-    package = "igvShiny",
-    "demos",
-    "igvShinyDemo-customGenome-http.R"
-    )
-if (interactive()) {
-    shiny::runApp(demo_app_file)
-    }
-```
-as well as data provided via local files:
-```{r custom-genome-local-demo, echo=TRUE}
-library(igvShiny)
-demo_app_file <-
-    system.file(
-        package = "igvShiny", 
-        "demos", 
-        "igvShinyDemo-customGenome-localFiles.R")
+demo_app_file <- system.file(package = "igvShiny", "demos", "genomes.R")
 if (interactive()) {
     shiny::runApp(demo_app_file)
     }

@@ -1,27 +1,14 @@
+# igvShiny — the smallest app there is: a genome, a widget, nothing else.
+
+library(shiny)
 library(igvShiny)
-#----------------------------------------------------------------------------------------------------
-options <- parseAndValidateGenomeSpec(genomeName="hg38",  initialLocus="NDUFS2",
-                                      stockGenome=TRUE, dataMode="stock",
-                                      fasta=NA, fastaIndex=NA, genomeAnnotation=NA)
-#----------------------------------------------------------------------------------------------------
-ui = shinyUI(
 
-   fluidPage(
-     igvShinyOutput('igvShiny'),
-     width=10
-     )
+options <- parseAndValidateGenomeSpec(genomeName = "hg38", initialLocus = "NDUFS2")
 
-) # ui
-#----------------------------------------------------------------------------------------------------
-server = function(input, output, session)
-{
-   output$igvShiny <- renderIgvShiny({
-      # options <- list(genomeName="hg38", initialLocus="NDUFS2")
-      igvShiny(options)
-      })
+ui <- fluidPage(igvShinyOutput("igvShiny"))
 
-} # server
-#----------------------------------------------------------------------------------------------------
-runApp(shinyApp(ui=ui, server=server), port=9998)
+server <- function(input, output, session) {
+  output$igvShiny <- renderIgvShiny(igvShiny(options))
+}
 
-
+shinyApp(ui = ui, server = server)

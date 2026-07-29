@@ -1,16 +1,20 @@
 # igvShiny public demo — Posit Connect Cloud
 
-A trimmed, deploy-ready copy of the flagship demo (`inst/demos/igvShinyDemo.R`)
-for hosting a clickable public demo on [Posit Connect Cloud](https://connect.posit.cloud/).
+Deploy wrapper for hosting the flagship demo (`inst/demos/igvShinyDemo.R`) as a
+clickable public app on [Posit Connect Cloud](https://connect.posit.cloud/).
 
-## What's different from the in-package demo
+## What `app.R` contains
 
-The "BAM local data" button and its `readGAlignments()` call were removed. That
-call is the *only* reason the full demo needs `GenomicAlignments` + `Rsamtools`
-— two heavy Bioconductor C-compiled packages. Dropping it keeps the deploy light
-without losing the alignment-track demo: the **BAM from URL** and **CRAM from
-URL** buttons still show alignments, because igv.js streams those files directly
-in the browser (zero server-side dependency).
+Two lines: it runs `inst/demos/igvShinyDemo.R` out of the installed package.
+There is no second copy of the app to keep in sync — this used to be a
+hand-maintained fork, and it drifted from the original on every new loader.
+
+The flagship demo loads no file server-side: no `*FromLocalData` loader, hence
+no `GenomicAlignments` / `Rsamtools` / `VariantAnnotation` — the heavy
+C-compiled Bioconductor packages — in this deploy. Those loaders are demoed by
+`inst/demos/local-data.R`, which is not what gets published here. Alignment
+tracks are still on show: **BAM (URL)** and **CRAM (URL)** stream in the
+browser, with zero server-side dependency.
 
 Server-side runtime footprint is tiny: a 74 KB `gwas.RData` loaded at startup
 (from the installed package via `system.file()`) plus small in-memory
@@ -28,14 +32,17 @@ that has not been released yet.
 > **The pin is a commit, not a branch.** `writeManifest` records
 > `GithubSHA1`/`RemoteSha` of the build installed at the time, and Connect Cloud
 > installs *that commit* — `GithubRef: master` is decoration. A republish
-> therefore serves the current `app.R` against a possibly much older package.
-> When `app.R` starts using something new, bump the two SHA fields (or
-> regenerate) in the same commit, or the app dies on the first click: an error
-> inside `observeEvent` ends the Shiny session, and the page just greys out with
-> nothing in the UI to explain it. The sidebar footer prints the installed
-> `igvShiny` version — check it there first.
+> therefore serves a possibly much older package.
+>
+> Since `app.R` now runs the demo *out of the package*, the pin decides which
+> demo is live: a new button merged to master does not appear on the public
+> demo until the SHA is bumped. Bump the two SHA fields (or regenerate) in the
+> same commit that the demo needs. Serving an old package can also kill the app
+> on the first click — an error inside `observeEvent` ends the Shiny session and
+> the page just greys out, with nothing in the UI to explain it. The sidebar
+> footer prints the installed `igvShiny` version — check it there first.
 
-Regenerate the manifest whenever `app.R` or its dependencies change, and make
+Regenerate the manifest whenever the demo or its dependencies change, and make
 sure the locally installed `igvShiny` is the GitHub build first, so the manifest
 records the GitHub source rather than Bioconductor:
 
