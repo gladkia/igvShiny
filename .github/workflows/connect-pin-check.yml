@@ -22,6 +22,11 @@ on:
 permissions:
   contents: read
 
+# Two runs racing to `gh issue list` both see nothing open and both file one.
+concurrency:
+  group: connect-pin-check
+  cancel-in-progress: true
+
 jobs:
   pin:
     runs-on: ubuntu-latest
@@ -51,8 +56,18 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
           exit 0
 
+      # The script separates the two: 1 means the manifest needs bumping,
+      # anything above means the check itself could not run (missing jq/gh, a
+      # commit that is not there, an API failure). Filing "the demo is behind"
+      # for a broken check would be a lie, and a quiet one.
+      - name: Fail when the check could not run
+        if: steps.check.outputs.status != '0' && steps.check.outputs.status != '1'
+        run: |
+          echo "bump-pin.sh exited ${{ steps.check.outputs.status }} - the check did not run" >&2
+          exit 1
+
       - name: Open a reminder when the pin is behind
-        if: steps.check.outputs.status != '0'
+        if: steps.check.outputs.status == '1'
         env:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |

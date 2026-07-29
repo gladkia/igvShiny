@@ -53,20 +53,29 @@ Six fields have to stay in step (two SHAs, the recorded version, the two file
 checksums), so use the script rather than editing the manifest by hand:
 
 ```bash
-./demo/posit-connect/bump-pin.sh --check   # would the live demo differ from master?
+./demo/posit-connect/bump-pin.sh --check   # is the manifest behind master?
 ./demo/posit-connect/bump-pin.sh           # re-pin to origin/master
 ./demo/posit-connect/bump-pin.sh <sha>     # or to one specific commit
 ```
+
+Run it **last**, after any edit to `app.R` or this README — it records their
+checksums, so editing either one afterwards invalidates the manifest again.
 
 Best done **in the same PR as the demo change**, pinning to the commit the demo
 landed in. Merging then triggers the republish, which picks the new pin up, and
 nothing is left to remember. Confirm it took: the sidebar footer must read the
 version the script printed.
 
-`--check` compares what the pinned commit would *install* against master — only
-`R/`, `inst/` and `DESCRIPTION` reach the served app. It deliberately does not
-require the pin to equal `HEAD`: that is false after every merge, including the
-merge that moves the pin.
+`--check` reads the manifest against `gladkia/igvShiny`'s master — it cannot see
+what Connect actually has deployed, only whether the manifest still describes
+master. It compares what the pinned commit would *install* (`R/`, `inst/`,
+`DESCRIPTION` — the only paths that reach the served package) and verifies the
+manifest's own invariants: both SHA fields agreeing, the recorded version, and
+the two file checksums. It deliberately does not require the pin to equal
+`HEAD`, which is false after every merge, including the merge that moves it.
+
+The deployment itself is verified in one place only: the version in the app's
+sidebar footer.
 
 ### When dependencies change
 

@@ -43,9 +43,13 @@ esac
 gh api "repos/$repo/commits/$sha" --jq .sha >/dev/null \
   || { echo "commit $sha not found in $repo" >&2; exit 2; }
 
-# the package version as recorded at that commit, not the working tree's
-version="$(gh api "repos/$repo/contents/DESCRIPTION?ref=$sha" --jq '.content' \
-           | base64 -d | awk '/^Version:/ {print $2}')"
+# the package version as recorded at that commit, not the working tree's.
+# Asking for the raw media type keeps base64 out of it: the -d/-D flag split
+# between GNU and macOS coreutils is a portability trap for no gain.
+version="$(gh api "repos/$repo/contents/DESCRIPTION?ref=$sha" \
+             -H "Accept: application/vnd.github.raw" \
+           | awk '/^Version:/ {print $2}')"
+[[ -n "$version" ]] || { echo "no Version: in DESCRIPTION at $sha" >&2; exit 2; }
 
 old_sha="$(jq -r '.packages.igvShiny.description.RemoteSha' "$manifest")"
 old_ver="$(jq -r '.packages.igvShiny.description.Version' "$manifest")"
@@ -65,17 +69,31 @@ if [[ "$old_sha" != "$sha" ]]; then
                  | grep -E '^(R/|inst/|DESCRIPTION$)' || true)"
 fi
 
-if [[ -z "$stale_files" ]]; then
-  echo "the pinned commit installs the same app as master"
-  $check_only && exit 0
-else
-  echo "the pinned commit predates these changes to the served app:"
-  echo "$stale_files" | sed 's/^/  /' | head -20
-  $check_only && { echo "DRIFT: the live demo runs ${old_sha:0:7}, not ${sha:0:7}"; exit 1; }
-fi
-
 app_md5="$(md5of "$dir/app.R")"
 readme_md5="$(md5of "$dir/README.md")"
+
+# The pin is only half of it: Connect also verifies the file checksums, and the
+# two sha fields are read by different parts of rsconnect. A manifest that is
+# internally inconsistent deploys something nobody described.
+inconsistent=""
+[[ "$(jq -r '.packages.igvShiny.description.GithubSHA1' "$manifest")" == "$old_sha" ]] \
+  || inconsistent+=$'\n  GithubSHA1 disagrees with RemoteSha'
+[[ "$(jq -r '.files["app.R"].checksum' "$manifest")" == "$app_md5" ]] \
+  || inconsistent+=$'\n  app.R checksum is stale'
+[[ "$(jq -r '.files["README.md"].checksum' "$manifest")" == "$readme_md5" ]] \
+  || inconsistent+=$'\n  README.md checksum is stale'
+
+if [[ -z "$stale_files" && -z "$inconsistent" ]]; then
+  echo "the pinned commit installs the same app as master, manifest consistent"
+  $check_only && exit 0
+else
+  [[ -n "$stale_files" ]] && {
+    echo "the pinned commit predates these changes to the served app:"
+    echo "$stale_files" | sed 's/^/  /' | head -20
+  }
+  [[ -n "$inconsistent" ]] && echo "manifest is internally inconsistent:$inconsistent"
+  $check_only && { echo "DRIFT: run bump-pin.sh to bring the manifest up to date"; exit 1; }
+fi
 
 tmp="$(mktemp)"
 jq --arg sha "$sha" --arg version "$version" \
@@ -90,5 +108,5 @@ jq --arg sha "$sha" --arg version "$version" \
 jq -e . "$tmp" >/dev/null || { echo "produced invalid json, manifest untouched" >&2; exit 1; }
 mv "$tmp" "$manifest"
 
-echo "manifest re-pinned; commit it, push to master, then republish in Connect Cloud."
-echo "the app's sidebar footer should read: igvShiny $version"
+echo "manifest re-pinned; commit it and push to master - Connect republishes on"
+echo "its own from there. The app's sidebar footer should then read: igvShiny $version"
