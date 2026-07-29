@@ -13,6 +13,12 @@
 
 library(igvShiny)
 
-shiny::shinyAppFile(
-  system.file("demos", "igvShinyDemo.R", package = "igvShiny")
-)
+# an igvShiny old enough to predate the demo returns "" here, and
+# shinyAppFile("") greys the page out with nothing to explain it - the failure
+# mode README.md warns about. Name the installed version instead.
+app.file <- system.file("demos", "igvShinyDemo.R", package = "igvShiny")
+if (!nzchar(app.file))
+  stop(sprintf("igvShiny %s ships no demos/igvShinyDemo.R - bump the pinned SHA in manifest.json",
+               utils::packageVersion("igvShiny")))
+
+shiny::shinyAppFile(app.file)

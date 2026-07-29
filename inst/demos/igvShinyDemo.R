@@ -35,7 +35,7 @@ tbl.bed9 <- data.frame(chrom = rep("chr1", 3),
                        start = c(base.loc, base.loc + 100, base.loc + 250),
                        end = c(base.loc + 50, base.loc + 120, base.loc + 290),
                        name = c("red", "green", "blue"),
-                       score = round(runif(3), 2),
+                       score = c(0.35, 0.62, 0.88),
                        strand = c("+", "-", "+"),
                        thickStart = c(base.loc + 10, base.loc + 110, base.loc + 260),
                        thickEnd = c(base.loc + 20, base.loc + 130, base.loc + 280),
@@ -103,7 +103,7 @@ ui <- page_sidebar(
         demoButton("clearChromLocButton", "Clear region", "eraser", "btn-outline-dark"),
         div(class = "small text-muted mt-1 mb-1", "Current region:"),
         div(class = "border rounded p-2 small bg-body-tertiary font-monospace",
-            htmlOutput("chromLocDisplay"))
+            textOutput("chromLocDisplay"))
       ),
 
       accordion_panel(
@@ -263,13 +263,15 @@ server <- function(input, output, session) {
     getGenomicRegion(session, id = "igvShiny_0")
   })
 
-  observeEvent(input$clearChromLocButton, {
-    output$chromLocDisplay <- renderText({ " " })
-  })
+  # one output, fed by a reactiveVal: assigning output$… inside an observer
+  # re-registers the output on every event
+  chromLoc <- reactiveVal(" ")
+  output$chromLocDisplay <- renderText(chromLoc())
+
+  observeEvent(input$clearChromLocButton, chromLoc(" "))
 
   observeEvent(input[[sprintf("currentGenomicRegion.%s", "igvShiny_0")]], {
-    newLoc <- input[[sprintf("currentGenomicRegion.%s", "igvShiny_0")]]
-    output$chromLocDisplay <- renderText({ newLoc })
+    chromLoc(input[[sprintf("currentGenomicRegion.%s", "igvShiny_0")]])
   })
 
   output$igvShiny_0 <- renderIgvShiny({
