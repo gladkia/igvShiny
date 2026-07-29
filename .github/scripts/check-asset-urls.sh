@@ -39,6 +39,11 @@ sources=(
 # Placeholder and unreachable-by-design hosts used in documentation examples.
 placeholder_re='^https?://(example\.org|127\.0\.0\.1|localhost|a\.bed|b\.bed|\.\.\.)'
 
+# Attribution links in comments, not assets igv.js fetches. Their last segment
+# looks like a file, so the scrape below keeps them, and bot-blocking hosts
+# answer both HEAD and the ranged GET with 403 - a permanent false failure.
+prose_re='^https?://www\.elated\.com/'
+
 # Assembled at run time from a base URL plus a file name, so the scrape below
 # only ever sees the directory half. Listed in full because these are the files
 # the demos actually fetch.
@@ -64,6 +69,7 @@ done < <(
     grep -rhoE 'https?://[^"'"'"'`) ,]+' "${sources[@]}" 2>/dev/null |
       sed -E 's/[.,;:)]+$//' |
       grep -vE "$placeholder_re" |
+      grep -vE "$prose_re" |
       grep -vE '^https?://[^/]*%[ds]' |
       # Keep only URLs whose last segment looks like a file. Bare directories
       # (CRAN mirrors, S3 prefixes, base URLs) answer 403/404 by design and
