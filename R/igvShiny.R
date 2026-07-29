@@ -25,7 +25,20 @@
   "maxPanelHeight", "separateBam", "wholeGenomeView", "roi", "queryable",
   ## alignment tracks sort their reads at load time from this object, the same
   ## one the igv.js right-click menu builds; "TAG" plus a tag covers #104
-  "sort"
+  "sort",
+  ## splice junction filters, thickness and label rules, read by
+  ## SpliceJunctionTrack straight off the track config. Names come from the
+  ## igv.js 3.8.4 source, not from its spliceJunctionTrack.html example: that
+  ## example sets labelUniqueReadCount and four siblings, and no such option
+  ## exists in the library any more
+  "minUniquelyMappedReads", "minTotalReads", "maxFractionMultiMappedReads",
+  "minSplicedAlignmentOverhang", "minJunctionEndsVisible",
+  "minSamplesWithThisJunction", "maxSamplesWithThisJunction",
+  "minPercentSamplesWithThisJunction", "maxPercentSamplesWithThisJunction",
+  "thicknessBasedOn", "bounceHeightBasedOn", "colorBy",
+  "colorByNumReadsThreshold", "labelWith", "labelWithInParen",
+  "hideAnnotatedJunctions", "hideUnannotatedJunctions", "hideMotifs",
+  "hideStrand"
   # Add other valid igv.js track options here as needed in the future
 )
 
@@ -1435,4 +1448,85 @@ loadGFF3TrackFromLocalData <-
     session$sendCustomMessage("loadGFF3TrackFromLocalData", msg.to.igv)
 
   } # loadGFF3TrackFromLocalData
+#-------------------------------------------------------------------------------
+#' load a splice junction track served up by http
+#'
+#' @description load splice junctions from a BED file reachable by URL, as
+#' written by STAR (\code{SJ.out.tab} converted to BED). Six columns, with the
+#' per-junction attributes packed into the name column as \code{key=value}
+#' pairs separated by semicolons: \code{motif}, \code{uniquely_mapped},
+#' \code{multi_mapped}, \code{maximum_spliced_alignment_overhang} and
+#' \code{annotated_junction}. The track reads its filters and labels from
+#' those attributes.
+#'
+#' igv.js draws junctions from a file of that shape only - it derives none of
+#' them from a bam file, and it has no sashimi plot. Show this track above a
+#' coverage track (bigWig, bedGraph) for the same sample to get the
+#' arcs-over-coverage view sashimi plots are wanted for.
+#'
+#' @rdname loadSpliceJunctionTrackFromURL
+#' @aliases loadSpliceJunctionTrackFromURL
+#'
+#' @param session an environment or list, provided and managed by shiny
+#' @param id character string, the html element id of this widget instance
+#' @param trackName character string
+#' @param url character string http url for the bed file of junctions
+#' @param indexURL character string http url for a tabix index, needed only
+#' for a bgzipped bed; "" by default, which loads the file whole
+#' @param trackHeight an integer, 100 (pixels) by default
+#' @param displayMode character, "COLLAPSED", "EXPANDED" or "SQUISHED"
+#' @param deleteTracksOfSameName logical, default TRUE
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options. The junction ones are read straight off it:
+#' \code{minUniquelyMappedReads}, \code{minTotalReads},
+#' \code{maxFractionMultiMappedReads}, \code{minSplicedAlignmentOverhang},
+#' \code{thicknessBasedOn}, \code{bounceHeightBasedOn}, \code{colorBy},
+#' \code{labelWith}, \code{hideAnnotatedJunctions},
+#' \code{hideUnannotatedJunctions}, \code{hideMotifs} among them.
+#'
+#' @examples
+#' library(igvShiny)
+#' demo_app_file <-
+#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#' if (interactive()) {
+#'   shiny::runApp(demo_app_file)
+#' }
+#'
+#' @return
+#' nothing
+#'
+#' @keywords track_loaders
+#' @export
+
+loadSpliceJunctionTrackFromURL <-
+  function(session,
+           id,
+           trackName,
+           url,
+           indexURL = "",
+           trackHeight = 100,
+           displayMode = "COLLAPSED",
+           deleteTracksOfSameName = TRUE,
+           trackConfig = list()) {
+    if (deleteTracksOfSameName) {
+      removeTracksByName(session, id, trackName)
+    }
+
+    state[["userAddedTracks"]] <-
+      unique(c(state[["userAddedTracks"]], trackName))
+
+    base.msg.to.igv <-
+      list(
+        elementID = id,
+        trackName = trackName,
+        url = url,
+        indexURL = indexURL,
+        trackHeight = trackHeight,
+        displayMode = displayMode
+      )
+
+    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    session$sendCustomMessage("loadSpliceJunctionTrackFromURL", msg.to.igv)
+
+  } # loadSpliceJunctionTrackFromURL
 #-------------------------------------------------------------------------------

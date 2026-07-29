@@ -35,13 +35,13 @@
                     {
                         type: 'wig',
                         format: "bigwig",
-                        url: 'https://s3.amazonaws.com/igv.org.demo/splice_junction_track_test_cases_sampleA.chr15-92835700-93031800.bigWig',
+                        url: 'https://raw.githubusercontent.com/igvteam/igv-data/main/data/test/splice_junctions/splice_junction_track_test_cases_sampleA.chr15-92835700-93031800.bigWig',
                     },
                     {
                         type: 'spliceJunctions',
                         format: 'bed',
-                        url: `https://s3.amazonaws.com/igv.org.demo/splice_junction_track_test_cases_sampleA.chr15-92835700-93031800.SJ.out.bed.gz`,
-                        indexURL: `https://s3.amazonaws.com/igv.org.demo/splice_junction_track_test_cases_sampleA.chr15-92835700-93031800.SJ.out.bed.gz.tbi`,
+                        url: `https://raw.githubusercontent.com/igvteam/igv-data/main/data/test/splice_junctions/splice_junction_track_test_cases_sampleA.chr15-92835700-93031800.SJ.out.bed.gz`,
+                        indexURL: `https://raw.githubusercontent.com/igvteam/igv-data/main/data/test/splice_junctions/splice_junction_track_test_cases_sampleA.chr15-92835700-93031800.SJ.out.bed.gz.tbi`,
                         displayMode: 'COLLAPSED',
                         minUniquelyMappedReads: 1,
                         minTotalReads: 1,
@@ -50,11 +50,8 @@
                         thicknessBasedOn: 'numUniqueReads', //options: numUniqueReads (default), numReads, isAnnotatedJunction
                         bounceHeightBasedOn: 'random', //options: random (default), distance, thickness
                         colorBy: 'isAnnotatedJunction', //options: numUniqueReads (default), numReads, isAnnotatedJunction, strand, motif
-                        labelUniqueReadCount: true,
-                        labelMultiMappedReadCount: true,
-                        labelTotalReadCount: false,
-                        labelMotif: false,
-                        labelIsAnnotatedJunction: " [A]",
+                        labelWith: 'uniqueReadCount', //options: uniqueReadCount (default), totalReadCount, numSamplesWithThisJunction, percentSamplesWithThisJunction, motif
+                        labelWithInParen: 'multiMappedReadCount', //options: uniqueReadCount, totalReadCount, multiMappedReadCount, numSamplesWithThisJunction, percentSamplesWithThisJunction
                         hideAnnotatedJunctions: false,
                         hideUnannotatedJunctions: false,
                         hideMotifs: ['GT/AT', 'non-canonical'], //options: 'GT/AG', 'CT/AC', 'GC/AG', 'CT/GC', 'AT/AC', 'GT/AT', 'non-canonical'

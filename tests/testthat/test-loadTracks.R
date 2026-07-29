@@ -258,6 +258,63 @@ test_that("the alignment loaders pass a sort-by-tag object through (#104)", {
   expect_equal(last_message(session, "loadCramTrackFromURL")$sort, sort_by_hp())
 })
 
+test_that("loadSpliceJunctionTrackFromURL sends the url and the junction knobs (#103)", {
+  session <- fake_session()
+  loadSpliceJunctionTrackFromURL(
+    session, ELEMENT_ID, "junctions",
+    "https://example.org/sampleA.SJ.out.bed",
+    trackHeight = 140,
+    trackConfig = list(minUniquelyMappedReads = 2,
+                       thicknessBasedOn = "numReads",
+                       colorBy = "isAnnotatedJunction",
+                       labelWith = "totalReadCount",
+                       hideMotifs = list("non-canonical"))
+  )
+
+  msg <- last_message(session, "loadSpliceJunctionTrackFromURL")
+  expect_equal(msg$elementID, ELEMENT_ID)
+  expect_equal(msg$url, "https://example.org/sampleA.SJ.out.bed")
+  expect_equal(msg$trackHeight, 140)
+  expect_equal(msg$displayMode, "COLLAPSED")
+  # an empty indexURL is what tells the JS side to set indexed = false; igv.js
+  # otherwise guesses url + ".tbi"
+  expect_equal(msg$indexURL, "")
+  expect_equal(msg$minUniquelyMappedReads, 2)
+  expect_equal(msg$thicknessBasedOn, "numReads")
+  expect_equal(msg$colorBy, "isAnnotatedJunction")
+  expect_equal(msg$labelWith, "totalReadCount")
+  expect_equal(msg$hideMotifs, list("non-canonical"))
+})
+
+test_that("loadSpliceJunctionTrackFromURL carries a tabix index when given one", {
+  session <- fake_session()
+  loadSpliceJunctionTrackFromURL(
+    session, ELEMENT_ID, "junctions",
+    "https://example.org/sampleA.SJ.out.bed.gz",
+    indexURL = "https://example.org/sampleA.SJ.out.bed.gz.tbi",
+    deleteTracksOfSameName = FALSE
+  )
+
+  msg <- last_message(session, "loadSpliceJunctionTrackFromURL")
+  expect_equal(msg$indexURL, "https://example.org/sampleA.SJ.out.bed.gz.tbi")
+  expect_length(sent_messages(session, "removeTracksByName"), 0L)
+})
+
+test_that("the label options from the bundled example are not igv.js 3.x options", {
+  # spliceJunctionTrack.html still sets labelUniqueReadCount and friends; the
+  # library dropped them for labelWith/labelWithInParen, so allowlisting them
+  # would have promised users something that draws nothing
+  session <- fake_session()
+  expect_warning(
+    loadSpliceJunctionTrackFromURL(
+      session, ELEMENT_ID, "junctions", "https://example.org/a.bed",
+      trackConfig = list(labelUniqueReadCount = TRUE)
+    ),
+    "invalid or unsupported"
+  )
+  expect_null(last_message(session, "loadSpliceJunctionTrackFromURL")$labelUniqueReadCount)
+})
+
 test_that("the navigation and removal helpers send their own messages", {
   session <- fake_session()
   showGenomicRegion(session, ELEMENT_ID, "chr1:1-1000")

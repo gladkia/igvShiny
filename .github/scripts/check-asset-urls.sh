@@ -24,11 +24,16 @@ markdown=false
 # Sources that carry URLs igv.js will actually fetch. The vendored library in
 # inst/htmlwidgets/lib is excluded: those are upstream's own URLs, thousands of
 # them, and not ours to fix.
+#
+# igv.js.examples went unscanned until #103, which is why its splice junction
+# demo kept pointing at three files on s3.amazonaws.com/igv.org.demo long after
+# they started to 404 - the same dead-asset class as #143.
 sources=(
   inst/htmlwidgets/igvShiny.js
   R
   inst/demos
   vignettes
+  igv.js.examples
 )
 
 # Placeholder and unreachable-by-design hosts used in documentation examples.

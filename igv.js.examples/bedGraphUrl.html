@@ -28,13 +28,12 @@
 
         var options =
             {
-                // Example of fully specifying a reference .  We could alternatively use  "genome: 'hg19'"
-                reference:
-                    {
-                        id: "hg19",
-                        fastaURL: "https://s3.amazonaws.com/igv.broadinstitute.org/genomes/seq/1kg_v37/human_g1k_v37_decoy.fasta",
-                        cytobandURL: "https://s3.amazonaws.com/igv.broadinstitute.org/genomes/seq/b37/b37_cytoband.txt"
-                    },
+                // This used to spell the reference out - fastaURL plus
+                // cytobandURL on the igv.broadinstitute.org bucket that answers
+                // 403 today, the same one #143 took out of the stock genome
+                // definitions. The old comment here already gave naming the
+                // stock genome as the alternative.
+                genome: "hg19",
                 locus: "myc",
                 tracks:
                     [

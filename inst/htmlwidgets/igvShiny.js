@@ -871,4 +871,35 @@ Shiny.addCustomMessageHandler("loadGFF3TrackFromLocalData",
 
 );  // loadGFF3TrackFromLocalData
 //------------------------------------------------------------------------------------------------------------------------
+Shiny.addCustomMessageHandler("loadSpliceJunctionTrackFromURL",
+
+   function(message){
+      igvshiny_log("=== loadSpliceJunctionTrackFromURL");
+      igvshiny_log(message)
+      var elementID = message.elementID;
+      var igvBrowser = document.getElementById(elementID).igvBrowser;
+
+      // "junction" is the registered type; "junctions" and "spliceJunctions"
+      // are aliases igv.js normalizes onto it. An unindexed bed has to say so
+      // through "indexed": on an empty indexURL igv.js otherwise guesses
+      // url + ".tbi" and fails on a file that is not there
+      var indexedData = message.indexURL.length > 0;
+
+      var config = {type: "junction",
+                    format: "bed",
+                    name: message.trackName,
+                    url: message.url,
+                    indexURL: message.indexURL,
+                    indexed: indexedData,
+                    displayMode: message.displayMode,
+                    order: Number.MAX_VALUE,
+                    height: message.trackHeight};
+
+      config = mergeExtraParameters(config, message);
+      igvBrowser.loadTrack(config);
+      igvshiny_log("=== after loadTrack, loadSpliceJunctionTrackFromURL")
+      } // function
+
+);  // loadSpliceJunctionTrackFromURL
+//------------------------------------------------------------------------------------------------------------------------
 

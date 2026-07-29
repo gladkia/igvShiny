@@ -1,3 +1,8 @@
+## igvShiny 1.9.32
+* Add loadSpliceJunctionTrackFromURL, drawing STAR splice junctions from a bed file (#103)
+* Extend the track option allowlist with the igv.js splice junction filters and labels (#103)
+* Fix the dead asset URLs in the bundled igv.js examples, and scan that directory (#103)
+
 ## igvShiny 1.9.31
 * Add loadCramTrackFromLocalData, serving a cram file and its index to igv.js (#102)
 * Extend the loader tests with the local cram payload and the staged files
