@@ -214,24 +214,33 @@ test_that("loadCramTrackFromLocalData serves the cram and its index (#102)", {
   session <- fake_session()
   cram <- tempfile(fileext = ".cram")
   writeBin(charToRaw("CRAM"), cram)
-  file.create(paste0(cram, ".crai"))
+  writeBin(charToRaw("CRAI"), paste0(cram, ".crai"))
   loadCramTrackFromLocalData(session, ELEMENT_ID, "local cram", cram,
                              trackConfig = list(sort = sort_by_hp()))
 
   msg <- last_message(session, "loadCramTrackFromURL")
   expect_match(msg$cram, "^tracks/.*\\.cram$")
   expect_match(msg$index, "^tracks/.*\\.crai$")
-  # whether the file was linked or copied, the served path must reach the bytes
-  served <- file.path(get_tracks_dir(), basename(msg$cram))
-  expect_equal(readBin(served, "raw", 4L), charToRaw("CRAM"))
+  # whether the file was linked or copied, the served paths must reach the
+  # bytes - and the index must not be a second copy of the cram
+  served <- function(path) file.path(get_tracks_dir(), basename(path))
+  expect_equal(readBin(served(msg$cram), "raw", 4L), charToRaw("CRAM"))
+  expect_equal(readBin(served(msg$index), "raw", 4L), charToRaw("CRAI"))
   expect_equal(msg$sort, sort_by_hp())
 })
 
 test_that("loadCramTrackFromLocalData rejects a file that is not there (#102)", {
   session <- fake_session()
+  cram <- tempfile(fileext = ".cram")
+  writeBin(charToRaw("CRAM"), cram)
+
   expect_error(
     loadCramTrackFromLocalData(session, ELEMENT_ID, "gone",
                                tempfile(fileext = ".cram")))
+  # a cram without its index is the likelier mistake, and igv.js needs both
+  expect_error(
+    loadCramTrackFromLocalData(session, ELEMENT_ID, "unindexed", cram))
+  expect_length(sent_messages(session, "loadCramTrackFromURL"), 0L)
 })
 
 test_that("the alignment loaders pass a sort-by-tag object through (#104)", {
