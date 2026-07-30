@@ -30,7 +30,8 @@ futile.logger::flog.threshold(futile.logger::WARN)
 # send to it, and there is no browser here. A session that prints instead of
 # sending lets every example below run, and shows what igv.js receives.
 session <- list(sendCustomMessage = function(type, message) {
-    fields <- vapply(message, function(v) paste(v, collapse = ","), character(1))
+    flatten <- function(v) paste(v, collapse = ",")
+    fields <- vapply(message, flatten, character(1))
     cat(type, "\n", paste0("  ", names(fields), ": ", fields, collapse = "\n"),
         "\n", sep = "")
     })
