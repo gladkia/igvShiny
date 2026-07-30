@@ -280,8 +280,8 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#> [1] igvShiny_1.9.35      shiny_1.14.0         GenomicRanges_1.65.1
-#> [4] Seqinfo_1.3.0        IRanges_2.47.2       S4Vectors_0.51.5    
+#> [1] igvShiny_1.9.36      shiny_1.14.0         GenomicRanges_1.65.1
+#> [4] Seqinfo_1.3.0        IRanges_2.47.2       S4Vectors_0.51.6    
 #> [7] BiocGenerics_0.59.10 generics_0.1.4       BiocStyle_2.41.0    
 #> 
 #> loaded via a namespace (and not attached):
