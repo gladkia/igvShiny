@@ -16,6 +16,24 @@ gff3.colors <- list(processed_transcript = "blue", protein_coding = "darkgreen",
                     miRNA = "darkred", default = "black")
 gff3.url <- "https://s3.amazonaws.com/igv.org.genomes/hg38/Homo_sapiens.GRCh38.94.chr.gff3.gz"
 
+# Junctions as they arrive in R: one row each, attributes in their own columns.
+# The loader packs them into the bed name field igv.js filters and labels on.
+# Rows are real, taken from the STAR output igvteam ships as a test case
+# (data/test/splice_junctions in igvteam/igv-data), so the counts are the ones
+# the arcs are sized by.
+junctions <- data.frame(
+  chrom = "chr15",
+  start = c(92883186, 92883186, 92883778, 92885584, 92886254, 92892072),
+  end = c(92883584, 92885514, 92885514, 92886168, 92892003, 92897723),
+  motif = "GT/AG",
+  uniquely_mapped = c(56, 222, 95, 555, 415, 1202),
+  multi_mapped = c(2, 9, 10, 11, 13, 10),
+  maximum_spliced_alignment_overhang = c(35, 37, 38, 37, 37, 38),
+  annotated_junction = TRUE,
+  strand = "+",
+  stringsAsFactors = FALSE
+)
+
 needs <- function(pkg) {
   ok <- requireNamespace(pkg, quietly = TRUE)
   if (!ok) showNotification(sprintf("install %s to use this button", pkg),
@@ -32,6 +50,7 @@ ui <- page_sidebar(
     actionButton("addLocalBamButton", "BAM (readGAlignments)", class = "w-100 mb-2"),
     actionButton("addLocalVcfButton", "VCF (readVcf)", class = "w-100 mb-2"),
     actionButton("addLocalGFF3TrackButtonWithBiotypeColors", "GFF3 local (colors)", class = "w-100 mb-2"),
+    actionButton("addLocalJunctionsButton", "Splice junctions (data.frame)", class = "w-100 mb-2"),
     hr(),
     actionButton("addRemoteGFF3TrackButton", "GFF3 from URL", class = "w-100 mb-2"),
     actionButton("addRemoteGFF3TrackButtonWithBiotypeColors", "GFF3 from URL (colors)", class = "w-100 mb-2"),
@@ -68,6 +87,14 @@ server <- function(input, output, session) {
                                color = "brown", colorTable = gff3.colors,
                                colorByAttribute = "biotype", displayMode = "EXPANDED",
                                trackHeight = 200, visibilityWindow = 80000)
+  })
+
+  observeEvent(input$addLocalJunctionsButton, {
+    showGenomicRegion(session, id = "igvShiny_0", "chr15:92,880,000-92,900,000")
+    loadSpliceJunctionTrackFromLocalData(
+      session, id = "igvShiny_0", trackName = "sampleA junctions",
+      tbl = junctions, trackHeight = 150,
+      trackConfig = list(colorBy = "motif", labelWith = "uniqueReadCount"))
   })
 
   observeEvent(input$addRemoteGFF3TrackButton, {

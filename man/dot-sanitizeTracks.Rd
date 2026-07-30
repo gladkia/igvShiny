@@ -4,7 +4,7 @@
 \alias{.sanitizeTracks}
 \title{Sanitize a list of startup track specifications}
 \usage{
-.sanitizeTracks(tracks)
+.sanitizeTracks(tracks, depth = 1L)
 }
 \arguments{
 \item{tracks}{A list of named lists, each an igv.js track configuration.}

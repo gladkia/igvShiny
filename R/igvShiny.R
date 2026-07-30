@@ -49,9 +49,21 @@
   "thicknessBasedOn", "bounceHeightBasedOn", "colorBy",
   "colorByNumReadsThreshold", "labelWith", "labelWithInParen",
   "hideAnnotatedJunctions", "hideUnannotatedJunctions", "hideMotifs",
-  "hideStrand"
+  "hideStrand",
+  ## MergedTrack passes this one down to every member track it draws, which is
+  ## what makes overlaid coverage readable under the junction arcs
+  "alpha"
   # Add other valid igv.js track options here as needed in the future
+  # "tracks" is deliberately absent: it is meaningful on a merged track only,
+  # and .sanitizeTrack handles it there.
 )
+
+#-------------------------------------------------------------------------------
+# A merged track may itself hold merged tracks - igv.js builds its members
+# through the same factory as top-level tracks, and nothing there stops the
+# recursion. One level is all that has a use (coverage under junction arcs);
+# the cap only bounds a pathological config, it states no policy.
+.maxTrackNestingDepth <- 3L
 
 #-------------------------------------------------------------------------------
 #' Sanitize and merge track configuration options
@@ -102,39 +114,88 @@
 #' @return A sanitized list of track configurations; invalid entries or keys
 #' are dropped with a warning.
 #' @keywords igvShiny
-.sanitizeTracks <- function(tracks) {
+.sanitizeTracks <- function(tracks, depth = 1L) {
   if (is.null(tracks) || length(tracks) == 0) {
     return(list())
   }
 
-  Filter(Negate(is.null), lapply(tracks, function(track) {
-    if (!is.list(track) || is.null(names(track)) || any(is.na(names(track))) ||
-        any(names(track) == "")) {
-      msg <- paste("Ignoring invalid entry in 'tracks': each entry must be",
-                   "a named list.")
+  sanitized <- Filter(Negate(is.null), lapply(tracks, .sanitizeTrack,
+                                              depth = depth))
+  # Names have to go: igv.js walks a merged track with `for (let tconf of
+  # this.config.tracks)` and calls .every() on the same value, and a named R
+  # list serializes to a JSON object, which is neither iterable nor an array.
+  unname(sanitized)
+}
+#-------------------------------------------------------------------------------
+#' Sanitize one startup track specification
+#' @param track A named list, one igv.js track configuration.
+#' @param depth An integer, how deep this track sits in a merged track.
+#' @return The sanitized track, or NULL if it cannot be used.
+#' @keywords igvShiny
+.sanitizeTrack <- function(track, depth) {
+  if (!is.list(track) || is.null(names(track)) || any(is.na(names(track))) ||
+      any(names(track) == "")) {
+    msg <- paste("Ignoring invalid entry in 'tracks': each entry must be",
+                 "a named list.")
+    warning(msg)
+    return(NULL)
+  }
+
+  # igv.js dispatches on config.type.toLowerCase(), so "Merged" is a merged
+  # track there and has to be one here too.
+  type <- track[["type"]]
+  merged <- is.character(type) && length(type) == 1L && !is.na(type) &&
+    identical(tolower(type), "merged")
+
+  # "tracks" is a key only a merged track may carry, so it is pulled out of
+  # the allowlist pass rather than added to the allowlist: on any other track
+  # it stays unsupported and is dropped with the usual warning.
+  members <- NULL
+  if (merged) {
+    members <- track[["tracks"]]
+    track[["tracks"]] <- NULL
+  }
+
+  invalidKeys <- setdiff(names(track), .validIgvTrackOptions)
+  if (length(invalidKeys) > 0) {
+    fmt <- paste("Ignoring invalid or unsupported track options in",
+                 "'tracks': %s")
+    warning(sprintf(fmt, toString(invalidKeys)))
+    track[invalidKeys] <- NULL
+  }
+
+  if (merged) {
+    if (depth >= .maxTrackNestingDepth) {
+      fmt <- paste("Dropping merged track nested more than %d levels deep in",
+                   "'tracks'.")
+      warning(sprintf(fmt, .maxTrackNestingDepth))
+      return(NULL)
+    }
+    # Members go through this same allowlist, so a merged track widens no
+    # boundary; it only relaxes where the url has to sit.
+    members <- .sanitizeTracks(members, depth = depth + 1L)
+    if (length(members) == 0) {
+      msg <- paste("Dropping merged track in 'tracks' with no usable member",
+                   "track.")
       warning(msg)
       return(NULL)
     }
-    invalidKeys <- setdiff(names(track), .validIgvTrackOptions)
-    if (length(invalidKeys) > 0) {
-      fmt <- paste("Ignoring invalid or unsupported track options in",
-                   "'tracks': %s")
-      warning(sprintf(fmt, toString(invalidKeys)))
-      track[invalidKeys] <- NULL
-    }
-    # A usable url is a single non-empty, non-NA character string. is.null()
-    # alone let NA, "", character(0) and non-character values through to
-    # igv.js as broken tracks.
-    url <- track[["url"]]
-    if (!is.character(url) || length(url) != 1L || is.na(url) ||
-        !nzchar(url)) {
-      msg <- paste("Dropping entry in 'tracks' with no valid 'url' after",
-                   "removing unsupported options.")
-      warning(msg)
-      return(NULL)
-    }
-    track
-  }))
+    track[["tracks"]] <- members
+    return(track)
+  }
+
+  # A usable url is a single non-empty, non-NA character string. is.null()
+  # alone let NA, "", character(0) and non-character values through to
+  # igv.js as broken tracks.
+  url <- track[["url"]]
+  if (!is.character(url) || length(url) != 1L || is.na(url) ||
+      !nzchar(url)) {
+    msg <- paste("Dropping entry in 'tracks' with no valid 'url' after",
+                 "removing unsupported options.")
+    warning(msg)
+    return(NULL)
+  }
+  track
 }
 #-------------------------------------------------------------------------------
 #' Create an igvShiny instance
@@ -1552,4 +1613,184 @@ loadSpliceJunctionTrackFromURL <-
     session$sendCustomMessage("loadSpliceJunctionTrackFromURL", msg.to.igv)
 
   } # loadSpliceJunctionTrackFromURL
+#-------------------------------------------------------------------------------
+# The per-junction attributes SpliceJunctionTrack reads off the bed name
+# column, in the spelling igv.js looks for.
+.junctionAttributeColumns <-
+  c("motif", "uniquely_mapped", "multi_mapped",
+    "maximum_spliced_alignment_overhang", "annotated_junction")
+
+#' Pack junction attributes into a bed name column
+#' @param tbl A data.frame of junctions.
+#' @return A character vector, one packed name field per row.
+#' @keywords igvShiny
+.packJunctionAttributes <- function(tbl) {
+  columns <- intersect(.junctionAttributeColumns, colnames(tbl))
+  if (length(columns) == 0) {
+    return(rep(".", NROW(tbl)))
+  }
+
+  asAttribute <- function(values) {
+    # igv.js compares annotated_junction against the strings "true" and
+    # "false", and R would write a logical column as TRUE/FALSE, which matches
+    # neither: the junction would be neither annotated nor unannotated and
+    # both hide options would pass it through.
+    if (is.logical(values)) {
+      return(tolower(as.character(values)))
+    }
+    as.character(values)
+  }
+
+  packed <- lapply(columns, function(column) {
+    paste0(column, "=", asAttribute(tbl[[column]]))
+  })
+  packed <- do.call(paste, c(packed, list(sep = ";")))
+
+  # The bed decoder reads column 4 as attributes only when it holds a "=" and
+  # a ";" past its first character. A single pair carries no ";", so it would
+  # arrive as a plain track label and every junction filter would quietly find
+  # nothing to read. A trailing ";" is dropped by the parser, so it costs
+  # nothing and keeps one attribute working like five.
+  if (length(columns) == 1L) {
+    packed <- paste0(packed, ";")
+  }
+  packed
+} # .packJunctionAttributes
+#-------------------------------------------------------------------------------
+#' load a splice junction track from a data.frame
+#'
+#' @description load splice junctions held in R, typically a STAR
+#' \code{SJ.out.tab} file read into a data.frame. The table is written as the
+#' six-column bed igv.js draws junctions from, and served from the same
+#' directory as the other local-data tracks.
+#'
+#' Columns \code{chrom} (or \code{chr}), \code{start} and \code{end} are
+#' required. \code{score} and \code{strand} are used when present. The
+#' per-junction attributes \code{motif}, \code{uniquely_mapped},
+#' \code{multi_mapped}, \code{maximum_spliced_alignment_overhang} and
+#' \code{annotated_junction} are packed into the bed name column, which is
+#' where the track reads its filters and labels from; supply the ones you
+#' want to filter or label on. A \code{name} column, if you have already
+#' packed it yourself, is written through untouched.
+#'
+#' Without \code{uniquely_mapped} or an explicit \code{score} the arcs all
+#' draw at the same thickness: igv.js has nothing to size them by.
+#'
+#' @rdname loadSpliceJunctionTrackFromLocalData
+#' @aliases loadSpliceJunctionTrackFromLocalData
+#'
+#' @param session an environment or list, provided and managed by shiny
+#' @param id character string, the html element id of this widget instance
+#' @param trackName character string
+#' @param tbl data.frame, with at least "chrom" "start" "end" columns
+#' @param trackHeight an integer, 100 (pixels) by default
+#' @param displayMode character, "COLLAPSED", "EXPANDED" or "SQUISHED"
+#' @param deleteTracksOfSameName logical, default TRUE
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options, the junction ones among them; see
+#' \code{\link{loadSpliceJunctionTrackFromURL}}
+#'
+#' @examples
+#' library(igvShiny)
+#' demo_app_file <-
+#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#' if (interactive()) {
+#'   shiny::runApp(demo_app_file)
+#' }
+#'
+#' @return
+#' nothing
+#'
+#' @keywords track_loaders
+#' @export
+
+loadSpliceJunctionTrackFromLocalData <-
+  function(session,
+           id,
+           trackName,
+           tbl,
+           trackHeight = 100,
+           displayMode = "COLLAPSED",
+           deleteTracksOfSameName = TRUE,
+           trackConfig = list()) {
+    stopifnot(is.data.frame(tbl))
+
+    if ("chrom" %in% colnames(tbl)) {
+      colnames(tbl)[colnames(tbl) == "chrom"] <- "chr"
+    }
+    missingColumns <- setdiff(c("chr", "start", "end"), colnames(tbl))
+    if (length(missingColumns) > 0) {
+      fmt <- "improper columns in splice junction data.frame, missing: %s"
+      stop(sprintf(fmt, toString(missingColumns)))
+    }
+    stopifnot(is(tbl$chr, "character"))
+    stopifnot(is(tbl$start, "numeric"))
+    stopifnot(is(tbl$end, "numeric"))
+
+    if (deleteTracksOfSameName) {
+      removeTracksByName(session, id, trackName)
+    }
+
+    state[["userAddedTracks"]] <-
+      unique(c(state[["userAddedTracks"]], trackName))
+
+    name <- if ("name" %in% colnames(tbl)) {
+      as.character(tbl$name)
+    } else {
+      .packJunctionAttributes(tbl)
+    }
+    # igv.js reads the bed score as the uniquely mapped spanning read count and
+    # sizes the arcs by it, so a uniquely_mapped column stands in for a score
+    # column when the caller gives one and not the other. 1000 is the score the
+    # bed decoder itself falls back to.
+    score <- if ("score" %in% colnames(tbl)) {
+      tbl$score
+    } else if ("uniquely_mapped" %in% colnames(tbl)) {
+      tbl$uniquely_mapped
+    } else {
+      1000
+    }
+    strand <- if ("strand" %in% colnames(tbl)) as.character(tbl$strand) else "."
+
+    tbl.bed <- data.frame(
+      chr = tbl$chr,
+      start = tbl$start,
+      end = tbl$end,
+      name = name,
+      score = score,
+      strand = strand,
+      stringsAsFactors = FALSE
+    )
+
+    bed.filePath <- tempfile(tmpdir = .tracksDir(), fileext = ".bed")
+    write.table(
+      tbl.bed,
+      file = bed.filePath,
+      sep = "\t",
+      quote = FALSE,
+      row.names = FALSE,
+      col.names = FALSE
+    )
+    lmsg <- sprintf(
+      "--- igvShiny.R, loadSpliceJunctionTrackFromLocalData wrote %d to %s",
+      NROW(tbl.bed), bed.filePath
+    )
+    flog.debug(lmsg)
+
+    base.msg.to.igv <-
+      list(
+        elementID = id,
+        trackName = trackName,
+        url = file.path("tracks", basename(bed.filePath)),
+        indexURL = "",
+        trackHeight = trackHeight,
+        displayMode = displayMode
+      )
+
+    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    # The url handler takes it from here: an unindexed bed served by shiny is
+    # the same job as an unindexed bed served by anyone else.
+    session$sendCustomMessage("loadSpliceJunctionTrackFromURL", msg.to.igv)
+
+  } # loadSpliceJunctionTrackFromLocalData
 #-------------------------------------------------------------------------------

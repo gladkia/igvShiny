@@ -342,6 +342,97 @@ test_that("the label options from the bundled example are not igv.js 3.x options
   expect_null(last_message(session, "loadSpliceJunctionTrackFromURL")$labelUniqueReadCount)
 })
 
+junction_tbl <- function() {
+  data.frame(
+    chrom = c("U13369.1", "U13369.1"),
+    start = c(7276, 7276),
+    end = c(8225, 9540),
+    motif = c("GT/AG", "CT/AC"),
+    uniquely_mapped = c(117, 3),
+    multi_mapped = c(6, 9),
+    maximum_spliced_alignment_overhang = c(37, 12),
+    annotated_junction = c(TRUE, FALSE),
+    strand = c("+", "-"),
+    stringsAsFactors = FALSE
+  )
+}
+
+read_staged_bed <- function(msg) {
+  path <- file.path(get_tracks_dir(), basename(msg$url))
+  expect_true(file.exists(path))
+  read.table(path, sep = "\t", header = FALSE, quote = "",
+             stringsAsFactors = FALSE)
+}
+
+test_that("loadSpliceJunctionTrackFromLocalData serves a bed through the url handler (#103)", {
+  session <- fake_session()
+  loadSpliceJunctionTrackFromLocalData(session, ELEMENT_ID, "junctions",
+                                       junction_tbl(), trackHeight = 140)
+
+  msg <- last_message(session, "loadSpliceJunctionTrackFromURL")
+  expect_equal(msg$elementID, ELEMENT_ID)
+  expect_equal(msg$trackName, "junctions")
+  expect_match(msg$url, "^tracks/.*\\.bed$")
+  expect_equal(msg$indexURL, "")
+  expect_equal(msg$trackHeight, 140)
+
+  bed <- read_staged_bed(msg)
+  expect_equal(nrow(bed), 2L)
+  expect_equal(bed[[1]], c("U13369.1", "U13369.1"))
+  expect_equal(bed[[2]], c(7276, 7276))
+  expect_equal(bed[[6]], c("+", "-"))
+})
+
+test_that("the junction attributes reach the bed name column igv.js parses (#103)", {
+  session <- fake_session()
+  loadSpliceJunctionTrackFromLocalData(session, ELEMENT_ID, "j",
+                                       junction_tbl())
+  bed <- read_staged_bed(last_message(session, "loadSpliceJunctionTrackFromURL"))
+
+  expect_equal(
+    bed[[4]][1],
+    paste0("motif=GT/AG;uniquely_mapped=117;multi_mapped=6;",
+           "maximum_spliced_alignment_overhang=37;annotated_junction=true")
+  )
+  # igv.js compares annotated_junction against "true"/"false"; R's own TRUE
+  # would match neither and both hide options would let the junction through
+  expect_match(bed[[4]][2], "annotated_junction=false", fixed = TRUE)
+  # score stands in for the uniquely mapped count, which is what sizes the arcs
+  expect_equal(bed[[5]], c(117, 3))
+})
+
+test_that("a single junction attribute still parses as an attribute (#103)", {
+  # the bed decoder reads column 4 as attributes only when it holds both "="
+  # and ";", so one pair on its own would arrive as a plain label
+  session <- fake_session()
+  tbl <- junction_tbl()[, c("chrom", "start", "end", "motif")]
+  loadSpliceJunctionTrackFromLocalData(session, ELEMENT_ID, "j", tbl)
+  bed <- read_staged_bed(last_message(session, "loadSpliceJunctionTrackFromURL"))
+
+  expect_equal(bed[[4]], c("motif=GT/AG;", "motif=CT/AC;"))
+  expect_equal(bed[[5]], c(1000, 1000))
+  expect_equal(bed[[6]], c(".", "."))
+})
+
+test_that("a packed name column is written through untouched (#103)", {
+  session <- fake_session()
+  tbl <- data.frame(chrom = "chr1", start = 100, end = 200,
+                    name = "motif=GT/AG;uniquely_mapped=9", score = 9,
+                    stringsAsFactors = FALSE)
+  loadSpliceJunctionTrackFromLocalData(session, ELEMENT_ID, "j", tbl)
+  bed <- read_staged_bed(last_message(session, "loadSpliceJunctionTrackFromURL"))
+
+  expect_equal(bed[[4]], "motif=GT/AG;uniquely_mapped=9")
+  expect_equal(bed[[5]], 9)
+})
+
+test_that("loadSpliceJunctionTrackFromLocalData rejects a table without chrom/start/end", {
+  session <- fake_session()
+  tbl <- data.frame(a = "chr1", b = 1, c = 2, stringsAsFactors = FALSE)
+  expect_error(loadSpliceJunctionTrackFromLocalData(session, ELEMENT_ID, "j", tbl),
+               "improper columns")
+})
+
 test_that("the navigation and removal helpers send their own messages", {
   session <- fake_session()
   showGenomicRegion(session, ELEMENT_ID, "chr1:1-1000")
