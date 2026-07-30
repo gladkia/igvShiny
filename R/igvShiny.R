@@ -111,6 +111,8 @@
 #-------------------------------------------------------------------------------
 #' Sanitize a list of startup track specifications
 #' @param tracks A list of named lists, each an igv.js track configuration.
+#' @param depth An integer, how deep this list sits in a merged track; 1 for
+#' the startup list itself.
 #' @return A sanitized list of track configurations; invalid entries or keys
 #' are dropped with a warning.
 #' @keywords igvShiny
