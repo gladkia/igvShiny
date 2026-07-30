@@ -377,7 +377,7 @@ test_that("loadSpliceJunctionTrackFromLocalData serves a bed through the url han
   expect_equal(msg$trackHeight, 140)
 
   bed <- read_staged_bed(msg)
-  expect_equal(nrow(bed), 2L)
+  expect_equal(NROW(bed), 2L)
   expect_equal(bed[[1]], c("U13369.1", "U13369.1"))
   expect_equal(bed[[2]], c(7276, 7276))
   expect_equal(bed[[6]], c("+", "-"))
