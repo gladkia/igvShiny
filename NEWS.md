@@ -1,3 +1,8 @@
+## igvShiny 1.9.37
+* Add the Track options reference vignette, covering every track type and its options
+* Replace the overview vignette, whose content the two remaining vignettes already held
+* Move the http custom genome example into the getting started vignette
+
 ## igvShiny 1.9.36
 * Remove 14 track options igv.js never reads, which reached the browser and were ignored (#159)
 * Add negColorScale and posColorScale, the gradients seg tracks read (#159)

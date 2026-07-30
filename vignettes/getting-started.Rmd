@@ -325,8 +325,28 @@ customOptions <- parseAndValidateGenomeSpec(
 customOptions[c("genomeName", "dataMode", "stockGenome")]
 ```
 
-The result goes to `igvShiny()` exactly like a stock genome specification. See
-the overview vignette for the URL-based variant.
+The result goes to `igvShiny()` exactly like a stock genome specification.
+
+The same genome served over HTTP instead, which is what you want once the app
+runs somewhere other than your laptop:
+
+```{r custom-genome-http}
+base_url <- "https://gladki.pl/igvr/testFiles"
+
+remoteOptions <- parseAndValidateGenomeSpec(
+    genomeName = "ribosomal RNA gene",
+    initialLocus = "U13369.1:7,276-8,225",
+    stockGenome = FALSE,
+    dataMode = "http",
+    fasta = file.path(base_url, "ribosomal-RNA-gene.fasta"),
+    fastaIndex = file.path(base_url, "ribosomal-RNA-gene.fasta.fai"),
+    genomeAnnotation = file.path(base_url, "ribosomal-RNA-gene.gff3")
+    )
+remoteOptions[c("genomeName", "dataMode", "stockGenome")]
+```
+
+`inst/demos/genomes.R` shows both variants side by side, picked with radio
+buttons.
 
 # When something does not show up
 
