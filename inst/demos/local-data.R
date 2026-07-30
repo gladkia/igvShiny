@@ -18,9 +18,10 @@ gff3.url <- "https://s3.amazonaws.com/igv.org.genomes/hg38/Homo_sapiens.GRCh38.9
 
 # Junctions as they arrive in R: one row each, attributes in their own columns.
 # The loader packs them into the bed name field igv.js filters and labels on.
-# Rows are real, taken from the STAR output igvteam ships as a test case
-# (data/test/splice_junctions in igvteam/igv-data), so the counts are the ones
-# the arcs are sized by.
+# Rows are real, read off the converted bed igvteam ships as a test case
+# (data/test/splice_junctions in igvteam/igv-data), so the coordinates are bed
+# coordinates already - STAR counts the intron 1-based in SJ.out.tab, and the
+# conversion to bed is what shifts the start.
 junctions <- data.frame(
   chrom = "chr15",
   start = c(92883186, 92883186, 92883778, 92885584, 92886254, 92892072),

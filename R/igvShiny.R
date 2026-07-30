@@ -1661,10 +1661,16 @@ loadSpliceJunctionTrackFromURL <-
 #-------------------------------------------------------------------------------
 #' load a splice junction track from a data.frame
 #'
-#' @description load splice junctions held in R, typically a STAR
-#' \code{SJ.out.tab} file read into a data.frame. The table is written as the
+#' @description load splice junctions held in R. The table is written as the
 #' six-column bed igv.js draws junctions from, and served from the same
 #' directory as the other local-data tracks.
+#'
+#' Coordinates are taken as bed coordinates and written out unchanged, as the
+#' other \code{*FromLocalData} loaders take theirs. STAR reports the first and
+#' last intron base of a junction 1-based in \code{SJ.out.tab}, so a table read
+#' straight from that file needs its start shifted by one first; a bed already
+#' converted from it, which is what STAR wrappers and the igv.js test fixtures
+#' ship, is passed in as is.
 #'
 #' Columns \code{chrom} (or \code{chr}), \code{start} and \code{end} are
 #' required. \code{score} and \code{strand} are used when present. The
@@ -1684,7 +1690,8 @@ loadSpliceJunctionTrackFromURL <-
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
 #' @param trackName character string
-#' @param tbl data.frame, with at least "chrom" "start" "end" columns
+#' @param tbl data.frame, with at least "chrom" "start" "end" columns, in bed
+#' coordinates: a 0-based start and an exclusive end
 #' @param trackHeight an integer, 100 (pixels) by default
 #' @param displayMode character, "COLLAPSED", "EXPANDED" or "SQUISHED"
 #' @param deleteTracksOfSameName logical, default TRUE
