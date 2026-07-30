@@ -22,6 +22,18 @@ knitr::opts_chunk$set(
 
 ```{r load-package, results="hide", message=FALSE, warning=FALSE}
 library(igvShiny)
+futile.logger::flog.threshold(futile.logger::WARN)
+```
+
+```{r stub-session, include = FALSE}
+# The loaders are one-way messages to a browser: they take a shiny session and
+# send to it, and there is no browser here. A session that prints instead of
+# sending lets every example below run, and shows what igv.js receives.
+session <- list(sendCustomMessage = function(type, message) {
+    fields <- vapply(message, function(v) paste(v, collapse = ","), character(1))
+    cat(type, "\n", paste0("  ", names(fields), ": ", fields, collapse = "\n"),
+        "\n", sep = "")
+    })
 ```
 
 # What this vignette is
@@ -39,7 +51,17 @@ reinventing them, and the names below are the ones the bundled igv.js
 Every loader takes a `trackConfig` argument: a named list merged into the track
 configuration sent to igv.js.
 
-```{r trackconfig, eval=FALSE}
+The examples here run against a stand-in `session` that prints the message
+instead of sending it to a browser, so you can see what igv.js is handed —
+including the defaults the loader fills in:
+
+```{r trackconfig}
+tbl <- data.frame(
+    chrom = "chr1",
+    start = 7432000,
+    end = 7436000
+    )
+
 loadBedTrack(
     session,
     id = "igv",
@@ -52,24 +74,38 @@ loadBedTrack(
 The frequently used options are also plain arguments on the loaders that need
 them — `color`, `trackHeight`, `displayMode` and so on. Both routes end up in
 the same place, so use whichever reads better. Giving the same option twice is
-not an error, but the explicit argument wins and you are told so:
-
-```
-Warning: User-provided trackConfig options conflict with function arguments
-and will be ignored: displayMode
-```
+not an error: the explicit argument wins, and you are told so.
 
 Keys are checked against an allowlist before they are sent, and a key that is
-not on it is dropped:
+not on it is dropped. Startup tracks go through the same check, and
+`igvShiny()` builds outside a Shiny session, so the behaviour is visible here:
 
-```
-Warning: Ignoring invalid or unsupported track options in trackConfig: onClick
+```{r rejected-key}
+genomeOptions <- parseAndValidateGenomeSpec(
+    genomeName = "hg38",
+    initialLocus = "NDUFS2"
+    )
+
+widget <- igvShiny(
+    genomeOptions,
+    tracks = list(
+        list(
+            name = "genes",
+            type = "annotation",
+            url = "https://example.org/genes.bed",
+            onClick = "alert('hi')"
+            )
+        )
+    )
+
+names(widget$x$tracks[[1]])
 ```
 
-That is the mechanism, not a nuisance: a `trackConfig` is a JavaScript object
-built from user input, and only names known to be data options are let through.
-The consequence to remember is that a typo does not reach igv.js and does not
-raise an error — it produces a warning and a track drawn with defaults.
+That is the mechanism, not a nuisance: a track configuration is a JavaScript
+object built from user input, and only names known to be data options are let
+through. The consequence to remember is that a typo does not reach igv.js and
+does not raise an error — it produces a warning and a track drawn with
+defaults.
 
 # Loaders
 
@@ -130,9 +166,17 @@ vignette.
 | `flipAxis` | logical | draw the y axis upside down |
 | `color`, `altColor` | character | values above and below the baseline |
 
-```{r wig, eval=FALSE}
+```{r wig}
+coverage <- data.frame(
+    chrom = "chr1",
+    start = c(7432000, 7437000),
+    end = c(7436000, 7442000),
+    value = c(0.2, 0.9)
+    )
+
 loadBedGraphTrack(
-    session, id = "igv", trackName = "coverage", tbl = tbl,
+    session, id = "igv", trackName = "coverage", tbl = coverage,
+    autoscale = TRUE,
     trackConfig = list(
         graphType = "points",
         autoscaleGroup = "sampleA",
@@ -159,11 +203,18 @@ On `loadGFF3TrackFromURL()` and `loadGFF3TrackFromLocalData()` the argument is
 called `colorByAttribute`, and it becomes igv.js `colorBy`. Pass it as the
 loader argument rather than in `trackConfig`, together with `colorTable`:
 
-```{r gff3, eval=FALSE}
+```{r gff3}
+gff3.url <- paste0(
+    "https://s3.amazonaws.com/igv.org.genomes/hg38/",
+    "Homo_sapiens.GRCh38.94.chr.gff3.gz"
+    )
+
 loadGFF3TrackFromURL(
     session, id = "igv", trackName = "genes",
-    gff3URL = url, indexURL = paste0(url, ".tbi"),
+    gff3URL = gff3.url, indexURL = paste0(gff3.url, ".tbi"),
     colorByAttribute = "biotype",
+    displayMode = "EXPANDED",
+    visibilityWindow = 1000000,
     colorTable = list(
         protein_coding = "darkgreen",
         processed_transcript = "blue",
@@ -189,10 +240,12 @@ A `default` entry in `colorTable` catches the values you did not list.
 `sort` takes the same object the igv.js right-click menu builds, so sorting by
 a tag at load time is:
 
-```{r bam-sort, eval=FALSE}
+```{r bam-sort}
+bam.url <- "https://1000genomes.s3.amazonaws.com/phase3/NA12878.bam"
+
 loadBamTrackFromURL(
     session, id = "igv", trackName = "reads",
-    bamURL = bam, indexURL = paste0(bam, ".bai"),
+    bamURL = bam.url, indexURL = paste0(bam.url, ".bai"),
     trackConfig = list(
         sort = list(
             option = "TAG", tag = "HP",
@@ -230,9 +283,16 @@ every read on the chromosome.
 it the parser guesses the layout from header names it recognises — any other
 spelling draws an empty track rather than an error:
 
-```{r gwas, eval=FALSE}
+```{r gwas}
+gwas <- data.frame(
+    CHR = "chr1",
+    BP = c(1000, 2000),
+    SNP = c("rs1", "rs2"),
+    P = c(1e-8, 1e-5)
+    )
+
 loadGwasTrack(
-    session, id = "igv", trackName = "gwas", tbl.gwas = tbl,
+    session, id = "igv", trackName = "gwas", tbl.gwas = gwas,
     trackConfig = list(
         columns = list(chromosome = 12, position = 13, value = 28)
         )
@@ -269,14 +329,27 @@ Appearance:
 
 | Option | Type | What it does |
 |---|---|---|
-| `thicknessBasedOn` | character | `"numUniqueReads"`, `"numReads"`, `"isAnnotatedJunction"` |
-| `bounceHeightBasedOn` | character | `"random"`, `"distance"`, `"thickness"` |
-| `colorBy` | character | `"numUniqueReads"`, `"numReads"`, `"isAnnotatedJunction"`, `"strand"`, `"motif"` |
-| `colorByNumReadsThreshold` | numeric | split point for the read-count colouring |
+| `thicknessBasedOn` | character | what sets the arc thickness |
+| `bounceHeightBasedOn` | character | what sets how high the arc rises |
+| `colorBy` | character | what sets the arc colour |
+| `colorByNumReadsThreshold` | numeric | split point for read-count colouring |
 | `labelWith` | character | what the arc label shows |
 | `labelWithInParen` | character | a second value, in parentheses |
 
-```{r junctions, eval=FALSE}
+The three `...BasedOn` and `colorBy` options take a fixed vocabulary:
+
+* `thicknessBasedOn`: `"numUniqueReads"`, `"numReads"`,
+  `"isAnnotatedJunction"`
+* `bounceHeightBasedOn`: `"random"`, `"distance"`, `"thickness"`
+* `colorBy`: `"numUniqueReads"`, `"numReads"`, `"isAnnotatedJunction"`,
+  `"strand"`, `"motif"`
+
+```{r junctions}
+junctions.url <- paste0(
+    "https://raw.githubusercontent.com/igvteam/igv-data/main/data/test/",
+    "splice_junctions/sampleA.SJ.out.bed.gz"
+    )
+
 loadSpliceJunctionTrackFromURL(
     session, id = "igv", trackName = "sampleA junctions",
     url = junctions.url, indexURL = paste0(junctions.url, ".tbi"),
@@ -302,21 +375,30 @@ allowlist, so everything above applies to them too. What they additionally need
 is a `url`, since there is no loader argument to carry the data: an entry
 without a usable one is dropped with a warning.
 
-```{r startup, eval=FALSE}
+```{r startup}
+gff3.url <- paste0(
+    "https://s3.amazonaws.com/igv.org.genomes/hg38/",
+    "Homo_sapiens.GRCh38.94.chr.gff3.gz"
+    )
+
+startupTrack <- list(
+    name = "genes",
+    type = "annotation",
+    format = "gff3",
+    url = gff3.url,
+    indexed = FALSE,
+    displayMode = "EXPANDED"
+    )
+
+widget <- igvShiny(genomeOptions, tracks = list(startupTrack))
+str(widget$x$tracks[[1]])
+```
+
+In an app that goes inside `renderIgvShiny()`:
+
+```{r startup-app, eval=FALSE}
 output$igv <- renderIgvShiny({
-    igvShiny(
-        genomeOptions,
-        tracks = list(
-            list(
-                name = "genes",
-                type = "annotation",
-                format = "gff3",
-                url = gff3.url,
-                indexed = FALSE,
-                displayMode = "EXPANDED"
-                )
-            )
-        )
+    igvShiny(genomeOptions, tracks = list(startupTrack))
     })
 ```
 
