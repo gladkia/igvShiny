@@ -1,3 +1,8 @@
+## igvShiny 1.9.36
+* Remove 14 track options igv.js never reads, which reached the browser and were ignored (#159)
+* Add negColorScale and posColorScale, the gradients seg tracks read (#159)
+* Add a test holding the option allowlist to the bundled igv.js build (#159)
+
 ## igvShiny 1.9.35
 * Rewrite the demo apps on bslib, replacing 15 legacy apps with 7 single-topic ones (#64)
 * Remove the forked Connect app, which now runs the package demo itself (#64)
