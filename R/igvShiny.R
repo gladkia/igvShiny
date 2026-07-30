@@ -7,22 +7,33 @@
 #-------------------------------------------------------------------------------
 # A list of safe, known igv.js track configuration parameters.
 # This allowlist prevents arbitrary code injection and invalid options.
-# Sourced from igv.js documentation.
+#
+# Every name here has to be one igv.js actually reads. A name it does not know
+# is worse than a rejected one: it passes validation, reaches the browser, and
+# is ignored there, so the user gets no warning from either side and a track
+# drawn with defaults. test-track-option-allowlist.R holds the list to that,
+# checking each name against the bundled igv.js build.
 .validIgvTrackOptions <- c(
   "name", "type", "format", "url", "indexURL", "indexed", "order",
-  "displayMode", "color", "altColor", "negColor", "posColor", "borderColor",
+  "displayMode", "color", "altColor", "borderColor",
   "trait", "height", "autoHeight", "minHeight", "maxHeight", "removable",
-  "visibilityWindow", "searchable", "autoScale", "autoscale", "autoScaleGroup",
-  "autoscaleGroup", "min", "max", "logScale", "graphType", "barChart",
-  "flipAxis", "stroke", "noStroke", "fill", "noFill", "featureHeight",
-  "showLabels", "font", "fontSize", "fontStyle", "fontWeight", "colorTable",
-  "colorByAttribute",
+  ## seg tracks read their two gradients from these; the shorter negColor and
+  ## posColor, which look like the obvious spelling, are read by nothing
+  "negColorScale", "posColorScale",
+  ## only the lower-case s spelling is a track option. autoScaleGroup used to
+  ## sit here next to it, which meant a capitalised typo passed validation and
+  ## produced an ungrouped track with nothing said about it
+  "autoscale", "autoscaleGroup",
+  "visibilityWindow", "searchable", "autoScale",
+  "min", "max", "logScale", "graphType",
+  "flipAxis", "stroke", "fill", "featureHeight",
+  "font", "colorTable",
   ## the gwas parser reads these 1-based; without them it guesses the layout
   ## from the header names it knows, and any other spelling draws nothing
   "columns",
   "showAllBases", "samplingWindowSize", "samplingDepth", "maxRows",
-  "hideEmptyTracks", "oauthToken", "headers", "viewAsPairs", "pairsSupported",
-  "maxPanelHeight", "separateBam", "wholeGenomeView", "roi", "queryable",
+  "oauthToken", "headers", "viewAsPairs", "pairsSupported",
+  "wholeGenomeView", "roi", "queryable",
   ## alignment tracks sort their reads at load time from this object, the same
   ## one the igv.js right-click menu builds; "TAG" plus a tag covers #104
   "sort",
