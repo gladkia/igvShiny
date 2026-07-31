@@ -93,8 +93,7 @@ demo](https://gladkia-igvshiny-demo.share.connect.posit.cloud) serves),
 ## Documentation
 
 - 📦 Reference & articles: <https://gladkia.github.io/igvShiny/>
-- 📖 Vignette:
-  [`vignette("igvShiny")`](https://gladkia.github.io/igvShiny/articles/igvShiny.md)
+- 📖 Vignette: `vignette("igvShiny")`
 - 🐛 Issues / feature requests:
   <https://github.com/gladkia/igvShiny/issues>
 

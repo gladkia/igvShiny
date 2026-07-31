@@ -93,8 +93,7 @@ demo](https://gladkia-igvshiny-demo.share.connect.posit.cloud) serves),
 ## Documentation
 
 - 📦 Reference & articles: <https://gladkia.github.io/igvShiny/>
-- 📖 Vignette:
-  [`vignette("igvShiny")`](https://gladkia.github.io/igvShiny/articles/igvShiny.md)
+- 📖 Vignette: `vignette("igvShiny")`
 - 🐛 Issues / feature requests:
   <https://github.com/gladkia/igvShiny/issues>
 
@@ -203,5 +202,5 @@ Arkadiusz Gladki.
 
 - [Getting started with
   igvShiny](https://gladkia.github.io/igvShiny/articles/getting-started.md):
-- [igvShiny: a wrapper of IGV in the Shiny
-  apps](https://gladkia.github.io/igvShiny/articles/igvShiny.md):
+- [Track options
+  reference](https://gladkia.github.io/igvShiny/articles/track-options.md):

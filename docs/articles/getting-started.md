@@ -353,8 +353,37 @@ customOptions[c("genomeName", "dataMode", "stockGenome")]
 
 The result goes to
 [`igvShiny()`](https://gladkia.github.io/igvShiny/reference/igvShiny.md)
-exactly like a stock genome specification. See the overview vignette for
-the URL-based variant.
+exactly like a stock genome specification.
+
+The same genome served over HTTP instead, which is what you want once
+the app runs somewhere other than your laptop:
+
+``` r
+
+base_url <- "https://gladki.pl/igvr/testFiles"
+
+remoteOptions <- parseAndValidateGenomeSpec(
+    genomeName = "ribosomal RNA gene",
+    initialLocus = "U13369.1:7,276-8,225",
+    stockGenome = FALSE,
+    dataMode = "http",
+    fasta = paste0(base_url, "/ribosomal-RNA-gene.fasta"),
+    fastaIndex = paste0(base_url, "/ribosomal-RNA-gene.fasta.fai"),
+    genomeAnnotation = paste0(base_url, "/ribosomal-RNA-gene.gff3")
+    )
+remoteOptions[c("genomeName", "dataMode", "stockGenome")]
+#> $genomeName
+#> [1] "ribosomal RNA gene"
+#> 
+#> $dataMode
+#> [1] "http"
+#> 
+#> $stockGenome
+#> [1] FALSE
+```
+
+`inst/demos/genomes.R` shows both variants side by side, picked with
+radio buttons.
 
 ## When something does not show up
 
@@ -417,7 +446,7 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#> [1] igvShiny_1.9.36      shiny_1.14.0         GenomicRanges_1.65.1
+#> [1] igvShiny_1.9.37      shiny_1.14.0         GenomicRanges_1.65.1
 #> [4] Seqinfo_1.3.0        IRanges_2.47.2       S4Vectors_0.51.6    
 #> [7] BiocGenerics_0.59.10 generics_0.1.4       BiocStyle_2.41.0    
 #> 
