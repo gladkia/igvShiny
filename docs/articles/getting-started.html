@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.37</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.38</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -227,7 +227,8 @@ wired to an event:</p>
 ignored. The other loaders follow the same shape —
 <code><a href="../reference/loadGenomeAnnotationTrack.html">loadBedGraphTrack()</a></code>, <code><a href="../reference/loadSEGTrack.html">loadSegTrack()</a></code>,
 <code><a href="../reference/loadVcfTrack.html">loadVcfTrack()</a></code>, <code><a href="../reference/loadGwasTrack.html">loadGwasTrack()</a></code>,
-<code><a href="../reference/loadBamTrackFromLocalData.html">loadBamTrackFromLocalData()</a></code> — and each has a
+<code><a href="../reference/loadBamTrackFromLocalData.html">loadBamTrackFromLocalData()</a></code>,
+<code><a href="../reference/loadSpliceJunctionTrackFromLocalData.html">loadSpliceJunctionTrackFromLocalData()</a></code> — and each has a
 <code>*FromURL()</code> counterpart for data that already lives on a web
 server:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -280,13 +281,60 @@ igv.js track configurations:</p>
 than passed through, so a typo produces a message instead of a silently
 empty track.</p>
 </div>
+<div class="section level3">
+<h3 id="drawing-two-tracks-in-one-panel">Drawing two tracks in one panel<a class="anchor" aria-label="anchor" href="#drawing-two-tracks-in-one-panel"></a>
+</h3>
+<p>A <code>merged</code> track holds other tracks instead of a url of
+its own, and draws them on top of each other in a single panel. Splice
+junction arcs over the coverage they were spliced out of — the view
+sashimi plots are wanted for — is the case it is worth knowing:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
+<span>    <span class="st">"https://raw.githubusercontent.com/igvteam/igv-data/main/data/test/"</span>,</span>
+<span>    <span class="st">"splice_junctions/splice_junction_track_test_cases_sampleA."</span>,</span>
+<span>    <span class="st">"chr15-92835700-93031800"</span></span>
+<span>    <span class="op">)</span></span>
+<span></span>
+<span><span class="va">output</span><span class="op">$</span><span class="va">igv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/renderIgvShiny.html">renderIgvShiny</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>    <span class="fu"><a href="../reference/igvShiny.html">igvShiny</a></span><span class="op">(</span></span>
+<span>        <span class="va">genomeOptions</span>,</span>
+<span>        tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>                name <span class="op">=</span> <span class="st">"sampleA"</span>,</span>
+<span>                type <span class="op">=</span> <span class="st">"merged"</span>,</span>
+<span>                height <span class="op">=</span> <span class="fl">180</span>,</span>
+<span>                tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>                    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>                        type <span class="op">=</span> <span class="st">"wig"</span>,</span>
+<span>                        format <span class="op">=</span> <span class="st">"bigwig"</span>,</span>
+<span>                        url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">sample</span>, <span class="st">".bigWig"</span><span class="op">)</span>,</span>
+<span>                        color <span class="op">=</span> <span class="st">"rgb(190,190,190)"</span></span>
+<span>                        <span class="op">)</span>,</span>
+<span>                    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>                        type <span class="op">=</span> <span class="st">"junction"</span>,</span>
+<span>                        format <span class="op">=</span> <span class="st">"bed"</span>,</span>
+<span>                        url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">sample</span>, <span class="st">".SJ.out.bed.gz"</span><span class="op">)</span>,</span>
+<span>                        indexURL <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">sample</span>, <span class="st">".SJ.out.bed.gz.tbi"</span><span class="op">)</span>,</span>
+<span>                        colorBy <span class="op">=</span> <span class="st">"motif"</span></span>
+<span>                        <span class="op">)</span></span>
+<span>                    <span class="op">)</span></span>
+<span>                <span class="op">)</span></span>
+<span>            <span class="op">)</span></span>
+<span>        <span class="op">)</span></span>
+<span>    <span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<p>Member tracks go through the same option allowlist as any other
+track. A member left with no usable url is dropped on its own, with a
+warning; the merged track itself is dropped only once no member
+survives, rather than sent on empty, as igv.js throws while building the
+browser if it is handed one.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="moving-around-and-knowing-where-you-are">Moving around, and knowing where you are<a class="anchor" aria-label="anchor" href="#moving-around-and-knowing-where-you-are"></a>
 </h2>
 <p>To drive the browser from R, use
 <code><a href="../reference/showGenomicRegion.html">showGenomicRegion()</a></code>:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">goto</span>, <span class="op">{</span></span>
 <span>    <span class="fu"><a href="../reference/showGenomicRegion.html">showGenomicRegion</a></span><span class="op">(</span></span>
 <span>        <span class="va">session</span>,</span>
@@ -299,7 +347,7 @@ the API that surprises people. <code><a href="../reference/showGenomicRegion.htm
 return the region; it asks the browser for it, and the answer arrives
 later as a Shiny input named
 <code>currentGenomicRegion.&lt;id&gt;</code>:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">whereAmI</span>, <span class="op">{</span></span>
 <span>    <span class="fu"><a href="../reference/showGenomicRegion.html">getGenomicRegion</a></span><span class="op">(</span><span class="va">session</span>, id <span class="op">=</span> <span class="st">"igv"</span><span class="op">)</span></span>
 <span>    <span class="op">}</span><span class="op">)</span></span>
@@ -323,7 +371,7 @@ widget reads the namespace from the session it is created in. The one
 thing to remember is that the loaders address the browser by its
 <em>HTML element</em> id, not by the input name — so they need the
 namespaced id, <code>ns("igv")</code>, and not <code>"igv"</code>:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">igvModuleUI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">ns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html" class="external-link">NS</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
@@ -386,7 +434,7 @@ FASTA file, its index, and optionally an annotation, either as local
 paths (<code>dataMode = "localFiles"</code>) or URLs
 (<code>dataMode = "http"</code>). The package ships a small example
 genome:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data_directory</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"igvShiny"</span>, <span class="st">"extdata"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">customOptions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/parseAndValidateGenomeSpec.html">parseAndValidateGenomeSpec</a></span><span class="op">(</span></span>
@@ -411,7 +459,7 @@ genome:</p>
 genome specification.</p>
 <p>The same genome served over HTTP instead, which is what you want once
 the app runs somewhere other than your laptop:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">base_url</span> <span class="op">&lt;-</span> <span class="st">"https://gladki.pl/igvr/testFiles"</span></span>
 <span></span>
 <span><span class="va">remoteOptions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/parseAndValidateGenomeSpec.html">parseAndValidateGenomeSpec</a></span><span class="op">(</span></span>
@@ -474,7 +522,7 @@ option this package passes through but does not document itself</li>
 <div class="section level2">
 <h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.6.1 (2026-06-24)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
@@ -500,7 +548,7 @@ option this package passes through but does not document itself</li>
 <span><span class="co">#&gt; [8] base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt; [1] igvShiny_1.9.37      shiny_1.14.0         GenomicRanges_1.65.1</span></span>
+<span><span class="co">#&gt; [1] igvShiny_1.9.38      shiny_1.14.0         GenomicRanges_1.65.1</span></span>
 <span><span class="co">#&gt; [4] Seqinfo_1.3.0        IRanges_2.47.2       S4Vectors_0.51.6    </span></span>
 <span><span class="co">#&gt; [7] BiocGenerics_0.59.10 generics_0.1.4       BiocStyle_2.41.0    </span></span>
 <span><span class="co">#&gt; </span></span>

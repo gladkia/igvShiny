@@ -5,7 +5,7 @@ Sanitize a list of startup track specifications
 ## Usage
 
 ``` r
-.sanitizeTracks(tracks)
+.sanitizeTracks(tracks, depth = 1L)
 ```
 
 ## Arguments
@@ -13,6 +13,11 @@ Sanitize a list of startup track specifications
 - tracks:
 
   A list of named lists, each an igv.js track configuration.
+
+- depth:
+
+  An integer, how deep this list sits in a merged track; 1 for the
+  startup list itself.
 
 ## Value
 

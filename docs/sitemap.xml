@@ -11,8 +11,10 @@
 <url><loc>https://gladkia.github.io/igvShiny/news/index.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/GWASTrack-class.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/display.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/dot-packJunctionAttributes.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-sanitizeAndMergeOptions.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-sanitizeChromosomeColorMap.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/dot-sanitizeTrack.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-sanitizeTracks.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-stageTrackFile.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-tracksDir.html</loc></url>
@@ -35,6 +37,7 @@
 <url><loc>https://gladkia.github.io/igvShiny/reference/loadGenomeAnnotationTrack.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/loadGwasTrack.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/loadSEGTrack.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/loadSpliceJunctionTrackFromLocalData.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/loadSpliceJunctionTrackFromURL.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/loadVcfTrack.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/parseAndValidateGenomeSpec.html</loc></url>

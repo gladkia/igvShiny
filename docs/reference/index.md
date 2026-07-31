@@ -2,8 +2,12 @@
 
 ## igvShiny
 
+- [`.packJunctionAttributes()`](https://gladkia.github.io/igvShiny/reference/dot-packJunctionAttributes.md)
+  : Pack junction attributes into a bed name column
 - [`.sanitizeAndMergeOptions()`](https://gladkia.github.io/igvShiny/reference/dot-sanitizeAndMergeOptions.md)
   : Sanitize and merge track configuration options
+- [`.sanitizeTrack()`](https://gladkia.github.io/igvShiny/reference/dot-sanitizeTrack.md)
+  : Sanitize one startup track specification
 - [`.sanitizeTracks()`](https://gladkia.github.io/igvShiny/reference/dot-sanitizeTracks.md)
   : Sanitize a list of startup track specifications
 - [`igvShiny()`](https://gladkia.github.io/igvShiny/reference/igvShiny.md)
@@ -47,6 +51,8 @@
   data.frame
 - [`loadSegTrack()`](https://gladkia.github.io/igvShiny/reference/loadSEGTrack.md)
   : load a seg track provided as a data.frame
+- [`loadSpliceJunctionTrackFromLocalData()`](https://gladkia.github.io/igvShiny/reference/loadSpliceJunctionTrackFromLocalData.md)
+  : load a splice junction track from a data.frame
 - [`loadSpliceJunctionTrackFromURL()`](https://gladkia.github.io/igvShiny/reference/loadSpliceJunctionTrackFromURL.md)
   : load a splice junction track served up by http
 - [`loadVcfTrack()`](https://gladkia.github.io/igvShiny/reference/loadVcfTrack.md)

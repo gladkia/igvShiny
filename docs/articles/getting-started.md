@@ -148,7 +148,8 @@ other loaders follow the same shape —
 [`loadSegTrack()`](https://gladkia.github.io/igvShiny/reference/loadSEGTrack.md),
 [`loadVcfTrack()`](https://gladkia.github.io/igvShiny/reference/loadVcfTrack.md),
 [`loadGwasTrack()`](https://gladkia.github.io/igvShiny/reference/loadGwasTrack.md),
-[`loadBamTrackFromLocalData()`](https://gladkia.github.io/igvShiny/reference/loadBamTrackFromLocalData.md)
+[`loadBamTrackFromLocalData()`](https://gladkia.github.io/igvShiny/reference/loadBamTrackFromLocalData.md),
+[`loadSpliceJunctionTrackFromLocalData()`](https://gladkia.github.io/igvShiny/reference/loadSpliceJunctionTrackFromLocalData.md)
 — and each has a `*FromURL()` counterpart for data that already lives on
 a web server:
 
@@ -210,6 +211,56 @@ output$igv <- renderIgvShiny({
 Keys that igv.js does not recognise are dropped with a warning rather
 than passed through, so a typo produces a message instead of a silently
 empty track.
+
+### Drawing two tracks in one panel
+
+A `merged` track holds other tracks instead of a url of its own, and
+draws them on top of each other in a single panel. Splice junction arcs
+over the coverage they were spliced out of — the view sashimi plots are
+wanted for — is the case it is worth knowing:
+
+``` r
+
+sample <- paste0(
+    "https://raw.githubusercontent.com/igvteam/igv-data/main/data/test/",
+    "splice_junctions/splice_junction_track_test_cases_sampleA.",
+    "chr15-92835700-93031800"
+    )
+
+output$igv <- renderIgvShiny({
+    igvShiny(
+        genomeOptions,
+        tracks = list(
+            list(
+                name = "sampleA",
+                type = "merged",
+                height = 180,
+                tracks = list(
+                    list(
+                        type = "wig",
+                        format = "bigwig",
+                        url = paste0(sample, ".bigWig"),
+                        color = "rgb(190,190,190)"
+                        ),
+                    list(
+                        type = "junction",
+                        format = "bed",
+                        url = paste0(sample, ".SJ.out.bed.gz"),
+                        indexURL = paste0(sample, ".SJ.out.bed.gz.tbi"),
+                        colorBy = "motif"
+                        )
+                    )
+                )
+            )
+        )
+    })
+```
+
+Member tracks go through the same option allowlist as any other track. A
+member left with no usable url is dropped on its own, with a warning;
+the merged track itself is dropped only once no member survives, rather
+than sent on empty, as igv.js throws while building the browser if it is
+handed one.
 
 ## Moving around, and knowing where you are
 
@@ -446,7 +497,7 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#> [1] igvShiny_1.9.37      shiny_1.14.0         GenomicRanges_1.65.1
+#> [1] igvShiny_1.9.38      shiny_1.14.0         GenomicRanges_1.65.1
 #> [4] Seqinfo_1.3.0        IRanges_2.47.2       S4Vectors_0.51.6    
 #> [7] BiocGenerics_0.59.10 generics_0.1.4       BiocStyle_2.41.0    
 #> 
