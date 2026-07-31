@@ -377,9 +377,11 @@ customOptions[c("genomeName", "dataMode", "stockGenome")]
 The result goes to `igvShiny()` exactly like a stock genome specification.
 
 The same genome served over HTTP instead, which is what you want once the app
-runs somewhere other than your laptop:
+runs somewhere other than your laptop. `dataMode = "http"` makes
+`parseAndValidateGenomeSpec()` send a `HEAD` request to every URL, so this
+chunk is shown rather than run — building the vignette stays offline:
 
-```{r custom-genome-http}
+```{r custom-genome-http, eval=FALSE}
 base_url <- "https://gladki.pl/igvr/testFiles"
 
 remoteOptions <- parseAndValidateGenomeSpec(
