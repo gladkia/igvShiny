@@ -4,10 +4,13 @@
 \alias{.sanitizeTracks}
 \title{Sanitize a list of startup track specifications}
 \usage{
-.sanitizeTracks(tracks)
+.sanitizeTracks(tracks, depth = 1L)
 }
 \arguments{
 \item{tracks}{A list of named lists, each an igv.js track configuration.}
+
+\item{depth}{An integer, how deep this list sits in a merged track; 1 for
+the startup list itself.}
 }
 \value{
 A sanitized list of track configurations; invalid entries or keys

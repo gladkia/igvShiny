@@ -99,6 +99,9 @@ test_that("the local-data demo loads its GFF3 tracks correctly", {
     # while shiny kept serving the one registered at load time. .tracksDir()
     # re-points the resource path before each write, so it renders again.
     .click_and_check(app, "addLocalGFF3TrackButtonWithBiotypeColors", 'title="local gff3 (colors)"')
+    # junctions handed over as a data.frame: written as bed, served from the
+    # tracks directory, no network anywhere in the path (#103)
+    .click_and_check(app, "addLocalJunctionsButton", 'title="sampleA junctions"')
 
     app$stop()
 })

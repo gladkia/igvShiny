@@ -1,3 +1,8 @@
+## igvShiny 1.9.38
+* Add loadSpliceJunctionTrackFromLocalData, writing junctions held in R as the bed igv.js reads (#103)
+* Support merged tracks in the startup track list, drawing junction arcs over a coverage track (#103)
+* Extend the track option allowlist with alpha, the blend a merged track hands its members (#103)
+
 ## igvShiny 1.9.37
 * Add the Track options reference vignette, covering every track type and its options
 * Replace the overview vignette, whose content the two remaining vignettes already held
