@@ -1,0 +1,430 @@
+---
+title: "Track options reference"
+author:
+- name: Arkadiusz Gladki
+package: igvShiny
+output:
+  BiocStyle::html_document:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{Track options reference}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>"
+    )
+```
+
+```{r load-package, results="hide", message=FALSE, warning=FALSE}
+library(igvShiny)
+futile.logger::flog.threshold(futile.logger::WARN)
+```
+
+```{r stub-session, include = FALSE}
+# The loaders are one-way messages to a browser: they take a shiny session and
+# send to it, and there is no browser here. A session that prints instead of
+# sending lets every example below run, and shows what igv.js receives.
+session <- list(sendCustomMessage = function(type, message) {
+    flatten <- function(v) paste(v, collapse = ",")
+    fields <- vapply(message, flatten, character(1))
+    cat(type, "\n", paste0("  ", names(fields), ": ", fields, collapse = "\n"),
+        "\n", sep = "")
+    })
+```
+
+# What this vignette is
+
+Every track type `igvShiny` can load, and the options each one accepts. If you
+are looking for how to get a browser onto the page in the first place, start
+with the *Getting started with igvShiny* vignette instead.
+
+The options are igv.js options: `igvShiny` passes them through rather than
+reinventing them, and the names below are the ones the bundled igv.js
+(currently 3.8.4) actually reads.
+
+# How an option reaches the browser
+
+Every loader takes a `trackConfig` argument: a named list merged into the track
+configuration sent to igv.js.
+
+The examples here run against a stand-in `session` that prints the message
+instead of sending it to a browser, so you can see what igv.js is handed —
+including the defaults the loader fills in:
+
+```{r trackconfig}
+tbl <- data.frame(
+    chrom = "chr1",
+    start = 7432000,
+    end = 7436000
+    )
+
+loadBedTrack(
+    session,
+    id = "igv",
+    trackName = "my regions",
+    tbl = tbl,
+    trackConfig = list(displayMode = "EXPANDED", maxRows = 20)
+    )
+```
+
+The frequently used options are also plain arguments on the loaders that need
+them — `color`, `trackHeight`, `displayMode` and so on. Both routes end up in
+the same place, so use whichever reads better. Giving the same option twice is
+not an error: the explicit argument wins, and you are told so.
+
+Keys are checked against an allowlist before they are sent, and a key that is
+not on it is dropped. Startup tracks go through the same check, and
+`igvShiny()` builds outside a Shiny session, so the behaviour is visible here:
+
+```{r rejected-key}
+genomeOptions <- parseAndValidateGenomeSpec(
+    genomeName = "hg38",
+    initialLocus = "NDUFS2"
+    )
+
+widget <- igvShiny(
+    genomeOptions,
+    tracks = list(
+        list(
+            name = "genes",
+            type = "annotation",
+            url = "https://example.org/genes.bed",
+            onClick = "alert('hi')"
+            )
+        )
+    )
+
+names(widget$x$tracks[[1]])
+```
+
+That is the mechanism, not a nuisance: a track configuration is a JavaScript
+object built from user input, and only names known to be data options are let
+through. The consequence to remember is that a typo does not reach igv.js and
+does not raise an error — it produces a warning and a track drawn with
+defaults.
+
+# Loaders
+
+| Function | Data comes from | igv.js track |
+|---|---|---|
+| `loadBedTrack()` | `data.frame` | annotation |
+| `loadBedGraphTrack()` | `data.frame` | wig |
+| `loadBedGraphTrackFromURL()` | URL | wig |
+| `loadSegTrack()` | `data.frame` | seg |
+| `loadGwasTrack()` | `data.frame` | gwas |
+| `loadVcfTrack()` | `VCF` object | variant |
+| `loadGFF3TrackFromLocalData()` | `data.frame` | annotation |
+| `loadGFF3TrackFromURL()` | URL | annotation |
+| `loadBamTrackFromLocalData()` | `GAlignments` | alignment |
+| `loadBamTrackFromURL()` | URL | alignment |
+| `loadCramTrackFromLocalData()` | file on disk | alignment |
+| `loadCramTrackFromURL()` | URL | alignment |
+| `loadSpliceJunctionTrackFromURL()` | URL | junction |
+
+The `FromURL` variants ask the *user's browser* to fetch the file. A URL that
+works in `download.file()` can still fail here if the server sends no
+permissive CORS header — see the troubleshooting section of the getting started
+vignette.
+
+# Options every track accepts
+
+| Option | Type | What it does |
+|---|---|---|
+| `name` | character | track label in the left panel |
+| `url` | character | where the data is |
+| `indexURL` | character | index for a bgzipped or binary file |
+| `indexed` | logical | set `FALSE` to read an unindexed file whole |
+| `format` | character | `"bed"`, `"gff3"`, `"bigwig"`, `"vcf"`, … |
+| `type` | character | igv.js track class; usually implied by the loader |
+| `order` | numeric | position among the other tracks |
+| `height` | numeric | track height in pixels |
+| `minHeight`, `maxHeight` | numeric | bounds when the track resizes itself |
+| `autoHeight` | logical | grow to fit the features in view |
+| `visibilityWindow` | numeric | above this span in bp, draw nothing |
+| `removable` | logical | whether the user may close the track |
+| `color` | character | any CSS colour |
+| `altColor` | character | second colour, per track type |
+| `displayMode` | character | `"COLLAPSED"`, `"EXPANDED"`, `"SQUISHED"` |
+| `roi` | list | regions of interest drawn over this track |
+| `oauthToken`, `headers` | character, list | sent with the data request |
+
+`trackHeight` on the loaders and `height` in `trackConfig` are the same thing.
+
+# Numeric tracks: bedGraph, wig, bigWig
+
+| Option | Type | What it does |
+|---|---|---|
+| `autoscale` | logical | rescale to the data in view |
+| `autoscaleGroup` | character | scale several tracks together, as one group |
+| `min`, `max` | numeric | fixed data range when not autoscaling |
+| `logScale` | logical | log the y axis |
+| `graphType` | character | `"bar"` or `"points"` |
+| `flipAxis` | logical | draw the y axis upside down |
+| `color`, `altColor` | character | values above and below the baseline |
+
+```{r wig}
+coverage <- data.frame(
+    chrom = "chr1",
+    start = c(7432000, 7437000),
+    end = c(7436000, 7442000),
+    value = c(0.2, 0.9)
+    )
+
+loadBedGraphTrack(
+    session, id = "igv", trackName = "coverage", tbl = coverage,
+    autoscale = TRUE,
+    trackConfig = list(
+        graphType = "points",
+        autoscaleGroup = "sampleA",
+        logScale = FALSE
+        )
+    )
+```
+
+Two tracks sharing an `autoscaleGroup` are drawn on one scale, which is what
+makes their heights comparable by eye.
+
+# Annotation tracks: bed, gff3
+
+| Option | Type | What it does |
+|---|---|---|
+| `colorBy` | character | feature attribute to take the colour from |
+| `colorTable` | list | attribute value to colour |
+| `featureHeight` | numeric | height of one feature row |
+| `maxRows` | numeric | rows drawn before the rest are hidden |
+| `searchable` | logical | let the locus box find features by name |
+| `queryable` | logical | whether the track answers region queries |
+
+On `loadGFF3TrackFromURL()` and `loadGFF3TrackFromLocalData()` the argument is
+called `colorByAttribute`, and it becomes igv.js `colorBy`. Pass it as the
+loader argument rather than in `trackConfig`, together with `colorTable`:
+
+```{r gff3}
+gff3.url <- paste0(
+    "https://s3.amazonaws.com/igv.org.genomes/hg38/",
+    "Homo_sapiens.GRCh38.94.chr.gff3.gz"
+    )
+
+loadGFF3TrackFromURL(
+    session, id = "igv", trackName = "genes",
+    gff3URL = gff3.url, indexURL = paste0(gff3.url, ".tbi"),
+    colorByAttribute = "biotype",
+    displayMode = "EXPANDED",
+    visibilityWindow = 1000000,
+    colorTable = list(
+        protein_coding = "darkgreen",
+        processed_transcript = "blue",
+        default = "black"
+        )
+    )
+```
+
+A `default` entry in `colorTable` catches the values you did not list.
+
+# Alignment tracks: bam, cram
+
+| Option | Type | What it does |
+|---|---|---|
+| `showAllBases` | logical | draw every base, not just mismatches |
+| `viewAsPairs` | logical | join mates on one row |
+| `colorBy` | character | `"strand"`, `"firstOfPairStrand"`, `"tag"`, … |
+| `colorTable` | list | value to colour, for `colorBy = "tag"` |
+| `sort` | list | how reads are sorted when the track loads |
+| `samplingWindowSize` | numeric | window the downsampler works over |
+| `samplingDepth` | numeric | reads kept per window |
+
+`sort` takes the same object the igv.js right-click menu builds, so sorting by
+a tag at load time is:
+
+```{r bam-sort}
+bam.url <- "https://1000genomes.s3.amazonaws.com/phase3/NA12878.bam"
+
+loadBamTrackFromURL(
+    session, id = "igv", trackName = "reads",
+    bamURL = bam.url, indexURL = paste0(bam.url, ".bai"),
+    trackConfig = list(
+        sort = list(
+            option = "TAG", tag = "HP",
+            chr = "chr8", position = 128750000
+            )
+        )
+    )
+```
+
+Alignment tracks are the memory-hungry ones. `visibilityWindow` matters here
+more than anywhere else: without it a user who zooms out asks the browser for
+every read on the chromosome.
+
+# Variant tracks: vcf
+
+| Option | Type | What it does |
+|---|---|---|
+| `colorBy` | character | variant attribute to colour by |
+| `colorTable` | list | attribute value to colour |
+| `maxRows` | numeric | genotype rows drawn |
+| `sort` | list | initial sort of the genotype rows |
+| `displayMode` | character | `"COLLAPSED"` hides the genotypes |
+
+# GWAS tracks
+
+| Option | Type | What it does |
+|---|---|---|
+| `trait` | character | column holding the trait name |
+| `columns` | list | **1-based** column positions in the source file |
+| `min`, `max` | numeric | y range, in -log10(p) |
+| `autoscale` | logical | rescale to the data in view |
+| `colorTable` | list | chromosome to colour |
+
+`columns` is worth its own note. The GWAS parser reads it 1-based, and without
+it the parser guesses the layout from header names it recognises — any other
+spelling draws an empty track rather than an error:
+
+```{r gwas}
+gwas <- data.frame(
+    CHR = "chr1",
+    BP = c(1000, 2000),
+    SNP = c("rs1", "rs2"),
+    P = c(1e-8, 1e-5)
+    )
+
+loadGwasTrack(
+    session, id = "igv", trackName = "gwas", tbl.gwas = gwas,
+    trackConfig = list(
+        columns = list(chromosome = 12, position = 13, value = 28)
+        )
+    )
+```
+
+The `GWASTrack` class is the other way into the same track type, for data that
+already lives at a URL; see `?GWASTrack`.
+
+# Splice junction tracks
+
+Junction options divide into filters, which decide whether an arc is drawn at
+all, and appearance.
+
+Filters:
+
+| Option | Type | What it does |
+|---|---|---|
+| `minUniquelyMappedReads` | numeric | drop junctions below this count |
+| `minTotalReads` | numeric | unique plus multi-mapped |
+| `maxFractionMultiMappedReads` | numeric | drop mostly multi-mapped junctions |
+| `minSplicedAlignmentOverhang` | numeric | shortest anchor accepted |
+| `minJunctionEndsVisible` | numeric | 0, 1 or 2 ends in view |
+| `minSamplesWithThisJunction` | numeric | across samples |
+| `maxSamplesWithThisJunction` | numeric | across samples |
+| `minPercentSamplesWithThisJunction` | numeric | as a percentage |
+| `maxPercentSamplesWithThisJunction` | numeric | as a percentage |
+| `hideAnnotatedJunctions` | logical | draw novel junctions only |
+| `hideUnannotatedJunctions` | logical | draw annotated junctions only |
+| `hideMotifs` | character | motifs to leave out, e.g. `c("GT/AG")` |
+| `hideStrand` | character | `"+"` or `"-"` |
+
+Appearance:
+
+| Option | Type | What it does |
+|---|---|---|
+| `thicknessBasedOn` | character | what sets the arc thickness |
+| `bounceHeightBasedOn` | character | what sets how high the arc rises |
+| `colorBy` | character | what sets the arc colour |
+| `colorByNumReadsThreshold` | numeric | split point for read-count colouring |
+| `labelWith` | character | what the arc label shows |
+| `labelWithInParen` | character | a second value, in parentheses |
+
+The three `...BasedOn` and `colorBy` options take a fixed vocabulary:
+
+* `thicknessBasedOn`: `"numUniqueReads"`, `"numReads"`,
+  `"isAnnotatedJunction"`
+* `bounceHeightBasedOn`: `"random"`, `"distance"`, `"thickness"`
+* `colorBy`: `"numUniqueReads"`, `"numReads"`, `"isAnnotatedJunction"`,
+  `"strand"`, `"motif"`
+
+```{r junctions}
+junctions.url <- paste0(
+    "https://raw.githubusercontent.com/igvteam/igv-data/main/data/test/",
+    "splice_junctions/sampleA.SJ.out.bed.gz"
+    )
+
+loadSpliceJunctionTrackFromURL(
+    session, id = "igv", trackName = "sampleA junctions",
+    url = junctions.url, indexURL = paste0(junctions.url, ".tbi"),
+    trackHeight = 150,
+    trackConfig = list(
+        colorBy = "motif",
+        labelWith = "uniquelyMapped",
+        minUniquelyMappedReads = 5,
+        hideAnnotatedJunctions = FALSE
+        )
+    )
+```
+
+The filter names come from the igv.js source rather than from the
+`spliceJunctionTrack.html` example page that ships with it: that example sets
+`labelUniqueReadCount` and four siblings, and no such option exists in the
+library any more.
+
+# Options on startup tracks
+
+Tracks passed to `igvShiny()` through `tracks` are checked against the same
+allowlist, so everything above applies to them too. What they additionally need
+is a `url`, since there is no loader argument to carry the data: an entry
+without a usable one is dropped with a warning.
+
+```{r startup}
+gff3.url <- paste0(
+    "https://s3.amazonaws.com/igv.org.genomes/hg38/",
+    "Homo_sapiens.GRCh38.94.chr.gff3.gz"
+    )
+
+startupTrack <- list(
+    name = "genes",
+    type = "annotation",
+    format = "gff3",
+    url = gff3.url,
+    indexed = FALSE,
+    displayMode = "EXPANDED"
+    )
+
+widget <- igvShiny(genomeOptions, tracks = list(startupTrack))
+str(widget$x$tracks[[1]])
+```
+
+In an app that goes inside `renderIgvShiny()`:
+
+```{r startup-app, eval=FALSE}
+output$igv <- renderIgvShiny({
+    igvShiny(genomeOptions, tracks = list(startupTrack))
+    })
+```
+
+# When an option seems to do nothing
+
+**Check for the warning first.** A dropped key says so on the R console. If
+there is no warning, the option reached igv.js and the problem is elsewhere.
+
+**An option igv.js does not know is ignored in silence** once past the
+allowlist. igv.js reads the keys it recognises and never complains about the
+rest, so a correct-looking option from IGV desktop, or from an older igv.js,
+produces a track drawn with defaults and no message anywhere.
+
+**Some options apply to one track type only.** `autoscale` on an annotation
+track, `colorBy = "motif"` on anything that is not a junction track: both are
+accepted, and both do nothing.
+
+When you need an option this vignette does not list, the
+[igv.js wiki](https://github.com/igvteam/igv.js/wiki) documents the underlying
+browser. If it is genuinely missing from the allowlist rather than misspelled,
+that is worth [an issue](https://github.com/gladkia/igvShiny/issues) — the list
+covers the options that are useful from R, and it grows.
+
+# Session Info
+
+```{r session-info}
+sessionInfo()
+```
