@@ -1,3 +1,6 @@
+## igvShiny 1.9.39
+* Prevent the getting-started vignette from reaching gladki.pl while the package builds (#158)
+
 ## igvShiny 1.9.38
 * Add loadSpliceJunctionTrackFromLocalData, writing junctions held in R as the bed igv.js reads (#103)
 * Support merged tracks in the startup track list, drawing junction arcs over a coverage track (#103)
