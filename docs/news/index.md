@@ -1,5 +1,11 @@
 # Changelog
 
+## igvShiny 1.9.39
+
+- Prevent the getting-started vignette from reaching gladki.pl while the
+  package builds
+  ([\#158](https://github.com/gladkia/igvShiny/issues/158))
+
 ## igvShiny 1.9.38
 
 - Add loadSpliceJunctionTrackFromLocalData, writing junctions held in R

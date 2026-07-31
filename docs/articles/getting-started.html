@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.38</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.39</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -458,7 +458,11 @@ genome:</p>
 <p>The result goes to <code><a href="../reference/igvShiny.html">igvShiny()</a></code> exactly like a stock
 genome specification.</p>
 <p>The same genome served over HTTP instead, which is what you want once
-the app runs somewhere other than your laptop:</p>
+the app runs somewhere other than your laptop.
+<code>dataMode = "http"</code> makes
+<code><a href="../reference/parseAndValidateGenomeSpec.html">parseAndValidateGenomeSpec()</a></code> send a <code>HEAD</code>
+request to every URL, so this chunk is shown rather than run — building
+the vignette stays offline:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">base_url</span> <span class="op">&lt;-</span> <span class="st">"https://gladki.pl/igvr/testFiles"</span></span>
 <span></span>
@@ -471,15 +475,7 @@ the app runs somewhere other than your laptop:</p>
 <span>    fastaIndex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base_url</span>, <span class="st">"/ribosomal-RNA-gene.fasta.fai"</span><span class="op">)</span>,</span>
 <span>    genomeAnnotation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base_url</span>, <span class="st">"/ribosomal-RNA-gene.gff3"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
-<span><span class="va">remoteOptions</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"genomeName"</span>, <span class="st">"dataMode"</span>, <span class="st">"stockGenome"</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="co">#&gt; $genomeName</span></span>
-<span><span class="co">#&gt; [1] "ribosomal RNA gene"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $dataMode</span></span>
-<span><span class="co">#&gt; [1] "http"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $stockGenome</span></span>
-<span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
+<span><span class="va">remoteOptions</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"genomeName"</span>, <span class="st">"dataMode"</span>, <span class="st">"stockGenome"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <p><code>inst/demos/genomes.R</code> shows both variants side by side,
 picked with radio buttons.</p>
 </div>
@@ -548,7 +544,7 @@ option this package passes through but does not document itself</li>
 <span><span class="co">#&gt; [8] base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt; [1] igvShiny_1.9.38      shiny_1.14.0         GenomicRanges_1.65.1</span></span>
+<span><span class="co">#&gt; [1] igvShiny_1.9.39      shiny_1.14.0         GenomicRanges_1.65.1</span></span>
 <span><span class="co">#&gt; [4] Seqinfo_1.3.0        IRanges_2.47.2       S4Vectors_0.51.6    </span></span>
 <span><span class="co">#&gt; [7] BiocGenerics_0.59.10 generics_0.1.4       BiocStyle_2.41.0    </span></span>
 <span><span class="co">#&gt; </span></span>

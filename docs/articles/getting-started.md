@@ -407,7 +407,10 @@ The result goes to
 exactly like a stock genome specification.
 
 The same genome served over HTTP instead, which is what you want once
-the app runs somewhere other than your laptop:
+the app runs somewhere other than your laptop. `dataMode = "http"` makes
+[`parseAndValidateGenomeSpec()`](https://gladkia.github.io/igvShiny/reference/parseAndValidateGenomeSpec.md)
+send a `HEAD` request to every URL, so this chunk is shown rather than
+run — building the vignette stays offline:
 
 ``` r
 
@@ -423,14 +426,6 @@ remoteOptions <- parseAndValidateGenomeSpec(
     genomeAnnotation = paste0(base_url, "/ribosomal-RNA-gene.gff3")
     )
 remoteOptions[c("genomeName", "dataMode", "stockGenome")]
-#> $genomeName
-#> [1] "ribosomal RNA gene"
-#> 
-#> $dataMode
-#> [1] "http"
-#> 
-#> $stockGenome
-#> [1] FALSE
 ```
 
 `inst/demos/genomes.R` shows both variants side by side, picked with
@@ -497,7 +492,7 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#> [1] igvShiny_1.9.38      shiny_1.14.0         GenomicRanges_1.65.1
+#> [1] igvShiny_1.9.39      shiny_1.14.0         GenomicRanges_1.65.1
 #> [4] Seqinfo_1.3.0        IRanges_2.47.2       S4Vectors_0.51.6    
 #> [7] BiocGenerics_0.59.10 generics_0.1.4       BiocStyle_2.41.0    
 #> 
