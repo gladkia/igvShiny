@@ -1,9 +1,6 @@
-# igvShiny — GWAS tracks, both ways of building one.
-#
-# loadGwasTrack() takes a data.frame and guesses the columns; the GWASTrack S4
-# class takes either a data.frame or a URL and is told the columns explicitly,
-# which is what a table with non-standard headers needs. The genome-wide view
-# ("all") is the point of a GWAS track, so the app opens there.
+# igvShiny — GWAS tracks, both ways of building one. loadGwasTrack() takes a
+# data.frame and guesses the columns; the GWASTrack S4 class takes a data.frame
+# or a URL and is told the columns, which is what non-standard headers need.
 
 library(shiny)
 library(bslib)
@@ -12,8 +9,8 @@ library(igvShiny)
 f <- system.file(package = "igvShiny", "extdata", "gwas.RData")
 tbl.gwas <- get(load(f))
 
-# a largish gwas table hosted remotely - some p-values are zero, which -log10
-# turns into Inf, so this one is displayed on a fixed scale, not autoscaled
+# some p-values in this remote table are zero, which -log10 turns into Inf, so
+# it is displayed on a fixed scale rather than autoscaled
 url.gwasTrack <- GWASTrack("remote url gwas",
                            "https://gladki.pl/igvShiny/gwas_sample.tsv.gz",
                            chrom.col = 3, pos.col = 4, pval.col = 10,
@@ -23,7 +20,6 @@ url.gwasTrack <- GWASTrack("remote url gwas",
 tbl.gwasTrack <- GWASTrack("data.frame gwas", tbl.gwas,
                            chrom.col = 3, pos.col = 4, pval.col = 10,
                            trackHeight = 100)
-
 ui <- page_sidebar(
   title = "igvShiny — GWAS tracks",
   theme = bs_theme(version = 5, primary = "#2c6faa"),
@@ -42,27 +38,18 @@ ui <- page_sidebar(
 )
 
 server <- function(input, output, session) {
-
-  observeEvent(input$loadSimpleGwasTrackButton, {
-    loadGwasTrack(session, id = "igvShiny_0", trackName = "gwas", tbl.gwas = tbl.gwas,
-                  deleteTracksOfSameName = FALSE)
-  })
-
-  observeEvent(input$loadLocalTableGwasTrackButton, {
-    display(tbl.gwasTrack, session, id = "igvShiny_0")
-  })
-
-  observeEvent(input$loadRemoteUrlGwasTrackButton, {
-    display(url.gwasTrack, session, id = "igvShiny_0")
-  })
-
-  observeEvent(input$showApoeButton, {
-    showGenomicRegion(session, id = "igvShiny_0", "chr19:45,303,720-45,463,047")
-  })
-
-  observeEvent(input$showAllButton, {
-    showGenomicRegion(session, id = "igvShiny_0", "all")
-  })
+  observeEvent(input$loadSimpleGwasTrackButton,
+               loadGwasTrack(session, id = "igvShiny_0", trackName = "gwas",
+                             tbl.gwas = tbl.gwas, deleteTracksOfSameName = FALSE))
+  observeEvent(input$loadLocalTableGwasTrackButton,
+               display(tbl.gwasTrack, session, id = "igvShiny_0"))
+  observeEvent(input$loadRemoteUrlGwasTrackButton,
+               display(url.gwasTrack, session, id = "igvShiny_0"))
+  observeEvent(input$showApoeButton,
+               showGenomicRegion(session, id = "igvShiny_0",
+                                 "chr19:45,303,720-45,463,047"))
+  observeEvent(input$showAllButton,
+               showGenomicRegion(session, id = "igvShiny_0", "all"))
 
   output$igvShiny_0 <- renderIgvShiny({
     igvShiny(parseAndValidateGenomeSpec(genomeName = "hg19", initialLocus = "all"))

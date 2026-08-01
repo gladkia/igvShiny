@@ -1,11 +1,11 @@
 # igvShiny public demo — Posit Connect Cloud
 
-Deploy wrapper for hosting the flagship demo (`inst/demos/igvShinyDemo.R`) as a
+Deploy wrapper for hosting the flagship demo (`inst/showcase/igvShinyDemo.R`) as a
 clickable public app on [Posit Connect Cloud](https://connect.posit.cloud/).
 
 ## What `app.R` contains
 
-Two lines: it runs `inst/demos/igvShinyDemo.R` out of the installed package.
+Two lines: it runs `inst/showcase/igvShinyDemo.R` out of the installed package.
 There is no second copy of the app to keep in sync — this used to be a
 hand-maintained fork, and it drifted from the original on every new loader.
 

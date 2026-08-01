@@ -422,8 +422,9 @@ can write there; `get_tracks_dir()` reports the directory in use.
 # Where to go next
 
 * The *Track options reference* vignette — every track type and its options
-* `inst/demos/` — one runnable app per feature; `igvShinyDemo.R` covers most of
-  the API in a single app
+* `inst/demos/` — one runnable app per feature, each under sixty lines
+* `inst/showcase/igvShinyDemo.R` — most of the API in a single app, and what
+  the public Posit Connect demo serves
 * [igv.js documentation](https://github.com/igvteam/igv.js/wiki) — the
   underlying browser, useful when you need a track option this package passes
   through but does not document itself

@@ -235,7 +235,7 @@
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#'   system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
@@ -369,7 +369,7 @@ igvShinyOutput <- function(outputId,
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#'   system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
@@ -412,7 +412,7 @@ renderIgvShiny <- function(expr,
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#'   system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
@@ -438,7 +438,7 @@ showGenomicRegion <- function(session, id, region) {
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#'   system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
@@ -469,7 +469,7 @@ getGenomicRegion <- function(session, id) {
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#'   system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
@@ -504,7 +504,7 @@ removeTracksByName <- function(session, id, trackNames) {
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#'   system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
@@ -545,7 +545,7 @@ removeUserAddedTracks <- function(session, id) {
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#'   system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
@@ -659,7 +659,7 @@ loadBedTrack <-
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#'   system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
@@ -759,7 +759,7 @@ loadBedGraphTrackFromURL <-
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#'   system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
@@ -868,7 +868,7 @@ loadBedGraphTrack <-
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#'   system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
@@ -1007,7 +1007,7 @@ loadVcfTrack <- function(session,
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#'   system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
@@ -1097,7 +1097,7 @@ loadGwasTrack <- function(session,
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#'   system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
@@ -1160,7 +1160,7 @@ loadBamTrackFromURL <-
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#'   system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
@@ -1233,7 +1233,7 @@ loadBamTrackFromLocalData <-
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#'   system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
@@ -1295,7 +1295,7 @@ loadCramTrackFromURL <-
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#'   system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
@@ -1561,7 +1561,7 @@ loadGFF3TrackFromLocalData <-
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#'   system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }
@@ -1702,7 +1702,7 @@ loadSpliceJunctionTrackFromURL <-
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
-#'   system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+#'   system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
 #' if (interactive()) {
 #'   shiny::runApp(demo_app_file)
 #' }

@@ -25,7 +25,7 @@ display the already constructed and configured track
 \examples{
 library(igvShiny)
 demo_app_file <-
-  system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+  system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
 if (interactive()) {
   shiny::runApp(demo_app_file)
 }

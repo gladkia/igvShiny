@@ -1,11 +1,7 @@
-# igvShiny — the three ways to specify a genome.
-#
-#   stock       igv.js knows the name, and streams the sequence itself
-#   localFiles  your own fasta + index + annotation, read from disk
-#   http        the same three files, fetched by the browser from a URL
-#
-# Only the first needs the igv.js registry, so a UCSC or registry outage leaves
-# the stock genomes blank while the custom ones keep working.
+# igvShiny — the three ways to specify a genome: a stock name igv.js streams
+# itself, your own fasta + index + annotation from disk, or the same three
+# files fetched from a URL. Only the first needs the igv.js registry, so an
+# outage there leaves the stock genomes blank and the custom ones working.
 
 library(shiny)
 library(bslib)
@@ -13,7 +9,6 @@ library(igvShiny)
 
 data.dir <- system.file(package = "igvShiny", "extdata")
 base.url <- "https://gladki.pl/igvr/testFiles"
-
 genomeSpec <- function(mode, stockName = "danRer11") {
   switch(
     mode,
@@ -45,19 +40,16 @@ ui <- page_sidebar(
                  c("stock (igv.js registry)" = "stock",
                    "custom, local files" = "localFiles",
                    "custom, files by URL" = "http")),
-    conditionalPanel(
-      "input.mode == 'stock'",
-      selectInput("genomeChooser", "Stock genome", sort(get_css_genomes()),
-                  selected = "danRer11")
-    )
+    conditionalPanel("input.mode == 'stock'",
+                     selectInput("genomeChooser", "Stock genome",
+                                 sort(get_css_genomes()), selected = "danRer11"))
   ),
-  card(full_screen = TRUE, card_body(class = "p-0",
-                                     igvShinyOutput("igvShiny_0", height = "100%")))
+  card(full_screen = TRUE,
+       card_body(class = "p-0", igvShinyOutput("igvShiny_0", height = "100%")))
 )
 
 server <- function(input, output, session) {
-  # re-rendering the widget rebuilds the browser: a genome cannot be swapped
-  # inside a live igv.js instance
+  # re-rendering rebuilds the browser: a live igv.js instance cannot swap genome
   output$igvShiny_0 <- renderIgvShiny({
     req(input$mode, input$genomeChooser)
     igvShiny(genomeSpec(input$mode, input$genomeChooser))

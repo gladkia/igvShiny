@@ -30,7 +30,7 @@ test_that("igvShinyDemo loads tracks correctly", {
     # Increase timeout for potentially slow-loading remote resources
     options(chromote.timeout = 120)
 
-    sf <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+    sf <- system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
     app <- AppDriver$new(
         app_dir = shiny::shinyAppFile(sf),
         name = "igv-shiny-demo-app",
@@ -61,7 +61,7 @@ test_that("igvShinyDemo loads a remote bigWig", {
     skip("remote ENCODE bigWig fetch is refused by the browser (status 0)")
 
     options(chromote.timeout = 120)
-    sf <- system.file(package = "igvShiny", "demos", "igvShinyDemo.R")
+    sf <- system.file(package = "igvShiny", "showcase", "igvShinyDemo.R")
     app <- AppDriver$new(
         app_dir = shiny::shinyAppFile(sf),
         name = "igv-shiny-demo-app-bigwig",
@@ -78,10 +78,10 @@ test_that("igvShinyDemo loads a remote bigWig", {
     app$stop()
 })
 
-test_that("the local-data demo loads its GFF3 tracks correctly", {
+test_that("the gff3 demo loads its GFF3 tracks correctly", {
     options(chromote.timeout = 120)
 
-    sf <- system.file(package = "igvShiny", "demos", "local-data.R")
+    sf <- system.file(package = "igvShiny", "demos", "gff3.R")
     app <- AppDriver$new(
       app_dir = shiny::shinyAppFile(sf),
       name = "test_app",
@@ -99,8 +99,27 @@ test_that("the local-data demo loads its GFF3 tracks correctly", {
     # while shiny kept serving the one registered at load time. .tracksDir()
     # re-points the resource path before each write, so it renders again.
     .click_and_check(app, "addLocalGFF3TrackButtonWithBiotypeColors", 'title="local gff3 (colors)"')
-    # junctions handed over as a data.frame: written as bed, served from the
-    # tracks directory, no network anywhere in the path (#103)
+
+    app$stop()
+})
+
+test_that("the junctions demo renders junctions held in a data.frame", {
+    options(chromote.timeout = 120)
+
+    sf <- system.file(package = "igvShiny", "demos", "junctions.R")
+    app <- AppDriver$new(
+      app_dir = shiny::shinyAppFile(sf),
+      name = "test_app",
+      height = 695,
+      width = 1235,
+      load_timeout = 1e+6,
+      timeout = 1e+6
+    )
+    app$wait_for_value(input = "igvReady")
+    Sys.sleep(2)
+
+    # written as bed, served from the tracks directory, no network in the
+    # path at all (#103)
     .click_and_check(app, "addLocalJunctionsButton", 'title="sampleA junctions"')
 
     app$stop()
