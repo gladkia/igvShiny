@@ -1,5 +1,16 @@
 # Changelog
 
+## igvShiny 1.9.41
+
+- Split the demo apps so each covers one feature in under sixty lines,
+  adding gff3.R and junctions.R
+  ([\#64](https://github.com/gladkia/igvShiny/issues/64))
+- Move the showcase app to inst/showcase, leaving inst/demos for the
+  focused examples
+  ([\#64](https://github.com/gladkia/igvShiny/issues/64))
+- Drop the makefile targets naming demo files removed in
+  [\#156](https://github.com/gladkia/igvShiny/issues/156)
+
 ## igvShiny 1.9.40
 
 - Switch the custom genome example to the sarsGenome files the package

@@ -457,8 +457,9 @@ reports the directory in use.
 
 - The *Track options reference* vignette — every track type and its
   options
-- `inst/demos/` — one runnable app per feature; `igvShinyDemo.R` covers
-  most of the API in a single app
+- `inst/demos/` — one runnable app per feature, each under sixty lines
+- `inst/showcase/igvShinyDemo.R` — most of the API in a single app, and
+  what the public Posit Connect demo serves
 - [igv.js documentation](https://github.com/igvteam/igv.js/wiki) — the
   underlying browser, useful when you need a track option this package
   passes through but does not document itself
@@ -492,7 +493,7 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#> [1] igvShiny_1.9.40      shiny_1.14.0         GenomicRanges_1.65.1
+#> [1] igvShiny_1.9.41      shiny_1.14.0         GenomicRanges_1.65.1
 #> [4] Seqinfo_1.3.0        IRanges_2.47.2       S4Vectors_0.51.6    
 #> [7] BiocGenerics_0.59.10 generics_0.1.4       BiocStyle_2.41.0    
 #> 
