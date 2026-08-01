@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.39</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.40</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -134,8 +134,11 @@ chromosome palette in place</p></dd>
 <span class="r-in"><span>    pval.col <span class="op">=</span> <span class="fl">28</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="getUrl.html">getUrl</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpWMIhZa/tracks/file17c12c518cf5.gwas"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpITetvU/tracks/file17c33deaa438.gwas"</span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># a remote gwas file: the constructor checks that the url resolves, so this</span></span></span>
+<span class="r-in"><span><span class="co"># block reaches the network and stays out of R CMD check</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="va">url</span> <span class="op">&lt;-</span> <span class="st">"https://gladki.pl/igvShiny/gwas_sample.tsv.gz"</span></span></span>
 <span class="r-in"><span><span class="va">track</span> <span class="op">&lt;-</span> <span class="fu">GWASTrack</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="st">"remote url gwas"</span>,</span></span>
@@ -150,6 +153,7 @@ chromosome palette in place</p></dd>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="getUrl.html">getUrl</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "https://gladki.pl/igvShiny/gwas_sample.tsv.gz"</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># colors picked per chromosome, with "*" covering the rest</span></span></span>
 <span class="r-in"><span><span class="va">track</span> <span class="op">&lt;-</span> <span class="fu">GWASTrack</span><span class="op">(</span></span></span>

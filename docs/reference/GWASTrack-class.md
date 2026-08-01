@@ -92,8 +92,11 @@ track <-
     pval.col = 28
   )
 getUrl(track)
-#> [1] "/tmp/RtmpWMIhZa/tracks/file17c12c518cf5.gwas"
+#> [1] "/tmp/RtmpITetvU/tracks/file17c33deaa438.gwas"
 
+# a remote gwas file: the constructor checks that the url resolves, so this
+# block reaches the network and stays out of R CMD check
+# \donttest{
 url <- "https://gladki.pl/igvShiny/gwas_sample.tsv.gz"
 track <- GWASTrack(
   "remote url gwas",
@@ -108,6 +111,7 @@ track <- GWASTrack(
 )
 getUrl(track)
 #> [1] "https://gladki.pl/igvShiny/gwas_sample.tsv.gz"
+# }
 
 # colors picked per chromosome, with "*" covering the rest
 track <- GWASTrack(

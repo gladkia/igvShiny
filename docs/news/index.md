@@ -1,5 +1,12 @@
 # Changelog
 
+## igvShiny 1.9.40
+
+- Switch the custom genome example to the sarsGenome files the package
+  ships, keeping R CMD check offline
+- Wrap the remote GWAS example in donttest, since the GWASTrack
+  constructor checks that the url resolves
+
 ## igvShiny 1.9.39
 
 - Prevent the getting-started vignette from reaching gladki.pl while the
