@@ -10,27 +10,16 @@ install:
 	R CMD INSTALL .  --no-test-load
 
 test:
-	(cd inst/unitTests; make)
+	R -e "testthat::test_local()"
+
+# the showcase app: most of the API in one place, and what Posit Connect serves
 demo:
-	(cd inst/demos; R -f igvShinyDemo.R)
+	(cd inst/showcase; R -f igvShinyDemo.R)
 
-demo-customGenomeHttp:
-	(cd inst/demos; R -f igvShinyDemo-customGenome-http.R)
-
-demo-customGenomeLocalFiles:
-	(cd inst/demos; R -f igvShinyDemo-customGenome-localFiles.R)
-
-demo-sars:
-	(cd inst/demos; R -f customGenome-localFiles-sars.R)
-
-demo2:
-	(cd inst/demos; R -f igvShinyDemo-twoInstances.R)
-
-moduleDemo:
-	(cd inst/demos; R -f igvShinyDemo-withModules.R)
-
-rstudio:
-	open -a Rstudio  inst/demos/customGenome-localFiles-sars.R
+# one focused app per feature - DEMO=gwas make demo-one
+DEMO ?= tiny
+demo-one:
+	(cd inst/demos; R -f $(DEMO).R)
 
 check-podman:
 	podman run --rm -v $$(pwd):/pkg igvshiny-test-env /bin/bash -c "Rscript -e \"gDRstyle::checkPackage('igvShiny', repoDir='.')\""

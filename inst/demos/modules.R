@@ -1,13 +1,8 @@
-# igvShiny — inside a Shiny module.
-#
-# The widget picks the namespace up from the session it is created in, so
-# igvShinyOutput(ns("igv")) is all the UI needs. The catch is on the server
-# side: the loaders address the browser by its HTML element id, which is the
-# namespaced one - ns("igv"), never "igv". The region event comes back on the
-# unnamespaced name, because it is named after the element inside the module.
-#
-# getGenomicRegion() inside a module is unreliable unless the module id happens
-# to be "igv" - https://github.com/gladkia/igvShiny/issues/134
+# igvShiny — inside a Shiny module. The widget takes its namespace from the
+# session, so igvShinyOutput(ns("igv")) is all the UI needs. The catch is on the
+# server side: loaders address the browser by its HTML element id, the
+# namespaced ns("igv") and never "igv", while the region event comes back on the
+# unnamespaced name, since it is named after the element inside the module.
 
 library(shiny)
 library(bslib)

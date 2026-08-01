@@ -1,8 +1,7 @@
-# igvShiny — two browsers on one page.
-#
-# Each widget is addressed by its own element id, and each reports its own
-# region: the currentGenomicRegion.<id> event carries the id it came from, so
-# two widgets sitting at the same locus both report it (#126).
+# igvShiny — two browsers on one page. Each widget is addressed by its own
+# element id and reports its own region: the currentGenomicRegion.<id> event
+# carries the id it came from, so two widgets on the same locus both report
+# it (#126).
 
 library(shiny)
 library(bslib)
@@ -16,12 +15,10 @@ tbl.bed <- data.frame(chr = c("1", "1", "1"),
                       stringsAsFactors = FALSE)
 
 browserCard <- function(id, label) {
-  card(
-    card_header(label,
-                tags$span(class = "small text-muted font-monospace ms-2",
-                          textOutput(sprintf("region_%s", id), inline = TRUE))),
-    card_body(class = "p-0", igvShinyOutput(id, height = "320px"))
-  )
+  card(card_header(label,
+                   tags$span(class = "small text-muted font-monospace ms-2",
+                             textOutput(sprintf("region_%s", id), inline = TRUE))),
+       card_body(class = "p-0", igvShinyOutput(id, height = "320px")))
 }
 
 ui <- page_fillable(
@@ -47,7 +44,6 @@ server <- function(input, output, session) {
   observeEvent(input$moveBoth, {
     for (id in ids) showGenomicRegion(session, id = id, "MEF2C")
   })
-
   for (id in ids) local({
     this.id <- id
     output[[sprintf("region_%s", this.id)]] <- renderText(
