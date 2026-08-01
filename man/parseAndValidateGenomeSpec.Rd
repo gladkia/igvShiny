@@ -48,23 +48,23 @@ to test their genome specification for validity
 \examples{
 genomeSpec <-
   parseAndValidateGenomeSpec("hg38", "APOE")  # the simplest case
-base.url <-
-  "https://gladki.pl/igvr/testFiles/sarsGenome"
+# a custom genome, read from the files shipped with the package: every
+# resource is checked for existence, and "http" would check it over the
+# network on each R CMD check
+base.dir <-
+  system.file(package = "igvShiny", "extdata", "sarsGenome")
 fasta.file <-
-  sprintf("\%s/\%s", base.url, "Sars_cov_2.ASM985889v3.dna.toplevel.fa")
-fastaIndex.file <-
-  sprintf("\%s/\%s",
-          base.url,
-          "Sars_cov_2.ASM985889v3.dna.toplevel.fa.fai")
+  file.path(base.dir, "Sars_cov_2.ASM985889v3.dna.toplevel.fa")
+fastaIndex.file <- paste0(fasta.file, ".fai")
 annotation.file <-
-  sprintf("\%s/\%s", base.url, "Sars_cov_2.ASM985889v3.101.gff3")
+  file.path(base.dir, "Sars_cov_2.ASM985889v3.101.gff3")
 custom.genome.title <- "SARS-CoV-2"
 genomeOptions <-
   parseAndValidateGenomeSpec(
     genomeName = custom.genome.title,
     initialLocus = "all",
     stockGenome = FALSE,
-    dataMode = "http",
+    dataMode = "localFiles",
     fasta = fasta.file,
     fastaIndex = fastaIndex.file,
     genomeAnnotation = annotation.file
