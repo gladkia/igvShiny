@@ -46,7 +46,7 @@ loadBedTrack(
 #> loadBedTrackFromFile
 #>   elementID: igv
 #>   trackName: my regions
-#>   bedFilepath: tracks/file1b9f2f63abee.bed
+#>   bedFilepath: tracks/file1b051b70bc8.bed
 #>   color: 
 #>   trackHeight: 50
 #>   displayMode: EXPANDED
@@ -345,7 +345,7 @@ loadGwasTrack(
 #> loadGwasTrack
 #>   elementID: igv
 #>   trackName: gwas
-#>   gwasDataFilepath: tracks/file1b9f4e219174.gwas
+#>   gwasDataFilepath: tracks/file1b051483a344.gwas
 #>   color: red
 #>   trackHeight: 200
 #>   autoscale: FALSE
