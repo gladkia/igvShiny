@@ -46,7 +46,7 @@ loadBedTrack(
 #> loadBedTrackFromFile
 #>   elementID: igv
 #>   trackName: my regions
-#>   bedFilepath: tracks/file1b051b70bc8.bed
+#>   bedFilepath: tracks/file1afd6892a510.bed
 #>   color: 
 #>   trackHeight: 50
 #>   displayMode: EXPANDED
@@ -345,7 +345,7 @@ loadGwasTrack(
 #> loadGwasTrack
 #>   elementID: igv
 #>   trackName: gwas
-#>   gwasDataFilepath: tracks/file1b051483a344.gwas
+#>   gwasDataFilepath: tracks/file1afd71925eca.gwas
 #>   color: red
 #>   trackHeight: 200
 #>   autoscale: FALSE
@@ -555,7 +555,7 @@ sessionInfo()
 #> [34] R6_2.6.1                mime_0.13               lifecycle_1.0.5        
 #> [37] stringr_1.6.0           fs_2.1.0                V8_8.2.0               
 #> [40] htmlwidgets_1.6.4       cluster_2.1.8.3         ragg_1.5.2             
-#> [43] desc_1.4.3              pkgdown_2.2.1           bslib_0.11.0           
+#> [43] desc_1.4.3              pkgdown_2.2.1           bslib_0.12.0           
 #> [46] later_1.4.8             glue_1.8.1              Rcpp_1.1.2             
 #> [49] systemfonts_1.3.2       xfun_0.60               knitr_1.51             
 #> [52] farver_2.1.2            xtable_1.8-8            htmltools_0.5.9        
