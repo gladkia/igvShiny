@@ -92,6 +92,13 @@ jobs:
   # subprocess *replaces* LD_LIBRARY_PATH instead of prepending to it, so source
   # builds lose the library. nbafrank/uvr#229 prepends.
   #
+  # The probe is S4Arrays, not Matrix. Installing Matrix only *builds* it, and the
+  # bug lives on the load path: R CMD INSTALL of S4Arrays calls dyn.load on
+  # Matrix.so inside the subprocess whose LD_LIBRARY_PATH was replaced. That is
+  # the exact signature the igvShiny sync hit — "Failed to install S4Arrays ...
+  # liblapack.so.3: cannot open shared object file". A Matrix-only probe passes
+  # on stock uvr and reports the bug as absent.
+  #
   # The two binaries run in SEPARATE JOBS on purpose: they share ~/.uvr/cache, and
   # in the single-job version the second binary just restored what the first one
   # had built — 2m45s of real compilation followed by a 3s "success" that proved
@@ -117,15 +124,15 @@ jobs:
       - name: Hide LAPACK from the loader
         run: .github/scripts/hide-lapack.sh
 
-      - name: Matrix source install — expected to FAIL
+      - name: S4Arrays source install — expected to FAIL
         env:
           LD_LIBRARY_PATH: /opt/blas
           UVR_NO_BINARY: "1"
         run: |
           mkdir -p "$RUNNER_TEMP/p" && cd "$RUNNER_TEMP/p"
           uvr init --here repro --r-version ">=4.5.0"
-          if uvr add Matrix; then
-            echo "::error::stock uvr installed Matrix — the repro no longer isolates #228"
+          if uvr add --bioc S4Arrays; then
+            echo "::error::stock uvr installed S4Arrays — the repro no longer isolates #228"
             exit 1
           fi
           echo "stock uvr failed as expected — bug reproduced"
@@ -141,7 +148,7 @@ jobs:
           git clone --depth 1 -b fix/ld-library-path-inheritance \
             https://github.com/gladkia/uvr.git "$RUNNER_TEMP/uvr-src"
           cargo build --release --manifest-path "$RUNNER_TEMP/uvr-src/Cargo.toml"
-          install -m755 "$RUNNER_TEMP/uvr-src/target/release/uvr" "$HOME/.local/bin/uvr"
+          install -D -m755 "$RUNNER_TEMP/uvr-src/target/release/uvr" "$HOME/.local/bin/uvr"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
       - name: Install pinned R
@@ -150,12 +157,12 @@ jobs:
       - name: Hide LAPACK from the loader
         run: .github/scripts/hide-lapack.sh
 
-      - name: Matrix source install — expected to SUCCEED
+      - name: S4Arrays source install — expected to SUCCEED
         env:
           LD_LIBRARY_PATH: /opt/blas
           UVR_NO_BINARY: "1"
         run: |
           mkdir -p "$RUNNER_TEMP/p" && cd "$RUNNER_TEMP/p"
           uvr init --here repro --r-version ">=4.5.0"
-          uvr add Matrix
-          echo "patched uvr installed Matrix through LD_LIBRARY_PATH — fix confirmed"
+          uvr add --bioc S4Arrays
+          echo "patched uvr installed S4Arrays through LD_LIBRARY_PATH — fix confirmed"
