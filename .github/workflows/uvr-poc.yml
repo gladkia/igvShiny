@@ -40,8 +40,11 @@ jobs:
             liblzma-dev libnode-dev libpng-dev libuv1-dev pandoc \
             libblas-dev liblapack-dev gfortran
 
+      # P3M serves a source tarball for some packages (restfulr here) and uvr
+      # aborts the whole sync instead of falling back to a source build. Take the
+      # binaries first, then let a second pass build whatever is still missing.
       - name: Sync dependencies from lockfile
-        run: uvr sync --frozen
+        run: uvr sync --frozen || uvr sync --frozen --no-binary
 
       - name: R CMD build + check
         run: |
@@ -58,3 +61,65 @@ jobs:
           name: uvr-check-log
           path: igvShiny.Rcheck/00check.log
           if-no-files-found: ignore
+
+  # Reproduces nbafrank/uvr#228 on a plain runner: BLAS/LAPACK reachable only via
+  # LD_LIBRARY_PATH (how HPC modules ship it), never via the loader cache. Stock
+  # uvr's R CMD INSTALL subprocess replaces LD_LIBRARY_PATH and the source build
+  # loses the library; the fix in nbafrank/uvr#229 prepends instead. Both binaries
+  # run the same install, so the pair is the before/after.
+  ld-library-path-repro:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build patched uvr from nbafrank/uvr#229
+        run: |
+          git clone --depth 1 -b fix/ld-library-path-inheritance \
+            https://github.com/gladkia/uvr.git uvr-src
+          cargo build --release --manifest-path uvr-src/Cargo.toml
+          find uvr-src/target/release -maxdepth 1 -type f -name uvr -exec cp {} "$RUNNER_TEMP/uvr-patched" \;
+          "$RUNNER_TEMP/uvr-patched" --version
+
+      - name: Install stock uvr
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/nbafrank/uvr/main/install.sh | sh
+          cp "$HOME/.local/bin/uvr" "$RUNNER_TEMP/uvr-stock"
+          "$RUNNER_TEMP/uvr-stock" --version
+
+      - name: Move LAPACK off the loader path
+        run: |
+          sudo apt-get install -y libblas-dev liblapack-dev gfortran
+          sudo mkdir -p /opt/blas
+          sudo mv /usr/lib/x86_64-linux-gnu/liblapack.so* /usr/lib/x86_64-linux-gnu/libblas.so* /opt/blas/
+          sudo ldconfig
+          # Confirm the loader can no longer find it without the env var.
+          ! ldconfig -p | grep -q liblapack.so.3
+
+      # Matrix is the smallest package here that links LAPACK and has no binary
+      # for this R build, so it always exercises the source-install path.
+      - name: Stock uvr — expected to FAIL
+        id: stock
+        continue-on-error: true
+        env:
+          LD_LIBRARY_PATH: /opt/blas
+          UVR_NO_BINARY: "1"
+        run: |
+          mkdir -p "$RUNNER_TEMP/stock" && cd "$RUNNER_TEMP/stock"
+          "$RUNNER_TEMP/uvr-stock" init --here repro --r-version ">=4.5.0"
+          "$RUNNER_TEMP/uvr-stock" add Matrix
+
+      - name: Patched uvr — expected to PASS
+        env:
+          LD_LIBRARY_PATH: /opt/blas
+          UVR_NO_BINARY: "1"
+        run: |
+          mkdir -p "$RUNNER_TEMP/patched" && cd "$RUNNER_TEMP/patched"
+          "$RUNNER_TEMP/uvr-patched" init --here repro --r-version ">=4.5.0"
+          "$RUNNER_TEMP/uvr-patched" add Matrix
+
+      - name: Verdict
+        run: |
+          echo "stock uvr:   ${{ steps.stock.outcome }} (failure = bug reproduced)"
+          echo "patched uvr: success (fix confirmed)"
+          test "${{ steps.stock.outcome }}" = "failure" \
+            || echo "::warning::stock uvr did not fail — repro no longer isolates the bug"
