@@ -121,6 +121,20 @@ jobs:
       - name: Install pinned R
         run: uvr r install 4.5.3
 
+      # Order matters. Matrix must be COMPILED while system LAPACK is still
+      # visible, so its .so hard-links liblapack.so.3. Build it after hiding the
+      # library and Matrix's configure silently falls back to R's bundled
+      # libRlapack.so — then nothing in the test depends on LD_LIBRARY_PATH and
+      # stock uvr passes for a reason that has nothing to do with #228.
+      - name: Build Matrix against system LAPACK
+        env:
+          UVR_NO_BINARY: "1"
+        run: |
+          mkdir -p "$RUNNER_TEMP/p" && cd "$RUNNER_TEMP/p"
+          uvr init --here repro --r-version ">=4.5.0"
+          uvr add Matrix
+          ldd .uvr/library/Matrix/libs/Matrix.so | grep lapack
+
       - name: Hide LAPACK from the loader
         run: .github/scripts/hide-lapack.sh
 
@@ -129,8 +143,7 @@ jobs:
           LD_LIBRARY_PATH: /opt/blas
           UVR_NO_BINARY: "1"
         run: |
-          mkdir -p "$RUNNER_TEMP/p" && cd "$RUNNER_TEMP/p"
-          uvr init --here repro --r-version ">=4.5.0"
+          cd "$RUNNER_TEMP/p"
           if uvr add --bioc S4Arrays; then
             echo "::error::stock uvr installed S4Arrays — the repro no longer isolates #228"
             exit 1
@@ -165,6 +178,15 @@ jobs:
       - name: Install pinned R
         run: uvr r install 4.5.3
 
+      - name: Build Matrix against system LAPACK
+        env:
+          UVR_NO_BINARY: "1"
+        run: |
+          mkdir -p "$RUNNER_TEMP/p" && cd "$RUNNER_TEMP/p"
+          uvr init --here repro --r-version ">=4.5.0"
+          uvr add Matrix
+          ldd .uvr/library/Matrix/libs/Matrix.so | grep lapack
+
       - name: Hide LAPACK from the loader
         run: .github/scripts/hide-lapack.sh
 
@@ -173,7 +195,6 @@ jobs:
           LD_LIBRARY_PATH: /opt/blas
           UVR_NO_BINARY: "1"
         run: |
-          mkdir -p "$RUNNER_TEMP/p" && cd "$RUNNER_TEMP/p"
-          uvr init --here repro --r-version ">=4.5.0"
+          cd "$RUNNER_TEMP/p"
           uvr add --bioc S4Arrays
           echo "patched uvr installed S4Arrays through LD_LIBRARY_PATH — fix confirmed"
