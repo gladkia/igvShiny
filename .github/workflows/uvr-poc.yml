@@ -89,7 +89,8 @@ jobs:
       # Shared by both binaries — they read the same ~/.uvr/r-versions. Must run
       # before LAPACK is moved, so the download itself is not part of the repro.
       - name: Install pinned R
-        run: "$RUNNER_TEMP/uvr-stock" r install 4.5.3
+        run: |
+          "$RUNNER_TEMP/uvr-stock" r install 4.5.3
 
       - name: Move LAPACK off the loader path
         run: |
