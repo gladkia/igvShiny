@@ -43,3 +43,10 @@ build_log.txt
 
 # BiocCheck artifacts
 *.BiocCheck/
+/.uvr/library/
+/.uvr/activate*
+
+# uvr: machine-local absolute paths, must not be shared
+/.vscode/
+# uvr: local R session hook, CI uses .uvr/activate instead
+/.Rprofile

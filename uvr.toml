@@ -1,0 +1,46 @@
+[project]
+name = "igvShiny"
+r_version = ">=4.5.0"
+description = "igvShiny: a wrapper of Integrative Genomics Viewer (IGV - an interactive tool for visualization and exploration integrated genomic data)"
+
+[dependencies]
+checkmate = "*"
+"futile.logger" = "*"
+htmlwidgets = "*"
+httr = "*"
+jsonlite = "*"
+methods = "*"
+randomcoloR = "*"
+shiny = "*"
+utils = "*"
+
+[dependencies.BiocGenerics]
+bioc = true
+
+[dependencies.GenomeInfoDbData]
+bioc = true
+
+[dependencies.GenomicRanges]
+bioc = true
+
+[dev-dependencies]
+bslib = "*"
+covr = "*"
+knitr = "*"
+shinytest2 = "*"
+testthat = "*"
+
+[dev-dependencies.BiocStyle]
+bioc = true
+
+[dev-dependencies.GenomicAlignments]
+bioc = true
+
+[dev-dependencies.Rsamtools]
+bioc = true
+
+[dev-dependencies.VariantAnnotation]
+bioc = true
+
+[dev-dependencies.rtracklayer]
+bioc = true

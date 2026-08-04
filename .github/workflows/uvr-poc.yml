@@ -1,0 +1,48 @@
+name: uvr PoC
+
+# Proof of concept: resolve and install this package's dependency tree with uvr
+# (https://github.com/nbafrank/uvr) instead of the usual Bioconductor container
+# + r-lib/actions path, then run the standard R CMD build/check on top of it.
+# Runs alongside check-bioc.yml — it does not replace it.
+
+on:
+  push:
+    branches: [poc/uvr-ci]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  uvr-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uvr
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/nbafrank/uvr/main/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Report versions
+        run: uvr --version && uvr doctor || true
+
+      - name: Install pinned R
+        run: uvr r install 4.5.3
+
+      - name: Sync dependencies from lockfile
+        run: uvr sync --frozen --install-system-deps
+
+      - name: R CMD build + check
+        run: |
+          uvr activate --write-shim
+          . ./.uvr/activate
+          R --version
+          R CMD build .
+          R CMD check --no-manual "$(ls -1t igvShiny_*.tar.gz | head -1)"
+
+      - name: Upload check log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uvr-check-log
+          path: igvShiny.Rcheck/00check.log
+          if-no-files-found: ignore

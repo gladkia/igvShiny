@@ -11,3 +11,7 @@
 ^\.serena$
 ^CLAUDE\.md$
 ^demo$
+^uvr\.toml$
+^uvr\.lock$
+^\.uvr$
+^\.Rprofile$
