@@ -28,8 +28,17 @@ jobs:
       - name: Install pinned R
         run: uvr r install 4.5.3
 
+      # uvr's sysreq resolver asks for `chromium`, which on Ubuntu 24.04 maps to
+      # the `chromium-browser` snap stub — dpkg fails on it in CI and takes the
+      # whole sync down with it. The runner already ships Chrome for shinytest2,
+      # so install the rest by hand and let uvr sync without the flag.
+      - name: System dependencies (minus chromium)
+        run: |
+          sudo apt-get install -y cmake libbz2-dev libcurl4-openssl-dev \
+            liblzma-dev libnode-dev libpng-dev libuv1-dev pandoc
+
       - name: Sync dependencies from lockfile
-        run: uvr sync --frozen --install-system-deps
+        run: uvr sync --frozen
 
       - name: R CMD build + check
         run: |
