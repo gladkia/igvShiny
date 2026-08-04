@@ -143,10 +143,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Fetched as refs/pull/229/head from the upstream repo, not as a branch from
+      # the fork: GitHub keeps PR refs after the PR merges and after a fork is
+      # deleted, so this job keeps building the same code once #229 lands and the
+      # branch goes away. The SHA is asserted so a force-push cannot swap the code
+      # under a green result.
       - name: Build patched uvr from nbafrank/uvr#229
+        env:
+          PR_SHA: 9c50aeeb14281003d38228641d30d5f18ebdf5db
         run: |
-          git clone --depth 1 -b fix/ld-library-path-inheritance \
-            https://github.com/gladkia/uvr.git "$RUNNER_TEMP/uvr-src"
+          git init -q "$RUNNER_TEMP/uvr-src"
+          git -C "$RUNNER_TEMP/uvr-src" remote add origin https://github.com/nbafrank/uvr.git
+          git -C "$RUNNER_TEMP/uvr-src" fetch -q --depth 1 origin refs/pull/229/head
+          git -C "$RUNNER_TEMP/uvr-src" checkout -q FETCH_HEAD
+          got=$(git -C "$RUNNER_TEMP/uvr-src" rev-parse HEAD)
+          test "$got" = "$PR_SHA" || { echo "::error::PR#229 head is $got, expected $PR_SHA"; exit 1; }
           cargo build --release --manifest-path "$RUNNER_TEMP/uvr-src/Cargo.toml"
           install -D -m755 "$RUNNER_TEMP/uvr-src/target/release/uvr" "$HOME/.local/bin/uvr"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
