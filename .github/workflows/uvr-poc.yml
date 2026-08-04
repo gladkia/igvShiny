@@ -163,7 +163,7 @@ jobs:
       # under a green result.
       - name: Build patched uvr from nbafrank/uvr#229
         env:
-          PR_SHA: 9c50aeeb14281003d38228641d30d5f18ebdf5db
+          PR_SHA: f4c7162fd8061d0419e360d62cd723d1960e2f1a
         run: |
           git init -q "$RUNNER_TEMP/uvr-src"
           git -C "$RUNNER_TEMP/uvr-src" remote add origin https://github.com/nbafrank/uvr.git
