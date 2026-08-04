@@ -121,19 +121,22 @@ jobs:
       - name: Install pinned R
         run: uvr r install 4.5.3
 
-      # Order matters. Matrix must be COMPILED while system LAPACK is still
-      # visible, so its .so hard-links liblapack.so.3. Build it after hiding the
-      # library and Matrix's configure silently falls back to R's bundled
-      # libRlapack.so — then nothing in the test depends on LD_LIBRARY_PATH and
-      # stock uvr passes for a reason that has nothing to do with #228.
-      - name: Build Matrix against system LAPACK
-        env:
-          UVR_NO_BINARY: "1"
+      # Matrix must come as a P3M BINARY, not from source. Posit's Ubuntu builds
+      # link the system liblapack.so.3, while a source build on this R links the
+      # bundled libRlapack.so instead and never touches the system library — so a
+      # source-built Matrix makes the whole test independent of LD_LIBRARY_PATH.
+      # That is why run 2 of uvr-check hit "Matrix.so: liblapack.so.3: cannot open
+      # shared object file" (binary) while the source-built probe passed cleanly.
+      # The ldd output is printed, then asserted, so a future change of Posit's
+      # build flags shows up as evidence rather than as a mysterious red step.
+      - name: Install Matrix as a P3M binary (links system LAPACK)
         run: |
           mkdir -p "$RUNNER_TEMP/p" && cd "$RUNNER_TEMP/p"
           uvr init --here repro --r-version ">=4.5.0"
           uvr add Matrix
-          ldd .uvr/library/Matrix/libs/Matrix.so | grep lapack
+          ldd .uvr/library/Matrix/libs/Matrix.so || true
+          ldd .uvr/library/Matrix/libs/Matrix.so | grep -q liblapack.so.3 \
+            || { echo "::error::Matrix.so does not link system LAPACK — probe invalid"; exit 1; }
 
       - name: Hide LAPACK from the loader
         run: .github/scripts/hide-lapack.sh
@@ -178,14 +181,14 @@ jobs:
       - name: Install pinned R
         run: uvr r install 4.5.3
 
-      - name: Build Matrix against system LAPACK
-        env:
-          UVR_NO_BINARY: "1"
+      - name: Install Matrix as a P3M binary (links system LAPACK)
         run: |
           mkdir -p "$RUNNER_TEMP/p" && cd "$RUNNER_TEMP/p"
           uvr init --here repro --r-version ">=4.5.0"
           uvr add Matrix
-          ldd .uvr/library/Matrix/libs/Matrix.so | grep lapack
+          ldd .uvr/library/Matrix/libs/Matrix.so || true
+          ldd .uvr/library/Matrix/libs/Matrix.so | grep -q liblapack.so.3 \
+            || { echo "::error::Matrix.so does not link system LAPACK — probe invalid"; exit 1; }
 
       - name: Hide LAPACK from the loader
         run: .github/scripts/hide-lapack.sh
