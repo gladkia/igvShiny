@@ -31,11 +31,14 @@ jobs:
       # uvr's sysreq resolver asks for `chromium`, which on Ubuntu 24.04 maps to
       # the `chromium-browser` snap stub — dpkg fails on it in CI and takes the
       # whole sync down with it. The runner already ships Chrome for shinytest2,
-      # so install the rest by hand and let uvr sync without the flag.
+      # so install the rest by hand and let uvr sync without the flag. BLAS/LAPACK
+      # are added on top: uvr does not list them, but Matrix builds from source
+      # here and its .so needs liblapack.so.3 at load time.
       - name: System dependencies (minus chromium)
         run: |
           sudo apt-get install -y cmake libbz2-dev libcurl4-openssl-dev \
-            liblzma-dev libnode-dev libpng-dev libuv1-dev pandoc
+            liblzma-dev libnode-dev libpng-dev libuv1-dev pandoc \
+            libblas-dev liblapack-dev gfortran
 
       - name: Sync dependencies from lockfile
         run: uvr sync --frozen
