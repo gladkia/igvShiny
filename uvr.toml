@@ -5,7 +5,6 @@ description = "igvShiny: a wrapper of Integrative Genomics Viewer (IGV - an inte
 
 [dependencies]
 checkmate = "*"
-fortunes = "*"
 "futile.logger" = "*"
 htmlwidgets = "*"
 httr = "*"
