@@ -15,13 +15,13 @@ Click through BED / BedGraph / GWAS / BAM / CRAM tracks in a running app
 Cloud](https://connect.posit.cloud/); source in
 [`demo/posit-connect/`](https://gladkia.github.io/igvShiny/demo/posit-connect/).)
 
-![igvShiny demo — BAM and CRAM alignment tracks over BRCA1 (chr17) shown
-as stacked panels in the embedded IGV browser, alongside the bslib
-control sidebar](reference/figures/demo.jpg)
+![igvShiny demo — hg38 BAM and CRAM alignment tracks over the APP region
+on chr21 shown as stacked panels in the embedded IGV browser, alongside
+the bslib control sidebar](reference/figures/demo.jpg)
 
-igvShiny demo — BAM and CRAM alignment tracks over BRCA1 (chr17) shown
-as stacked panels in the embedded IGV browser, alongside the bslib
-control sidebar
+igvShiny demo — hg38 BAM and CRAM alignment tracks over the APP region
+on chr21 shown as stacked panels in the embedded IGV browser, alongside
+the bslib control sidebar
 
 ## Installation
 
