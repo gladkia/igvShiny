@@ -21,4 +21,14 @@ test_that("the human stock genomes keep their assets off hgdownload", {
   # whole-genome, and igv.js reads all of it before drawing the first gene
   expect_equal(lengths(regmatches(pinned, gregexpr("indexURL", pinned)))[1], 1L)
   expect_match(pinned, "indexed: true", fixed = TRUE)
+
+  # twoBitURL has to be spelled out for both, and this is the assertion that
+  # earns its keep: igv.js merges the registry entry by id, so a reference
+  # naming only a fasta keeps the registry's twoBitURL and the sequence comes
+  # from UCSC after all. getSequence() then never resolves and every alignment
+  # track spins forever, while the gene track still draws - so the symptom
+  # points nowhere near the cause
+  twoBit <- regmatches(pinned, gregexpr("twoBitURL: \"[^\"]+\"", pinned))[[1]]
+  expect_length(twoBit, 2L)
+  expect_true(all(grepl("https://igv.org/genomes/data/", twoBit, fixed = TRUE)))
 })
