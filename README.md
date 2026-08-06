@@ -20,7 +20,7 @@ Click through BED / BedGraph / GWAS / BAM / CRAM tracks in a running app — no
 install required. (Hosted on [Posit Connect Cloud](https://connect.posit.cloud/);
 source in [`demo/posit-connect/`](demo/posit-connect/).)
 
-![igvShiny demo — BAM and CRAM alignment tracks over BRCA1 (chr17) shown as stacked panels in the embedded IGV browser, alongside the bslib control sidebar](man/figures/demo.jpg)
+![igvShiny demo — hg38 BAM and CRAM alignment tracks over the APP region on chr21 shown as stacked panels in the embedded IGV browser, alongside the bslib control sidebar](man/figures/demo.jpg)
 
 ## Installation
 
