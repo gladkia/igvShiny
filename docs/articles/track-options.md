@@ -46,7 +46,7 @@ loadBedTrack(
 #> loadBedTrackFromFile
 #>   elementID: igv
 #>   trackName: my regions
-#>   bedFilepath: tracks/file1a6462750cf.bed
+#>   bedFilepath: tracks/file1a5d12e2e9ae.bed
 #>   color: 
 #>   trackHeight: 50
 #>   displayMode: EXPANDED
@@ -345,7 +345,7 @@ loadGwasTrack(
 #> loadGwasTrack
 #>   elementID: igv
 #>   trackName: gwas
-#>   gwasDataFilepath: tracks/file1a644e130c78.gwas
+#>   gwasDataFilepath: tracks/file1a5d612980be.gwas
 #>   color: red
 #>   trackHeight: 200
 #>   autoscale: FALSE
@@ -536,7 +536,7 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#> [1] igvShiny_1.9.41      shiny_1.14.0         GenomicRanges_1.65.1
+#> [1] igvShiny_1.9.42      shiny_1.14.0         GenomicRanges_1.65.1
 #> [4] Seqinfo_1.3.0        IRanges_2.47.2       S4Vectors_0.51.6    
 #> [7] BiocGenerics_0.59.11 generics_0.1.4       BiocStyle_2.41.0    
 #> 
