@@ -1,3 +1,8 @@
+## igvShiny 1.9.42
+* Switch the hg19 and hg38 assets to igv.org, off a hgdownload host answering in tens of seconds (#167)
+* Use the tabix-indexed RefSeq annotation, so startup reads the locus rather than the whole genome (#167)
+* Fix the demo BAM track, which drew GRCh37 reads against the hg38 reference (#168)
+
 ## igvShiny 1.9.41
 * Split the demo apps so each covers one feature in under sixty lines, adding gff3.R and junctions.R (#64)
 * Move the showcase app to inst/showcase, leaving inst/demos for the focused examples (#64)
