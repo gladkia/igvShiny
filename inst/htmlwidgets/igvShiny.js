@@ -181,6 +181,71 @@ function currentGenomicRegionEventNames(elementID)
      }
 }
 //------------------------------------------------------------------------------------------------------------
+// A stock genome is normally requested by bare id and igv.js resolves it
+// against https://igv.org/genomes/genomes3.json. For the human genomes every
+// asset that registry names - sequence, cytobands and the RefSeq annotation
+// alike - sits on hgdownload.soe.ucsc.edu, and the browser draws nothing until
+// they arrive. Two things go wrong there:
+//
+//   - the RefSeq track it ships is whole-genome and unindexed, so igv.js pulls
+//     ~25 MB down before the first gene appears, however small the locus;
+//   - hgdownload throttles hard. Measured 2026-08-06: 35 s for a 1 kB range
+//     request and 60 s timeouts, while the same bytes came off igv.org in 0.5 s.
+//
+// Together that is a browser which looks hung for half a minute on startup,
+// reported against the public demo. The URLs below carry the same data from
+// igv.org and the igv.org.genomes bucket, and the annotation is the
+// tabix-indexed build, so startup reads a few kB covering the visible locus
+// instead of the whole genome.
+//
+// mm10 stays on the registry id on purpose: the bucket has its indexed RefSeq
+// but no cytoband file, and losing the ideogram to gain startup time is the
+// worse trade.
+function pinnedReference(genomeName)
+{
+  var chromosomeOrder =
+      "chr1,chr2,chr3,chr4,chr5,chr6,chr7,chr8,chr9,chr10,chr11,chr12," +
+      "chr13,chr14,chr15,chr16,chr17,chr18,chr19,chr20,chr21,chr22,chrX,chrY";
+
+  var refseqTrack = function(stem){
+     return {
+        name: "Refseq Genes",
+        format: "refgene",
+        url: stem + ".sorted.txt.gz",
+        indexURL: stem + ".sorted.txt.gz.tbi",
+        indexed: true,
+        removable: false,
+        order: 1000000,
+        infoURL: "https://www.ncbi.nlm.nih.gov/gene/?term=$$"
+        };
+     };
+
+  var references = {
+     hg19: {
+        id: "hg19",
+        name: "Human (GRCh37/hg19)",
+        twoBitURL: "https://igv.org/genomes/data/hg19/hg19.2bit",
+        chromSizesURL: "https://igv.org/genomes/data/hg19/hg19.chrom.sizes",
+        cytobandURL: "https://igv.org/genomes/data/hg19/cytoBand.txt.gz",
+        aliasURL: "https://s3.amazonaws.com/igv.org.genomes/hg19/hg19_alias.tab",
+        chromosomeOrder: chromosomeOrder,
+        tracks: [refseqTrack("https://s3.amazonaws.com/igv.org.genomes/hg19/ncbiRefSeq")]
+        },
+     hg38: {
+        id: "hg38",
+        name: "Human (GRCh38/hg38)",
+        twoBitURL: "https://igv.org/genomes/data/hg38/hg38.2bit",
+        chromSizesURL: "https://igv.org/genomes/data/hg38/hg38.chrom.sizes",
+        cytobandURL: "https://igv.org/genomes/data/hg38/cytoBandIdeo.txt.gz",
+        aliasURL: "https://s3.amazonaws.com/igv.org.genomes/hg38/hg38_alias.tab",
+        chromosomeOrder: chromosomeOrder,
+        tracks: [refseqTrack("https://s3.amazonaws.com/igv.org.genomes/hg38/ncbiRefSeq")]
+        }
+     };
+
+  return references.hasOwnProperty(genomeName) ? references[genomeName] : null;
+}
+//------------------------------------------------------------------------------------------------------------
 function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, displayMode, trackHeight,
                                fasta, fastaIndex, annotation, moduleNS, tracks)
 {
@@ -191,18 +256,27 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
          minimumBases: 5,
          flanking: 1000,
 	       name: genomeName,
-         showRuler: true,
-         genome: genomeName
+         showRuler: true
          };
        // Stock genomes are requested by bare id: igv.js 3.x looks the id up in
        // https://igv.org/genomes/genomes3.json, which carries a working twoBit
-       // sequence for every genome igvShiny offers (issue #107).
+       // sequence for every genome igvShiny offers (issue #107). The human
+       // genomes are the exception - see pinnedReference above.
+       var pinned = pinnedReference(genomeName);
+       if(pinned){
+          igvOptions.reference = pinned;
+       } else {
+          igvOptions.genome = genomeName;
+       }
        if (tracks && tracks.length > 0) {
           igvOptions.tracks = tracks;
        }
        return(igvOptions)
        }
-       
+
+    // everything below this point is reached only for a custom genome: a stock
+    // one has already returned above
+
     var localCustomGenome_options = {
         locus: initialLocus,
         flanking: 1000,
@@ -258,8 +332,8 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
         minimumBases: 5,
         genome: "hg19"
         }; // hg19_options
-    
-    
+
+
     var hg38_options = {
         locus: initialLocus,
         height: 200,
@@ -270,8 +344,8 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
         showRuler: true,
         genome: "hg38"
         }; // hg38_options
-    
-    
+
+
     var mm10_options = {
         locus: initialLocus,
         flanking: 2000,

@@ -46,7 +46,7 @@ test_that("igvShinyDemo loads tracks correctly", {
 
     .click_and_check(app, "addBedGraphTrackButton", 'title="wig/bedGraph/local"')
     # the remote ENCODE bigWig has a test of its own below, see the note there
-    .click_and_check(app, "addBamViaHttpButton", 'title="1kg.bam"')
+    .click_and_check(app, "addBamViaHttpButton", 'title="NA19240.bam"')
     .click_and_check(app, "addCramViaHttpButton", 'title="CRAM"')
 
     app$stop()

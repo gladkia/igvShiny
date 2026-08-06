@@ -207,11 +207,16 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$addBamViaHttpButton, {
-    showGenomicRegion(session, id = "igvShiny_0", "chr5:88,733,959-88,761,606")
-    base.url <- "https://1000genomes.s3.amazonaws.com/phase3/data/HG02450/alignment"
-    url <- sprintf("%s/%s", base.url,
-                   "HG02450.mapped.ILLUMINA.bwa.ACB.low_coverage.20120522.bam")
-    loadBamTrackFromURL(session, id = "igvShiny_0", trackName = "1kg.bam",
+    # the browser runs on hg38, so the reads have to be aligned to hg38 too.
+    # This used to point at a 1000 Genomes phase 3 bam, which is GRCh37: the
+    # track loaded, and every read came up a wall of mismatches, because it was
+    # being drawn against the wrong reference (spotted on the 2026-08 LinkedIn
+    # post). NA19240 below is the igv.js structural-variant tutorial sample,
+    # aligned to hg38
+    showGenomicRegion(session, id = "igvShiny_0", "chr21:26,000,000-26,004,000")
+    url <- paste0("https://raw.githubusercontent.com/igvteam/igv-data/",
+                  "main/data/tutorials/svs/NA19240.bam")
+    loadBamTrackFromURL(session, id = "igvShiny_0", trackName = "NA19240.bam",
                         bamURL = url, indexURL = sprintf("%s.bai", url))
   })
 
