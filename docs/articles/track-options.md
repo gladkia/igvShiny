@@ -46,7 +46,7 @@ loadBedTrack(
 #> loadBedTrackFromFile
 #>   elementID: igv
 #>   trackName: my regions
-#>   bedFilepath: tracks/file19c44aa4bfe1.bed
+#>   bedFilepath: tracks/file1a6462750cf.bed
 #>   color: 
 #>   trackHeight: 50
 #>   displayMode: EXPANDED
@@ -345,7 +345,7 @@ loadGwasTrack(
 #> loadGwasTrack
 #>   elementID: igv
 #>   trackName: gwas
-#>   gwasDataFilepath: tracks/file19c465082436.gwas
+#>   gwasDataFilepath: tracks/file1a644e130c78.gwas
 #>   color: red
 #>   trackHeight: 200
 #>   autoscale: FALSE
@@ -538,10 +538,10 @@ sessionInfo()
 #> other attached packages:
 #> [1] igvShiny_1.9.41      shiny_1.14.0         GenomicRanges_1.65.1
 #> [4] Seqinfo_1.3.0        IRanges_2.47.2       S4Vectors_0.51.6    
-#> [7] BiocGenerics_0.59.10 generics_0.1.4       BiocStyle_2.41.0    
+#> [7] BiocGenerics_0.59.11 generics_0.1.4       BiocStyle_2.41.0    
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] sass_0.4.10             futile.options_1.0.1    stringi_1.8.7          
+#>  [1] sass_0.4.10             futile.options_1.0.1    stringi_1.8.9          
 #>  [4] digest_0.6.39           magrittr_2.0.5          RColorBrewer_1.1-3     
 #>  [7] evaluate_1.0.5          bookdown_0.47           fastmap_1.2.0          
 #> [10] jsonlite_2.0.0          backports_1.5.1         formatR_1.14           
