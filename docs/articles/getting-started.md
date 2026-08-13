@@ -495,7 +495,7 @@ sessionInfo()
 #> other attached packages:
 #> [1] igvShiny_1.9.42      shiny_1.14.0         GenomicRanges_1.65.1
 #> [4] Seqinfo_1.3.0        IRanges_2.47.2       S4Vectors_0.51.6    
-#> [7] BiocGenerics_0.59.11 generics_0.1.4       BiocStyle_2.41.0    
+#> [7] BiocGenerics_0.59.12 generics_0.1.4       BiocStyle_2.41.0    
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] sass_0.4.10             futile.options_1.0.1    stringi_1.8.9          
