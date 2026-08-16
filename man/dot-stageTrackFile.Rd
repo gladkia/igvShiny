@@ -4,9 +4,12 @@
 \alias{.stageTrackFile}
 \title{Make a file on disk reachable by igv.js}
 \usage{
-.stageTrackFile(path, ext)
+.stageTrackFile(session, path, ext)
 }
 \arguments{
+\item{session}{a shiny session object, which the staged file outlives no
+longer than}
+
 \item{path}{character string, an existing file}
 
 \item{ext}{character string, the extension of the served file}
