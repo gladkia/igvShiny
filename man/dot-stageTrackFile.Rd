@@ -7,8 +7,8 @@
 .stageTrackFile(session, path, ext)
 }
 \arguments{
-\item{session}{a shiny session object, which the staged file outlives no
-longer than}
+\item{session}{a shiny session object; the staged file is removed when that
+session ends}
 
 \item{path}{character string, an existing file}
 

@@ -139,8 +139,8 @@ get_tracks_dir <- function(env_var = "TRACKS_DIR") {
 #' refusing links, falls back to a copy). The name is randomized: two loaders
 #' may be handed same-named files from different directories.
 #'
-#' @param session a shiny session object, which the staged file outlives no
-#' longer than
+#' @param session a shiny session object; the staged file is removed when that
+#' session ends
 #' @param path character string, an existing file
 #' @param ext character string, the extension of the served file
 #'
