@@ -603,7 +603,7 @@ loadBedTrack <-
     tbl <- tbl[new.order, ]
 
     temp.file <-
-      tempfile(tmpdir = .tracksDir(), fileext = ".bed")
+      .trackFile(session, ".bed")
     write.table(
       tbl,
       sep = "\t",
@@ -957,7 +957,7 @@ loadVcfTrack <- function(session,
 
   state[["userAddedTracks"]] <-
     unique(c(state[["userAddedTracks"]], trackName))
-  temp.file <- tempfile(tmpdir = .tracksDir(), fileext = ".vcf")
+  temp.file <- .trackFile(session, ".vcf")
   lmsg <- sprintf("igvShiny::loadVcfTrack, about to write to file '%s'",
                   temp.file)
   flog.debug(lmsg)
@@ -1035,7 +1035,7 @@ loadGwasTrack <- function(session,
     unique(c(state[["userAddedTracks"]], trackName))
 
   temp.file <-
-    tempfile(tmpdir = .tracksDir(), fileext = ".gwas")
+    .trackFile(session, ".gwas")
   write.table(
     tbl.gwas,
     sep = "\t",
@@ -1187,8 +1187,10 @@ loadBamTrackFromLocalData <-
       removeTracksByName(session, id, trackName)
     }
 
-    t_dir <- .tracksDir()
-    fpath <- tempfile(tmpdir = t_dir, fileext = ".bam")
+    fpath <- .trackFile(session, ".bam")
+    # rtracklayer indexes the bam it writes, next to it and under a name we
+    # never see; it is served alongside, so it goes at session end too
+    .registerTrackFile(session, paste0(fpath, ".bai"))
 
     lmsg <-
       sprintf("igvShiny::load bam from local data, about to write to file '%s'",
@@ -1320,8 +1322,8 @@ loadCramTrackFromLocalData <-
       removeTracksByName(session, id, trackName)
     }
 
-    cramPath <- .stageTrackFile(cramFile, ".cram")
-    indexPath <- .stageTrackFile(indexFile, ".crai")
+    cramPath <- .stageTrackFile(session, cramFile, ".cram")
+    indexPath <- .stageTrackFile(session, indexFile, ".crai")
     flog.debug(sprintf("igvShiny::load local cram, serving '%s'", cramPath))
 
     state[["userAddedTracks"]] <-
@@ -1487,7 +1489,7 @@ loadGFF3TrackFromLocalData <-
       unique(c(state[["userAddedTracks"]], trackName))
 
     gff3.filePath <-
-      tempfile(tmpdir = .tracksDir(), fileext = ".gff3")
+      .trackFile(session, ".gff3")
     write.table(
       tbl.gff3,
       sep = "\t",
@@ -1771,7 +1773,7 @@ loadSpliceJunctionTrackFromLocalData <-
       stringsAsFactors = FALSE
     )
 
-    bed.filePath <- tempfile(tmpdir = .tracksDir(), fileext = ".bed")
+    bed.filePath <- .trackFile(session, ".bed")
     write.table(
       tbl.bed,
       file = bed.filePath,

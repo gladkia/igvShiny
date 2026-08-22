@@ -1,3 +1,6 @@
+## igvShiny 1.9.43
+* Remove the track files a session wrote when that session ends (#152)
+
 ## igvShiny 1.9.42
 * Switch the hg19 and hg38 assets to igv.org, off a hgdownload host answering in tens of seconds (#167)
 * Use the tabix-indexed RefSeq annotation, so startup reads the locus rather than the whole genome (#167)

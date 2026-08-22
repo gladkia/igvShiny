@@ -71,6 +71,66 @@ get_tracks_dir <- function(env_var = "TRACKS_DIR") {
   tracks_dir
 } # .tracksDir
 #-------------------------------------------------------------------------------
+#' Name a file in the served tracks directory, and have it removed with the
+#' session that asked for it
+#'
+#' @description Loaders write a file per track load and nothing ever removes
+#' it. In an interactive session that is harmless - the default directory sits
+#' under \code{tempdir()} and goes with the process - but a deployed app keeps
+#' one R process across many user sessions, and \code{TRACKS_DIR} may point
+#' outside \code{tempdir()} altogether, where nothing removes the files at all.
+#' Alignment loads make it concrete: a bam export or a cram copy is gigabytes.
+#'
+#' The paths handed out to one session are collected in that session's
+#' \code{userData}, and the first call registers a single
+#' \code{session$onSessionEnded()} hook to unlink the set. Assignment goes
+#' through a local binding to the \code{userData} environment on purpose:
+#' \code{session$userData$x <- value} would call the assignment method of a
+#' module's session proxy, which refuses to be written to.
+#'
+#' @param session a shiny session object
+#' @param ext character string, the extension of the served file
+#'
+#' @return string with the path to the file
+#'
+#' @keywords internal
+.trackFile <- function(session, ext) {
+  .registerTrackFile(session, tempfile(tmpdir = .tracksDir(), fileext = ext))
+} # .trackFile
+#-------------------------------------------------------------------------------
+#' Have a path removed when the session ends
+#'
+#' @description The companion of \code{.trackFile}, for the files a loader does
+#' not name itself: \code{rtracklayer::export(format = "BAM")} writes an index
+#' next to the bam it was given, and that index is served and leaks the same
+#' way. The path need not exist yet, or ever - \code{unlink()} does not mind.
+#'
+#' @param session a shiny session object
+#' @param path character string, the path to remove when the session ends
+#'
+#' @return the path, unchanged
+#'
+#' @keywords internal
+.registerTrackFile <- function(session, path) {
+  # a stub session (some downstream tests) has nothing to hang a hook on, and
+  # a leaked file beats a loader that errors
+  if (!is.function(session$onSessionEnded)) {
+    return(path)
+  }
+
+  registry <- session$userData$igvShinyTrackFiles
+  if (is.null(registry)) {
+    registry <- new.env(parent = emptyenv())
+    registry$paths <- character(0)
+    user_data <- session$userData
+    user_data$igvShinyTrackFiles <- registry
+    session$onSessionEnded(function() unlink(registry$paths))
+  }
+  registry$paths <- c(registry$paths, path)
+
+  path
+} # .registerTrackFile
+#-------------------------------------------------------------------------------
 #' Make a file on disk reachable by igv.js
 #'
 #' @description Files igv.js reads by url have to sit in the directory shiny
@@ -79,14 +139,16 @@ get_tracks_dir <- function(env_var = "TRACKS_DIR") {
 #' refusing links, falls back to a copy). The name is randomized: two loaders
 #' may be handed same-named files from different directories.
 #'
+#' @param session a shiny session object; the staged file is removed when that
+#' session ends
 #' @param path character string, an existing file
 #' @param ext character string, the extension of the served file
 #'
 #' @return string with the path to the file, relative to the shiny app
 #'
 #' @keywords internal
-.stageTrackFile <- function(path, ext) {
-  dest <- tempfile(tmpdir = .tracksDir(), fileext = ext)
+.stageTrackFile <- function(session, path, ext) {
+  dest <- .trackFile(session, ext)
   ok <- suppressWarnings(file.symlink(normalizePath(path), dest))
   if (!ok) {
     ok <- file.copy(path, dest)

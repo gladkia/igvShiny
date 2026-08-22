@@ -14,7 +14,23 @@ fake_session <- function() {
       list(type = type, message = message)
     invisible(NULL)
   }
+  # loaders park the files they write in userData and unlink them from an
+  # onSessionEnded hook, so a fake without those two leaks past every test
+  self$userData <- new.env(parent = emptyenv())
+  self$endedCallbacks <- list()
+  self$onSessionEnded <- function(callback) {
+    self$endedCallbacks <- c(self$endedCallbacks, callback)
+    invisible(NULL)
+  }
   self
+}
+
+# Close a fake session, the way shiny closes a real one when its websocket goes.
+end_session <- function(session) {
+  for (callback in session$endedCallbacks) {
+    callback()
+  }
+  invisible(NULL)
 }
 
 # The messages recorded so far, optionally narrowed to one message type.
