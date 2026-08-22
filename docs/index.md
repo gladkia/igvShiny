@@ -28,41 +28,15 @@ the bslib control sidebar
 Release version from
 [Bioconductor](https://bioconductor.org/packages/igvShiny):
 
-``` r
-
-if (!require("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-BiocManager::install("igvShiny")
-```
+`if`` ``(``!`[`require`](https://rdrr.io/r/base/library.html)`(`[`"BiocManager"`](https://bioconductor.github.io/BiocManager/)`, quietly ``=`` ``TRUE``)``)`` `` `[`install.packages`](https://rdrr.io/r/utils/install.packages.html)`(``"BiocManager"``)`` ``BiocManager``::`[`install`](https://bioconductor.github.io/BiocManager/reference/install.html)`(``"igvShiny"``)`
 
 Development version from GitHub:
 
-``` r
-
-remotes::install_github("gladkia/igvShiny")
-```
+`remotes``::`[`install_github`](https://remotes.r-lib.org/reference/install_github.html)`(``"gladkia/igvShiny"``)`
 
 ## Quick start
 
-``` r
-
-library(shiny)
-library(igvShiny)
-
-options <- parseAndValidateGenomeSpec(genomeName = "hg38", initialLocus = "NDUFS2")
-
-ui <- fluidPage(
-  igvShinyOutput("igv")
-)
-
-server <- function(input, output, session) {
-  output$igv <- renderIgvShiny({
-    igvShiny(options)
-  })
-}
-
-shinyApp(ui, server)
-```
+[`library`](https://rdrr.io/r/base/library.html)`(`[`shiny`](https://shiny.posit.co/)`)`` `[`library`](https://rdrr.io/r/base/library.html)`(`[`igvShiny`](https://github.com/gladkia/igvShiny)`)`` `` ``options`` ``<-`` `[`parseAndValidateGenomeSpec`](https://gladkia.github.io/igvShiny/reference/parseAndValidateGenomeSpec.md)`(``genomeName ``=`` ``"hg38"``, initialLocus ``=`` ``"NDUFS2"``)`` `` ``ui`` ``<-`` `[`fluidPage`](https://rdrr.io/pkg/shiny/man/fluidPage.html)`(`` `` `[`igvShinyOutput`](https://gladkia.github.io/igvShiny/reference/igvShinyOutput.md)`(``"igv"``)`` ``)`` `` ``server`` ``<-`` ``function``(``input``, ``output``, ``session``)`` ``{`` `` ``output``$``igv`` ``<-`` `[`renderIgvShiny`](https://gladkia.github.io/igvShiny/reference/renderIgvShiny.md)`(``{`` `` `[`igvShiny`](https://gladkia.github.io/igvShiny/reference/igvShiny.md)`(``options``)`` `` ``}``)`` ``}`` `` `[`shinyApp`](https://rdrr.io/pkg/shiny/man/shinyApp.html)`(``ui``, ``server``)`
 
 From there, load tracks reactively with the `load*Track*` functions
 (`loadBedTrack`, `loadBedGraphTrack`, `loadGwasTrack`,
