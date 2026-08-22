@@ -24,3 +24,6 @@ Two conventions exist for the bot's benefit:
 
 - PRs use `Related: #NNN`, not `Fixes #NNN` — see `.github/pull_request_template.md`. Auto-closing has hidden partly-finished work before (#36), but the reference still has to be there or CodeRabbit's linked-issue checks silently skip.
 - Broken external assets are checked deterministically, not by an AI reviewer: `.github/workflows/asset-url-check.yml` runs `.github/scripts/check-asset-urls.sh` weekly and files an issue when a genome, index or demo track URL stops resolving. Run the script by hand after touching any URL in `R/`, `inst/demos/` or `inst/htmlwidgets/igvShiny.js`.
+
+If a `CLAUDE.md` file exists in the repository root, read it too. Some contributors keep longer
+local notes there; it is untracked, so its absence is normal and nothing depends on it.
