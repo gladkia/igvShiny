@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.42</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.43</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,7 +62,8 @@
 <p>Two conventions exist for the bot’s benefit:</p>
 <ul><li>PRs use <code>Related: #NNN</code>, not <code>Fixes #NNN</code> — see <code>.github/pull_request_template.md</code>. Auto-closing has hidden partly-finished work before (#36), but the reference still has to be there or CodeRabbit’s linked-issue checks silently skip.</li>
 <li>Broken external assets are checked deterministically, not by an AI reviewer: <code>.github/workflows/asset-url-check.yml</code> runs <code>.github/scripts/check-asset-urls.sh</code> weekly and files an issue when a genome, index or demo track URL stops resolving. Run the script by hand after touching any URL in <code>R/</code>, <code>inst/demos/</code> or <code>inst/htmlwidgets/igvShiny.js</code>.</li>
-</ul></div>
+</ul><p>If a <code>CLAUDE.md</code> file exists in the repository root, read it too. Some contributors keep longer local notes there; it is untracked, so its absence is normal and nothing depends on it.</p>
+</div>
 </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

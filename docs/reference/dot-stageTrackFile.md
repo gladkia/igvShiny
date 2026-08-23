@@ -9,10 +9,15 @@ loaders may be handed same-named files from different directories.
 ## Usage
 
 ``` r
-.stageTrackFile(path, ext)
+.stageTrackFile(session, path, ext)
 ```
 
 ## Arguments
+
+- session:
+
+  a shiny session object; the staged file is removed when that session
+  ends
 
 - path:
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## igvShiny 1.9.43
+
+- Remove the track files a session wrote when that session ends
+  ([\#152](https://github.com/gladkia/igvShiny/issues/152))
+
 ## igvShiny 1.9.42
 
 - Switch the hg19 and hg38 assets to igv.org, off a hgdownload host

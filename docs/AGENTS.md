@@ -56,3 +56,7 @@ Two conventions exist for the bot’s benefit:
   genome, index or demo track URL stops resolving. Run the script by
   hand after touching any URL in `R/`, `inst/demos/` or
   `inst/htmlwidgets/igvShiny.js`.
+
+If a `CLAUDE.md` file exists in the repository root, read it too. Some
+contributors keep longer local notes there; it is untracked, so its
+absence is normal and nothing depends on it.
