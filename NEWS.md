@@ -1,6 +1,7 @@
 ## igvShiny 1.9.44
 * Add HTTP Range Request streaming for local BAM and CRAM tracks (#174)
 * Add serveLocalFile and loadBamTrackFromLocalFile for zero-RAM local alignment streaming (#174)
+* Add BAM local file stream to the flagship demo and update local-data demo
 
 ## igvShiny 1.9.43
 * Remove the track files a session wrote when that session ends (#152)

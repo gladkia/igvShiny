@@ -8,8 +8,8 @@
 #
 # The demo file is inside the installed package, so manifest.json's pinned
 # igvShiny commit decides which version of the app is served - see README.md.
-# The flagship deliberately avoids the *FromLocalData loaders, which is what
-# keeps Rsamtools / GenomicAlignments out of this deploy.
+# The flagship avoids in-memory *FromLocalData loaders to keep Rsamtools /
+# GenomicAlignments out of this deploy; local BAM streaming uses loadBamTrackFromLocalFile().
 
 library(igvShiny)
 

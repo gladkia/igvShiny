@@ -9,16 +9,17 @@ Two lines: it runs `inst/showcase/igvShinyDemo.R` out of the installed package.
 There is no second copy of the app to keep in sync — this used to be a
 hand-maintained fork, and it drifted from the original on every new loader.
 
-The flagship demo loads no file server-side: no `*FromLocalData` loader, hence
-no `GenomicAlignments` / `Rsamtools` / `VariantAnnotation` — the heavy
-C-compiled Bioconductor packages — in this deploy. Those loaders are demoed by
-`inst/demos/local-data.R`, which is not what gets published here. Alignment
-tracks are still on show: **BAM (URL)** and **CRAM (URL)** stream in the
-browser, with zero server-side dependency.
+The flagship demo avoids `*FromLocalData` loaders that require `GenomicAlignments` /
+`Rsamtools` / `VariantAnnotation` — the heavy C-compiled Bioconductor packages — in this deploy.
+Those in-memory loaders are demoed by `inst/demos/local-data.R`. For local alignments, the demo
+features **BAM (Local File Stream)** streaming `inst/extdata/tumor.bam` directly from disk via
+HTTP 206 Range Requests (`loadBamTrackFromLocalFile()`, zero R memory overhead, no Bioconductor C deps),
+alongside remote **BAM (URL)** and **CRAM (URL)** tracks.
 
 Server-side runtime footprint is tiny: a 74 KB `gwas.RData` loaded at startup
-(from the installed package via `system.file()`) plus small in-memory
-`data.frame`s built on click. All heavy rendering happens client-side in igv.js.
+(from the installed package via `system.file()`), small in-memory `data.frame`s
+built on click, and zero-RAM disk-streaming of `tumor.bam`. All heavy rendering
+happens client-side in igv.js.
 
 ## Deploy
 
@@ -106,4 +107,4 @@ merges, and the next republish fails with nothing to point at.
 **BAM from URL**, **CRAM from URL**, and **BedGraph from URL** stream from
 `1000genomes.s3.amazonaws.com` / `encodeproject.org`. When those hosts are slow
 or return 5xx the tracks look broken even though the app is fine. The inline /
-local-data buttons (BED, BedGraph, bed9, GWAS) always work offline.
+local-data buttons (BED, BedGraph, bed9, GWAS, BAM Local File Stream) always work offline.

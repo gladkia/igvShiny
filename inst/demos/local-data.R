@@ -1,6 +1,14 @@
-# igvShiny — alignments and variants that are already in R: the *FromLocalData
-# loaders write a file into the tracks directory and have shiny serve it, so
-# unlike the URL loaders they need the parsing package on the server side.
+# igvShiny — alignments and variants: local files vs in-memory R objects.
+#
+# For local BAM files on disk, loadBamTrackFromLocalFile() streams alignments
+# directly via HTTP 206 Partial Content (range requests) with zero RAM overhead
+# and without requiring heavy compiled Bioconductor dependencies.
+#
+# For alignments and variants already loaded in R memory, loadBamTrackFromLocalData()
+# and loadVcfTrack() serialize the R objects and serve them from the session's tracks
+# directory. (Note: loadBamTrackFromLocalData also accepts a file path directly,
+# delegating to loadBamTrackFromLocalFile).
+#
 # Loaded on click, not at startup: a missing suggested package should grey out
 # one button rather than the whole app. Junctions are in junctions.R, GFF3 in
 # gff3.R.
@@ -22,7 +30,8 @@ ui <- page_sidebar(
   fillable = TRUE,
   sidebar = sidebar(
     width = 280,
-    actionButton("addLocalBamButton", "BAM (readGAlignments)", class = "w-100 mb-2"),
+    actionButton("addLocalBamStreamButton", "BAM (loadBamTrackFromLocalFile)", class = "w-100 mb-2"),
+    actionButton("addLocalBamButton", "BAM (readGAlignments in R)", class = "w-100 mb-2"),
     actionButton("addLocalVcfButton", "VCF (readVcf)", class = "w-100 mb-2"),
     actionButton("removeUserTracksButton", "Remove user tracks",
                  class = "btn-outline-danger w-100")
@@ -32,11 +41,18 @@ ui <- page_sidebar(
 )
 
 server <- function(input, output, session) {
+  observeEvent(input$addLocalBamStreamButton, {
+    showGenomicRegion(session, id = "igvShiny_0", "chr21:10,397,614-10,423,341")
+    bam <- system.file(package = "igvShiny", "extdata", "tumor.bam")
+    loadBamTrackFromLocalFile(session, id = "igvShiny_0", trackName = "tumor.bam (stream)",
+                              bamFile = bam)
+  })
+
   observeEvent(input$addLocalBamButton, {
     if (!needs("GenomicAlignments")) return()
     showGenomicRegion(session, id = "igvShiny_0", "chr21:10,397,614-10,423,341")
     bam <- system.file(package = "igvShiny", "extdata", "tumor.bam")
-    loadBamTrackFromLocalData(session, id = "igvShiny_0", trackName = "tumor.bam",
+    loadBamTrackFromLocalData(session, id = "igvShiny_0", trackName = "tumor.bam (in-memory)",
                               data = GenomicAlignments::readGAlignments(bam))
   })
 

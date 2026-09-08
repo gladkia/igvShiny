@@ -5,11 +5,13 @@
 # tests/testthat/test-shinyApp.R drives, so the input ids are part of the
 # contract: renaming one breaks a test and the live demo at the same time.
 #
-# Deliberately no *FromLocalData loader here: those pull Rsamtools /
-# GenomicAlignments / VariantAnnotation, heavy C-compiled Bioconductor deps
-# that would have to be installed on the cloud host just to serve a demo
-# button. They live in local-data.R instead. Everything below is either built
-# from a data.frame or fetched client-side by igv.js from a URL.
+# In-memory *FromLocalData loaders (GenomicAlignments / VariantAnnotation) live
+# in local-data.R to avoid heavy compiled Bioconductor dependencies on the cloud
+# host. For local BAM files, loadBamTrackFromLocalFile() streams alignments
+# directly from disk via HTTP 206 Partial Content (range requests) with zero
+# R RAM overhead and no compiled Bioconductor dependencies. Everything below is
+# either built from a data.frame, streamed locally via range requests, or fetched
+# client-side by igv.js from a URL.
 
 library(shiny)
 library(bslib)
@@ -86,7 +88,8 @@ ui <- page_sidebar(
         demoButton("addBedGraphWithAltColorTrackButton", "BedGraph (AltColor)", "palette"),
         demoButton("addBed9TrackButton", "bed9", "grip-lines"),
         demoButton("addGwasTrackButton", "GWAS", "chart-column"),
-        demoButton("addGwasCustomTrackButton", "GWAS (columns + colors)", "palette")
+        demoButton("addGwasCustomTrackButton", "GWAS (columns + colors)", "palette"),
+        demoButton("addBamFileStreamButton", "BAM (Local File Stream)", "dna")
       ),
 
       accordion_panel(
@@ -204,6 +207,13 @@ server <- function(input, output, session) {
                        trackHeight = 200,
                        chromosomeColorMap = list("19" = "purple", "*" = "gray"))
     display(track, session, id = "igvShiny_0", deleteTracksOfSameName = FALSE)
+  })
+
+  observeEvent(input$addBamFileStreamButton, {
+    showGenomicRegion(session, id = "igvShiny_0", "chr21:10,397,614-10,423,341")
+    bamFile <- system.file(package = "igvShiny", "extdata", "tumor.bam")
+    loadBamTrackFromLocalFile(session, id = "igvShiny_0", trackName = "tumor.bam",
+                              bamFile = bamFile)
   })
 
   observeEvent(input$addBamViaHttpButton, {
