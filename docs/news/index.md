@@ -7,6 +7,8 @@
 - Add serveLocalFile and loadBamTrackFromLocalFile for zero-RAM local
   alignment streaming
   ([\#174](https://github.com/gladkia/igvShiny/issues/174))
+- Add BAM local file stream to the flagship demo and update local-data
+  demo
 
 ## igvShiny 1.9.43
 
