@@ -48,6 +48,7 @@ test_that("igvShinyDemo loads tracks correctly", {
     # the remote ENCODE bigWig has a test of its own below, see the note there
     .click_and_check(app, "addBamViaHttpButton", 'title="NA19240.bam"')
     .click_and_check(app, "addCramViaHttpButton", 'title="CRAM"')
+    .click_and_check(app, "addBamFileStreamButton", 'title="tumor.bam"')
 
     app$stop()
 })
