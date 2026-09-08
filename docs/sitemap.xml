@@ -17,6 +17,7 @@
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-sanitizeChromosomeColorMap.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-sanitizeTrack.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-sanitizeTracks.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/dot-serveFileWithHttpRange.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-stageTrackFile.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-trackFile.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-tracksDir.html</loc></url>
@@ -29,6 +30,7 @@
 <url><loc>https://gladkia.github.io/igvShiny/reference/igvShinyOutput.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/index.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/loadBamTrackFromLocalData.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/loadBamTrackFromLocalFile.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/loadBamTrackFromURL.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/loadBedGraphTrackFromURL.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/loadBedTrack.html</loc></url>
@@ -46,6 +48,7 @@
 <url><loc>https://gladkia.github.io/igvShiny/reference/removeTracksByName.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/removeUserAddedTracks.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/renderIgvShiny.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/serveLocalFile.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/show.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/showGenomicRegion.html</loc></url>
 </urlset>

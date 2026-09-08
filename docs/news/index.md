@@ -1,5 +1,13 @@
 # Changelog
 
+## igvShiny 1.9.44
+
+- Add HTTP Range Request streaming for local BAM and CRAM tracks
+  ([\#174](https://github.com/gladkia/igvShiny/issues/174))
+- Add serveLocalFile and loadBamTrackFromLocalFile for zero-RAM local
+  alignment streaming
+  ([\#174](https://github.com/gladkia/igvShiny/issues/174))
+
 ## igvShiny 1.9.43
 
 - Remove the track files a session wrote when that session ends

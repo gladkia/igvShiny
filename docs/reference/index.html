@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.43</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.44</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -142,6 +142,13 @@
 
         <dt>
 
+          <code><a href="loadBamTrackFromLocalFile.html">loadBamTrackFromLocalFile()</a></code>
+
+        </dt>
+        <dd>Load a BAM Track from a Local File via HTTP Range Requests</dd>
+
+        <dt>
+
           <code><a href="loadBamTrackFromURL.html">loadBamTrackFromURL()</a></code>
 
         </dt>
@@ -163,7 +170,7 @@
 
         <dt>
 
-          <code><a href="loadCramTrackFromLocalData.html">loadCramTrackFromLocalData()</a></code>
+          <code><a href="loadCramTrackFromLocalData.html">loadCramTrackFromLocalData()</a></code> <code><a href="loadCramTrackFromLocalData.html">loadCramTrackFromLocalFile()</a></code>
 
         </dt>
         <dd>load a cram file sitting on the same machine as the shiny app</dd>
@@ -311,6 +318,13 @@
 
         </dt>
         <dd>get_tracks_dir Get the directory where tracks are stored. The directory can be defined with environmental variable. If not defined the default is a directory called "tracks" in the temp directory. We need a local directory to write files - for instance, a vcf file representing a genomic region of interest. We then tell shiny about that directory, so that shiny's built-in http server can serve up files we write there, ultimately consumed by igv.js</dd>
+
+        <dt>
+
+          <code><a href="serveLocalFile.html">serveLocalFile()</a></code>
+
+        </dt>
+        <dd>Serve a local file via HTTP Range Requests from the Shiny session</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

@@ -13,7 +13,7 @@ directory shiny serves as "tracks".'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.43</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.44</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,6 +55,16 @@ directory shiny serves as "tracks".</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">loadCramTrackFromLocalData</span><span class="op">(</span></span>
+<span>  <span class="va">session</span>,</span>
+<span>  <span class="va">id</span>,</span>
+<span>  <span class="va">trackName</span>,</span>
+<span>  <span class="va">cramFile</span>,</span>
+<span>  indexFile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">cramFile</span>, <span class="st">".crai"</span><span class="op">)</span>,</span>
+<span>  deleteTracksOfSameName <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  trackConfig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">loadCramTrackFromLocalFile</span><span class="op">(</span></span>
 <span>  <span class="va">session</span>,</span>
 <span>  <span class="va">id</span>,</span>
 <span>  <span class="va">trackName</span>,</span>

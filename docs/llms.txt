@@ -117,6 +117,8 @@ Arkadiusz Gladki.
 
 - [`loadBamTrackFromLocalData()`](https://gladkia.github.io/igvShiny/reference/loadBamTrackFromLocalData.md)
   : load GenomicAlignments data as an igv.js alignment track
+- [`loadBamTrackFromLocalFile()`](https://gladkia.github.io/igvShiny/reference/loadBamTrackFromLocalFile.md)
+  : Load a BAM Track from a Local File via HTTP Range Requests
 - [`loadBamTrackFromURL()`](https://gladkia.github.io/igvShiny/reference/loadBamTrackFromURL.md)
   : load a bam track which, with index, is served up by http
 - [`loadBedGraphTrackFromURL()`](https://gladkia.github.io/igvShiny/reference/loadBedGraphTrackFromURL.md)
@@ -124,6 +126,7 @@ Arkadiusz Gladki.
 - [`loadBedTrack()`](https://gladkia.github.io/igvShiny/reference/loadBedTrack.md)
   : load a bed track provided as a data.frame
 - [`loadCramTrackFromLocalData()`](https://gladkia.github.io/igvShiny/reference/loadCramTrackFromLocalData.md)
+  [`loadCramTrackFromLocalFile()`](https://gladkia.github.io/igvShiny/reference/loadCramTrackFromLocalData.md)
   : load a cram file sitting on the same machine as the shiny app
 - [`loadCramTrackFromURL()`](https://gladkia.github.io/igvShiny/reference/loadCramTrackFromURL.md)
   : load a cram track which, with index, is served up by http
@@ -175,6 +178,8 @@ Arkadiusz Gladki.
   representing a genomic region of interest. We then tell shiny about
   that directory, so that shiny's built-in http server can serve up
   files we write there, ultimately consumed by igv.js
+- [`serveLocalFile()`](https://gladkia.github.io/igvShiny/reference/serveLocalFile.md)
+  : Serve a local file via HTTP Range Requests from the Shiny session
 
 # Articles
 

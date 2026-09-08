@@ -17,6 +17,16 @@ loadCramTrackFromLocalData(
   deleteTracksOfSameName = TRUE,
   trackConfig = list()
 )
+
+loadCramTrackFromLocalFile(
+  session,
+  id,
+  trackName,
+  cramFile,
+  indexFile = paste0(cramFile, ".crai"),
+  deleteTracksOfSameName = TRUE,
+  trackConfig = list()
+)
 ```
 
 ## Arguments
