@@ -27,59 +27,75 @@
     "Access-Control-Allow-Origin" = "*"
   )
 
-  # Full-file GET (no Range header)
-  if (is.null(rangeHeader) || !grepl("^bytes=", rangeHeader)) {
-    # If the file is small (<= 10MB), read in full; otherwise serve the first 10MB chunk
-    chunkLimit <- 10 * 1024 * 1024
-    lengthToRead <- min(fileSize, chunkLimit)
+  # Full-file GET helper: returns 200 OK with the entire file
+  serveFullFile <- function() {
     con <- file(filePath, "rb")
     on.exit(close(con), add = TRUE)
-    bytes <- readBin(con, "raw", n = lengthToRead)
-
-    defaultHeaders[["Content-Length"]] <- as.character(lengthToRead)
-    return(shiny:::httpResponse(
+    bytes <- readBin(con, "raw", n = fileSize)
+    headers <- defaultHeaders
+    headers[["Content-Length"]] <- as.character(fileSize)
+    shiny:::httpResponse(
       status = 200L,
       content_type = "application/octet-stream",
       content = bytes,
-      headers = defaultHeaders
-    ))
+      headers = headers
+    )
   }
 
-  # Parse Range header: "bytes=start-end" or "bytes=start-"
+  # 416 Range Not Satisfiable helper
+  rangeNotSatisfiable <- function() {
+    shiny:::httpResponse(
+      status = 416L,
+      content_type = "text/plain",
+      content = "Requested Range Not Satisfiable",
+      headers = list(
+        "Content-Range" = sprintf("bytes */%s", format(fileSize, scientific = FALSE)),
+        "Access-Control-Allow-Origin" = "*"
+      )
+    )
+  }
+
+  # Full-file GET (no Range header)
+  if (is.null(rangeHeader) || !nzchar(rangeHeader)) {
+    return(serveFullFile())
+  }
+
+  # RFC 7233 Section 4.3: If Range header contains multiple ranges (e.g. "bytes=0-1,3-4")
+  # or does not start with "bytes=", ignore the Range header and return 200 OK.
+  if (!grepl("^bytes=", rangeHeader) || grepl(",", rangeHeader)) {
+    return(serveFullFile())
+  }
+
   rangeVal <- sub("^bytes=", "", rangeHeader)
-  parts <- strsplit(rangeVal, "-")[[1]]
-  start <- suppressWarnings(as.numeric(parts[1]))
 
-  if (is.na(start) || start < 0 || start >= fileSize) {
-    return(shiny:::httpResponse(
-      status = 416L,
-      content_type = "text/plain",
-      content = "Requested Range Not Satisfiable",
-      headers = list(
-        "Content-Range" = sprintf("bytes */%s", format(fileSize, scientific = FALSE)),
-        "Access-Control-Allow-Origin" = "*"
-      )
-    ))
-  }
-
-  if (length(parts) > 1 && nzchar(parts[2])) {
-    end <- suppressWarnings(as.numeric(parts[2]))
-    if (is.na(end)) end <- fileSize - 1
-  } else {
+  # Check for suffix range: "bytes=-500" (last 500 bytes)
+  if (grepl("^-([0-9]+)$", rangeVal)) {
+    suffixLen <- suppressWarnings(as.numeric(sub("^-", "", rangeVal)))
+    if (is.na(suffixLen) || suffixLen <= 0) {
+      return(rangeNotSatisfiable())
+    }
+    start <- max(0, fileSize - suffixLen)
     end <- fileSize - 1
-  }
-
-  end <- min(end, fileSize - 1)
-  if (end < start) {
-    return(shiny:::httpResponse(
-      status = 416L,
-      content_type = "text/plain",
-      content = "Requested Range Not Satisfiable",
-      headers = list(
-        "Content-Range" = sprintf("bytes */%s", format(fileSize, scientific = FALSE)),
-        "Access-Control-Allow-Origin" = "*"
-      )
-    ))
+  } else if (grepl("^([0-9]+)-([0-9]*)$", rangeVal)) {
+    # Standard range: "bytes=start-end" or "bytes=start-"
+    parts <- regmatches(rangeVal, regexec("^([0-9]+)-([0-9]*)$", rangeVal))[[1]]
+    start <- suppressWarnings(as.numeric(parts[2]))
+    if (is.na(start) || start < 0 || start >= fileSize) {
+      return(rangeNotSatisfiable())
+    }
+    if (nzchar(parts[3])) {
+      end <- suppressWarnings(as.numeric(parts[3]))
+      if (is.na(end)) end <- fileSize - 1
+    } else {
+      end <- fileSize - 1
+    }
+    end <- min(end, fileSize - 1)
+    if (end < start) {
+      return(rangeNotSatisfiable())
+    }
+  } else {
+    # Malformed range header: per RFC 7233, ignore and serve 200 OK
+    return(serveFullFile())
   }
 
   lengthToRead <- as.integer(end - start + 1)
@@ -148,6 +164,7 @@
 #' }
 #'
 #' @export
+#' @keywords utils
 serveLocalFile <- function(session, filePath) {
   checkmate::assert_multi_class(session, c("ShinySession", "environment"))
   checkmate::assert_file_exists(filePath, access = "r")

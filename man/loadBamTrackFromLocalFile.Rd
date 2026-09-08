@@ -11,6 +11,7 @@ loadBamTrackFromLocalFile(
   bamFile,
   indexFile = paste0(bamFile, ".bai"),
   deleteTracksOfSameName = TRUE,
+  displayMode = "EXPANDED",
   trackConfig = list()
 )
 }
@@ -29,6 +30,9 @@ loadBamTrackFromLocalFile(
 \item{deleteTracksOfSameName}{logical, whether to delete any existing track
 with the same name (default: TRUE)}
 
+\item{displayMode}{character string, display mode for alignments ("EXPANDED",
+"COLLAPSED", or "SQUISHED"), default "EXPANDED"}
+
 \item{trackConfig}{list, additional track options passed to igv.js}
 }
 \value{
@@ -38,5 +42,16 @@ None, sends a message to the browser
 Streams a local BAM file and its index directly from disk using HTTP 206
 Partial Content requests handled by the Shiny session. This allows viewing
 multi-gigabyte BAM files without loading them into R memory.
+}
+\examples{
+\dontrun{
+# Inside a Shiny server function:
+bamFile <- system.file(package = "igvShiny", "extdata",
+                       "A_2_A24_02_01_01.nanopore.minimap.sorted.bam")
+baiFile <- paste0(bamFile, ".bai")
+loadBamTrackFromLocalFile(session, "igvShiny_0", "Nanopore Reads",
+                         bamFile, baiFile, displayMode = "SQUISHED")
+}
+
 }
 \keyword{track_loaders}

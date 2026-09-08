@@ -1189,6 +1189,7 @@ loadBamTrackFromLocalData <-
       return(loadBamTrackFromLocalFile(session, id, trackName,
                                        bamFile = data,
                                        deleteTracksOfSameName = deleteTracksOfSameName,
+                                       displayMode = displayMode,
                                        trackConfig = trackConfig))
     }
 
@@ -1244,9 +1245,21 @@ loadBamTrackFromLocalData <-
 #'   (default: \code{paste0(bamFile, ".bai")})
 #' @param deleteTracksOfSameName logical, whether to delete any existing track
 #'   with the same name (default: TRUE)
+#' @param displayMode character string, display mode for alignments ("EXPANDED",
+#'   "COLLAPSED", or "SQUISHED"), default "EXPANDED"
 #' @param trackConfig list, additional track options passed to igv.js
 #'
 #' @return None, sends a message to the browser
+#'
+#' @examples
+#' \dontrun{
+#' # Inside a Shiny server function:
+#' bamFile <- system.file(package = "igvShiny", "extdata",
+#'                        "A_2_A24_02_01_01.nanopore.minimap.sorted.bam")
+#' baiFile <- paste0(bamFile, ".bai")
+#' loadBamTrackFromLocalFile(session, "igvShiny_0", "Nanopore Reads",
+#'                          bamFile, baiFile, displayMode = "SQUISHED")
+#' }
 #'
 #' @keywords track_loaders
 #' @export
@@ -1257,6 +1270,7 @@ loadBamTrackFromLocalFile <-
            bamFile,
            indexFile = paste0(bamFile, ".bai"),
            deleteTracksOfSameName = TRUE,
+           displayMode = "EXPANDED",
            trackConfig = list()) {
     checkmate::assert_multi_class(session, c("ShinySession", "environment"))
     checkmate::assert_string(id)
@@ -1279,7 +1293,8 @@ loadBamTrackFromLocalFile <-
         elementID = id,
         trackName = trackName,
         bam = bamUrl,
-        index = baiUrl
+        index = baiUrl,
+        displayMode = displayMode
       )
     msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
     session$sendCustomMessage("loadBamTrackFromURL", msg.to.igv)

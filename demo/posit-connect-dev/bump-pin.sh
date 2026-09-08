@@ -6,9 +6,9 @@
 # decides what the public demo shows. Merging a demo change to master does
 # nothing until the pin moves.
 #
-#   ./demo/posit-connect/bump-pin.sh            # pin to origin/master
-#   ./demo/posit-connect/bump-pin.sh <sha>      # pin to a specific commit
-#   ./demo/posit-connect/bump-pin.sh --check    # report drift, change nothing
+#   ./demo/posit-connect-dev/bump-pin.sh            # pin to origin/master
+#   ./demo/posit-connect-dev/bump-pin.sh <sha>      # pin to a specific commit
+#   ./demo/posit-connect-dev/bump-pin.sh --check    # report drift, change nothing
 #
 # Six fields have to stay in step (two SHAs, the version, two file checksums),
 # which is why this is a script and not a paragraph in the README.
@@ -95,7 +95,8 @@ else
   $check_only && { echo "DRIFT: run bump-pin.sh to bring the manifest up to date"; exit 1; }
 fi
 
-tmp="$(mktemp)"
+tmp="$(mktemp "$dir/.manifest.json.XXXXXX")"
+trap 'rm -f "$tmp"' EXIT
 jq --arg sha "$sha" --arg version "$version" \
    --arg app "$app_md5" --arg readme "$readme_md5" '
   .packages.igvShiny.description.RemoteSha  = $sha

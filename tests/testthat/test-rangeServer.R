@@ -74,6 +74,67 @@ test_that(".serveFileWithHttpRange returns 416 for unsatisfiable ranges", {
   ))
   resp2 <- igvShiny:::.serveFileWithHttpRange(tmp, req2)
   expect_equal(resp2$status, 416L)
+
+  # Suffix 0 is invalid
+  req3 <- as.environment(list(
+    REQUEST_METHOD = "GET",
+    HTTP_RANGE = "bytes=-0"
+  ))
+  resp3 <- igvShiny:::.serveFileWithHttpRange(tmp, req3)
+  expect_equal(resp3$status, 416L)
+})
+
+test_that(".serveFileWithHttpRange handles suffix ranges correctly", {
+  tmp <- tempfile(fileext = ".bin")
+  on.exit(unlink(tmp), add = TRUE)
+  writeBin(as.raw(0:99), tmp) # 100 bytes
+
+  # Range: bytes=-10 (last 10 bytes: 90-99)
+  req <- as.environment(list(
+    REQUEST_METHOD = "GET",
+    HTTP_RANGE = "bytes=-10"
+  ))
+  resp <- igvShiny:::.serveFileWithHttpRange(tmp, req)
+  expect_equal(resp$status, 206L)
+  expect_equal(resp$headers[["Content-Range"]], "bytes 90-99/100")
+  expect_equal(resp$headers[["Content-Length"]], "10")
+  expect_equal(as.integer(resp$content), 90:99)
+
+  # Range: bytes=-200 (suffix larger than file -> returns all 100 bytes)
+  req2 <- as.environment(list(
+    REQUEST_METHOD = "GET",
+    HTTP_RANGE = "bytes=-200"
+  ))
+  resp2 <- igvShiny:::.serveFileWithHttpRange(tmp, req2)
+  expect_equal(resp2$status, 206L)
+  expect_equal(resp2$headers[["Content-Range"]], "bytes 0-99/100")
+  expect_equal(resp2$headers[["Content-Length"]], "100")
+  expect_equal(as.integer(resp2$content), 0:99)
+})
+
+test_that(".serveFileWithHttpRange ignores multiple or malformed ranges and returns 200", {
+  tmp <- tempfile(fileext = ".bin")
+  on.exit(unlink(tmp), add = TRUE)
+  writeBin(as.raw(0:49), tmp)
+
+  # Multiple ranges (unsupported per RFC 7233 Section 4.3 -> ignore and return 200)
+  req_multi <- as.environment(list(
+    REQUEST_METHOD = "GET",
+    HTTP_RANGE = "bytes=0-10,20-30"
+  ))
+  resp_multi <- igvShiny:::.serveFileWithHttpRange(tmp, req_multi)
+  expect_equal(resp_multi$status, 200L)
+  expect_equal(resp_multi$headers[["Content-Length"]], "50")
+  expect_equal(length(resp_multi$content), 50L)
+
+  # Malformed range (ignore and return 200)
+  req_malformed <- as.environment(list(
+    REQUEST_METHOD = "GET",
+    HTTP_RANGE = "bytes=abc-xyz"
+  ))
+  resp_malformed <- igvShiny:::.serveFileWithHttpRange(tmp, req_malformed)
+  expect_equal(resp_malformed$status, 200L)
+  expect_equal(resp_malformed$headers[["Content-Length"]], "50")
 })
 
 test_that(".serveFileWithHttpRange works on real BAM and BAI sample files", {
@@ -133,12 +194,14 @@ test_that("loadBamTrackFromLocalFile sends loadBamTrackFromURL custom message", 
     id = "igvTest",
     trackName = "Nanopore Reads",
     bamFile = bam_file,
-    indexFile = bai_file
+    indexFile = bai_file,
+    displayMode = "SQUISHED"
   )
 
   msg <- last_message(session, "loadBamTrackFromURL")
   expect_equal(msg$elementID, "igvTest")
   expect_equal(msg$trackName, "Nanopore Reads")
+  expect_equal(msg$displayMode, "SQUISHED")
   expect_match(msg$bam, sprintf("^session/%s/dataobj/", session$token))
   expect_match(msg$index, sprintf("^session/%s/dataobj/", session$token))
 })
@@ -154,12 +217,14 @@ test_that("loadBamTrackFromLocalData delegates character BAM path to loadBamTrac
     session = session,
     id = "igvTest",
     trackName = "Nanopore Delegated",
-    data = bam_file
+    data = bam_file,
+    displayMode = "COLLAPSED"
   )
 
   msg <- last_message(session, "loadBamTrackFromURL")
   expect_equal(msg$elementID, "igvTest")
   expect_equal(msg$trackName, "Nanopore Delegated")
+  expect_equal(msg$displayMode, "COLLAPSED")
   expect_match(msg$bam, sprintf("^session/%s/dataobj/", session$token))
 })
 
