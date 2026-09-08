@@ -219,13 +219,11 @@ test_that("loadCramTrackFromLocalData serves the cram and its index (#102)", {
                              trackConfig = list(sort = sort_by_hp()))
 
   msg <- last_message(session, "loadCramTrackFromURL")
-  expect_match(msg$cram, "^tracks/.*\\.cram$")
-  expect_match(msg$index, "^tracks/.*\\.crai$")
-  # whether the file was linked or copied, the served paths must reach the
-  # bytes - and the index must not be a second copy of the cram
-  served <- function(path) file.path(get_tracks_dir(), basename(path))
-  expect_equal(readBin(served(msg$cram), "raw", 4L), charToRaw("CRAM"))
-  expect_equal(readBin(served(msg$index), "raw", 4L), charToRaw("CRAI"))
+  expect_match(msg$cram, "^session/.*/dataobj/.*\\.cram")
+  expect_match(msg$index, "^session/.*/dataobj/.*\\.crai")
+  # Served directly via session$registerDataObj with Range support (no file copy)
+  expect_true(any(grepl("\\.cram", names(session$registeredDataObjs))))
+  expect_true(any(grepl("\\.crai", names(session$registeredDataObjs))))
   expect_equal(msg$sort, sort_by_hp())
 })
 

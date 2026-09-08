@@ -2,9 +2,20 @@
 % Please edit documentation in R/igvShiny.R
 \name{loadCramTrackFromLocalData}
 \alias{loadCramTrackFromLocalData}
+\alias{loadCramTrackFromLocalFile}
 \title{load a cram file sitting on the same machine as the shiny app}
 \usage{
 loadCramTrackFromLocalData(
+  session,
+  id,
+  trackName,
+  cramFile,
+  indexFile = paste0(cramFile, ".crai"),
+  deleteTracksOfSameName = TRUE,
+  trackConfig = list()
+)
+
+loadCramTrackFromLocalFile(
   session,
   id,
   trackName,
