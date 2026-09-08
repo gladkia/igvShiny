@@ -22,6 +22,14 @@ fake_session <- function() {
     self$endedCallbacks <- c(self$endedCallbacks, callback)
     invisible(NULL)
   }
+  self$token <- "fake_session_token_123"
+  self$registeredDataObjs <- list()
+  self$registerDataObj <- function(name, data, filterFunc) {
+    self$registeredDataObjs[[name]] <-
+      list(name = name, data = data, filterFunc = filterFunc)
+    sprintf("session/%s/dataobj/%s?w=0&nonce=123", self$token, name)
+  }
+  class(self) <- c("ShinySession", "environment")
   self
 }
 

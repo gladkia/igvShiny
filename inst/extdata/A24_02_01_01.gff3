@@ -1,0 +1,12 @@
+##gff-version 3
+##sequence-region A24_02_01_01 1 3502
+A24_02_01_01	IMGT	gene	1	3502	.	+	.	ID=gene-HLA-A;Name=HLA-A;gene_biotype=protein_coding
+A24_02_01_01	IMGT	mRNA	1	3502	.	+	.	ID=rna-HLA-A*24:02:01:01;Parent=gene-HLA-A;Name=HLA-A*24:02:01:01;product=major histocompatibility complex, class I, A
+A24_02_01_01	IMGT	exon	301	373	.	+	.	ID=exon-1;Parent=rna-HLA-A*24:02:01:01
+A24_02_01_01	IMGT	exon	504	773	.	+	.	ID=exon-2;Parent=rna-HLA-A*24:02:01:01
+A24_02_01_01	IMGT	exon	1015	1290	.	+	.	ID=exon-3;Parent=rna-HLA-A*24:02:01:01
+A24_02_01_01	IMGT	exon	1868	2143	.	+	.	ID=exon-4;Parent=rna-HLA-A*24:02:01:01
+A24_02_01_01	IMGT	exon	2544	2660	.	+	.	ID=exon-5;Parent=rna-HLA-A*24:02:01:01
+A24_02_01_01	IMGT	exon	2901	2933	.	+	.	ID=exon-6;Parent=rna-HLA-A*24:02:01:01
+A24_02_01_01	IMGT	exon	3076	3123	.	+	.	ID=exon-7;Parent=rna-HLA-A*24:02:01:01
+A24_02_01_01	IMGT	exon	3267	3271	.	+	.	ID=exon-8;Parent=rna-HLA-A*24:02:01:01

@@ -59,6 +59,7 @@ Collate:
     'constants.R'
     'genomeSpec.R'
     'GWASTrack.R'
+    'rangeServer.R'
     'igvShiny.R'
     'packages.R'
     'utils.R'

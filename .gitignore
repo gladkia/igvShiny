@@ -5,6 +5,9 @@
 *.bam
 *.bai
 *.gwas
+!inst/extdata/*.bam
+!inst/extdata/*.bai
+
 
 # Session Data files
 .RData

@@ -158,6 +158,12 @@
     track[["tracks"]] <- NULL
   }
 
+  # Normalise 'index' alias to 'indexURL'
+  if ("index" %in% names(track) && !"indexURL" %in% names(track)) {
+    track[["indexURL"]] <- track[["index"]]
+    track[["index"]] <- NULL
+  }
+
   invalidKeys <- setdiff(names(track), .validIgvTrackOptions)
   if (length(invalidKeys) > 0) {
     fmt <- paste("Ignoring invalid or unsupported track options in",
@@ -1179,6 +1185,13 @@ loadBamTrackFromLocalData <-
            deleteTracksOfSameName = TRUE,
            displayMode = "EXPANDED",
            trackConfig = list()) {
+    if (is.character(data) && length(data) == 1 && file.exists(data)) {
+      return(loadBamTrackFromLocalFile(session, id, trackName,
+                                       bamFile = data,
+                                       deleteTracksOfSameName = deleteTracksOfSameName,
+                                       trackConfig = trackConfig))
+    }
+
     if (!requireNamespace("rtracklayer"))
       stop("install rtracklayer to use loadBamTrackFromLocalData")
     if (!requireNamespace("Rsamtools"))
@@ -1212,6 +1225,66 @@ loadBamTrackFromLocalData <-
     session$sendCustomMessage("loadBamTrackFromLocalData", msg.to.igv)
 
   } # loadBamTrackFromLocalData
+
+#-------------------------------------------------------------------------------
+#' Load a BAM Track from a Local File via HTTP Range Requests
+#'
+#' Streams a local BAM file and its index directly from disk using HTTP 206
+#' Partial Content requests handled by the Shiny session. This allows viewing
+#' multi-gigabyte BAM files without loading them into R memory.
+#'
+#' @rdname loadBamTrackFromLocalFile
+#' @aliases loadBamTrackFromLocalFile
+#'
+#' @param session an environment or list, provided and managed by shiny (ShinySession)
+#' @param id character string, the html element id of this widget instance
+#' @param trackName character string, display name for the track
+#' @param bamFile character string, path to an existing, readable .bam file
+#' @param indexFile character string, path to the corresponding .bai index file
+#'   (default: \code{paste0(bamFile, ".bai")})
+#' @param deleteTracksOfSameName logical, whether to delete any existing track
+#'   with the same name (default: TRUE)
+#' @param trackConfig list, additional track options passed to igv.js
+#'
+#' @return None, sends a message to the browser
+#'
+#' @keywords track_loaders
+#' @export
+loadBamTrackFromLocalFile <-
+  function(session,
+           id,
+           trackName,
+           bamFile,
+           indexFile = paste0(bamFile, ".bai"),
+           deleteTracksOfSameName = TRUE,
+           trackConfig = list()) {
+    checkmate::assert_multi_class(session, c("ShinySession", "environment"))
+    checkmate::assert_string(id)
+    checkmate::assert_string(trackName)
+    checkmate::assert_file_exists(bamFile, access = "r")
+    checkmate::assert_file_exists(indexFile, access = "r")
+
+    if (deleteTracksOfSameName) {
+      removeTracksByName(session, id, trackName)
+    }
+
+    bamUrl <- serveLocalFile(session, bamFile)
+    baiUrl <- serveLocalFile(session, indexFile)
+
+    state[["userAddedTracks"]] <-
+      unique(c(state[["userAddedTracks"]], trackName))
+
+    base.msg.to.igv <-
+      list(
+        elementID = id,
+        trackName = trackName,
+        bam = bamUrl,
+        index = baiUrl
+      )
+    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    session$sendCustomMessage("loadBamTrackFromURL", msg.to.igv)
+
+  } # loadBamTrackFromLocalFile
 
 #-------------------------------------------------------------------------------
 #' load a cram track which, with index, is served up by http
@@ -1322,8 +1395,8 @@ loadCramTrackFromLocalData <-
       removeTracksByName(session, id, trackName)
     }
 
-    cramPath <- .stageTrackFile(session, cramFile, ".cram")
-    indexPath <- .stageTrackFile(session, indexFile, ".crai")
+    cramPath <- serveLocalFile(session, cramFile)
+    indexPath <- serveLocalFile(session, indexFile)
     flog.debug(sprintf("igvShiny::load local cram, serving '%s'", cramPath))
 
     state[["userAddedTracks"]] <-
@@ -1342,6 +1415,11 @@ loadCramTrackFromLocalData <-
     session$sendCustomMessage("loadCramTrackFromURL", msg.to.igv)
 
   } # loadCramTrackFromLocalData
+
+#' @rdname loadCramTrackFromLocalData
+#' @aliases loadCramTrackFromLocalFile
+#' @export
+loadCramTrackFromLocalFile <- loadCramTrackFromLocalData
 
 #-------------------------------------------------------------------------------
 #' load a GFF3 track which, with index, is served up by http
