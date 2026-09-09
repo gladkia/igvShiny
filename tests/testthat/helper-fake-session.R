@@ -23,6 +23,12 @@ fake_session <- function() {
     invisible(NULL)
   }
   self$token <- "fake_session_token_123"
+  self$notifications <- list()
+  self$sendNotification <- function(action, message) {
+    self$notifications[[length(self$notifications) + 1L]] <-
+      list(action = action, message = message)
+    invisible(NULL)
+  }
   self$registeredDataObjs <- list()
   self$registerDataObj <- function(name, data, filterFunc) {
     self$registeredDataObjs[[name]] <-
@@ -55,4 +61,16 @@ last_message <- function(session, type) {
   msgs <- sent_messages(session, type)
   testthat::expect_gt(length(msgs), 0L)
   msgs[[length(msgs)]]$message
+}
+
+# The notifications recorded by fake_session so far.
+sent_notifications <- function(session) {
+  session$notifications
+}
+
+# The payload of the last notification sent.
+last_notification <- function(session) {
+  notes <- sent_notifications(session)
+  testthat::expect_gt(length(notes), 0L)
+  notes[[length(notes)]]
 }
