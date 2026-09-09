@@ -92,12 +92,13 @@ check_url() {
   local url="$1" code
   # HEAD first; some static hosts answer it with 403/405, so fall back to a
   # single-byte ranged GET before calling the asset dead.
-  code=$(curl -sSL --max-time 30 -o /dev/null -w '%{http_code}' -I "$url" 2>/dev/null)
+  local ua="Mozilla/5.0 (compatible; igvShiny-asset-check/1.0)"
+  code=$(curl -sSL -A "$ua" --max-time 30 -o /dev/null -w '%{http_code}' -I "$url" 2>/dev/null)
   if [[ "$code" =~ ^2 ]]; then
     echo "$code"
     return 0
   fi
-  code=$(curl -sSL --max-time 30 -o /dev/null -w '%{http_code}' -r 0-0 "$url" 2>/dev/null)
+  code=$(curl -sSL -A "$ua" --max-time 30 -o /dev/null -w '%{http_code}' -r 0-0 "$url" 2>/dev/null)
   echo "$code"
   [[ "$code" =~ ^2 ]]
 }
