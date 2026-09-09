@@ -210,7 +210,7 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$addBamFileStreamButton, {
-    showGenomicRegion(session, id = "igvShiny_0", "chr21:10,397,614-10,423,341")
+    showGenomicRegion(session, id = "igvShiny_0", "chr21:26,000,000-26,004,000")
     bamFile <- system.file(package = "igvShiny", "extdata", "tumor.bam")
     loadBamTrackFromLocalFile(session, id = "igvShiny_0", trackName = "tumor.bam",
                               bamFile = bamFile)

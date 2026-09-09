@@ -42,7 +42,7 @@ ui <- page_sidebar(
 
 server <- function(input, output, session) {
   observeEvent(input$addLocalBamStreamButton, {
-    showGenomicRegion(session, id = "igvShiny_0", "chr21:10,397,614-10,423,341")
+    showGenomicRegion(session, id = "igvShiny_0", "chr21:26,000,000-26,004,000")
     bam <- system.file(package = "igvShiny", "extdata", "tumor.bam")
     loadBamTrackFromLocalFile(session, id = "igvShiny_0", trackName = "tumor.bam (stream)",
                               bamFile = bam)
@@ -50,7 +50,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$addLocalBamButton, {
     if (!needs("GenomicAlignments")) return()
-    showGenomicRegion(session, id = "igvShiny_0", "chr21:10,397,614-10,423,341")
+    showGenomicRegion(session, id = "igvShiny_0", "chr21:26,000,000-26,004,000")
     bam <- system.file(package = "igvShiny", "extdata", "tumor.bam")
     loadBamTrackFromLocalData(session, id = "igvShiny_0", trackName = "tumor.bam (in-memory)",
                               data = GenomicAlignments::readGAlignments(bam))
