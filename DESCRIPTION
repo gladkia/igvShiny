@@ -30,16 +30,18 @@ BugReports: https://github.com/gladkia/igvShiny/issues
 Depends: 
     GenomicRanges,
     methods,
-    shiny
+    shiny (>= 1.6.0)
 Imports: 
     BiocGenerics,
     checkmate,
     futile.logger,
+    GenomeInfoDb,
     GenomeInfoDbData,
     htmlwidgets,
     httr,
     jsonlite,
     randomcoloR,
+    stats,
     utils
 Suggests:
     BiocStyle,
@@ -47,10 +49,11 @@ Suggests:
     covr,
     GenomicAlignments,
     knitr,
+    Rhtslib,
     Rsamtools,
     rtracklayer,
-    testthat,
     shinytest2,
+    testthat,
     VariantAnnotation
 biocViews: Software, ShinyApps, Sequencing, Coverage
 License: MIT + file LICENSE

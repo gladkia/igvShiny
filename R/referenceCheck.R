@@ -149,6 +149,7 @@
         return(registry[[".last"]])
       }
     }
+    return(NULL)
   }
 
   if ("lastGenomeSpec" %in% ls(state)) {
@@ -404,16 +405,12 @@
   }, error = function(e) NULL)
 }
 
-# Extract seqinfo data safely from GenomicRanges namespace
+# Extract seqinfo data safely from GenomeInfoDb
 .getSeqinfoData <- function(x) {
   tryCatch({
-    ns <- asNamespace("GenomicRanges")
-    si_fn <- get("seqinfo", envir = ns)
-    sl_fn <- get("seqlengths", envir = ns)
-    gn_fn <- get("genome", envir = ns)
-    si <- si_fn(x)
-    lens <- sl_fn(si)
-    asm <- unique(stats::na.omit(gn_fn(si)))[1]
+    si <- GenomeInfoDb::seqinfo(x)
+    lens <- GenomeInfoDb::seqlengths(si)
+    asm <- unique(stats::na.omit(GenomeInfoDb::genome(si)))[1]
     list(contigs = lens, assembly = asm)
   }, error = function(e) NULL)
 }
@@ -527,7 +524,10 @@
 
   if (!is.null(end_col)) {
     ends <- suppressWarnings(as.numeric(tbl[[end_col]]))
-    max_coords <- tapply(ends, tbl[[chr_col]], max, na.rm = TRUE)
+    max_coords <- tapply(ends, tbl[[chr_col]], function(v) {
+      v <- v[!is.na(v)]
+      if (length(v) == 0L) NA_real_ else max(v)
+    })
   }
 
   list(contigs = lens, maxCoords = max_coords)
@@ -681,7 +681,11 @@ checkReferenceCompatibility <- function(target,
 
   if (has_canonical && ref_has_chr && !track_has_chr) {
     msg <- sprintf(
-      "Contig naming mismatch: track uses contigs without 'chr' prefix (e.g. '1'), but reference genome '%s' expects 'chr' prefix (e.g. 'chr1'). Track alignments/variants may not render in igv.js.",
+      paste(
+        "Contig naming mismatch: track uses contigs without 'chr' prefix (e.g. '1'),",
+        "but reference genome '%s' expects 'chr' prefix (e.g. 'chr1').",
+        "Track alignments/variants may not render in igv.js."
+      ),
       ref_name
     )
     res$compatible <- FALSE
@@ -689,7 +693,10 @@ checkReferenceCompatibility <- function(target,
     res$details$namingMismatch <- TRUE
   } else if (has_canonical && !ref_has_chr && track_has_chr) {
     msg <- sprintf(
-      "Contig naming mismatch: track uses 'chr' prefix (e.g. 'chr1'), but reference genome '%s' does not use 'chr' prefix (e.g. '1').",
+      paste(
+        "Contig naming mismatch: track uses 'chr' prefix (e.g. 'chr1'),",
+        "but reference genome '%s' does not use 'chr' prefix (e.g. '1')."
+      ),
       ref_name
     )
     res$compatible <- FALSE
@@ -732,7 +739,11 @@ checkReferenceCompatibility <- function(target,
         "This indicates a divergent genome assembly."
       }
       msg <- sprintf(
-        "Genome assembly mismatch: contig '%s' length in track (%s bp) differs from reference '%s' (%s bp). %s In igv.js, this causes false mismatch highlights or misaligned reads (see issue #168).",
+        paste(
+          "Genome assembly mismatch: contig '%s' length in track (%s bp)",
+          "differs from reference '%s' (%s bp). %s In igv.js, this causes",
+          "false mismatch highlights or misaligned reads (see issue #168)."
+        ),
         first_diff$trackContig,
         format(first_diff$trackLength, big.mark = ","),
         ref_name,
@@ -749,8 +760,9 @@ checkReferenceCompatibility <- function(target,
   if (!is.null(track_info$assembly) && !is.na(track_info$assembly) && nzchar(track_info$assembly)) {
     canon_ref <- .canonicalGenomeName(ref_name)
     canon_track <- .canonicalGenomeName(track_info$assembly)
-    if (!is.null(canon_ref) && !is.na(canon_ref) &&
-        !is.null(canon_track) && !is.na(canon_track) &&
+    known <- names(.canonicalChromSizes)
+    if (!is.null(canon_ref) && !is.na(canon_ref) && canon_ref %in% known &&
+        !is.null(canon_track) && !is.na(canon_track) && canon_track %in% known &&
         isTRUE(canon_ref != canon_track)) {
       if (length(res$details$lengthMismatches) == 0L) {
         msg <- sprintf(
@@ -788,7 +800,10 @@ checkReferenceCompatibility <- function(target,
       first_oob <- oob[[1]]
       chrom_name <- names(oob)[1]
       msg <- sprintf(
-        "Coordinate out-of-bounds: track contains features on '%s' up to %s bp, exceeding reference chromosome length of %s bp.",
+        paste(
+          "Coordinate out-of-bounds: track contains features on '%s' up to %s bp,",
+          "exceeding reference chromosome length of %s bp."
+        ),
         chrom_name,
         format(first_oob$maxCoord, big.mark = ","),
         format(first_oob$refLength, big.mark = ",")

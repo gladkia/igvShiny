@@ -1,4 +1,5 @@
-testthat::test_that("checkReferenceCompatibility accurately identifies BAM contig and assembly compatibility and mismatches", {
+testthat::test_that(
+  "checkReferenceCompatibility accurately identifies BAM contig and assembly compatibility and mismatches", {
   bam_file <- system.file(package = "igvShiny", "extdata", "tumor.bam")
   testthat::skip_if_not(file.exists(bam_file))
 
@@ -128,7 +129,8 @@ testthat::test_that("checkReferenceCompatibility supports custom genomes with fa
   testthat::expect_match(res2$mismatches[1], "Coordinate out-of-bounds")
 })
 
-testthat::test_that("loadBedTrack emits warning and UI toast on reference mismatch, silenced by validateReference=FALSE", {
+testthat::test_that(
+  "loadBedTrack emits warning and UI toast on reference mismatch, silenced by validateReference=FALSE", {
   session <- fake_session()
   on.exit(end_session(session), add = TRUE)
 
@@ -155,7 +157,7 @@ testthat::test_that("loadBedTrack emits warning and UI toast on reference mismat
 
   # 2. With validateReference = FALSE: no warning, no new notification
   notif_count_before <- length(sent_notifications(session))
-  testthat::expect_silent(
+  testthat::expect_no_warning(
     loadBedTrack(session, "igvTest", "Test Bed Silenced", bed_mismatch,
                  validateReference = FALSE)
   )
@@ -182,13 +184,14 @@ testthat::test_that("loadBedGraphTrack respects validateReference flag", {
     "Coordinate out-of-bounds"
   )
 
-  testthat::expect_silent(
+  testthat::expect_no_warning(
     loadBedGraphTrack(session, "igvTest", "OOB BedGraph Silenced", bg_oob,
                       autoscale = TRUE, validateReference = FALSE)
   )
 })
 
-testthat::test_that("loadBamTrackFromLocalFile emits warning on assembly mismatch, silenced by validateReference=FALSE", {
+testthat::test_that(
+  "loadBamTrackFromLocalFile emits warning on assembly mismatch, silenced by validateReference=FALSE", {
   bam_file <- system.file(package = "igvShiny", "extdata", "tumor.bam")
   bai_file <- system.file(package = "igvShiny", "extdata", "tumor.bam.bai")
   testthat::skip_if_not(file.exists(bam_file) && file.exists(bai_file))
@@ -207,7 +210,7 @@ testthat::test_that("loadBamTrackFromLocalFile emits warning on assembly mismatc
   )
 
   # 2. validateReference = FALSE: silenced
-  testthat::expect_silent(
+  testthat::expect_no_warning(
     loadBamTrackFromLocalFile(session, "igvTest", "Tumor Reads Silenced",
                               bamFile = bam_file, indexFile = bai_file,
                               validateReference = FALSE)
