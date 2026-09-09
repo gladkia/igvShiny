@@ -272,6 +272,11 @@ igvShiny <- function(genomeOptions,
   )
   stopifnot(genomeOptions[["validated"]])
 
+  # the reference check reads fastaIndex off disk, and the block below rewrites
+  # it to a served path, so the spec has to be registered before that happens
+  session <- shiny::getDefaultReactiveDomain()
+  .registerGenomeSpec(session, elementId, genomeOptions)
+
   if (!genomeOptions[["stockGenome"]] &&
         genomeOptions[["dataMode"]] == "localFiles") {
     directory.name <- .tracksDir()
@@ -303,8 +308,6 @@ igvShiny <- function(genomeOptions,
   flog.debug(sprintf("--initial track count: %d", length(tracks)))
 
   #send namespace info in case widget is being called from a module
-  session <- shiny::getDefaultReactiveDomain()
-  .registerGenomeSpec(session, elementId, genomeOptions)
   genomeOptions$displayMode <- displayMode
   genomeOptions$trackHeight <-
     100      # todo: make this an igvShiny ctor argument

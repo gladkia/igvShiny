@@ -216,3 +216,68 @@ testthat::test_that(
                               validateReference = FALSE)
   )
 })
+
+testthat::test_that("igvShiny registers the on-disk custom genome spec, not the served paths", {
+  d <- system.file(package = "igvShiny", "extdata", "sarsGenome")
+  testthat::skip_if_not(dir.exists(d))
+
+  spec <- parseAndValidateGenomeSpec(
+    "sarsGenome", "NC_045512.2:1-100",
+    stockGenome = FALSE, dataMode = "localFiles",
+    fasta = file.path(d, "Sars_cov_2.ASM985889v3.dna.toplevel.fa"),
+    fastaIndex = file.path(d, "Sars_cov_2.ASM985889v3.dna.toplevel.fa.fai"),
+    genomeAnnotation = file.path(d, "Sars_cov_2.ASM985889v3.101.gff3")
+  )
+  invisible(igvShiny(spec))
+
+  # igvShiny() rewrites fastaIndex to a served path; the registered spec must
+  # still carry the readable one, or the check silently passes everything
+  registered <- igvShiny:::.getGenomeSpec(NULL)
+  testthat::expect_gt(length(igvShiny:::.getReferenceContigs(registered)), 0L)
+
+  human_bed <- data.frame(chr = "chr1", start = 1e6, end = 2e6,
+                          stringsAsFactors = FALSE)
+  res <- checkReferenceCompatibility(human_bed, genomeSpec = registered)
+  testthat::expect_false(res$compatible)
+})
+
+testthat::test_that("genome spec is keyed on the output id the track loaders use", {
+  opts <- parseAndValidateGenomeSpec("hg38", "chr1:1-1000")
+
+  shiny::testServer(function(input, output, session) {
+    output$igvShiny_0 <- renderIgvShiny(igvShiny(opts))
+  }, {
+    invisible(output$igvShiny_0)
+    testthat::expect_true("igvShiny_0" %in% ls(session$userData$igvShinyGenomeSpecs))
+  })
+
+  shiny::testServer(function(id) {
+    shiny::moduleServer(id, function(input, output, session) {
+      output$igv <- renderIgvShiny(igvShiny(opts))
+    })
+  }, args = list(id = "mod1"), {
+    invisible(output$igv)
+    testthat::expect_true("mod1-igv" %in% ls(session$userData$igvShinyGenomeSpecs))
+  })
+})
+
+testthat::test_that("unresolvable widget id skips the check instead of guessing a genome", {
+  session <- fake_session()
+  on.exit(end_session(session), add = TRUE)
+
+  igvShiny:::.registerGenomeSpec(session, NULL, list(genomeName = "hg38", stockGenome = TRUE))
+  igvShiny:::.registerGenomeSpec(session, NULL, list(genomeName = "mm10", stockGenome = TRUE))
+
+  # chr2:189-190 Mb is in bounds on hg38 and out of bounds on mm10; guessing
+  # the last spec would raise a mismatch for a track that is fine
+  testthat::expect_null(igvShiny:::.getGenomeSpec(session, "igvShiny_0"))
+
+  bed <- data.frame(chr = "chr2", start = 189e6, end = 190e6, stringsAsFactors = FALSE)
+  testthat::expect_no_warning(loadBedTrack(session, "igvShiny_0", "ambiguous", bed))
+
+  # one genome only: the fallback still applies
+  single <- fake_session()
+  on.exit(end_session(single), add = TRUE)
+  igvShiny:::.registerGenomeSpec(single, NULL, list(genomeName = "hg38", stockGenome = TRUE))
+  testthat::expect_equal(igvShiny:::.getGenomeSpec(single, "igvShiny_0")$genomeName, "hg38")
+})

@@ -125,8 +125,20 @@
     user_data$igvShinyGenomeSpecs <- registry
   }
 
-  if (!is.null(elementId) && nzchar(elementId)) {
+  # elementId is NULL in every demo; inside renderIgvShiny() shiny knows the
+  # output id, which is exactly the id the track loaders are called with
+  if (is.null(elementId) || !nzchar(elementId)) {
+    elementId <- tryCatch(shiny::getCurrentOutputInfo()[["name"]],
+                          error = function(e) NULL)
+  }
+
+  if (!is.null(elementId) && is.character(elementId) && nzchar(elementId)) {
     registry[[elementId]] <- genomeOptions
+  }
+
+  previous <- registry[[".last"]]
+  if (!is.null(previous) && !identical(previous, genomeOptions)) {
+    registry[[".ambiguous"]] <- TRUE
   }
   registry[[".last"]] <- genomeOptions
   invisible(NULL)
@@ -144,6 +156,12 @@
       registry <- user_data$igvShinyGenomeSpecs
       if (!is.null(id) && !is.null(registry[[id]])) {
         return(registry[[id]])
+      }
+      # no entry under this id: validating against another widget's genome
+      # invents mismatches, so fall back to the last spec only while every
+      # widget in this session agrees on one
+      if (isTRUE(registry[[".ambiguous"]])) {
+        return(NULL)
       }
       if (!is.null(registry[[".last"]])) {
         return(registry[[".last"]])
