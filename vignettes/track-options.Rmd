@@ -242,7 +242,7 @@ A `default` entry in `colorTable` catches the values you did not list.
 a tag at load time is:
 
 ```{r bam-sort}
-bam.url <- "https://1000genomes.s3.amazonaws.com/phase3/NA12878.bam"
+bam.url <- "https://1000genomes.s3.amazonaws.com/phase3/data/HG02450/alignment/HG02450.mapped.ILLUMINA.bwa.ACB.low_coverage.20120522.bam"
 
 loadBamTrackFromURL(
     session, id = "igv", trackName = "reads",
