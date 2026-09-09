@@ -111,7 +111,7 @@ what igv.js is handed — including the defaults the loader fills in:</p>
 <span><span class="co">#&gt; loadBedTrackFromFile</span></span>
 <span><span class="co">#&gt;   elementID: igv</span></span>
 <span><span class="co">#&gt;   trackName: my regions</span></span>
-<span><span class="co">#&gt;   bedFilepath: tracks/file1c6b44eb7876.bed</span></span>
+<span><span class="co">#&gt;   bedFilepath: tracks/file1c7710fea5c0.bed</span></span>
 <span><span class="co">#&gt;   color: </span></span>
 <span><span class="co">#&gt;   trackHeight: 50</span></span>
 <span><span class="co">#&gt;   displayMode: EXPANDED</span></span>
@@ -586,7 +586,7 @@ values you did not list.</p>
 <p><code>sort</code> takes the same object the igv.js right-click menu
 builds, so sorting by a tag at load time is:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bam.url</span> <span class="op">&lt;-</span> <span class="st">"https://1000genomes.s3.amazonaws.com/phase3/NA12878.bam"</span></span>
+<code class="sourceCode R"><span><span class="va">bam.url</span> <span class="op">&lt;-</span> <span class="st">"https://1000genomes.s3.amazonaws.com/phase3/data/HG02450/alignment/HG02450.mapped.ILLUMINA.bwa.ACB.low_coverage.20120522.bam"</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/loadBamTrackFromURL.html">loadBamTrackFromURL</a></span><span class="op">(</span></span>
 <span>    <span class="va">session</span>, id <span class="op">=</span> <span class="st">"igv"</span>, trackName <span class="op">=</span> <span class="st">"reads"</span>,</span>
@@ -604,8 +604,8 @@ builds, so sorting by a tag at load time is:</p>
 <span><span class="co">#&gt; loadBamTrackFromURL</span></span>
 <span><span class="co">#&gt;   elementID: igv</span></span>
 <span><span class="co">#&gt;   trackName: reads</span></span>
-<span><span class="co">#&gt;   bam: https://1000genomes.s3.amazonaws.com/phase3/NA12878.bam</span></span>
-<span><span class="co">#&gt;   index: https://1000genomes.s3.amazonaws.com/phase3/NA12878.bam.bai</span></span>
+<span><span class="co">#&gt;   bam: https://1000genomes.s3.amazonaws.com/phase3/data/HG02450/alignment/HG02450.mapped.ILLUMINA.bwa.ACB.low_coverage.20120522.bam</span></span>
+<span><span class="co">#&gt;   index: https://1000genomes.s3.amazonaws.com/phase3/data/HG02450/alignment/HG02450.mapped.ILLUMINA.bwa.ACB.low_coverage.20120522.bam.bai</span></span>
 <span><span class="co">#&gt;   displayMode: EXPANDED</span></span>
 <span><span class="co">#&gt;   showAllBases: FALSE</span></span>
 <span><span class="co">#&gt;   sort: TAG,HP,chr8,128750000</span></span></code></pre></div>
@@ -717,7 +717,7 @@ error:</p>
 <span><span class="co">#&gt; loadGwasTrack</span></span>
 <span><span class="co">#&gt;   elementID: igv</span></span>
 <span><span class="co">#&gt;   trackName: gwas</span></span>
-<span><span class="co">#&gt;   gwasDataFilepath: tracks/file1c6b606e383.gwas</span></span>
+<span><span class="co">#&gt;   gwasDataFilepath: tracks/file1c774149fcfe.gwas</span></span>
 <span><span class="co">#&gt;   color: red</span></span>
 <span><span class="co">#&gt;   trackHeight: 200</span></span>
 <span><span class="co">#&gt;   autoscale: FALSE</span></span>
