@@ -28,7 +28,9 @@ checkReferenceCompatibility(
 \value{
 A list with:
 \itemize{
-  \item \code{compatible}: logical indicating if no critical mismatches were found
+  \item \code{checked}: logical indicating whether both inputs could be inspected
+  \item \code{compatible}: logical indicating if no critical mismatches were
+    found, or \code{NA} when the inputs could not be checked
   \item \code{mismatches}: character vector of descriptive warning messages
   \item \code{details}: list of specific detected anomalies (naming, length, out-of-bounds)
   \item \code{targetAssembly}: detected assembly of track, if recognized
