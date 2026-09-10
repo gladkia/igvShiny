@@ -76,8 +76,10 @@
     return(NULL)
   }
   lower <- tolower(trimws(genomeName))
-  if (lower %in% names(.canonicalChromSizes)) {
-    return(lower)
+  canonical_names <- names(.canonicalChromSizes)
+  canonical_idx <- match(lower, tolower(canonical_names))
+  if (!is.na(canonical_idx)) {
+    return(canonical_names[canonical_idx])
   }
   if (lower %in% names(.genomeAliases)) {
     return(.genomeAliases[[lower]])
@@ -88,8 +90,8 @@
       return(.genomeAliases[[alias]])
     }
   }
-  for (canon in names(.canonicalChromSizes)) {
-    if (grepl(paste0("(^|[^a-z0-9])", canon, "([^a-z0-9]|$)"), lower)) {
+  for (canon in canonical_names) {
+    if (grepl(paste0("(^|[^a-z0-9])", tolower(canon), "([^a-z0-9]|$)"), lower)) {
       return(canon)
     }
   }
@@ -208,7 +210,8 @@
         header = FALSE,
         sep = "\t",
         stringsAsFactors = FALSE,
-        nrows = 500L
+        comment.char = "",
+        quote = ""
       )
       lengths <- as.integer(tbl[[2]])
       names(lengths) <- as.character(tbl[[1]])
@@ -257,9 +260,10 @@
       names(targets) <- names(hdr$targets)
       assembly <- NULL
       if (!is.null(hdr$text)) {
-        for (sq in hdr$text[["@SQ"]]) {
-          if (!is.null(sq["AS"])) {
-            assembly <- sq["AS"]
+        sq_lines <- hdr$text[names(hdr$text) == "@SQ"]
+        for (sq in sq_lines) {
+          assembly <- .extractTag(paste(sq, collapse = "\t"), "AS")
+          if (!is.null(assembly)) {
             break
           }
         }
@@ -508,7 +512,8 @@
   if (is.character(tbl) && length(tbl) == 1L && file.exists(tbl)) {
     tryCatch({
       tbl <- utils::read.table(tbl, sep = "\t", header = FALSE,
-                               stringsAsFactors = FALSE, nrows = 1000L)
+                               stringsAsFactors = FALSE,
+                               comment.char = "", quote = "")
       colnames(tbl)[1:3] <- c("chr", "start", "end")
     }, error = function(e) return(NULL))
   }
@@ -532,9 +537,17 @@
   names(lens) <- chroms
 
   max_coords <- NULL
+  invalid_coords <- integer(0)
+  start_col <- if ("start" %in% colnames(tbl)) {
+    "start"
+  } else if (NCOL(tbl) >= 2L) {
+    colnames(tbl)[2]
+  } else {
+    NULL
+  }
   end_col <- if ("end" %in% colnames(tbl)) {
     "end"
-  } else if (NCOL(tbl) >= 3L && is.numeric(tbl[[3]])) {
+  } else if (NCOL(tbl) >= 3L) {
     colnames(tbl)[3]
   } else {
     NULL
@@ -546,9 +559,17 @@
       v <- v[!is.na(v)]
       if (length(v) == 0L) NA_real_ else max(v)
     })
+    if (!is.null(start_col)) {
+      starts <- suppressWarnings(as.numeric(tbl[[start_col]]))
+      invalid_coords <- which(
+        is.na(starts) | is.na(ends) |
+          starts < 0 | ends < 0 | starts > ends
+      )
+    }
   }
 
-  list(contigs = lens, maxCoords = max_coords)
+  list(contigs = lens, maxCoords = max_coords,
+       invalidCoordinates = invalid_coords)
 }
 
 #' Infer the likely assembly of a set of contigs from lengths or metadata
@@ -608,7 +629,9 @@
 #'
 #' @return A list with:
 #' \itemize{
-#'   \item \code{compatible}: logical indicating if no critical mismatches were found
+#'   \item \code{checked}: logical indicating whether both inputs could be inspected
+#'   \item \code{compatible}: logical indicating if no critical mismatches were
+#'     found, or \code{NA} when the inputs could not be checked
 #'   \item \code{mismatches}: character vector of descriptive warning messages
 #'   \item \code{details}: list of specific detected anomalies (naming, length, out-of-bounds)
 #'   \item \code{targetAssembly}: detected assembly of track, if recognized
@@ -643,13 +666,16 @@ checkReferenceCompatibility <- function(target,
   ref_contigs <- .getReferenceContigs(genomeSpec)
 
   res <- list(
-    compatible = TRUE,
+    checked = FALSE,
+    compatible = NA,
     mismatches = character(0),
     details = list(
       namingMismatch = FALSE,
+      missingContigs = character(0),
       lengthMismatches = list(),
       metadataMismatch = FALSE,
-      outOfBounds = list()
+      outOfBounds = list(),
+      invalidCoordinates = integer(0)
     ),
     targetAssembly = NULL,
     referenceAssembly = ref_name
@@ -662,60 +688,82 @@ checkReferenceCompatibility <- function(target,
 
   # Extract track contig information based on input type
   track_info <- NULL
+  target_type <- NULL
   if (is.character(target) && length(target) == 1L) {
     if (grepl("\\.bam$", target, ignore.case = TRUE)) {
+      target_type <- "bam"
       track_info <- .extractBamContigs(target)
     } else if (grepl("\\.cram$", target, ignore.case = TRUE)) {
+      target_type <- "cram"
       track_info <- .extractCramContigs(target)
     } else if (grepl("\\.vcf(\\.gz)?$", target, ignore.case = TRUE)) {
+      target_type <- "vcf"
       track_info <- .extractVcfContigs(target)
     } else {
       # Try BED
+      target_type <- "bed"
       track_info <- .extractBedContigs(target)
     }
   } else if (is.data.frame(target)) {
+    target_type <- "bed"
     track_info <- .extractBedContigs(target)
   } else if (inherits(target, "GAlignments") || inherits(target, "GAlignmentPairs") ||
              inherits(target, "VCF") || inherits(target, "GRanges")) {
+    target_type <- if (inherits(target, "VCF")) "vcf" else "bioc"
     track_info <- .getSeqinfoData(target)
   }
 
   if (is.null(track_info) || (length(track_info$contigs) == 0L && length(track_info$maxCoords) == 0L)) {
     return(res)
   }
+  res$checked <- TRUE
+  res$compatible <- TRUE
 
   track_contigs <- track_info$contigs
   track_assembly <- .identifyLikelyAssembly(track_contigs, track_info$assembly)
   res$targetAssembly <- track_assembly
 
-  # 1. Contig naming style comparison (UCSC 'chr' vs Ensembl/NCBI bare numbers)
-  ref_has_chr <- any(grepl("^chr", names(ref_contigs), ignore.case = TRUE))
+  # 1. Contig presence and naming style (UCSC 'chr' vs bare names)
   track_names <- if (length(track_contigs) > 0L) names(track_contigs) else names(track_info$maxCoords)
-  track_has_chr <- any(grepl("^chr", track_names, ignore.case = TRUE))
-
-  # Only check naming if track has standard human/mouse chromosomes (1..22, X, Y)
+  norm_ref_names <- sub("^chr", "", tolower(names(ref_contigs)))
   norm_track <- sub("^chr", "", tolower(track_names))
-  has_canonical <- any(norm_track %in% c("1", "2", "3", "x", "y"))
+  common_norm <- intersect(norm_ref_names, norm_track)
+  missing_norm <- setdiff(norm_track, norm_ref_names)
 
-  if (has_canonical && ref_has_chr && !track_has_chr) {
+  if (length(common_norm) == 0L) {
     msg <- sprintf(
-      paste(
-        "Contig naming mismatch: track uses contigs without 'chr' prefix (e.g. '1'),",
-        "but reference genome '%s' expects 'chr' prefix (e.g. 'chr1').",
-        "Track alignments/variants may not render in igv.js."
-      ),
+      "No track contigs match reference genome '%s'.",
       ref_name
     )
     res$compatible <- FALSE
     res$mismatches <- c(res$mismatches, msg)
-    res$details$namingMismatch <- TRUE
-  } else if (has_canonical && !ref_has_chr && track_has_chr) {
+    res$details$missingContigs <- track_names
+  }
+  strict_missing <- !is.null(track_info$maxCoords) ||
+    identical(target_type, "vcf") ||
+    isFALSE(genomeSpec[["stockGenome"]])
+  if (length(common_norm) > 0L && strict_missing && length(missing_norm) > 0L) {
+    missing <- track_names[norm_track %in% missing_norm]
     msg <- sprintf(
-      paste(
-        "Contig naming mismatch: track uses 'chr' prefix (e.g. 'chr1'),",
-        "but reference genome '%s' does not use 'chr' prefix (e.g. '1')."
-      ),
-      ref_name
+      "Track contig(s) absent from reference genome '%s': %s.",
+      ref_name, toString(missing)
+    )
+    res$compatible <- FALSE
+    res$mismatches <- c(res$mismatches, msg)
+    res$details$missingContigs <- missing
+  }
+
+  prefix_mismatches <- vapply(common_norm, function(cn) {
+    ref_idx <- match(cn, norm_ref_names)
+    track_idx <- match(cn, norm_track)
+    grepl("^chr", names(ref_contigs)[ref_idx], ignore.case = TRUE) !=
+      grepl("^chr", track_names[track_idx], ignore.case = TRUE)
+  }, logical(1))
+  if (any(prefix_mismatches)) {
+    cn <- common_norm[which(prefix_mismatches)[1]]
+    msg <- sprintf(
+      "Contig naming mismatch for '%s': track and reference use different 'chr' prefixes.",
+      cn
     )
     res$compatible <- FALSE
     res$mismatches <- c(res$mismatches, msg)
@@ -724,12 +772,9 @@ checkReferenceCompatibility <- function(target,
 
   # 2. Contig length comparison (assembly mismatch, e.g. hg19 vs hg38)
   if (length(track_contigs) > 0L) {
-    norm_ref_names <- sub("^chr", "", tolower(names(ref_contigs)))
     norm_track_names <- sub("^chr", "", tolower(names(track_contigs)))
 
     common_norm <- intersect(norm_ref_names, norm_track_names)
-    # Check primary chromosomes
-    common_norm <- intersect(common_norm, c(as.character(1:22), "x", "y"))
 
     length_diffs <- list()
     for (cn in common_norm) {
@@ -794,7 +839,15 @@ checkReferenceCompatibility <- function(target,
     }
   }
 
-  # 4. Out-of-bounds coordinates (for BED/BedGraph)
+  # 4. Invalid and out-of-bounds coordinates (for BED/BedGraph)
+  if (length(track_info$invalidCoordinates) > 0L) {
+    first_invalid <- track_info$invalidCoordinates[1]
+    msg <- sprintf("Invalid coordinate range in track row %d.", first_invalid)
+    res$compatible <- FALSE
+    res$mismatches <- c(res$mismatches, msg)
+    res$details$invalidCoordinates <- track_info$invalidCoordinates
+  }
+
   if (!is.null(track_info$maxCoords) && length(track_info$maxCoords) > 0L) {
     norm_ref_names <- sub("^chr", "", tolower(names(ref_contigs)))
     norm_coord_names <- sub("^chr", "", tolower(names(track_info$maxCoords)))
@@ -864,7 +917,7 @@ checkReferenceCompatibility <- function(target,
     compat <- checkReferenceCompatibility(target = target, genomeSpec = genomeSpec,
                                           session = session, id = id)
 
-    if (!compat$compatible && length(compat$mismatches) > 0L) {
+    if (isFALSE(compat$compatible) && length(compat$mismatches) > 0L) {
       full_msg <- sprintf(
         "igvShiny: Reference incompatibility detected for track '%s':\n%s",
         trackName,
