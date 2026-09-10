@@ -235,6 +235,11 @@ A `default` entry in `colorTable` catches the values you did not list.
 | `colorBy` | character | `"strand"`, `"firstOfPairStrand"`, `"tag"`, … |
 | `colorTable` | list | value to colour, for `colorBy = "tag"` |
 | `sort` | list | how reads are sorted when the track loads |
+| `coverageTrackHeight` | numeric | height of the coverage track in pixels (default 50) |
+| `showCoverage` | logical | show coverage histogram above alignments (default `TRUE`) |
+| `showAlignments` | logical | show alignment reads (default `TRUE`) |
+| `alignmentRowHeight` | numeric | row height in pixels for `"EXPANDED"` mode (default 14) |
+| `squishedRowHeight` | numeric | row height in pixels for `"SQUISHED"` mode (default 3) |
 | `samplingWindowSize` | numeric | window the downsampler works over |
 | `samplingDepth` | numeric | reads kept per window |
 

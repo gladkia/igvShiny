@@ -13,6 +13,7 @@ loadBamTrackFromURL(
   deleteTracksOfSameName = TRUE,
   displayMode = "EXPANDED",
   showAllBases = FALSE,
+  trackHeight = NULL,
   trackConfig = list()
 )
 }
@@ -35,6 +36,8 @@ typically small}
 "SQUISHED" or "COLLAPSED"}
 
 \item{showAllBases}{logical, show all bases in the alignment, default FALSE}
+
+\item{trackHeight}{integer, track height in pixels (default: NULL, igv.js defaults to 300)}
 
 \item{trackConfig}{a named list of additional igv.js track configuration
 options. Alignment tracks read \code{sort}: \code{list(sort =

@@ -12,6 +12,7 @@ loadCramTrackFromLocalData(
   cramFile,
   indexFile = paste0(cramFile, ".crai"),
   deleteTracksOfSameName = TRUE,
+  trackHeight = NULL,
   trackConfig = list(),
   validateReference = TRUE
 )
@@ -23,6 +24,7 @@ loadCramTrackFromLocalFile(
   cramFile,
   indexFile = paste0(cramFile, ".crai"),
   deleteTracksOfSameName = TRUE,
+  trackHeight = NULL,
   trackConfig = list(),
   validateReference = TRUE
 )
@@ -40,6 +42,8 @@ loadCramTrackFromLocalFile(
 by default the cram file with ".crai" appended}
 
 \item{deleteTracksOfSameName}{logical, default TRUE}
+
+\item{trackHeight}{integer, track height in pixels (default: NULL, igv.js defaults to 300)}
 
 \item{trackConfig}{a named list of additional igv.js track configuration
 options, \code{sort} among them; see \code{\link{loadBamTrackFromURL}}.}

@@ -270,3 +270,80 @@ test_that(".sanitizeTracks normalises 'index' to 'indexURL'", {
   expect_null(sanitized[[1]][["index"]])
   expect_false("index" %in% names(sanitized[[1]]))
 })
+
+test_that("loadBamTrackFromLocalFile forwards trackHeight and alignment trackConfig (#174)", {
+  bam_file <- system.file(package = "igvShiny", "extdata", "A_2_A24_02_01_01.nanopore.minimap.sorted.bam")
+  bai_file <- paste0(bam_file, ".bai")
+  skip_if_not(file.exists(bam_file) && file.exists(bai_file))
+
+  session <- fake_session()
+
+  # 1. explicit trackHeight argument
+  loadBamTrackFromLocalFile(
+    session = session,
+    id = "igvTest",
+    trackName = "Nanopore Height Arg",
+    bamFile = bam_file,
+    indexFile = bai_file,
+    trackHeight = 100
+  )
+  msg <- last_message(session, "loadBamTrackFromURL")
+  expect_equal(msg$height, 100)
+
+  # 2. trackHeight inside trackConfig (aliased to height)
+  loadBamTrackFromLocalFile(
+    session = session,
+    id = "igvTest",
+    trackName = "Nanopore Config TrackHeight",
+    bamFile = bam_file,
+    indexFile = bai_file,
+    trackConfig = list(trackHeight = 120)
+  )
+  msg <- last_message(session, "loadBamTrackFromURL")
+  expect_equal(msg$height, 120)
+
+  # 3. trackHeight combined with alignment coverage options
+  loadBamTrackFromLocalFile(
+    session = session,
+    id = "igvTest",
+    trackName = "Nanopore Combined",
+    bamFile = bam_file,
+    indexFile = bai_file,
+    trackHeight = 60,
+    trackConfig = list(
+      coverageTrackHeight = 20,
+      showCoverage = TRUE,
+      showAlignments = TRUE,
+      squishedRowHeight = 4
+    )
+  )
+  msg <- last_message(session, "loadBamTrackFromURL")
+  expect_equal(msg$height, 60)
+  expect_equal(msg$coverageTrackHeight, 20)
+  expect_true(msg$showCoverage)
+  expect_true(msg$showAlignments)
+  expect_equal(msg$squishedRowHeight, 4)
+})
+
+test_that("loadCramTrackFromLocalData forwards trackHeight (#174)", {
+  tmp_cram <- tempfile(fileext = ".cram")
+  tmp_crai <- tempfile(fileext = ".crai")
+  on.exit(unlink(c(tmp_cram, tmp_crai)), add = TRUE)
+  writeBin(as.raw(1:10), tmp_cram)
+  writeBin(as.raw(1:10), tmp_crai)
+
+  session <- fake_session()
+
+  loadCramTrackFromLocalData(
+    session = session,
+    id = "igvCram",
+    trackName = "Local CRAM",
+    cramFile = tmp_cram,
+    indexFile = tmp_crai,
+    trackHeight = 90
+  )
+
+  msg <- last_message(session, "loadCramTrackFromURL")
+  expect_equal(msg$height, 90)
+})
+

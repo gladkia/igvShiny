@@ -52,7 +52,10 @@
   "hideStrand",
   ## MergedTrack passes this one down to every member track it draws, which is
   ## what makes overlaid coverage readable under the junction arcs
-  "alpha"
+  "alpha",
+  ## alignment track sizing, coverage display and read row heights
+  "coverageTrackHeight", "showCoverage", "showAlignments",
+  "alignmentRowHeight", "squishedRowHeight"
   # Add other valid igv.js track options here as needed in the future
   # "tracks" is deliberately absent: it is meaningful on a merged track only,
   # and .sanitizeTrack handles it there.
@@ -94,6 +97,14 @@
     warning(sprintf(fmt, toString(conflictingKeys)))
     # Prioritize base options for security and clarity
     userOptions[conflictingKeys] <- NULL
+  }
+
+  # Map trackHeight alias to height for consistency with loader arguments
+  if ("trackHeight" %in% names(userOptions)) {
+    if (!("height" %in% names(userOptions)) && !("height" %in% names(baseOptions))) {
+      userOptions[["height"]] <- userOptions[["trackHeight"]]
+    }
+    userOptions[["trackHeight"]] <- NULL
   }
 
   # Filter user options against the allowlist of valid igv.js parameters
@@ -1117,6 +1128,7 @@ loadGwasTrack <- function(session,
 #' @param displayMode character string, possible values are "EXPANDED"(default),
 #' "SQUISHED" or "COLLAPSED"
 #' @param showAllBases logical, show all bases in the alignment, default FALSE
+#' @param trackHeight integer, track height in pixels (default: NULL, igv.js defaults to 300)
 #' @param trackConfig a named list of additional igv.js track configuration
 #' options. Alignment tracks read \code{sort}: \code{list(sort =
 #' list(chr = "chr1", position = 155160540, option = "TAG", tag = "HP"))}
@@ -1147,7 +1159,12 @@ loadBamTrackFromURL <-
            deleteTracksOfSameName = TRUE,
            displayMode = "EXPANDED",
            showAllBases = FALSE,
+           trackHeight = NULL,
            trackConfig = list()) {
+    if (is.list(trackHeight) && missing(trackConfig)) {
+      trackConfig <- trackHeight
+      trackHeight <- NULL
+    }
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
     }
@@ -1163,6 +1180,10 @@ loadBamTrackFromURL <-
         displayMode = displayMode,
         showAllBases = showAllBases
       )
+    if (!is.null(trackHeight)) {
+      checkmate::assert_number(trackHeight, lower = 1)
+      base.msg.to.igv$height <- trackHeight
+    }
 
     msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
     flog.debug("--- about to send message, loadBamTrack")
@@ -1184,6 +1205,7 @@ loadBamTrackFromURL <-
 #' @param deleteTracksOfSameName logical, default TRUE
 #' @param displayMode character string, possible values are "EXPANDED"(default),
 #' "SQUISHED" or "COLLAPSED"
+#' @param trackHeight integer, track height in pixels (default: NULL, igv.js defaults to 300)
 #' @param trackConfig a named list of additional igv.js track configuration
 #' options, \code{sort} among them; see \code{\link{loadBamTrackFromURL}}.
 #' @param validateReference logical flag, default TRUE: checks track contigs
@@ -1210,13 +1232,19 @@ loadBamTrackFromLocalData <-
            data,
            deleteTracksOfSameName = TRUE,
            displayMode = "EXPANDED",
+           trackHeight = NULL,
            trackConfig = list(),
            validateReference = TRUE) {
+    if (is.list(trackHeight) && missing(trackConfig)) {
+      trackConfig <- trackHeight
+      trackHeight <- NULL
+    }
     if (is.character(data) && length(data) == 1 && file.exists(data)) {
       return(loadBamTrackFromLocalFile(session, id, trackName,
                                        bamFile = data,
                                        deleteTracksOfSameName = deleteTracksOfSameName,
                                        displayMode = displayMode,
+                                       trackHeight = trackHeight,
                                        trackConfig = trackConfig,
                                        validateReference = validateReference))
     }
@@ -1253,6 +1281,10 @@ loadBamTrackFromLocalData <-
         bamDataFilepath = file.path("tracks", basename(fpath)),
         displayMode = displayMode
       )
+    if (!is.null(trackHeight)) {
+      checkmate::assert_number(trackHeight, lower = 1)
+      base.msg.to.igv$height <- trackHeight
+    }
     msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
     session$sendCustomMessage("loadBamTrackFromLocalData", msg.to.igv)
 
@@ -1278,6 +1310,7 @@ loadBamTrackFromLocalData <-
 #'   with the same name (default: TRUE)
 #' @param displayMode character string, display mode for alignments ("EXPANDED",
 #'   "COLLAPSED", or "SQUISHED"), default "EXPANDED"
+#' @param trackHeight integer, track height in pixels (default: NULL, igv.js defaults to 300)
 #' @param trackConfig list, additional track options passed to igv.js
 #' @param validateReference logical flag, default TRUE: checks track contigs
 #'   against the active reference genome and emits warnings/toasts on mismatch.
@@ -1291,7 +1324,8 @@ loadBamTrackFromLocalData <-
 #'                        "A_2_A24_02_01_01.nanopore.minimap.sorted.bam")
 #' baiFile <- paste0(bamFile, ".bai")
 #' loadBamTrackFromLocalFile(session, "igvShiny_0", "Nanopore Reads",
-#'                          bamFile, baiFile, displayMode = "SQUISHED")
+#'                          bamFile, baiFile, displayMode = "SQUISHED",
+#'                          trackHeight = 100)
 #' }
 #'
 #' @keywords track_loaders
@@ -1304,13 +1338,21 @@ loadBamTrackFromLocalFile <-
            indexFile = paste0(bamFile, ".bai"),
            deleteTracksOfSameName = TRUE,
            displayMode = "EXPANDED",
+           trackHeight = NULL,
            trackConfig = list(),
            validateReference = TRUE) {
+    if (is.list(trackHeight) && missing(trackConfig)) {
+      trackConfig <- trackHeight
+      trackHeight <- NULL
+    }
     checkmate::assert_multi_class(session, c("ShinySession", "environment"))
     checkmate::assert_string(id)
     checkmate::assert_string(trackName)
     checkmate::assert_file_exists(bamFile, access = "r")
     checkmate::assert_file_exists(indexFile, access = "r")
+    if (!is.null(trackHeight)) {
+      checkmate::assert_number(trackHeight, lower = 1)
+    }
 
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
@@ -1333,6 +1375,9 @@ loadBamTrackFromLocalFile <-
         index = baiUrl,
         displayMode = displayMode
       )
+    if (!is.null(trackHeight)) {
+      base.msg.to.igv$height <- trackHeight
+    }
     msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
     session$sendCustomMessage("loadBamTrackFromURL", msg.to.igv)
 
@@ -1354,6 +1399,7 @@ loadBamTrackFromLocalFile <-
 #' @param indexURL character string http url for the bam file index,
 #' typically small
 #' @param deleteTracksOfSameName logical, default TRUE
+#' @param trackHeight integer, track height in pixels (default: NULL, igv.js defaults to 300)
 #' @param trackConfig a named list of additional igv.js track configuration
 #' options, \code{sort} among them; see \code{\link{loadBamTrackFromURL}}.
 #'
@@ -1378,7 +1424,12 @@ loadCramTrackFromURL <-
            cramURL,
            indexURL,
            deleteTracksOfSameName = TRUE,
+           trackHeight = NULL,
            trackConfig = list()) {
+    if (is.list(trackHeight) && missing(trackConfig)) {
+      trackConfig <- trackHeight
+      trackHeight <- NULL
+    }
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
     }
@@ -1393,6 +1444,10 @@ loadCramTrackFromURL <-
         cram = cramURL,
         index = indexURL
       )
+    if (!is.null(trackHeight)) {
+      checkmate::assert_number(trackHeight, lower = 1)
+      base.msg.to.igv$height <- trackHeight
+    }
     msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
     session$sendCustomMessage("loadCramTrackFromURL", msg.to.igv)
 
@@ -1416,6 +1471,7 @@ loadCramTrackFromURL <-
 #' @param indexFile character string, path to its crai index,
 #' by default the cram file with ".crai" appended
 #' @param deleteTracksOfSameName logical, default TRUE
+#' @param trackHeight integer, track height in pixels (default: NULL, igv.js defaults to 300)
 #' @param trackConfig a named list of additional igv.js track configuration
 #' options, \code{sort} among them; see \code{\link{loadBamTrackFromURL}}.
 #' @param validateReference logical flag, default TRUE: checks track contigs
@@ -1442,10 +1498,18 @@ loadCramTrackFromLocalData <-
            cramFile,
            indexFile = paste0(cramFile, ".crai"),
            deleteTracksOfSameName = TRUE,
+           trackHeight = NULL,
            trackConfig = list(),
            validateReference = TRUE) {
+    if (is.list(trackHeight) && missing(trackConfig)) {
+      trackConfig <- trackHeight
+      trackHeight <- NULL
+    }
     checkmate::assert_file_exists(cramFile, access = "r")
     checkmate::assert_file_exists(indexFile, access = "r")
+    if (!is.null(trackHeight)) {
+      checkmate::assert_number(trackHeight, lower = 1)
+    }
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
     }
@@ -1467,6 +1531,9 @@ loadCramTrackFromLocalData <-
         cram = cramPath,
         index = indexPath
       )
+    if (!is.null(trackHeight)) {
+      base.msg.to.igv$height <- trackHeight
+    }
     msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
     # the payload is what the remote loader sends, only with app-relative urls,
     # so the browser side needs no handler of its own

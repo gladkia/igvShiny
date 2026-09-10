@@ -12,6 +12,7 @@ loadBamTrackFromLocalFile(
   indexFile = paste0(bamFile, ".bai"),
   deleteTracksOfSameName = TRUE,
   displayMode = "EXPANDED",
+  trackHeight = NULL,
   trackConfig = list(),
   validateReference = TRUE
 )
@@ -34,6 +35,8 @@ with the same name (default: TRUE)}
 \item{displayMode}{character string, display mode for alignments ("EXPANDED",
 "COLLAPSED", or "SQUISHED"), default "EXPANDED"}
 
+\item{trackHeight}{integer, track height in pixels (default: NULL, igv.js defaults to 300)}
+
 \item{trackConfig}{list, additional track options passed to igv.js}
 
 \item{validateReference}{logical flag, default TRUE: checks track contigs
@@ -54,7 +57,8 @@ bamFile <- system.file(package = "igvShiny", "extdata",
                        "A_2_A24_02_01_01.nanopore.minimap.sorted.bam")
 baiFile <- paste0(bamFile, ".bai")
 loadBamTrackFromLocalFile(session, "igvShiny_0", "Nanopore Reads",
-                         bamFile, baiFile, displayMode = "SQUISHED")
+                         bamFile, baiFile, displayMode = "SQUISHED",
+                         trackHeight = 100)
 }
 
 }

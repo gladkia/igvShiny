@@ -86,3 +86,40 @@ test_that("an empty tracks argument yields an empty list, not NULL (#36)", {
   expect_equal(sanitizeTracks(list()), list())
   expect_equal(sanitizeTracks(NULL), list())
 })
+
+test_that("trackHeight in trackConfig is aliased to height (#174)", {
+  base <- list(elementID = "igvShiny_0")
+  merged <- sanitizeAndMergeOptions(base, list(trackHeight = 100))
+  expect_equal(merged$height, 100)
+  expect_null(merged$trackHeight)
+
+  # explicit height takes precedence over trackHeight alias
+  merged_both <- sanitizeAndMergeOptions(base, list(height = 120, trackHeight = 100))
+  expect_equal(merged_both$height, 120)
+  expect_null(merged_both$trackHeight)
+
+  # trackHeight in userOptions conflicts if base already has trackHeight
+  base_with_height <- list(elementID = "igvShiny_0", trackHeight = 50)
+  expect_warning(
+    merged_conflict <- sanitizeAndMergeOptions(base_with_height, list(trackHeight = 100)),
+    "conflict with function arguments"
+  )
+  expect_equal(merged_conflict$trackHeight, 50)
+})
+
+test_that("alignment track sizing and visibility options pass validation (#174)", {
+  base <- list(elementID = "igvShiny_0")
+  opts <- list(
+    coverageTrackHeight = 25,
+    showCoverage = FALSE,
+    showAlignments = TRUE,
+    alignmentRowHeight = 20,
+    squishedRowHeight = 5
+  )
+  expect_silent(merged <- sanitizeAndMergeOptions(base, opts))
+  expect_equal(merged$coverageTrackHeight, 25)
+  expect_false(merged$showCoverage)
+  expect_true(merged$showAlignments)
+  expect_equal(merged$alignmentRowHeight, 20)
+  expect_equal(merged$squishedRowHeight, 5)
+})
