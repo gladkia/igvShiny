@@ -734,7 +734,7 @@ checkReferenceCompatibility <- function(target,
     missing <- track_names[norm_track %in% missing_norm]
     msg <- sprintf(
       "Track contig(s) absent from reference genome '%s': %s.",
-      ref_name, paste(missing, collapse = ", ")
+      ref_name, toString(missing)
     )
     res$compatible <- FALSE
     res$mismatches <- c(res$mismatches, msg)
