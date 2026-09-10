@@ -346,4 +346,3 @@ test_that("loadCramTrackFromLocalData forwards trackHeight (#174)", {
   msg <- last_message(session, "loadCramTrackFromURL")
   expect_equal(msg$height, 90)
 })
-
