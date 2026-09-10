@@ -14,7 +14,8 @@ loadBedTrack(
   trackHeight = 50,
   deleteTracksOfSameName = TRUE,
   quiet = TRUE,
-  trackConfig = list()
+  trackConfig = list(),
+  validateReference = TRUE
 )
 ```
 
@@ -55,6 +56,12 @@ loadBedTrack(
 - trackConfig:
 
   a named list of additional igv.js track configuration options.
+
+- validateReference:
+
+  logical flag, default TRUE: checks track contigs and coordinates
+  against the active reference genome and emits warnings/toasts on
+  mismatch.
 
 ## Value
 

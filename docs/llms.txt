@@ -164,6 +164,9 @@ Arkadiusz Gladki.
 
 ## Utils
 
+- [`checkReferenceCompatibility()`](https://gladkia.github.io/igvShiny/reference/checkReferenceCompatibility.md)
+  : Check reference compatibility between track data and genome
+  specification
 - [`get_basic_genomes()`](https://gladkia.github.io/igvShiny/reference/get_basic_genomes.md)
   : get_basic_genomes
 - [`get_cas_genomes()`](https://gladkia.github.io/igvShiny/reference/get_cas_genomes.md)

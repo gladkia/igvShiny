@@ -12,7 +12,8 @@ loadBamTrackFromLocalData(
   data,
   deleteTracksOfSameName = TRUE,
   displayMode = "EXPANDED",
-  trackConfig = list()
+  trackConfig = list(),
+  validateReference = TRUE
 )
 ```
 
@@ -48,6 +49,11 @@ loadBamTrackFromLocalData(
   a named list of additional igv.js track configuration options, `sort`
   among them; see
   [`loadBamTrackFromURL`](https://gladkia.github.io/igvShiny/reference/loadBamTrackFromURL.md).
+
+- validateReference:
+
+  logical flag, default TRUE: checks track contigs against the active
+  reference genome and emits warnings/toasts on mismatch.
 
 ## Value
 

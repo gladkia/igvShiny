@@ -12,7 +12,8 @@ loadVcfTrack(
   trackName,
   vcfData,
   deleteTracksOfSameName = TRUE,
-  trackConfig = list()
+  trackConfig = list(),
+  validateReference = TRUE
 )
 ```
 
@@ -41,6 +42,11 @@ loadVcfTrack(
 - trackConfig:
 
   a named list of additional igv.js track configuration options.
+
+- validateReference:
+
+  logical flag, default TRUE: checks track contigs against the active
+  reference genome and emits warnings/toasts on mismatch.
 
 ## Value
 

@@ -15,7 +15,8 @@ loadBamTrackFromLocalFile(
   indexFile = paste0(bamFile, ".bai"),
   deleteTracksOfSameName = TRUE,
   displayMode = "EXPANDED",
-  trackConfig = list()
+  trackConfig = list(),
+  validateReference = TRUE
 )
 ```
 
@@ -55,6 +56,11 @@ loadBamTrackFromLocalFile(
 - trackConfig:
 
   list, additional track options passed to igv.js
+
+- validateReference:
+
+  logical flag, default TRUE: checks track contigs against the active
+  reference genome and emits warnings/toasts on mismatch.
 
 ## Value
 

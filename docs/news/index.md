@@ -1,5 +1,14 @@
 # Changelog
 
+## igvShiny 1.9.45
+
+- Add pre-flight reference compatibility check with warnings and toasts
+  for BAM, CRAM, VCF, and BED tracks
+  ([\#179](https://github.com/gladkia/igvShiny/issues/179))
+- Add checkReferenceCompatibility for offline validation of contig
+  naming, assemblies, and coordinate bounds
+  ([\#179](https://github.com/gladkia/igvShiny/issues/179))
+
 ## igvShiny 1.9.44
 
 - Add HTTP Range Request streaming for local BAM and CRAM tracks
@@ -9,6 +18,8 @@
   ([\#174](https://github.com/gladkia/igvShiny/issues/174))
 - Add BAM local file stream to the flagship demo and update local-data
   demo
+- Update inst/extdata/tumor.bam to a GRCh38 alignment sample for clean
+  demo rendering
 
 ## igvShiny 1.9.43
 

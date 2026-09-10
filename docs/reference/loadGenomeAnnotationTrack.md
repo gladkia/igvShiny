@@ -18,7 +18,8 @@ loadBedGraphTrack(
   max = NA_real_,
   deleteTracksOfSameName = TRUE,
   quiet = TRUE,
-  trackConfig = list()
+  trackConfig = list(),
+  validateReference = TRUE
 )
 ```
 
@@ -75,6 +76,12 @@ loadBedGraphTrack(
 - trackConfig:
 
   a named list of additional igv.js track configuration options.
+
+- validateReference:
+
+  logical flag, default TRUE: checks track contigs and coordinates
+  against the active reference genome and emits warnings/toasts on
+  mismatch.
 
 ## Value
 

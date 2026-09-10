@@ -13,7 +13,7 @@ directory shiny serves as "tracks".'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.44</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.45</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,7 +61,8 @@ directory shiny serves as "tracks".</p>
 <span>  <span class="va">cramFile</span>,</span>
 <span>  indexFile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">cramFile</span>, <span class="st">".crai"</span><span class="op">)</span>,</span>
 <span>  deleteTracksOfSameName <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  trackConfig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  trackConfig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  validateReference <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">loadCramTrackFromLocalFile</span><span class="op">(</span></span>
@@ -71,7 +72,8 @@ directory shiny serves as "tracks".</p>
 <span>  <span class="va">cramFile</span>,</span>
 <span>  indexFile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">cramFile</span>, <span class="st">".crai"</span><span class="op">)</span>,</span>
 <span>  deleteTracksOfSameName <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  trackConfig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  trackConfig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  validateReference <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -107,6 +109,11 @@ by default the cram file with ".crai" appended</p></dd>
 <dt id="arg-trackconfig">trackConfig<a class="anchor" aria-label="anchor" href="#arg-trackconfig"></a></dt>
 <dd><p>a named list of additional igv.js track configuration
 options, <code>sort</code> among them; see <code><a href="loadBamTrackFromURL.html">loadBamTrackFromURL</a></code>.</p></dd>
+
+
+<dt id="arg-validatereference">validateReference<a class="anchor" aria-label="anchor" href="#arg-validatereference"></a></dt>
+<dd><p>logical flag, default TRUE: checks track contigs
+against the active reference genome and emits warnings/toasts on mismatch.</p></dd>
 
 </dl></div>
     <div class="section level2">

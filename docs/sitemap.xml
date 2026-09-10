@@ -10,8 +10,17 @@
 <url><loc>https://gladkia.github.io/igvShiny/index.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/news/index.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/GWASTrack-class.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/checkReferenceCompatibility.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/display.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/dot-extractBamContigs.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/dot-extractBedContigs.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/dot-extractCramContigs.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/dot-extractVcfContigs.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/dot-getGenomeSpec.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/dot-getReferenceContigs.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/dot-identifyLikelyAssembly.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-packJunctionAttributes.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/dot-registerGenomeSpec.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-registerTrackFile.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-sanitizeAndMergeOptions.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-sanitizeChromosomeColorMap.html</loc></url>
@@ -21,6 +30,7 @@
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-stageTrackFile.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-trackFile.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/dot-tracksDir.html</loc></url>
+<url><loc>https://gladkia.github.io/igvShiny/reference/dot-validateTrackReference.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/getUrl.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/get_basic_genomes.html</loc></url>
 <url><loc>https://gladkia.github.io/igvShiny/reference/get_cas_genomes.html</loc></url>

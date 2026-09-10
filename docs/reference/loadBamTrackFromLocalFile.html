@@ -11,7 +11,7 @@ multi-gigabyte BAM files without loading them into R memory."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.44</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.45</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,7 +59,8 @@ multi-gigabyte BAM files without loading them into R memory.</p>
 <span>  indexFile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">bamFile</span>, <span class="st">".bai"</span><span class="op">)</span>,</span>
 <span>  deleteTracksOfSameName <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  displayMode <span class="op">=</span> <span class="st">"EXPANDED"</span>,</span>
-<span>  trackConfig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  trackConfig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  validateReference <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -100,6 +101,11 @@ with the same name (default: TRUE)</p></dd>
 
 <dt id="arg-trackconfig">trackConfig<a class="anchor" aria-label="anchor" href="#arg-trackconfig"></a></dt>
 <dd><p>list, additional track options passed to igv.js</p></dd>
+
+
+<dt id="arg-validatereference">validateReference<a class="anchor" aria-label="anchor" href="#arg-validatereference"></a></dt>
+<dd><p>logical flag, default TRUE: checks track contigs
+against the active reference genome and emits warnings/toasts on mismatch.</p></dd>
 
 </dl></div>
     <div class="section level2">
