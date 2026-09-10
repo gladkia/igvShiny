@@ -11,7 +11,8 @@ loadVcfTrack(
   trackName,
   vcfData,
   deleteTracksOfSameName = TRUE,
-  trackConfig = list()
+  trackConfig = list(),
+  validateReference = TRUE
 )
 }
 \arguments{
@@ -27,6 +28,9 @@ loadVcfTrack(
 
 \item{trackConfig}{a named list of additional igv.js track configuration
 options.}
+
+\item{validateReference}{logical flag, default TRUE: checks track contigs
+against the active reference genome and emits warnings/toasts on mismatch.}
 }
 \value{
 nothing

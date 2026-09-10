@@ -12,7 +12,8 @@ loadCramTrackFromLocalData(
   cramFile,
   indexFile = paste0(cramFile, ".crai"),
   deleteTracksOfSameName = TRUE,
-  trackConfig = list()
+  trackConfig = list(),
+  validateReference = TRUE
 )
 
 loadCramTrackFromLocalFile(
@@ -22,7 +23,8 @@ loadCramTrackFromLocalFile(
   cramFile,
   indexFile = paste0(cramFile, ".crai"),
   deleteTracksOfSameName = TRUE,
-  trackConfig = list()
+  trackConfig = list(),
+  validateReference = TRUE
 )
 }
 \arguments{
@@ -41,6 +43,9 @@ by default the cram file with ".crai" appended}
 
 \item{trackConfig}{a named list of additional igv.js track configuration
 options, \code{sort} among them; see \code{\link{loadBamTrackFromURL}}.}
+
+\item{validateReference}{logical flag, default TRUE: checks track contigs
+against the active reference genome and emits warnings/toasts on mismatch.}
 }
 \value{
 nothing

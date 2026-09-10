@@ -11,3 +11,8 @@
 ^\.serena$
 ^CLAUDE\.md$
 ^demo$
+^\.claude$
+^\.status$
+^\.uvr$
+^igvShiny_.*\.tar\.gz$
+^.*\.Rcheck$

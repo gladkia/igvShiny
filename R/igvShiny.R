@@ -272,6 +272,11 @@ igvShiny <- function(genomeOptions,
   )
   stopifnot(genomeOptions[["validated"]])
 
+  # the reference check reads fastaIndex off disk, and the block below rewrites
+  # it to a served path, so the spec has to be registered before that happens
+  session <- shiny::getDefaultReactiveDomain()
+  .registerGenomeSpec(session, elementId, genomeOptions)
+
   if (!genomeOptions[["stockGenome"]] &&
         genomeOptions[["dataMode"]] == "localFiles") {
     directory.name <- .tracksDir()
@@ -303,7 +308,6 @@ igvShiny <- function(genomeOptions,
   flog.debug(sprintf("--initial track count: %d", length(tracks)))
 
   #send namespace info in case widget is being called from a module
-  session <- shiny::getDefaultReactiveDomain()
   genomeOptions$displayMode <- displayMode
   genomeOptions$trackHeight <-
     100      # todo: make this an igvShiny ctor argument
@@ -547,6 +551,9 @@ removeUserAddedTracks <- function(session, id) {
 #' @param quiet logical, default TRUE, controls verbosity
 #' @param trackConfig a named list of additional igv.js track configuration
 #' options.
+#' @param validateReference logical flag, default TRUE: checks track contigs
+#' and coordinates against the active reference genome and emits warnings/toasts
+#' on mismatch.
 #'
 #' @examples
 #' library(igvShiny)
@@ -571,7 +578,8 @@ loadBedTrack <-
            trackHeight = 50,
            deleteTracksOfSameName = TRUE,
            quiet = TRUE,
-           trackConfig = list()) {
+           trackConfig = list(),
+           validateReference = TRUE) {
     if (color == "random")
       color <-
         randomColors[sample(seq_along(randomColors), 1)]
@@ -601,6 +609,9 @@ loadBedTrack <-
       flog.debug(lmsg2)
       stop("improper columns in bed track data.frame")
     }
+
+    .validateTrackReference(session, id, trackName, tbl,
+                            validateReference = validateReference)
 
     stopifnot(is(tbl$chr, "character"))
     stopifnot(is(tbl$start, "numeric"))
@@ -761,6 +772,9 @@ loadBedGraphTrackFromURL <-
 #' @param quiet logical, default TRUE, controls verbosity
 #' @param trackConfig a named list of additional igv.js track configuration
 #' options.
+#' @param validateReference logical flag, default TRUE: checks track contigs
+#' and coordinates against the active reference genome and emits warnings/toasts
+#' on mismatch.
 #'
 #' @examples
 #' library(igvShiny)
@@ -789,7 +803,8 @@ loadBedGraphTrack <-
            max = NA_real_,
            deleteTracksOfSameName = TRUE,
            quiet = TRUE,
-           trackConfig = list()) {
+           trackConfig = list(),
+           validateReference = TRUE) {
     stopifnot(NCOL(tbl) >= 4)
 
     if (color == "random")
@@ -826,6 +841,9 @@ loadBedGraphTrack <-
                  toString(c("chr", "start", "end")))
       stop("improper columns in bed track data.frame")
     }
+
+    .validateTrackReference(session, id, trackName, tbl,
+                            validateReference = validateReference)
 
     stopifnot(is(tbl$chr, "character"))
     stopifnot(is(tbl$start, "numeric"))
@@ -932,6 +950,8 @@ loadSegTrack <-
 #' @param deleteTracksOfSameName logical, default TRUE
 #' @param trackConfig a named list of additional igv.js track configuration
 #' options.
+#' @param validateReference logical flag, default TRUE: checks track contigs
+#' against the active reference genome and emits warnings/toasts on mismatch.
 #'
 #' @examples
 #' library(igvShiny)
@@ -952,9 +972,13 @@ loadVcfTrack <- function(session,
                          trackName,
                          vcfData,
                          deleteTracksOfSameName = TRUE,
-                         trackConfig = list()) {
+                         trackConfig = list(),
+                         validateReference = TRUE) {
   if (!requireNamespace("VariantAnnotation"))
     stop("install VariantAnnotation to use this function")
+
+  .validateTrackReference(session, id, trackName, vcfData,
+                          validateReference = validateReference)
 
   flog.debug("======== igvShiny.R, loadVcfTrack")
   if (deleteTracksOfSameName) {
@@ -1162,6 +1186,8 @@ loadBamTrackFromURL <-
 #' "SQUISHED" or "COLLAPSED"
 #' @param trackConfig a named list of additional igv.js track configuration
 #' options, \code{sort} among them; see \code{\link{loadBamTrackFromURL}}.
+#' @param validateReference logical flag, default TRUE: checks track contigs
+#' against the active reference genome and emits warnings/toasts on mismatch.
 #'
 #' @examples
 #' library(igvShiny)
@@ -1184,13 +1210,15 @@ loadBamTrackFromLocalData <-
            data,
            deleteTracksOfSameName = TRUE,
            displayMode = "EXPANDED",
-           trackConfig = list()) {
+           trackConfig = list(),
+           validateReference = TRUE) {
     if (is.character(data) && length(data) == 1 && file.exists(data)) {
       return(loadBamTrackFromLocalFile(session, id, trackName,
                                        bamFile = data,
                                        deleteTracksOfSameName = deleteTracksOfSameName,
                                        displayMode = displayMode,
-                                       trackConfig = trackConfig))
+                                       trackConfig = trackConfig,
+                                       validateReference = validateReference))
     }
 
     if (!requireNamespace("rtracklayer"))
@@ -1200,6 +1228,9 @@ loadBamTrackFromLocalData <-
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
     }
+
+    .validateTrackReference(session, id, trackName, data,
+                            validateReference = validateReference)
 
     fpath <- .trackFile(session, ".bam")
     # rtracklayer indexes the bam it writes, next to it and under a name we
@@ -1248,6 +1279,8 @@ loadBamTrackFromLocalData <-
 #' @param displayMode character string, display mode for alignments ("EXPANDED",
 #'   "COLLAPSED", or "SQUISHED"), default "EXPANDED"
 #' @param trackConfig list, additional track options passed to igv.js
+#' @param validateReference logical flag, default TRUE: checks track contigs
+#'   against the active reference genome and emits warnings/toasts on mismatch.
 #'
 #' @return None, sends a message to the browser
 #'
@@ -1271,7 +1304,8 @@ loadBamTrackFromLocalFile <-
            indexFile = paste0(bamFile, ".bai"),
            deleteTracksOfSameName = TRUE,
            displayMode = "EXPANDED",
-           trackConfig = list()) {
+           trackConfig = list(),
+           validateReference = TRUE) {
     checkmate::assert_multi_class(session, c("ShinySession", "environment"))
     checkmate::assert_string(id)
     checkmate::assert_string(trackName)
@@ -1281,6 +1315,9 @@ loadBamTrackFromLocalFile <-
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
     }
+
+    .validateTrackReference(session, id, trackName, bamFile,
+                            validateReference = validateReference)
 
     bamUrl <- serveLocalFile(session, bamFile)
     baiUrl <- serveLocalFile(session, indexFile)
@@ -1381,6 +1418,8 @@ loadCramTrackFromURL <-
 #' @param deleteTracksOfSameName logical, default TRUE
 #' @param trackConfig a named list of additional igv.js track configuration
 #' options, \code{sort} among them; see \code{\link{loadBamTrackFromURL}}.
+#' @param validateReference logical flag, default TRUE: checks track contigs
+#' against the active reference genome and emits warnings/toasts on mismatch.
 #'
 #' @examples
 #' library(igvShiny)
@@ -1403,12 +1442,16 @@ loadCramTrackFromLocalData <-
            cramFile,
            indexFile = paste0(cramFile, ".crai"),
            deleteTracksOfSameName = TRUE,
-           trackConfig = list()) {
+           trackConfig = list(),
+           validateReference = TRUE) {
     checkmate::assert_file_exists(cramFile, access = "r")
     checkmate::assert_file_exists(indexFile, access = "r")
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
     }
+
+    .validateTrackReference(session, id, trackName, cramFile,
+                            validateReference = validateReference)
 
     cramPath <- serveLocalFile(session, cramFile)
     indexPath <- serveLocalFile(session, indexFile)

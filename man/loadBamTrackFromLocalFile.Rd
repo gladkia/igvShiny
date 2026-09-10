@@ -12,7 +12,8 @@ loadBamTrackFromLocalFile(
   indexFile = paste0(bamFile, ".bai"),
   deleteTracksOfSameName = TRUE,
   displayMode = "EXPANDED",
-  trackConfig = list()
+  trackConfig = list(),
+  validateReference = TRUE
 )
 }
 \arguments{
@@ -34,6 +35,9 @@ with the same name (default: TRUE)}
 "COLLAPSED", or "SQUISHED"), default "EXPANDED"}
 
 \item{trackConfig}{list, additional track options passed to igv.js}
+
+\item{validateReference}{logical flag, default TRUE: checks track contigs
+against the active reference genome and emits warnings/toasts on mismatch.}
 }
 \value{
 None, sends a message to the browser

@@ -11,7 +11,8 @@ loadBamTrackFromLocalData(
   data,
   deleteTracksOfSameName = TRUE,
   displayMode = "EXPANDED",
-  trackConfig = list()
+  trackConfig = list(),
+  validateReference = TRUE
 )
 }
 \arguments{
@@ -30,6 +31,9 @@ loadBamTrackFromLocalData(
 
 \item{trackConfig}{a named list of additional igv.js track configuration
 options, \code{sort} among them; see \code{\link{loadBamTrackFromURL}}.}
+
+\item{validateReference}{logical flag, default TRUE: checks track contigs
+against the active reference genome and emits warnings/toasts on mismatch.}
 }
 \value{
 nothing

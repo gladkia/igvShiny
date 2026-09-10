@@ -1,3 +1,7 @@
+## igvShiny 1.9.45
+* Add pre-flight reference compatibility check with warnings and toasts for BAM, CRAM, VCF, and BED tracks (#179)
+* Add checkReferenceCompatibility for offline validation of contig naming, assemblies, and coordinate bounds (#179)
+
 ## igvShiny 1.9.44
 * Add HTTP Range Request streaming for local BAM and CRAM tracks (#174)
 * Add serveLocalFile and loadBamTrackFromLocalFile for zero-RAM local alignment streaming (#174)

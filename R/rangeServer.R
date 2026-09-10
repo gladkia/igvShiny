@@ -12,7 +12,7 @@
 #' @keywords internal
 .serveFileWithHttpRange <- function(filePath, req) {
   if (!file.exists(filePath)) {
-    return(shiny:::httpResponse(
+    return(shiny::httpResponse(
       status = 404L,
       content_type = "text/plain",
       content = "File not found"
@@ -34,7 +34,7 @@
     bytes <- readBin(con, "raw", n = fileSize)
     headers <- defaultHeaders
     headers[["Content-Length"]] <- as.character(fileSize)
-    shiny:::httpResponse(
+    shiny::httpResponse(
       status = 200L,
       content_type = "application/octet-stream",
       content = bytes,
@@ -44,7 +44,7 @@
 
   # 416 Range Not Satisfiable helper
   rangeNotSatisfiable <- function() {
-    shiny:::httpResponse(
+    shiny::httpResponse(
       status = 416L,
       content_type = "text/plain",
       content = "Requested Range Not Satisfiable",
@@ -114,7 +114,7 @@
   )
   headers[["Content-Length"]] <- as.character(lengthToRead)
 
-  shiny:::httpResponse(
+  shiny::httpResponse(
     status = 206L,
     content_type = "application/octet-stream",
     content = bytes,
