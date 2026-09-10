@@ -76,8 +76,10 @@
     return(NULL)
   }
   lower <- tolower(trimws(genomeName))
-  if (lower %in% names(.canonicalChromSizes)) {
-    return(lower)
+  canonical_names <- names(.canonicalChromSizes)
+  canonical_idx <- match(lower, tolower(canonical_names))
+  if (!is.na(canonical_idx)) {
+    return(canonical_names[canonical_idx])
   }
   if (lower %in% names(.genomeAliases)) {
     return(.genomeAliases[[lower]])
@@ -88,8 +90,8 @@
       return(.genomeAliases[[alias]])
     }
   }
-  for (canon in names(.canonicalChromSizes)) {
-    if (grepl(paste0("(^|[^a-z0-9])", canon, "([^a-z0-9]|$)"), lower)) {
+  for (canon in canonical_names) {
+    if (grepl(paste0("(^|[^a-z0-9])", tolower(canon), "([^a-z0-9]|$)"), lower)) {
       return(canon)
     }
   }
@@ -538,14 +540,14 @@
   invalid_coords <- integer(0)
   start_col <- if ("start" %in% colnames(tbl)) {
     "start"
-  } else if (NCOL(tbl) >= 2L && is.numeric(tbl[[2]])) {
+  } else if (NCOL(tbl) >= 2L) {
     colnames(tbl)[2]
   } else {
     NULL
   }
   end_col <- if ("end" %in% colnames(tbl)) {
     "end"
-  } else if (NCOL(tbl) >= 3L && is.numeric(tbl[[3]])) {
+  } else if (NCOL(tbl) >= 3L) {
     colnames(tbl)[3]
   } else {
     NULL
@@ -560,9 +562,8 @@
     if (!is.null(start_col)) {
       starts <- suppressWarnings(as.numeric(tbl[[start_col]]))
       invalid_coords <- which(
-        (!is.na(starts) & starts < 0) |
-          (!is.na(ends) & ends < 0) |
-          (!is.na(starts) & !is.na(ends) & starts > ends)
+        is.na(starts) | is.na(ends) |
+          starts < 0 | ends < 0 | starts > ends
       )
     }
   }
@@ -687,21 +688,28 @@ checkReferenceCompatibility <- function(target,
 
   # Extract track contig information based on input type
   track_info <- NULL
+  target_type <- NULL
   if (is.character(target) && length(target) == 1L) {
     if (grepl("\\.bam$", target, ignore.case = TRUE)) {
+      target_type <- "bam"
       track_info <- .extractBamContigs(target)
     } else if (grepl("\\.cram$", target, ignore.case = TRUE)) {
+      target_type <- "cram"
       track_info <- .extractCramContigs(target)
     } else if (grepl("\\.vcf(\\.gz)?$", target, ignore.case = TRUE)) {
+      target_type <- "vcf"
       track_info <- .extractVcfContigs(target)
     } else {
       # Try BED
+      target_type <- "bed"
       track_info <- .extractBedContigs(target)
     }
   } else if (is.data.frame(target)) {
+    target_type <- "bed"
     track_info <- .extractBedContigs(target)
   } else if (inherits(target, "GAlignments") || inherits(target, "GAlignmentPairs") ||
              inherits(target, "VCF") || inherits(target, "GRanges")) {
+    target_type <- if (inherits(target, "VCF")) "vcf" else "bioc"
     track_info <- .getSeqinfoData(target)
   }
 
@@ -730,7 +738,11 @@ checkReferenceCompatibility <- function(target,
     res$compatible <- FALSE
     res$mismatches <- c(res$mismatches, msg)
     res$details$missingContigs <- track_names
-  } else if (!is.null(track_info$maxCoords) && length(missing_norm) > 0L) {
+  }
+  strict_missing <- !is.null(track_info$maxCoords) ||
+    identical(target_type, "vcf") ||
+    isFALSE(genomeSpec[["stockGenome"]])
+  if (length(common_norm) > 0L && strict_missing && length(missing_norm) > 0L) {
     missing <- track_names[norm_track %in% missing_norm]
     msg <- sprintf(
       "Track contig(s) absent from reference genome '%s': %s.",

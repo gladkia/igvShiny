@@ -49,6 +49,21 @@ testthat::test_that("checkReferenceCompatibility detects VCF contig mismatches",
   testthat::expect_false(res_hg19$compatible)
   testthat::expect_true(res_hg19$details$namingMismatch)
   testthat::expect_equal(length(res_hg19$details$lengthMismatches), 0L)
+
+  foreign_vcf <- tempfile(fileext = ".vcf")
+  writeLines(c(
+    "##fileformat=VCFv4.2",
+    "##contig=<ID=chr1,length=248956422>",
+    "##contig=<ID=chrExtra,length=50000>",
+    "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO",
+    "chr1\t100\t.\tA\tT\t.\t.\t.",
+    "chrExtra\t100\t.\tA\tT\t.\t.\t."
+  ), foreign_vcf)
+  on.exit(unlink(foreign_vcf), add = TRUE)
+
+  foreign_res <- checkReferenceCompatibility(foreign_vcf, genomeName = "hg38")
+  testthat::expect_false(foreign_res$compatible)
+  testthat::expect_equal(foreign_res$details$missingContigs, "chrExtra")
 })
 
 testthat::test_that("checkReferenceCompatibility validates BED and bedGraph data frames", {
@@ -127,6 +142,16 @@ testthat::test_that("checkReferenceCompatibility supports custom genomes with fa
   res2 <- checkReferenceCompatibility(bed_custom_oob, genomeSpec = custom_spec)
   testthat::expect_false(res2$compatible)
   testthat::expect_match(res2$mismatches[1], "Coordinate out-of-bounds")
+
+  custom_alignments <- GenomicRanges::GRanges(
+    c("chrTest1", "chrExtra"), IRanges::IRanges(c(1L, 1L), width = 100L)
+  )
+  GenomeInfoDb::seqlengths(custom_alignments) <- c(
+    chrTest1 = 10000L, chrExtra = 5000L
+  )
+  res3 <- checkReferenceCompatibility(custom_alignments, genomeSpec = custom_spec)
+  testthat::expect_false(res3$compatible)
+  testthat::expect_equal(res3$details$missingContigs, "chrExtra")
 })
 
 testthat::test_that(
@@ -329,6 +354,28 @@ testthat::test_that("compatibility checks every BED row and rejects invalid rang
   reversed_res <- checkReferenceCompatibility(reversed, genomeName = "hg38")
   testthat::expect_false(reversed_res$compatible)
   testthat::expect_equal(reversed_res$details$invalidCoordinates, 1L)
+
+  missing <- data.frame(chr = "chr1", start = NA_real_, end = 100L)
+  missing_res <- checkReferenceCompatibility(missing, genomeName = "hg38")
+  testthat::expect_false(missing_res$compatible)
+  testthat::expect_equal(missing_res$details$invalidCoordinates, 1L)
+
+  non_numeric <- data.frame(V1 = "chr1", V2 = "not-a-coordinate", V3 = "100")
+  non_numeric_res <- checkReferenceCompatibility(non_numeric, genomeName = "hg38")
+  testthat::expect_false(non_numeric_res$compatible)
+  testthat::expect_equal(non_numeric_res$details$invalidCoordinates, 1L)
+})
+
+testthat::test_that("canonical genome names are matched case-insensitively", {
+  bed <- data.frame(chr = "chrI", start = 1L, end = 5000000L)
+
+  for (genome_name in c("sacCer3", "saccer3", "SACCER3",
+                        "https://example.org/SacCer3.fa")) {
+    res <- checkReferenceCompatibility(bed, genomeName = genome_name)
+    testthat::expect_true(res$checked, info = genome_name)
+    testthat::expect_false(res$compatible, info = genome_name)
+    testthat::expect_length(res$details$outOfBounds, 1L)
+  }
 })
 
 testthat::test_that("compatibility reports when validation could not run", {
