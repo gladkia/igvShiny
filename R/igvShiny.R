@@ -101,7 +101,13 @@
 
   # Map trackHeight alias to height for consistency with loader arguments
   if ("trackHeight" %in% names(userOptions)) {
-    if (!("height" %in% names(userOptions)) && !("height" %in% names(baseOptions))) {
+    if (!("height" %in% names(userOptions)) &&
+        !("height" %in% names(baseOptions))) {
+      checkmate::assert_number(
+        userOptions[["trackHeight"]],
+        lower = 1,
+        finite = TRUE
+      )
       userOptions[["height"]] <- userOptions[["trackHeight"]]
     }
     userOptions[["trackHeight"]] <- NULL

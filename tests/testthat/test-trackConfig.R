@@ -101,10 +101,29 @@ test_that("trackHeight in trackConfig is aliased to height (#174)", {
   # trackHeight in userOptions conflicts if base already has trackHeight
   base_with_height <- list(elementID = "igvShiny_0", trackHeight = 50)
   expect_warning(
-    merged_conflict <- sanitizeAndMergeOptions(base_with_height, list(trackHeight = 100)),
+    merged_conflict <- sanitizeAndMergeOptions(base_with_height,
+                                               list(trackHeight = 100)),
     "conflict with function arguments"
   )
   expect_equal(merged_conflict$trackHeight, 50)
+
+  # invalid trackHeight in trackConfig is rejected
+  expect_error(
+    sanitizeAndMergeOptions(base, list(trackHeight = 0)),
+    ">= 1"
+  )
+  expect_error(
+    sanitizeAndMergeOptions(base, list(trackHeight = -10)),
+    ">= 1"
+  )
+  expect_error(
+    sanitizeAndMergeOptions(base, list(trackHeight = Inf)),
+    "finite"
+  )
+  expect_error(
+    sanitizeAndMergeOptions(base, list(trackHeight = "100")),
+    "number"
+  )
 })
 
 test_that("alignment track sizing and visibility options pass validation (#174)", {
