@@ -14,7 +14,8 @@ loadBamTrackFromURL(
   deleteTracksOfSameName = TRUE,
   displayMode = "EXPANDED",
   showAllBases = FALSE,
-  trackConfig = list()
+  trackConfig = list(),
+  trackHeight = NULL
 )
 ```
 
@@ -61,6 +62,11 @@ loadBamTrackFromURL(
   sorts the reads at that 1-based position by the HP tag. Any igv.js
   sort option works (BASE, STRAND, INSERT_SIZE, ...); reads sort
   descending unless `direction = "ASC"`.
+
+- trackHeight:
+
+  numeric, track height in pixels (default: NULL, igv.js defaults to
+  300)
 
 ## Value
 

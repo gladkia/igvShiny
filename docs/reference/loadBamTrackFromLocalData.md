@@ -13,7 +13,8 @@ loadBamTrackFromLocalData(
   deleteTracksOfSameName = TRUE,
   displayMode = "EXPANDED",
   trackConfig = list(),
-  validateReference = TRUE
+  validateReference = TRUE,
+  trackHeight = NULL
 )
 ```
 
@@ -54,6 +55,11 @@ loadBamTrackFromLocalData(
 
   logical flag, default TRUE: checks track contigs against the active
   reference genome and emits warnings/toasts on mismatch.
+
+- trackHeight:
+
+  numeric, track height in pixels (default: NULL, igv.js defaults to
+  300)
 
 ## Value
 

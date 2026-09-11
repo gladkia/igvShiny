@@ -12,7 +12,8 @@ loadCramTrackFromURL(
   cramURL,
   indexURL,
   deleteTracksOfSameName = TRUE,
-  trackConfig = list()
+  trackConfig = list(),
+  trackHeight = NULL
 )
 ```
 
@@ -47,6 +48,11 @@ loadCramTrackFromURL(
   a named list of additional igv.js track configuration options, `sort`
   among them; see
   [`loadBamTrackFromURL`](https://gladkia.github.io/igvShiny/reference/loadBamTrackFromURL.md).
+
+- trackHeight:
+
+  numeric, track height in pixels (default: NULL, igv.js defaults to
+  300)
 
 ## Value
 

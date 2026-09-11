@@ -1,5 +1,11 @@
 # Changelog
 
+## igvShiny 1.9.46
+
+- Add trackHeight parameter and coverageTrackHeight/showCoverage options
+  for alignment tracks
+  ([\#174](https://github.com/gladkia/igvShiny/issues/174))
+
 ## igvShiny 1.9.45
 
 - Add pre-flight reference compatibility check with warnings and toasts

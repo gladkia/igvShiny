@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.45</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.46</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +54,8 @@
 <span>  deleteTracksOfSameName <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  displayMode <span class="op">=</span> <span class="st">"EXPANDED"</span>,</span>
 <span>  showAllBases <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  trackConfig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  trackConfig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  trackHeight <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -104,6 +105,10 @@ list(chr = "chr1", position = 155160540, option = "TAG", tag = "HP"))</code>
 sorts the reads at that 1-based position by the HP tag. Any igv.js sort
 option works (BASE, STRAND, INSERT_SIZE, ...); reads sort descending
 unless <code>direction = "ASC"</code>.</p></dd>
+
+
+<dt id="arg-trackheight">trackHeight<a class="anchor" aria-label="anchor" href="#arg-trackheight"></a></dt>
+<dd><p>numeric, track height in pixels (default: NULL, igv.js defaults to 300)</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.45</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.46</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +52,8 @@
 <span>  <span class="va">cramURL</span>,</span>
 <span>  <span class="va">indexURL</span>,</span>
 <span>  deleteTracksOfSameName <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  trackConfig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  trackConfig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  trackHeight <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -89,6 +90,10 @@ typically small</p></dd>
 <dt id="arg-trackconfig">trackConfig<a class="anchor" aria-label="anchor" href="#arg-trackconfig"></a></dt>
 <dd><p>a named list of additional igv.js track configuration
 options, <code>sort</code> among them; see <code><a href="loadBamTrackFromURL.html">loadBamTrackFromURL</a></code>.</p></dd>
+
+
+<dt id="arg-trackheight">trackHeight<a class="anchor" aria-label="anchor" href="#arg-trackheight"></a></dt>
+<dd><p>numeric, track height in pixels (default: NULL, igv.js defaults to 300)</p></dd>
 
 </dl></div>
     <div class="section level2">

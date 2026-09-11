@@ -16,7 +16,8 @@ loadCramTrackFromLocalData(
   indexFile = paste0(cramFile, ".crai"),
   deleteTracksOfSameName = TRUE,
   trackConfig = list(),
-  validateReference = TRUE
+  validateReference = TRUE,
+  trackHeight = NULL
 )
 
 loadCramTrackFromLocalFile(
@@ -27,7 +28,8 @@ loadCramTrackFromLocalFile(
   indexFile = paste0(cramFile, ".crai"),
   deleteTracksOfSameName = TRUE,
   trackConfig = list(),
-  validateReference = TRUE
+  validateReference = TRUE,
+  trackHeight = NULL
 )
 ```
 
@@ -68,6 +70,11 @@ loadCramTrackFromLocalFile(
 
   logical flag, default TRUE: checks track contigs against the active
   reference genome and emits warnings/toasts on mismatch.
+
+- trackHeight:
+
+  numeric, track height in pixels (default: NULL, igv.js defaults to
+  300)
 
 ## Value
 

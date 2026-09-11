@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.45</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.46</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -111,7 +111,7 @@ what igv.js is handed — including the defaults the loader fills in:</p>
 <span><span class="co">#&gt; loadBedTrackFromFile</span></span>
 <span><span class="co">#&gt;   elementID: igv</span></span>
 <span><span class="co">#&gt;   trackName: my regions</span></span>
-<span><span class="co">#&gt;   bedFilepath: tracks/file1ceea8d0c10.bed</span></span>
+<span><span class="co">#&gt;   bedFilepath: tracks/file1c9f483e172d.bed</span></span>
 <span><span class="co">#&gt;   color: </span></span>
 <span><span class="co">#&gt;   trackHeight: 50</span></span>
 <span><span class="co">#&gt;   displayMode: EXPANDED</span></span>
@@ -572,11 +572,39 @@ values you did not list.</p>
 <td>how reads are sorted when the track loads</td>
 </tr>
 <tr class="even">
+<td><code>coverageTrackHeight</code></td>
+<td>numeric</td>
+<td>height of the coverage track in pixels (default 50)</td>
+</tr>
+<tr class="odd">
+<td><code>showCoverage</code></td>
+<td>logical</td>
+<td>show coverage histogram above alignments (default
+<code>TRUE</code>)</td>
+</tr>
+<tr class="even">
+<td><code>showAlignments</code></td>
+<td>logical</td>
+<td>show alignment reads (default <code>TRUE</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>alignmentRowHeight</code></td>
+<td>numeric</td>
+<td>row height in pixels for <code>"EXPANDED"</code> mode (default
+14)</td>
+</tr>
+<tr class="even">
+<td><code>squishedRowHeight</code></td>
+<td>numeric</td>
+<td>row height in pixels for <code>"SQUISHED"</code> mode (default
+3)</td>
+</tr>
+<tr class="odd">
 <td><code>samplingWindowSize</code></td>
 <td>numeric</td>
 <td>window the downsampler works over</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>samplingDepth</code></td>
 <td>numeric</td>
 <td>reads kept per window</td>
@@ -717,7 +745,7 @@ error:</p>
 <span><span class="co">#&gt; loadGwasTrack</span></span>
 <span><span class="co">#&gt;   elementID: igv</span></span>
 <span><span class="co">#&gt;   trackName: gwas</span></span>
-<span><span class="co">#&gt;   gwasDataFilepath: tracks/file1cee58d0c70c.gwas</span></span>
+<span><span class="co">#&gt;   gwasDataFilepath: tracks/file1c9f49347eb2.gwas</span></span>
 <span><span class="co">#&gt;   color: red</span></span>
 <span><span class="co">#&gt;   trackHeight: 200</span></span>
 <span><span class="co">#&gt;   autoscale: FALSE</span></span>
@@ -1001,7 +1029,7 @@ list covers the options that are useful from R, and it grows.</p>
 <span><span class="co">#&gt; [8] base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt; [1] igvShiny_1.9.45      shiny_1.14.0         GenomicRanges_1.65.4</span></span>
+<span><span class="co">#&gt; [1] igvShiny_1.9.46      shiny_1.14.0         GenomicRanges_1.65.4</span></span>
 <span><span class="co">#&gt; [4] Seqinfo_1.3.2        IRanges_2.47.5       S4Vectors_0.51.9    </span></span>
 <span><span class="co">#&gt; [7] BiocGenerics_0.59.12 generics_0.1.4       BiocStyle_2.41.0    </span></span>
 <span><span class="co">#&gt; </span></span>
