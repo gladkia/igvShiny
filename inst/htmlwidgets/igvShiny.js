@@ -38,6 +38,9 @@ function mergeExtraParameters(config, message) {
             config[key] = message[key];
         }
     }
+    if (message.trackHeight !== undefined && config.height === undefined) {
+        config.height = message.trackHeight;
+    }
     return config;
 }
 //----------------------------------------------------------------------------------------------------

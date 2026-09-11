@@ -13,7 +13,8 @@ loadCramTrackFromLocalData(
   indexFile = paste0(cramFile, ".crai"),
   deleteTracksOfSameName = TRUE,
   trackConfig = list(),
-  validateReference = TRUE
+  validateReference = TRUE,
+  trackHeight = NULL
 )
 
 loadCramTrackFromLocalFile(
@@ -24,7 +25,8 @@ loadCramTrackFromLocalFile(
   indexFile = paste0(cramFile, ".crai"),
   deleteTracksOfSameName = TRUE,
   trackConfig = list(),
-  validateReference = TRUE
+  validateReference = TRUE,
+  trackHeight = NULL
 )
 }
 \arguments{
@@ -46,6 +48,8 @@ options, \code{sort} among them; see \code{\link{loadBamTrackFromURL}}.}
 
 \item{validateReference}{logical flag, default TRUE: checks track contigs
 against the active reference genome and emits warnings/toasts on mismatch.}
+
+\item{trackHeight}{numeric, track height in pixels (default: NULL, igv.js defaults to 300)}
 }
 \value{
 nothing

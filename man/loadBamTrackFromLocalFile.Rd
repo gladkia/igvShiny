@@ -13,7 +13,8 @@ loadBamTrackFromLocalFile(
   deleteTracksOfSameName = TRUE,
   displayMode = "EXPANDED",
   trackConfig = list(),
-  validateReference = TRUE
+  validateReference = TRUE,
+  trackHeight = NULL
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ with the same name (default: TRUE)}
 
 \item{validateReference}{logical flag, default TRUE: checks track contigs
 against the active reference genome and emits warnings/toasts on mismatch.}
+
+\item{trackHeight}{numeric, track height in pixels (default: NULL, igv.js defaults to 300)}
 }
 \value{
 None, sends a message to the browser
@@ -54,7 +57,8 @@ bamFile <- system.file(package = "igvShiny", "extdata",
                        "A_2_A24_02_01_01.nanopore.minimap.sorted.bam")
 baiFile <- paste0(bamFile, ".bai")
 loadBamTrackFromLocalFile(session, "igvShiny_0", "Nanopore Reads",
-                         bamFile, baiFile, displayMode = "SQUISHED")
+                         bamFile, baiFile, displayMode = "SQUISHED",
+                         trackHeight = 100)
 }
 
 }

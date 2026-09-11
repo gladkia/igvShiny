@@ -1,3 +1,6 @@
+## igvShiny 1.9.46
+* Add trackHeight parameter and coverageTrackHeight/showCoverage options for alignment tracks (#174)
+
 ## igvShiny 1.9.45
 * Add pre-flight reference compatibility check with warnings and toasts for BAM, CRAM, VCF, and BED tracks (#179)
 * Add checkReferenceCompatibility for offline validation of contig naming, assemblies, and coordinate bounds (#179)
@@ -237,4 +240,3 @@
 
 ## igvShiny 0.99.0 - 2024-02-04
 * make the first Bioconductor release
-
