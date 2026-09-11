@@ -346,3 +346,171 @@ test_that("loadCramTrackFromLocalData forwards trackHeight (#174)", {
   msg <- last_message(session, "loadCramTrackFromURL")
   expect_equal(msg$height, 90)
 })
+
+test_that(
+  "alignment loaders preserve positional argument compatibility (#174, #181)",
+  {
+    bam_file <- system.file(
+      package = "igvShiny", "extdata",
+      "A_2_A24_02_01_01.nanopore.minimap.sorted.bam"
+    )
+    bai_file <- paste0(bam_file, ".bai")
+    skip_if_not(file.exists(bam_file) && file.exists(bai_file))
+
+    tmp_cram <- tempfile(fileext = ".cram")
+    tmp_crai <- tempfile(fileext = ".crai")
+    on.exit(unlink(c(tmp_cram, tmp_crai)), add = TRUE)
+    writeBin(as.raw(seq_len(10)), tmp_cram)
+    writeBin(as.raw(seq_len(10)), tmp_crai)
+
+    session <- fake_session()
+
+    # 1. loadCramTrackFromLocalData:
+    # (session, id, trackName, cramFile, indexFile, deleteTracksOfSameName,
+    #  trackConfig, validateReference)
+    loadCramTrackFromLocalData(
+      session, "igv", "cram_pos", tmp_cram, tmp_crai,
+      TRUE, list(height = 80), FALSE
+    )
+    msg <- last_message(session, "loadCramTrackFromURL")
+    expect_equal(msg$height, 80)
+
+    # 2. loadCramTrackFromLocalFile alias:
+    loadCramTrackFromLocalFile(
+      session, "igv", "cram_alias_pos", tmp_cram, tmp_crai,
+      TRUE, list(height = 82), FALSE
+    )
+    msg <- last_message(session, "loadCramTrackFromURL")
+    expect_equal(msg$height, 82)
+
+    # 3. loadBamTrackFromLocalFile:
+    # (session, id, trackName, bamFile, indexFile, deleteTracksOfSameName,
+    #  displayMode, trackConfig, validateReference)
+    loadBamTrackFromLocalFile(
+      session, "igv", "bam_pos", bam_file, bai_file,
+      TRUE, "SQUISHED", list(height = 85), FALSE
+    )
+    msg <- last_message(session, "loadBamTrackFromURL")
+    expect_equal(msg$height, 85)
+    expect_equal(msg$displayMode, "SQUISHED")
+
+    # 4. loadBamTrackFromLocalData delegating with file path:
+    # (session, id, trackName, data, deleteTracksOfSameName, displayMode,
+    #  trackConfig, validateReference)
+    loadBamTrackFromLocalData(
+      session, "igv", "bam_data_pos", bam_file,
+      TRUE, "COLLAPSED", list(height = 95), FALSE
+    )
+    msg <- last_message(session, "loadBamTrackFromURL")
+    expect_equal(msg$height, 95)
+    expect_equal(msg$displayMode, "COLLAPSED")
+
+    # 5. loadBamTrackFromURL:
+    # (session, id, trackName, bamURL, indexURL, deleteTracksOfSameName,
+    #  displayMode, showAllBases, trackConfig)
+    loadBamTrackFromURL(
+      session, "igv", "bam_url_pos",
+      "https://example.com/test.bam", "https://example.com/test.bai",
+      TRUE, "EXPANDED", TRUE, list(height = 110)
+    )
+    msg <- last_message(session, "loadBamTrackFromURL")
+    expect_equal(msg$height, 110)
+    expect_true(msg$showAllBases)
+
+    # 6. loadCramTrackFromURL:
+    # (session, id, trackName, cramURL, indexURL, deleteTracksOfSameName,
+    #  trackConfig)
+    loadCramTrackFromURL(
+      session, "igv", "cram_url_pos",
+      "https://example.com/test.cram", "https://example.com/test.crai",
+      TRUE, list(height = 115)
+    )
+    msg <- last_message(session, "loadCramTrackFromURL")
+    expect_equal(msg$height, 115)
+  }
+)
+
+test_that(
+  "alignment loaders reject non-finite or invalid trackHeight (#174, #181)",
+  {
+    bam_file <- system.file(
+      package = "igvShiny", "extdata",
+      "A_2_A24_02_01_01.nanopore.minimap.sorted.bam"
+    )
+    bai_file <- paste0(bam_file, ".bai")
+    skip_if_not(file.exists(bam_file) && file.exists(bai_file))
+
+    tmp_cram <- tempfile(fileext = ".cram")
+    tmp_crai <- tempfile(fileext = ".crai")
+    on.exit(unlink(c(tmp_cram, tmp_crai)), add = TRUE)
+    writeBin(as.raw(seq_len(10)), tmp_cram)
+    writeBin(as.raw(seq_len(10)), tmp_crai)
+
+    session <- fake_session()
+
+    # Inf must be rejected (finite = TRUE)
+    expect_error(
+      loadBamTrackFromURL(
+        session, "igv", "b1",
+        "https://example.com/a.bam", "https://example.com/a.bai",
+        trackHeight = Inf
+      ),
+      "finite"
+    )
+    expect_error(
+      loadBamTrackFromLocalFile(
+        session, "igv", "b2", bam_file, bai_file,
+        trackHeight = Inf
+      ),
+      "finite"
+    )
+    expect_error(
+      loadBamTrackFromLocalData(
+        session, "igv", "b3", bam_file,
+        trackHeight = Inf
+      ),
+      "finite"
+    )
+    expect_error(
+      loadCramTrackFromURL(
+        session, "igv", "c1",
+        "https://example.com/a.cram", "https://example.com/a.crai",
+        trackHeight = Inf
+      ),
+      "finite"
+    )
+    expect_error(
+      loadCramTrackFromLocalData(
+        session, "igv", "c2", tmp_cram, tmp_crai,
+        trackHeight = Inf
+      ),
+      "finite"
+    )
+
+    # Non-positive or non-number values must be rejected
+    expect_error(
+      loadBamTrackFromURL(
+        session, "igv", "b4",
+        "https://example.com/a.bam", "https://example.com/a.bai",
+        trackHeight = 0
+      ),
+      ">= 1"
+    )
+    expect_error(
+      loadBamTrackFromURL(
+        session, "igv", "b5",
+        "https://example.com/a.bam", "https://example.com/a.bai",
+        trackHeight = -10
+      ),
+      ">= 1"
+    )
+    expect_error(
+      loadBamTrackFromURL(
+        session, "igv", "b6",
+        "https://example.com/a.bam", "https://example.com/a.bai",
+        trackHeight = "100"
+      ),
+      "number"
+    )
+  }
+)

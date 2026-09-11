@@ -12,9 +12,9 @@ loadBamTrackFromLocalFile(
   indexFile = paste0(bamFile, ".bai"),
   deleteTracksOfSameName = TRUE,
   displayMode = "EXPANDED",
-  trackHeight = NULL,
   trackConfig = list(),
-  validateReference = TRUE
+  validateReference = TRUE,
+  trackHeight = NULL
 )
 }
 \arguments{
@@ -35,12 +35,12 @@ with the same name (default: TRUE)}
 \item{displayMode}{character string, display mode for alignments ("EXPANDED",
 "COLLAPSED", or "SQUISHED"), default "EXPANDED"}
 
-\item{trackHeight}{integer, track height in pixels (default: NULL, igv.js defaults to 300)}
-
 \item{trackConfig}{list, additional track options passed to igv.js}
 
 \item{validateReference}{logical flag, default TRUE: checks track contigs
 against the active reference genome and emits warnings/toasts on mismatch.}
+
+\item{trackHeight}{numeric, track height in pixels (default: NULL, igv.js defaults to 300)}
 }
 \value{
 None, sends a message to the browser

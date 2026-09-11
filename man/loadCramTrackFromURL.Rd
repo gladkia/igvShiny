@@ -11,8 +11,8 @@ loadCramTrackFromURL(
   cramURL,
   indexURL,
   deleteTracksOfSameName = TRUE,
-  trackHeight = NULL,
-  trackConfig = list()
+  trackConfig = list(),
+  trackHeight = NULL
 )
 }
 \arguments{
@@ -30,10 +30,10 @@ typically small}
 
 \item{deleteTracksOfSameName}{logical, default TRUE}
 
-\item{trackHeight}{integer, track height in pixels (default: NULL, igv.js defaults to 300)}
-
 \item{trackConfig}{a named list of additional igv.js track configuration
 options, \code{sort} among them; see \code{\link{loadBamTrackFromURL}}.}
+
+\item{trackHeight}{numeric, track height in pixels (default: NULL, igv.js defaults to 300)}
 }
 \value{
 nothing

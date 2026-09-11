@@ -1128,13 +1128,13 @@ loadGwasTrack <- function(session,
 #' @param displayMode character string, possible values are "EXPANDED"(default),
 #' "SQUISHED" or "COLLAPSED"
 #' @param showAllBases logical, show all bases in the alignment, default FALSE
-#' @param trackHeight integer, track height in pixels (default: NULL, igv.js defaults to 300)
 #' @param trackConfig a named list of additional igv.js track configuration
 #' options. Alignment tracks read \code{sort}: \code{list(sort =
 #' list(chr = "chr1", position = 155160540, option = "TAG", tag = "HP"))}
 #' sorts the reads at that 1-based position by the HP tag. Any igv.js sort
 #' option works (BASE, STRAND, INSERT_SIZE, ...); reads sort descending
 #' unless \code{direction = "ASC"}.
+#' @param trackHeight numeric, track height in pixels (default: NULL, igv.js defaults to 300)
 #'
 #' @examples
 #' library(igvShiny)
@@ -1159,11 +1159,10 @@ loadBamTrackFromURL <-
            deleteTracksOfSameName = TRUE,
            displayMode = "EXPANDED",
            showAllBases = FALSE,
-           trackHeight = NULL,
-           trackConfig = list()) {
-    if (is.list(trackHeight) && missing(trackConfig)) {
-      trackConfig <- trackHeight
-      trackHeight <- NULL
+           trackConfig = list(),
+           trackHeight = NULL) {
+    if (!is.null(trackHeight)) {
+      checkmate::assert_number(trackHeight, lower = 1, finite = TRUE)
     }
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
@@ -1181,7 +1180,6 @@ loadBamTrackFromURL <-
         showAllBases = showAllBases
       )
     if (!is.null(trackHeight)) {
-      checkmate::assert_number(trackHeight, lower = 1)
       base.msg.to.igv$height <- trackHeight
     }
 
@@ -1205,11 +1203,11 @@ loadBamTrackFromURL <-
 #' @param deleteTracksOfSameName logical, default TRUE
 #' @param displayMode character string, possible values are "EXPANDED"(default),
 #' "SQUISHED" or "COLLAPSED"
-#' @param trackHeight integer, track height in pixels (default: NULL, igv.js defaults to 300)
 #' @param trackConfig a named list of additional igv.js track configuration
 #' options, \code{sort} among them; see \code{\link{loadBamTrackFromURL}}.
 #' @param validateReference logical flag, default TRUE: checks track contigs
 #' against the active reference genome and emits warnings/toasts on mismatch.
+#' @param trackHeight numeric, track height in pixels (default: NULL, igv.js defaults to 300)
 #'
 #' @examples
 #' library(igvShiny)
@@ -1232,21 +1230,20 @@ loadBamTrackFromLocalData <-
            data,
            deleteTracksOfSameName = TRUE,
            displayMode = "EXPANDED",
-           trackHeight = NULL,
            trackConfig = list(),
-           validateReference = TRUE) {
-    if (is.list(trackHeight) && missing(trackConfig)) {
-      trackConfig <- trackHeight
-      trackHeight <- NULL
+           validateReference = TRUE,
+           trackHeight = NULL) {
+    if (!is.null(trackHeight)) {
+      checkmate::assert_number(trackHeight, lower = 1, finite = TRUE)
     }
     if (is.character(data) && length(data) == 1 && file.exists(data)) {
       return(loadBamTrackFromLocalFile(session, id, trackName,
                                        bamFile = data,
                                        deleteTracksOfSameName = deleteTracksOfSameName,
                                        displayMode = displayMode,
-                                       trackHeight = trackHeight,
                                        trackConfig = trackConfig,
-                                       validateReference = validateReference))
+                                       validateReference = validateReference,
+                                       trackHeight = trackHeight))
     }
 
     if (!requireNamespace("rtracklayer"))
@@ -1282,7 +1279,6 @@ loadBamTrackFromLocalData <-
         displayMode = displayMode
       )
     if (!is.null(trackHeight)) {
-      checkmate::assert_number(trackHeight, lower = 1)
       base.msg.to.igv$height <- trackHeight
     }
     msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
@@ -1310,10 +1306,10 @@ loadBamTrackFromLocalData <-
 #'   with the same name (default: TRUE)
 #' @param displayMode character string, display mode for alignments ("EXPANDED",
 #'   "COLLAPSED", or "SQUISHED"), default "EXPANDED"
-#' @param trackHeight integer, track height in pixels (default: NULL, igv.js defaults to 300)
 #' @param trackConfig list, additional track options passed to igv.js
 #' @param validateReference logical flag, default TRUE: checks track contigs
 #'   against the active reference genome and emits warnings/toasts on mismatch.
+#' @param trackHeight numeric, track height in pixels (default: NULL, igv.js defaults to 300)
 #'
 #' @return None, sends a message to the browser
 #'
@@ -1338,20 +1334,16 @@ loadBamTrackFromLocalFile <-
            indexFile = paste0(bamFile, ".bai"),
            deleteTracksOfSameName = TRUE,
            displayMode = "EXPANDED",
-           trackHeight = NULL,
            trackConfig = list(),
-           validateReference = TRUE) {
-    if (is.list(trackHeight) && missing(trackConfig)) {
-      trackConfig <- trackHeight
-      trackHeight <- NULL
-    }
+           validateReference = TRUE,
+           trackHeight = NULL) {
     checkmate::assert_multi_class(session, c("ShinySession", "environment"))
     checkmate::assert_string(id)
     checkmate::assert_string(trackName)
     checkmate::assert_file_exists(bamFile, access = "r")
     checkmate::assert_file_exists(indexFile, access = "r")
     if (!is.null(trackHeight)) {
-      checkmate::assert_number(trackHeight, lower = 1)
+      checkmate::assert_number(trackHeight, lower = 1, finite = TRUE)
     }
 
     if (deleteTracksOfSameName) {
@@ -1399,9 +1391,9 @@ loadBamTrackFromLocalFile <-
 #' @param indexURL character string http url for the bam file index,
 #' typically small
 #' @param deleteTracksOfSameName logical, default TRUE
-#' @param trackHeight integer, track height in pixels (default: NULL, igv.js defaults to 300)
 #' @param trackConfig a named list of additional igv.js track configuration
 #' options, \code{sort} among them; see \code{\link{loadBamTrackFromURL}}.
+#' @param trackHeight numeric, track height in pixels (default: NULL, igv.js defaults to 300)
 #'
 #' @examples
 #' library(igvShiny)
@@ -1424,11 +1416,10 @@ loadCramTrackFromURL <-
            cramURL,
            indexURL,
            deleteTracksOfSameName = TRUE,
-           trackHeight = NULL,
-           trackConfig = list()) {
-    if (is.list(trackHeight) && missing(trackConfig)) {
-      trackConfig <- trackHeight
-      trackHeight <- NULL
+           trackConfig = list(),
+           trackHeight = NULL) {
+    if (!is.null(trackHeight)) {
+      checkmate::assert_number(trackHeight, lower = 1, finite = TRUE)
     }
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
@@ -1445,7 +1436,6 @@ loadCramTrackFromURL <-
         index = indexURL
       )
     if (!is.null(trackHeight)) {
-      checkmate::assert_number(trackHeight, lower = 1)
       base.msg.to.igv$height <- trackHeight
     }
     msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
@@ -1471,11 +1461,11 @@ loadCramTrackFromURL <-
 #' @param indexFile character string, path to its crai index,
 #' by default the cram file with ".crai" appended
 #' @param deleteTracksOfSameName logical, default TRUE
-#' @param trackHeight integer, track height in pixels (default: NULL, igv.js defaults to 300)
 #' @param trackConfig a named list of additional igv.js track configuration
 #' options, \code{sort} among them; see \code{\link{loadBamTrackFromURL}}.
 #' @param validateReference logical flag, default TRUE: checks track contigs
 #' against the active reference genome and emits warnings/toasts on mismatch.
+#' @param trackHeight numeric, track height in pixels (default: NULL, igv.js defaults to 300)
 #'
 #' @examples
 #' library(igvShiny)
@@ -1498,17 +1488,13 @@ loadCramTrackFromLocalData <-
            cramFile,
            indexFile = paste0(cramFile, ".crai"),
            deleteTracksOfSameName = TRUE,
-           trackHeight = NULL,
            trackConfig = list(),
-           validateReference = TRUE) {
-    if (is.list(trackHeight) && missing(trackConfig)) {
-      trackConfig <- trackHeight
-      trackHeight <- NULL
-    }
+           validateReference = TRUE,
+           trackHeight = NULL) {
     checkmate::assert_file_exists(cramFile, access = "r")
     checkmate::assert_file_exists(indexFile, access = "r")
     if (!is.null(trackHeight)) {
-      checkmate::assert_number(trackHeight, lower = 1)
+      checkmate::assert_number(trackHeight, lower = 1, finite = TRUE)
     }
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)

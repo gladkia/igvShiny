@@ -11,9 +11,9 @@ loadBamTrackFromLocalData(
   data,
   deleteTracksOfSameName = TRUE,
   displayMode = "EXPANDED",
-  trackHeight = NULL,
   trackConfig = list(),
-  validateReference = TRUE
+  validateReference = TRUE,
+  trackHeight = NULL
 )
 }
 \arguments{
@@ -30,13 +30,13 @@ loadBamTrackFromLocalData(
 \item{displayMode}{character string, possible values are "EXPANDED"(default),
 "SQUISHED" or "COLLAPSED"}
 
-\item{trackHeight}{integer, track height in pixels (default: NULL, igv.js defaults to 300)}
-
 \item{trackConfig}{a named list of additional igv.js track configuration
 options, \code{sort} among them; see \code{\link{loadBamTrackFromURL}}.}
 
 \item{validateReference}{logical flag, default TRUE: checks track contigs
 against the active reference genome and emits warnings/toasts on mismatch.}
+
+\item{trackHeight}{numeric, track height in pixels (default: NULL, igv.js defaults to 300)}
 }
 \value{
 nothing
