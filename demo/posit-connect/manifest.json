@@ -94,6 +94,39 @@
         "Built": "R 4.5.3; ; 2026-05-17 09:20:53 UTC; unix"
       }
     },
+    "GenomeInfoDb": {
+      "Source": "Bioconductor",
+      "Repository": "https://bioconductor.org/packages/3.22/bioc",
+      "description": {
+        "Package": "GenomeInfoDb",
+        "Title": "Utilities for manipulating chromosome names, including modifying\nthem to follow a particular naming style",
+        "Description": "Contains data and functions that\n\tdefine and allow translation between different chromosome\n\tsequence naming conventions (e.g., \"chr1\" versus \"1\"),\n\tincluding a function that attempts to place sequence names in\n\ttheir natural, rather than lexicographic, order.",
+        "biocViews": "Genetics, DataRepresentation, Annotation, GenomeAnnotation",
+        "URL": "https://bioconductor.org/packages/GenomeInfoDb",
+        "Video": "http://youtu.be/wdEjCYSXa7w",
+        "BugReports": "https://github.com/Bioconductor/GenomeInfoDb/issues",
+        "Version": "1.46.2",
+        "License": "Artistic-2.0",
+        "Encoding": "UTF-8",
+        "Authors@R": "c(\n\tperson(\"Sonali\", \"Arora\", role=\"aut\"),\n\tperson(\"Martin\", \"Morgan\", role=\"aut\"),\n\tperson(\"Marc\", \"Carlson\", role=\"aut\"),\n\tperson(\"Hervé\", \"Pagès\", role=c(\"aut\", \"cre\"),\n\t\temail=\"hpages.on.github@gmail.com\"),\n\tperson(\"Prisca Chidimma\", \"Maduka\", role=\"ctb\"),\n\tperson(\"Atuhurira Kirabo\", \"Kakopo\", role=\"ctb\"),\n\tperson(\"Haleema\", \"Khan\", role=\"ctb\",\n\t\tcomment=\"vignette translation from Sweave to Rmarkdown / HTML\"),\n\tperson(\"Emmanuel Chigozie\", \"Elendu\", role=\"ctb\"))",
+        "Depends": "R (>= 4.0.0), methods, BiocGenerics (>= 0.53.2), S4Vectors (>=\n0.47.6), IRanges (>= 2.41.1), Seqinfo (>= 0.99.2)",
+        "Imports": "stats, utils, UCSC.utils",
+        "Suggests": "GenomeInfoDbData, R.utils, data.table, GenomicRanges,\nRsamtools, GenomicAlignments, BSgenome, GenomicFeatures,\nTxDb.Dmelanogaster.UCSC.dm3.ensGene,\nBSgenome.Scerevisiae.UCSC.sacCer2, BSgenome.Celegans.UCSC.ce2,\nBSgenome.Hsapiens.NCBI.GRCh38, RUnit, BiocStyle, knitr",
+        "VignetteBuilder": "knitr",
+        "Collate": "utils.R fetch_table_dump_from_Ensembl_FTP.R list_ftp_dir.R\nNCBI-utils.R UCSC-utils.R Ensembl-utils.R\ngetChromInfoFromNCBI.R getChromInfoFromUCSC.R\ngetChromInfoFromEnsembl.R loadTaxonomyDb.R mapGenomeBuilds.R\nseqlevelsStyle.R seqlevels-wrappers.R zzz.R",
+        "git_url": "https://git.bioconductor.org/packages/GenomeInfoDb",
+        "git_branch": "RELEASE_3_22",
+        "git_last_commit": "149c9ca",
+        "git_last_commit_date": "2025-12-03",
+        "Repository": "Bioconductor 3.22",
+        "Date/Publication": "2025-12-04",
+        "NeedsCompilation": "no",
+        "Packaged": "2025-12-04 23:03:32 UTC; biocbuild",
+        "Author": "Sonali Arora [aut],\n  Martin Morgan [aut],\n  Marc Carlson [aut],\n  Hervé Pagès [aut, cre],\n  Prisca Chidimma Maduka [ctb],\n  Atuhurira Kirabo Kakopo [ctb],\n  Haleema Khan [ctb] (vignette translation from Sweave to Rmarkdown /\n    HTML),\n  Emmanuel Chigozie Elendu [ctb]",
+        "Maintainer": "Hervé Pagès <hpages.on.github@gmail.com>",
+        "Built": "R 4.5.3; ; 2026-09-09 11:07:38 UTC; unix"
+      }
+    },
     "GenomeInfoDbData": {
       "Source": "Bioconductor",
       "Repository": "https://bioconductor.org/packages/3.22/data/annotation",
@@ -342,6 +375,37 @@
         "Author": "Hervé Pagès [aut, cre] (ORCID: <https://orcid.org/0009-0002-8272-4522>)",
         "Maintainer": "Hervé Pagès <hpages.on.github@gmail.com>",
         "Built": "R 4.5.3; ; 2026-05-17 10:00:55 UTC; unix"
+      }
+    },
+    "UCSC.utils": {
+      "Source": "Bioconductor",
+      "Repository": "https://bioconductor.org/packages/3.22/bioc",
+      "description": {
+        "Package": "UCSC.utils",
+        "Title": "Low-level utilities to retrieve data from the UCSC Genome\nBrowser",
+        "Description": "A set of low-level utilities to retrieve data from the UCSC\n\tGenome Browser. Most functions in the package access the data via\n\tthe UCSC REST API but some of them query the UCSC MySQL server\n\tdirectly. Note that the primary purpose of the package is to support\n\thigher-level functionalities implemented in downstream packages\n\tlike GenomeInfoDb or txdbmaker.",
+        "biocViews": "Infrastructure, GenomeAssembly, Annotation,\nGenomeAnnotation, DataImport",
+        "URL": "https://bioconductor.org/packages/UCSC.utils",
+        "BugReports": "https://github.com/Bioconductor/UCSC.utils/issues",
+        "Version": "1.6.1",
+        "License": "Artistic-2.0",
+        "Encoding": "UTF-8",
+        "Authors@R": "person(\"Hervé\", \"Pagès\", role=c(\"aut\", \"cre\"),\n\t          email=\"hpages.on.github@gmail.com\")",
+        "Imports": "methods, stats, httr, jsonlite, S4Vectors (>= 0.47.6)",
+        "Suggests": "DBI, RMariaDB, GenomeInfoDb, testthat, knitr, rmarkdown,\nBiocStyle",
+        "VignetteBuilder": "knitr",
+        "Collate": "00utils.R UCSC.api.url.R REST_API.R list_UCSC_genomes.R\nget_UCSC_chrom_sizes.R list_UCSC_tracks.R\nfetch_UCSC_track_data.R UCSC_dbselect.R zzz.R",
+        "git_url": "https://git.bioconductor.org/packages/UCSC.utils",
+        "git_branch": "RELEASE_3_22",
+        "git_last_commit": "625d554",
+        "git_last_commit_date": "2025-12-08",
+        "Repository": "Bioconductor 3.22",
+        "Date/Publication": "2025-12-11",
+        "NeedsCompilation": "no",
+        "Packaged": "2025-12-12 02:35:20 UTC; biocbuild",
+        "Author": "Hervé Pagès [aut, cre]",
+        "Maintainer": "Hervé Pagès <hpages.on.github@gmail.com>",
+        "Built": "R 4.5.3; ; 2026-09-09 11:07:36 UTC; unix"
       }
     },
     "V8": {
