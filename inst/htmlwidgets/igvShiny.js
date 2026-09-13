@@ -53,28 +53,57 @@ HTMLWidgets.widget({
   factory: function(el, width, height) {
 
     var igvWidget = null;
+    var currentRenderId = 0;
 
     return {
       renderValue: function(options) {
-         igvshiny_log("---- ~/github/igvShiny/inst/htmlwidgets, renderValue");
+         currentRenderId++;
+         var renderId = currentRenderId;
+
+         igvshiny_log("---- ~/github/igvShiny/inst/htmlwidgets, renderValue (renderId: " + renderId + ")");
          igvshiny_log("     el: ");
          igvshiny_log(el);
-         igvshiny_log("igv.js renderValue, wh: " + width + ", " + height)
+         igvshiny_log("igv.js renderValue, wh: " + width + ", " + height);
          igvshiny_log("--------- options");
-         igvshiny_log(options)
-         var igvDiv;
-         igvDiv = el; // $("#igvDiv")[0];
-         var igvDiv_jquerySignature = "#" + igvDiv.id;
-         $(igvDiv_jquerySignature).children().remove() // any previously created igv instance
-         igvshiny_log("---- el");
-         igvshiny_log(el);
-         igvshiny_log(el.id)
+         igvshiny_log(options);
+
          var htmlContainerID = el.id;
-         // the custom message handlers below live outside this factory and never
-         // see `options`, so park the namespace on the element itself (#134)
+         var container = document.getElementById(htmlContainerID) || el;
+
+         // Dispose previously active igv.js browser instance if present
+         if (igvWidget) {
+            try {
+               igv.removeBrowser(igvWidget);
+            } catch (e) {
+               igvshiny_log("error disposing igvWidget: " + e);
+            }
+            igvWidget = null;
+         }
+         if (container.igvBrowser && container.igvBrowser !== igvWidget) {
+            try {
+               igv.removeBrowser(container.igvBrowser);
+            } catch (e) {
+               igvshiny_log("error disposing container.igvBrowser: " + e);
+            }
+            container.igvBrowser = null;
+         }
+
+         // igv.js 3.x mounts into shadowRoot. Clean up shadow DOM child elements
+         // from previous or stalled browser initializations to prevent stacking
+         if (el.shadowRoot) {
+            while (el.shadowRoot.firstChild) {
+               el.shadowRoot.removeChild(el.shadowRoot.firstChild);
+            }
+         }
+
+         // Clean up light DOM children (e.g. error banners or legacy containers)
+         while (el.firstChild) {
+            el.removeChild(el.firstChild);
+         }
+
          el.moduleNS = options.moduleNS || "";
-         igvshiny_log("fasta: " + options.fasta)
-         igvshiny_log("index: " + options.fastaIndex)
+         igvshiny_log("fasta: " + options.fasta);
+         igvshiny_log("index: " + options.fastaIndex);
          var fullOptions = genomeSpecificOptions(options.genomeName,
                                                  options.stockGenome,
                                                  options.dataMode,
@@ -85,23 +114,27 @@ HTMLWidgets.widget({
                                                  options.fastaIndex,
                                                  options.annotation,
                                                  options.moduleNS,
-                                                 options.tracks)
+                                                 options.tracks);
 
-         igvshiny_log("about to createBrowser, trackHeight: " + fullOptions.height)
-         igv.createBrowser(igvDiv, fullOptions)
+         igvshiny_log("about to createBrowser, trackHeight: " + fullOptions.height);
+         igv.createBrowser(el, fullOptions)
              .then(function (browser) {
+                // If a newer renderValue was initiated while this browser was loading,
+                // discard and dispose this stale browser instance.
+                if (renderId !== currentRenderId) {
+                   igvshiny_log("createBrowser fulfilled for stale renderId " + renderId + " (current is " + currentRenderId + "); disposing.");
+                   try {
+                      igv.removeBrowser(browser);
+                   } catch (e) {}
+                   return;
+                }
+
                 igvshiny_log("createBrowser promise fulfilled");
                 igvWidget = browser;
                 igvshiny_log("about to save igv browser");
-                document.getElementById(htmlContainerID).igvBrowser = browser;
-                document.getElementById(htmlContainerID).chromLocString = options.initialLocus;
-                jqueryTag = "#" + htmlContainerID + " .igv-root";
-                igvshiny_log("jqueryTag: " + jqueryTag);
-                igvRoots = $(jqueryTag);
-                if(igvRoots.length > 1){
-                   igvRoots[0].remove()
-                   }
-                igvshiny_log(" count: " + igvRoots.length);
+                var c = document.getElementById(htmlContainerID) || el;
+                c.igvBrowser = browser;
+                c.chromLocString = options.initialLocus;
                 igvWidget.on('locuschange', debounce(function (referenceFrameList){
                    igvshiny_log("---- locuschange, referenceFrameList: ")
                    igvshiny_log(referenceFrameList);
@@ -157,36 +190,51 @@ HTMLWidgets.widget({
                 Shiny.setInputValue(moduleNamespace(options.moduleNS, "igvReady"), htmlContainerID, {priority: "event"});
                 }) // then: promise fulfilled
              .catch(function (error) {
+                // If a newer renderValue was initiated while this browser was loading,
+                // ignore errors from this superseded render.
+                if (renderId !== currentRenderId) {
+                   igvshiny_log("createBrowser failed for stale renderId " + renderId + " (current is " + currentRenderId + "); ignoring.");
+                   return;
+                }
+
                 igvshiny_log("createBrowser failed: " + error);
                 console.error("igvShiny: Failed to initialize igv.js browser", error);
-                var container = document.getElementById(htmlContainerID);
-                if (container) {
-                   container.innerHTML = "";
-                   var errorDiv = document.createElement("div");
-                   errorDiv.className = "alert alert-warning igvshiny-error-banner";
-                   errorDiv.style.margin = "20px";
-                   errorDiv.style.padding = "16px";
-                   errorDiv.style.border = "1px solid #ffc107";
-                   errorDiv.style.borderRadius = "6px";
-                   errorDiv.style.backgroundColor = "#fff3cd";
-                   errorDiv.style.color = "#664d03";
-                   errorDiv.style.fontFamily = "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
 
-                   var errorMsg = (error && error.message) ? error.message : String(error);
-                   var genomeName = options.genomeName || "specified genome";
-
-                   errorDiv.innerHTML =
-                      "<h5 style='margin-top:0;margin-bottom:8px;font-weight:600;display:flex;align-items:center;'>" +
-                      "<span style='font-size:1.3em;margin-right:8px;'>&#9888;</span> " +
-                      "Unable to load genome browser</h5>" +
-                      "<p style='margin-bottom:8px;font-size:0.95em;'>" +
-                      "Failed to initialize reference genome <strong>" + genomeName + "</strong>. " +
-                      "The remote genome asset server (such as igv.org or UCSC) may be offline, timing out, or unreachable.</p>" +
-                      "<div style='margin-top:10px;padding:8px;background:rgba(0,0,0,0.05);border-radius:4px;font-size:0.85em;font-family:monospace;white-space:pre-wrap;word-break:break-word;'>" +
-                      errorMsg + "</div>";
-
-                   container.appendChild(errorDiv);
+                if (el.shadowRoot) {
+                   while (el.shadowRoot.firstChild) {
+                      el.shadowRoot.removeChild(el.shadowRoot.firstChild);
+                   }
                 }
+                while (el.firstChild) {
+                   el.removeChild(el.firstChild);
+                }
+
+                var container = document.getElementById(htmlContainerID) || el;
+                var errorDiv = document.createElement("div");
+                errorDiv.className = "alert alert-warning igvshiny-error-banner";
+                errorDiv.style.margin = "20px";
+                errorDiv.style.padding = "16px";
+                errorDiv.style.border = "1px solid #ffc107";
+                errorDiv.style.borderRadius = "6px";
+                errorDiv.style.backgroundColor = "#fff3cd";
+                errorDiv.style.color = "#664d03";
+                errorDiv.style.fontFamily = "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+
+                var errorMsg = (error && error.message) ? error.message : String(error);
+                var genomeName = options.genomeName || "specified genome";
+
+                errorDiv.innerHTML =
+                   "<h5 style='margin-top:0;margin-bottom:8px;font-weight:600;display:flex;align-items:center;'>" +
+                   "<span style='font-size:1.3em;margin-right:8px;'>&#9888;</span> " +
+                   "Unable to load genome browser</h5>" +
+                   "<p style='margin-bottom:8px;font-size:0.95em;'>" +
+                   "Failed to initialize reference genome <strong>" + genomeName + "</strong>. " +
+                   "The remote genome asset server (such as igv.org or UCSC) may be offline, timing out, or unreachable.</p>" +
+                   "<div style='margin-top:10px;padding:8px;background:rgba(0,0,0,0.05);border-radius:4px;font-size:0.85em;font-family:monospace;white-space:pre-wrap;word-break:break-word;'>" +
+                   errorMsg + "</div>";
+
+                container.appendChild(errorDiv);
+
                 var errorPayload = {
                    id: htmlContainerID,
                    genome: options.genomeName,
