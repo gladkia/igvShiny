@@ -26,7 +26,17 @@ library(igvShiny)
     expect_true(found)
 }
 
+.is_hg38_reachable <- function() {
+    tryCatch({
+        con <- url("https://igv.org/genomes/data/hg38/hg38.chrom.sizes")
+        suppressWarnings(open(con, open = "r", timeout = 3))
+        close(con)
+        TRUE
+    }, error = function(e) FALSE)
+}
+
 test_that("igvShinyDemo loads tracks correctly", {
+    skip_if(!.is_hg38_reachable(), "remote igv.org hg38 reference is unreachable (HTTP 503/timeout)")
     # Increase timeout for potentially slow-loading remote resources
     options(chromote.timeout = 120)
 
@@ -80,6 +90,7 @@ test_that("igvShinyDemo loads a remote bigWig", {
 })
 
 test_that("the gff3 demo loads its GFF3 tracks correctly", {
+    skip_if(!.is_hg38_reachable(), "remote igv.org hg38 reference is unreachable (HTTP 503/timeout)")
     options(chromote.timeout = 120)
 
     sf <- system.file(package = "igvShiny", "demos", "gff3.R")
@@ -105,6 +116,7 @@ test_that("the gff3 demo loads its GFF3 tracks correctly", {
 })
 
 test_that("the junctions demo renders junctions held in a data.frame", {
+    skip_if(!.is_hg38_reachable(), "remote igv.org hg38 reference is unreachable (HTTP 503/timeout)")
     options(chromote.timeout = 120)
 
     sf <- system.file(package = "igvShiny", "demos", "junctions.R")

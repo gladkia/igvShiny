@@ -75,7 +75,8 @@ ui <- page_sidebar(
       textInput("roi", label = "Search locus / gene",
                 placeholder = "e.g. MEF2C or chr1:7,426,231-7,453,241"),
       actionButton("searchButton", "Search", icon = icon("magnifying-glass"),
-                   class = "btn-primary w-100")
+                   class = "btn-primary w-100 mb-2"),
+      checkboxInput("offlineMode", "Offline mode (SARS-CoV-2)", value = FALSE)
     ),
 
     accordion(
@@ -139,7 +140,7 @@ ui <- page_sidebar(
     card_header(
       class = "d-flex align-items-center gap-2",
       icon("dna"), "Genome viewer",
-      tags$span(class = "badge text-bg-light ms-auto", "hg38")
+      uiOutput("genomeBadge", inline = TRUE, class = "ms-auto")
     ),
     card_body(
       class = "p-0",
@@ -289,10 +290,53 @@ server <- function(input, output, session) {
     chromLoc(input[[sprintf("currentGenomicRegion.%s", "igvShiny_0")]])
   })
 
+  output$genomeBadge <- renderUI({
+    if (isTRUE(input$offlineMode)) {
+      tags$span(class = "badge text-bg-success ms-auto", "SARS-CoV-2 (offline)")
+    } else {
+      tags$span(class = "badge text-bg-light ms-auto", "hg38")
+    }
+  })
+
   output$igvShiny_0 <- renderIgvShiny({
-    genomeOptions <- parseAndValidateGenomeSpec(
-      genomeName = "hg38", initialLocus = "chr1:6,575,383-8,304,088")
-    igvShiny(genomeOptions, displayMode = "SQUISHED", tracks = list())
+    if (isTRUE(input$offlineMode)) {
+      data.directory <- system.file(package = "igvShiny", "extdata", "sarsGenome")
+      fasta.file <- file.path(data.directory, "Sars_cov_2.ASM985889v3.dna.toplevel.fa")
+      fastaIndex.file <- file.path(data.directory, "Sars_cov_2.ASM985889v3.dna.toplevel.fa.fai")
+      annotation.file <- file.path(data.directory, "Sars_cov_2.ASM985889v3.101.gff3")
+      genomeOptions <- parseAndValidateGenomeSpec(
+        genomeName = "SARS-CoV-2",
+        initialLocus = "all",
+        stockGenome = FALSE,
+        dataMode = "localFiles",
+        fasta = fasta.file,
+        fastaIndex = fastaIndex.file,
+        genomeAnnotation = annotation.file
+      )
+      igvShiny(genomeOptions, displayMode = "SQUISHED", tracks = list())
+    } else {
+      genomeOptions <- parseAndValidateGenomeSpec(
+        genomeName = "hg38", initialLocus = "chr1:6,575,383-8,304,088")
+      igvShiny(genomeOptions, displayMode = "SQUISHED", tracks = list())
+    }
+  })
+
+  observeEvent(input$igvError, {
+    err <- input$igvError
+    genomeName <- if (!is.null(err$genome)) err$genome else "hg38"
+    showNotification(
+      tags$div(
+        tags$b("Remote genome server unavailable"),
+        tags$p(
+          sprintf("Failed to connect to the external host for %s. Switch on 'Offline mode (SARS-CoV-2)' in the sidebar to run without external network access.",
+                  genomeName),
+          class = "mb-0 mt-1"
+        )
+      ),
+      type = "warning",
+      duration = 15,
+      id = "igv_error_notification"
+    )
   })
 
 } # server

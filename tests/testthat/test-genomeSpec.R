@@ -53,6 +53,8 @@ test_that("Cached (caas) genomes are retrieved quickly", {
   expect_lt(t3[["elapsed"]], 0.1)
 
   # Parsing a non-cached genome spec is slower
+  skip_if(identical(cssg, get_basic_genomes()),
+          "genome registry unreachable, fell back to the built-in list")
   t4 <- system.time(
     parseAndValidateGenomeSpec(
       genomeName = "macFas5",

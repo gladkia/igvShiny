@@ -155,7 +155,46 @@ HTMLWidgets.widget({
                    }); // on
                 Shiny.setInputValue("igvReady", htmlContainerID, {priority: "event"});
                 Shiny.setInputValue(moduleNamespace(options.moduleNS, "igvReady"), htmlContainerID, {priority: "event"});
-                }); // then: promise fulflled
+                }) // then: promise fulfilled
+             .catch(function (error) {
+                igvshiny_log("createBrowser failed: " + error);
+                console.error("igvShiny: Failed to initialize igv.js browser", error);
+                var container = document.getElementById(htmlContainerID);
+                if (container) {
+                   container.innerHTML = "";
+                   var errorDiv = document.createElement("div");
+                   errorDiv.className = "alert alert-warning igvshiny-error-banner";
+                   errorDiv.style.margin = "20px";
+                   errorDiv.style.padding = "16px";
+                   errorDiv.style.border = "1px solid #ffc107";
+                   errorDiv.style.borderRadius = "6px";
+                   errorDiv.style.backgroundColor = "#fff3cd";
+                   errorDiv.style.color = "#664d03";
+                   errorDiv.style.fontFamily = "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+
+                   var errorMsg = (error && error.message) ? error.message : String(error);
+                   var genomeName = options.genomeName || "specified genome";
+
+                   errorDiv.innerHTML =
+                      "<h5 style='margin-top:0;margin-bottom:8px;font-weight:600;display:flex;align-items:center;'>" +
+                      "<span style='font-size:1.3em;margin-right:8px;'>&#9888;</span> " +
+                      "Unable to load genome browser</h5>" +
+                      "<p style='margin-bottom:8px;font-size:0.95em;'>" +
+                      "Failed to initialize reference genome <strong>" + genomeName + "</strong>. " +
+                      "The remote genome asset server (such as igv.org or UCSC) may be offline, timing out, or unreachable.</p>" +
+                      "<div style='margin-top:10px;padding:8px;background:rgba(0,0,0,0.05);border-radius:4px;font-size:0.85em;font-family:monospace;white-space:pre-wrap;word-break:break-word;'>" +
+                      errorMsg + "</div>";
+
+                   container.appendChild(errorDiv);
+                }
+                var errorPayload = {
+                   id: htmlContainerID,
+                   genome: options.genomeName,
+                   error: (error && error.message) ? error.message : String(error)
+                };
+                Shiny.setInputValue("igvError", errorPayload, {priority: "event"});
+                Shiny.setInputValue(moduleNamespace(options.moduleNS, "igvError"), errorPayload, {priority: "event"});
+             });
           },
       resize: function(width, height) {
         // TODO: code to re-render the widget with a new size
