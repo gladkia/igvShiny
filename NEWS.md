@@ -1,3 +1,9 @@
+## igvShiny 1.9.47
+* Handle remote genome host outages gracefully in igv.js with in-widget error banner and igvError Shiny event (#182)
+* Clean shadowRoot and dispose previous browser instances on re-render to prevent stacked duplicate viewers (#182)
+* Discard and dispose superseded async browser initializations via render generation tracking (#182)
+* Add zero-network offline demo mode (SARS-CoV-2) to the flagship showcase app using bundled data
+
 ## igvShiny 1.9.46
 * Add trackHeight parameter and coverageTrackHeight/showCoverage options for alignment tracks (#174)
 
