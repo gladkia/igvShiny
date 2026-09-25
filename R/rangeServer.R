@@ -166,7 +166,9 @@
 #' @export
 #' @keywords utils
 serveLocalFile <- function(session, filePath) {
-  checkmate::assert_multi_class(session, c("ShinySession", "environment"))
+  checkmate::assert_multi_class(
+    session, c("ShinySession", "session_proxy", "environment")
+  )
   checkmate::assert_file_exists(filePath, access = "r")
 
   normPath <- normalizePath(filePath, winslash = "/", mustWork = TRUE)

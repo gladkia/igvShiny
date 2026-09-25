@@ -51,9 +51,9 @@ test_that("igvShiny refuses a genome spec that was not validated", {
   expect_error(with_domain(igvShiny(list(genomeName = "hg38"))))
 })
 
-test_that("igvShiny copies local genome files into the tracks directory", {
+local_ribo_opts <- function() {
   data.dir <- system.file(package = "igvShiny", "extdata")
-  opts <- parseAndValidateGenomeSpec(
+  parseAndValidateGenomeSpec(
     genomeName = "ribo",
     initialLocus = "all",
     stockGenome = FALSE,
@@ -62,9 +62,30 @@ test_that("igvShiny copies local genome files into the tracks directory", {
     fastaIndex = file.path(data.dir, "ribosomal-RNA-gene.fasta.fai"),
     genomeAnnotation = file.path(data.dir, "ribosomal-RNA-gene.gff3")
   )
-  widget <- with_domain(igvShiny(opts))
+}
 
-  # the paths handed to igv.js are rewritten to the served "tracks" directory
+test_that("igvShiny serves a local fasta through the Range handler (#183)", {
+  session <- fake_session()
+  session$ns <- function(id) id
+  widget <- shiny::withReactiveDomain(session, igvShiny(local_ribo_opts()))
+
+  # the "tracks" resource path ignores Range, so the indexed fasta must not go
+  # there: igv.js would download the whole genome for every sequence read
+  expect_match(widget$x$fasta, "^session/.*/dataobj/")
+  expect_match(widget$x$fastaIndex, "^session/.*/dataobj/")
+  expect_match(widget$x$annotation, "^tracks/")
+
+  fasta <- Filter(function(o) grepl("\\.fasta$", o$name),
+                  session$registeredDataObjs)[[1]]
+  res <- fasta$filterFunc(fasta$data, list(HTTP_RANGE = "bytes=0-9"))
+  expect_equal(res$status, 206L)
+  expect_length(res$content, 10L)
+})
+
+test_that("igvShiny copies local genome files into tracks without a session", {
+  expect_null(shiny::getDefaultReactiveDomain())
+  widget <- igvShiny(local_ribo_opts())
+
   expect_match(widget$x$fasta, "^tracks/")
   expect_match(widget$x$fastaIndex, "^tracks/")
   expect_true(file.exists(file.path(get_tracks_dir(),
