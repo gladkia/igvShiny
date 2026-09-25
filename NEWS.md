@@ -1,3 +1,7 @@
+## igvShiny 1.9.48
+* Fix custom local genomes behind remote servers by serving the fasta and index with HTTP Range support (#183)
+* Allow serveLocalFile() to accept a Shiny module session proxy
+
 ## igvShiny 1.9.47
 * Handle remote genome host outages gracefully in igv.js with in-widget error banner and igvError Shiny event (#182)
 * Clean shadowRoot and dispose previous browser instances on re-render to prevent stacked duplicate viewers (#182)

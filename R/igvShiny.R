@@ -300,23 +300,31 @@ igvShiny <- function(genomeOptions,
     fasta.file <- genomeOptions[["fasta"]]
     fasta.indexFile <- genomeOptions[["fastaIndex"]]
     gff3.file <- genomeOptions[["annotation"]]
-    destination <-
-      file.path(directory.name, basename(fasta.file))
-    file.copy(fasta.file, destination, overwrite = TRUE)
-    destination <-
-      file.path(directory.name, basename(fasta.indexFile))
-    file.copy(fasta.indexFile, destination, overwrite = TRUE)
+    # igv.js reads an indexed fasta by Range requests only; the "tracks"
+    # resource path ignores Range and answers with the whole file, which
+    # never finishes for a multi-GB genome behind a remote server (#183)
+    if (!is.null(session)) {
+      genomeOptions[["fasta"]] <- serveLocalFile(session, fasta.file)
+      genomeOptions[["fastaIndex"]] <- serveLocalFile(session, fasta.indexFile)
+    } else {
+      file.copy(fasta.file, file.path(directory.name, basename(fasta.file)),
+                overwrite = TRUE)
+      file.copy(fasta.indexFile,
+                file.path(directory.name, basename(fasta.indexFile)),
+                overwrite = TRUE)
+      genomeOptions[["fasta"]] <-
+        file.path(basename(directory.name), basename(fasta.file))
+      genomeOptions[["fastaIndex"]] <-
+        file.path(basename(directory.name), basename(fasta.indexFile))
+    }
+    # the annotation is fetched whole, so it stays on the static path, which
+    # streams from disk instead of reading the file into R memory
     if (!is.na(gff3.file)) {
       destination <- file.path(directory.name, basename(gff3.file))
       file.copy(gff3.file, destination, overwrite = TRUE)
       genomeOptions[["annotation"]] <-
         file.path(basename(directory.name), basename(gff3.file))
     }
-    # now that they have been copied, store the new paths
-    genomeOptions[["fasta"]] <-
-      file.path(basename(directory.name), basename(fasta.file))
-    genomeOptions[["fastaIndex"]] <-
-      file.path(basename(directory.name), basename(fasta.indexFile))
   } # if custom genome, local files
 
   state[["requestedHeight"]] <- height

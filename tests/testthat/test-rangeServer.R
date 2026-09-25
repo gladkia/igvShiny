@@ -514,3 +514,17 @@ test_that(
     )
   }
 )
+
+test_that("serveLocalFile accepts a module session proxy", {
+  tmp <- tempfile(fileext = ".bam")
+  writeBin(as.raw(1:10), tmp)
+  on.exit(unlink(tmp), add = TRUE)
+
+  shiny::testServer(function(input, output, session) {
+    shiny::moduleServer("m", function(input, output, session) {
+      expect_s3_class(session, "session_proxy")
+      # MockShinySession$registerDataObj returns NULL; the point is the guard
+      expect_no_error(serveLocalFile(session, tmp))
+    })
+  }, {})
+})
