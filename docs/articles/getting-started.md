@@ -466,7 +466,7 @@ reports the directory in use.
 `#> [8] base     `\
 `#> `\
 `#> other attached packages:`\
-`#> [1] igvShiny_1.9.48      shiny_1.14.0         GenomicRanges_1.65.4`\
+`#> [1] igvShiny_1.9.49      shiny_1.14.0         GenomicRanges_1.65.4`\
 `#> [4] Seqinfo_1.3.2        IRanges_2.47.5       S4Vectors_0.51.10   `\
 `#> [7] BiocGenerics_0.59.12 generics_0.1.4       BiocStyle_2.41.0    `\
 `#> `\
