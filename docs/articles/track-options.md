@@ -43,7 +43,7 @@ is handed — including the defaults the loader fills in:
 `#> loadBedTrackFromFile`\
 `#>   elementID: igv`\
 `#>   trackName: my regions`\
-`#>   bedFilepath: tracks/file1c9c65bceaff.bed`\
+`#>   bedFilepath: tracks/file1ed724ee8351.bed`\
 `#>   color: `\
 `#>   trackHeight: 50`\
 `#>   displayMode: EXPANDED`\
@@ -337,7 +337,7 @@ without it the parser guesses the layout from header names it recognises
 `#> loadGwasTrack`\
 `#>   elementID: igv`\
 `#>   trackName: gwas`\
-`#>   gwasDataFilepath: tracks/file1c9c365988df.gwas`\
+`#>   gwasDataFilepath: tracks/file1ed76b78655f.gwas`\
 `#>   color: red`\
 `#>   trackHeight: 200`\
 `#>   autoscale: FALSE`\
@@ -520,8 +520,8 @@ options that are useful from R, and it grows.
 `#> [8] base     `\
 `#> `\
 `#> other attached packages:`\
-`#> [1] igvShiny_1.9.46      shiny_1.14.0         GenomicRanges_1.65.4`\
-`#> [4] Seqinfo_1.3.2        IRanges_2.47.5       S4Vectors_0.51.9    `\
+`#> [1] igvShiny_1.9.48      shiny_1.14.0         GenomicRanges_1.65.4`\
+`#> [4] Seqinfo_1.3.2        IRanges_2.47.5       S4Vectors_0.51.10   `\
 `#> [7] BiocGenerics_0.59.12 generics_0.1.4       BiocStyle_2.41.0    `\
 `#> `\
 `#> loaded via a namespace (and not attached):`\
@@ -541,6 +541,6 @@ options that are useful from R, and it grows.
 `#> [40] htmlwidgets_1.6.4       cluster_2.1.8.3         ragg_1.5.2             `\
 `#> [43] desc_1.4.3              pkgdown_2.2.1           bslib_0.12.0           `\
 `#> [46] later_1.4.8             glue_1.8.1              Rcpp_1.1.2             `\
-`#> [49] systemfonts_1.3.2       xfun_0.60               knitr_1.52             `\
+`#> [49] systemfonts_1.3.2       xfun_0.61               knitr_1.52             `\
 `#> [52] farver_2.1.2            xtable_1.8-8            htmltools_0.5.9        `\
 `#> [55] rmarkdown_2.32          compiler_4.6.1`

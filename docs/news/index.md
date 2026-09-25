@@ -1,5 +1,26 @@
 # Changelog
 
+## igvShiny 1.9.48
+
+- Fix custom local genomes behind remote servers by serving the fasta
+  and index with HTTP Range support
+  ([\#183](https://github.com/gladkia/igvShiny/issues/183))
+- Allow serveLocalFile() to accept a Shiny module session proxy
+
+## igvShiny 1.9.47
+
+- Handle remote genome host outages gracefully in igv.js with in-widget
+  error banner and igvError Shiny event
+  ([\#182](https://github.com/gladkia/igvShiny/issues/182))
+- Clean shadowRoot and dispose previous browser instances on re-render
+  to prevent stacked duplicate viewers
+  ([\#182](https://github.com/gladkia/igvShiny/issues/182))
+- Discard and dispose superseded async browser initializations via
+  render generation tracking
+  ([\#182](https://github.com/gladkia/igvShiny/issues/182))
+- Add zero-network offline demo mode (SARS-CoV-2) to the flagship
+  showcase app using bundled data
+
 ## igvShiny 1.9.46
 
 - Add trackHeight parameter and coverageTrackHeight/showCoverage options

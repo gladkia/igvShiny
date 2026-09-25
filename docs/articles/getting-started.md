@@ -466,8 +466,8 @@ reports the directory in use.
 `#> [8] base     `\
 `#> `\
 `#> other attached packages:`\
-`#> [1] igvShiny_1.9.46      shiny_1.14.0         GenomicRanges_1.65.4`\
-`#> [4] Seqinfo_1.3.2        IRanges_2.47.5       S4Vectors_0.51.9    `\
+`#> [1] igvShiny_1.9.48      shiny_1.14.0         GenomicRanges_1.65.4`\
+`#> [4] Seqinfo_1.3.2        IRanges_2.47.5       S4Vectors_0.51.10   `\
 `#> [7] BiocGenerics_0.59.12 generics_0.1.4       BiocStyle_2.41.0    `\
 `#> `\
 `#> loaded via a namespace (and not attached):`\
@@ -487,6 +487,6 @@ reports the directory in use.
 `#> [40] htmlwidgets_1.6.4       cluster_2.1.8.3         ragg_1.5.2             `\
 `#> [43] desc_1.4.3              pkgdown_2.2.1           bslib_0.12.0           `\
 `#> [46] later_1.4.8             glue_1.8.1              Rcpp_1.1.2             `\
-`#> [49] systemfonts_1.3.2       xfun_0.60               knitr_1.52             `\
+`#> [49] systemfonts_1.3.2       xfun_0.61               knitr_1.52             `\
 `#> [52] farver_2.1.2            xtable_1.8-8            htmltools_0.5.9        `\
 `#> [55] rmarkdown_2.32          compiler_4.6.1`
