@@ -28,6 +28,47 @@ function debounce(func, wait, immediate) {
 //----------------------------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------------------------
+// Handlers registered through addBrowserMessageHandler dereference the saved
+// igv browser. A message that arrives before createBrowser resolves (a slow
+// custom genome, or a re-render in progress) used to throw on the undefined
+// browser and drop the track silently (#185). Queue it per container and
+// replay it, in order, once the browser exists.
+var igvPendingMessages = {};
+
+function addBrowserMessageHandler(name, handler) {
+   Shiny.addCustomMessageHandler(name, function(message) {
+      var container = document.getElementById(message.elementID);
+      if (container && container.igvBrowser) {
+         return handler(message);
+      }
+      igvshiny_log("igv browser not ready for " + message.elementID + ", queueing " + name);
+      var queue = igvPendingMessages[message.elementID] || [];
+      queue.push({name: name, run: function() { handler(message); }});
+      igvPendingMessages[message.elementID] = queue;
+   });
+}
+
+function flushPendingMessages(elementID) {
+   var queue = igvPendingMessages[elementID] || [];
+   delete igvPendingMessages[elementID];
+   queue.forEach(function(entry) {
+      try {
+         entry.run();
+      } catch (e) {
+         console.error("igvShiny: queued " + entry.name + " failed", e);
+      }
+   });
+}
+
+function dropPendingMessages(elementID) {
+   var queue = igvPendingMessages[elementID] || [];
+   delete igvPendingMessages[elementID];
+   if (queue.length > 0) {
+      console.warn("igvShiny: igv browser failed to start; dropped " + queue.length +
+                   " queued call(s): " + queue.map(function(e) { return e.name; }).join(", "));
+   }
+}
+//----------------------------------------------------------------------------------------------------
 // Generic helper function to merge extra parameters from R into the config object
 function mergeExtraParameters(config, message) {
     var handledKeys = Object.keys(config);
@@ -188,6 +229,7 @@ HTMLWidgets.widget({
                    }); // on
                 Shiny.setInputValue("igvReady", htmlContainerID, {priority: "event"});
                 Shiny.setInputValue(moduleNamespace(options.moduleNS, "igvReady"), htmlContainerID, {priority: "event"});
+                flushPendingMessages(htmlContainerID);
                 }) // then: promise fulfilled
              .catch(function (error) {
                 // If a newer renderValue was initiated while this browser was loading,
@@ -199,6 +241,7 @@ HTMLWidgets.widget({
 
                 igvshiny_log("createBrowser failed: " + error);
                 console.error("igvShiny: Failed to initialize igv.js browser", error);
+                dropPendingMessages(htmlContainerID);
 
                 if (el.shadowRoot) {
                    while (el.shadowRoot.firstChild) {
@@ -531,7 +574,7 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
 
 } // genomeSpecificOptions
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("showGenomicRegion",
+addBrowserMessageHandler("showGenomicRegion",
 
     function(message) {
         var elementID = message.elementID;
@@ -559,7 +602,7 @@ Shiny.addCustomMessageHandler("getGenomicRegion",
        })
 
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("removeTracksByName",
+addBrowserMessageHandler("removeTracksByName",
 
    function(message){
        var elementID = message.elementID;
@@ -583,7 +626,7 @@ Shiny.addCustomMessageHandler("removeTracksByName",
 
 })  // removeTrackByName
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("loadGenomeAnnotationTrackFromFile",
+addBrowserMessageHandler("loadGenomeAnnotationTrackFromFile",
 
    function(message){
        igvshiny_log("=== loadGenomeAnnotationTrackFromFile");
@@ -610,7 +653,7 @@ Shiny.addCustomMessageHandler("loadGenomeAnnotationTrackFromFile",
 
 );
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("loadBedTrack",
+addBrowserMessageHandler("loadBedTrack",
 
    function(message){
       igvshiny_log("=== loadBedTrack");
@@ -639,7 +682,7 @@ Shiny.addCustomMessageHandler("loadBedTrack",
 
 );
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("loadBedTrackFromFile",
+addBrowserMessageHandler("loadBedTrackFromFile",
 
    function(message){
       igvshiny_log("=== loadBedTrackFromFile");
@@ -671,7 +714,7 @@ Shiny.addCustomMessageHandler("loadBedTrackFromFile",
 
 );
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("loadBedGraphTrack",
+addBrowserMessageHandler("loadBedGraphTrack",
 
    function(message){
       igvshiny_log("=== loadBedGraphTrack");
@@ -711,7 +754,7 @@ Shiny.addCustomMessageHandler("loadBedGraphTrack",
 
 );
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("loadBedGraphTrackFromURL",
+addBrowserMessageHandler("loadBedGraphTrackFromURL",
 
    function(message){
       igvshiny_log("=== loadBedGraphTrackFromURL");
@@ -756,7 +799,7 @@ Shiny.addCustomMessageHandler("loadBedGraphTrackFromURL",
 
 ); // loadBedGraphTrackFromURL
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("loadSegTrack",
+addBrowserMessageHandler("loadSegTrack",
 
    function(message){
       igvshiny_log("=== loadSegTrack");
@@ -785,7 +828,7 @@ Shiny.addCustomMessageHandler("loadSegTrack",
 
 );
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("loadVcfTrack",
+addBrowserMessageHandler("loadVcfTrack",
 
    function(message){
 
@@ -821,7 +864,7 @@ Shiny.addCustomMessageHandler("loadVcfTrack",
 
 );
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("loadGwasTrack",
+addBrowserMessageHandler("loadGwasTrack",
 
    function(message){
 
@@ -858,7 +901,7 @@ Shiny.addCustomMessageHandler("loadGwasTrack",
 ); // loadGwasTrack
 //------------------------------------------------------------------------------------------------------------------------
 // either local url (pointing to a just-written data.frame) or a remote url
-Shiny.addCustomMessageHandler("loadGwasTrackFlexibleSource",
+addBrowserMessageHandler("loadGwasTrackFlexibleSource",
 
    function(message){
 
@@ -895,7 +938,7 @@ Shiny.addCustomMessageHandler("loadGwasTrackFlexibleSource",
 
 ); // loadGwasTrackFlexibleSource
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("loadBamTrackFromURL",
+addBrowserMessageHandler("loadBamTrackFromURL",
 
    function(message){
       igvshiny_log("=== loadBamTrack");
@@ -923,7 +966,7 @@ Shiny.addCustomMessageHandler("loadBamTrackFromURL",
 
 );
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("loadBamTrackFromLocalData",
+addBrowserMessageHandler("loadBamTrackFromLocalData",
 
    function(message){
       igvshiny_log("=== loadBamTrackFromLocalData");
@@ -948,7 +991,7 @@ Shiny.addCustomMessageHandler("loadBamTrackFromLocalData",
 
 );
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("loadCramTrackFromURL",
+addBrowserMessageHandler("loadCramTrackFromURL",
 
    function(message){
       igvshiny_log("=== loadCramTrackFromURL");
@@ -972,7 +1015,7 @@ Shiny.addCustomMessageHandler("loadCramTrackFromURL",
 
 );
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("loadGFF3TrackFromURL",
+addBrowserMessageHandler("loadGFF3TrackFromURL",
 
    function(message){
       igvshiny_log("=== loadGFF3TrackFromURL");
@@ -1008,7 +1051,7 @@ Shiny.addCustomMessageHandler("loadGFF3TrackFromURL",
 
 ); // loadGFF3TrackFromURL
 //----------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("loadGFF3TrackFromLocalData",
+addBrowserMessageHandler("loadGFF3TrackFromLocalData",
 
    function(message){
       igvshiny_log("=== loadGFF3TrackFromLocalData");
@@ -1043,7 +1086,7 @@ Shiny.addCustomMessageHandler("loadGFF3TrackFromLocalData",
 
 );  // loadGFF3TrackFromLocalData
 //------------------------------------------------------------------------------------------------------------------------
-Shiny.addCustomMessageHandler("loadSpliceJunctionTrackFromURL",
+addBrowserMessageHandler("loadSpliceJunctionTrackFromURL",
 
    function(message){
       igvshiny_log("=== loadSpliceJunctionTrackFromURL");

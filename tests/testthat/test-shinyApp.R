@@ -398,3 +398,65 @@ test_that("getGenomicRegion replies to a module named anything but 'igv'", {
 
     app$stop()
 })
+
+test_that("a track loaded before the browser is ready is not dropped (#185)", {
+    # A loader called at session start reaches the client in the same flush as
+    # the widget itself, i.e. before igv.createBrowser() resolves. The handlers
+    # used to dereference the undefined browser, throw, and lose the track.
+    options(chromote.timeout = 120)
+
+    port <- local_server()
+    app_file <- tempfile(fileext = ".R")
+    writeLines(sprintf('
+        library(shiny)
+        library(igvShiny)
+
+        ui <- fluidPage(igvShinyOutput("igvShiny_0"))
+
+        server <- function(input, output, session) {
+            output$igvShiny_0 <- renderIgvShiny(igvShiny(parseAndValidateGenomeSpec(
+                genomeName = "ribo",
+                initialLocus = "all",
+                stockGenome = FALSE,
+                dataMode = "http",
+                fasta = "%s",
+                fastaIndex = "%s",
+                genomeAnnotation = "%s"
+            )))
+            tbl <- data.frame(chr = "U13369.1", start = 7276L, end = 8225L,
+                              name = "early", stringsAsFactors = FALSE)
+            loadBedTrack(session, "igvShiny_0", "earlyBedTrack", tbl,
+                         validateReference = FALSE)
+        }
+
+        shinyApp(ui = ui, server = server)',
+        local_url(port, "ribosomal-RNA-gene.fasta"),
+        local_url(port, "ribosomal-RNA-gene.fasta.fai"),
+        local_url(port, "ribosomal-RNA-gene.gff3")
+    ), app_file)
+
+    app <- AppDriver$new(
+        app_dir = shiny::shinyAppFile(app_file),
+        name = "igv-shiny-early-load",
+        height = 695,
+        width = 1235,
+        load_timeout = 1e+6,
+        timeout = 1e+6
+    )
+    app$wait_for_value(input = "igvReady")
+
+    js <- paste0("document.getElementById('igvShiny_0').igvBrowser.trackViews",
+                 ".map(function(tv) { return tv.track.name; }).join('|')")
+    deadline <- Sys.time() + 30
+    names <- ""
+    repeat {
+        names <- app$get_js(js)
+        if (grepl("earlyBedTrack", names, fixed = TRUE) || Sys.time() > deadline) {
+            break
+        }
+        Sys.sleep(0.5)
+    }
+    expect_match(names, "earlyBedTrack", fixed = TRUE)
+
+    app$stop()
+})

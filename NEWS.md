@@ -1,3 +1,6 @@
+## igvShiny 1.9.49
+* Fix track loaders dropped when called before the igv browser is ready (#185)
+
 ## igvShiny 1.9.48
 * Fix custom local genomes behind remote servers by serving the fasta and index with HTTP Range support (#183)
 * Allow serveLocalFile() to accept a Shiny module session proxy
