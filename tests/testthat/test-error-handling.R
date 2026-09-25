@@ -1,7 +1,11 @@
 test_that("igv.createBrowser has .catch handler, cleans shadowRoot, and emits igvError", {
   # Read from source tree if running in development, or installed package
   src_binding <- file.path("..", "..", "inst", "htmlwidgets", "igvShiny.js")
-  binding <- if (file.exists(src_binding)) src_binding else system.file("htmlwidgets", "igvShiny.js", package = "igvShiny")
+  binding <- if (file.exists(src_binding)) {
+    src_binding
+  } else {
+    system.file("htmlwidgets", "igvShiny.js", package = "igvShiny")
+  }
   expect_true(file.exists(binding))
   js <- paste(readLines(binding, warn = FALSE), collapse = "\n")
 
@@ -26,6 +30,6 @@ test_that("showcase demo defines offline mode using bundled sarsGenome", {
   demo_code <- paste(readLines(demo_file, warn = FALSE), collapse = "\n")
 
   expect_match(demo_code, 'checkboxInput("offlineMode"', fixed = TRUE)
-  expect_match(demo_code, 'observeEvent(input$igvError', fixed = TRUE)
+  expect_match(demo_code, "observeEvent(input$igvError", fixed = TRUE)
   expect_match(demo_code, "sarsGenome", fixed = TRUE)
 })
