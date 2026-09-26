@@ -43,7 +43,7 @@ is handed — including the defaults the loader fills in:
 `#> loadBedTrackFromFile`\
 `#>   elementID: igv`\
 `#>   trackName: my regions`\
-`#>   bedFilepath: tracks/file1d466b57131c.bed`\
+`#>   bedFilepath: tracks/file1d3458162d6f.bed`\
 `#>   color: `\
 `#>   trackHeight: 50`\
 `#>   displayMode: EXPANDED`\
@@ -337,7 +337,7 @@ without it the parser guesses the layout from header names it recognises
 `#> loadGwasTrack`\
 `#>   elementID: igv`\
 `#>   trackName: gwas`\
-`#>   gwasDataFilepath: tracks/file1d46365796fb.gwas`\
+`#>   gwasDataFilepath: tracks/file1d341ea02f53.gwas`\
 `#>   color: red`\
 `#>   trackHeight: 200`\
 `#>   autoscale: FALSE`\
