@@ -51,6 +51,7 @@ function addBrowserMessageHandler(name, handler) {
       var queue = igvPendingMessages[message.elementID] || [];
       queue.push({
          name: name,
+         container: container,
          renderId: currentRenderId,
          run: function() { handler(message); }
       });
@@ -64,6 +65,9 @@ function flushPendingMessages(elementID) {
    var container = document.getElementById(elementID);
    var currentRenderId = container ? container.igvRenderId : null;
    queue.forEach(function(entry) {
+      if (entry.container && entry.container !== container) {
+         return;
+      }
       if (entry.renderId && currentRenderId && entry.renderId !== currentRenderId) {
          return;
       }
@@ -124,36 +128,36 @@ HTMLWidgets.widget({
          igvshiny_log(options);
 
          var htmlContainerID = el.id;
-         var container = document.getElementById(htmlContainerID) || el;
+         var container = el;
          container.igvRenderId = renderId;
          container.igvStatus = "loading";
 
          if (igvPendingMessages[htmlContainerID]) {
             var existingQueue = igvPendingMessages[htmlContainerID];
-            if (renderId === 1) {
-               // Retain calls queued before renderValue (generation 0), binding them to renderId 1 (#185)
-               existingQueue.forEach(function(entry) { entry.renderId = 1; });
-            } else {
-               // Drop calls queued for earlier, now superseded renders
-               var kept = [];
-               var dropped = [];
-               existingQueue.forEach(function(entry) {
-                  if (entry.renderId === renderId) {
-                     kept.push(entry);
-                  } else {
-                     dropped.push(entry);
-                  }
-               });
-               if (dropped.length > 0) {
-                  console.warn("igvShiny: dropped " + dropped.length +
-                               " queued call(s) from superseded render: " +
-                               dropped.map(function(e) { return e.name; }).join(", "));
-               }
-               if (kept.length > 0) {
-                  igvPendingMessages[htmlContainerID] = kept;
+            // Retain startup calls for this element, not a previous instance with the same ID.
+            var kept = [];
+            var dropped = [];
+            existingQueue.forEach(function(entry) {
+               if (renderId === 1 && entry.renderId === 0 &&
+                   (!entry.container || entry.container === el)) {
+                  entry.container = el;
+                  entry.renderId = renderId;
+                  kept.push(entry);
+               } else if (entry.container === el && entry.renderId === renderId) {
+                  kept.push(entry);
                } else {
-                  delete igvPendingMessages[htmlContainerID];
+                  dropped.push(entry);
                }
+            });
+            if (dropped.length > 0) {
+               console.warn("igvShiny: dropped " + dropped.length +
+                            " queued call(s) from superseded render: " +
+                            dropped.map(function(e) { return e.name; }).join(", "));
+            }
+            if (kept.length > 0) {
+               igvPendingMessages[htmlContainerID] = kept;
+            } else {
+               delete igvPendingMessages[htmlContainerID];
             }
          }
 
@@ -208,7 +212,7 @@ HTMLWidgets.widget({
              .then(function (browser) {
                 // If a newer renderValue was initiated while this browser was loading,
                 // discard and dispose this stale browser instance.
-                if (renderId !== currentRenderId) {
+                if (renderId !== currentRenderId || document.getElementById(htmlContainerID) !== el) {
                    igvshiny_log("createBrowser fulfilled for stale renderId " + renderId + " (current is " + currentRenderId + "); disposing.");
                    try {
                       igv.removeBrowser(browser);
@@ -219,7 +223,7 @@ HTMLWidgets.widget({
                 igvshiny_log("createBrowser promise fulfilled");
                 igvWidget = browser;
                 igvshiny_log("about to save igv browser");
-                var c = document.getElementById(htmlContainerID) || el;
+                var c = el;
                 c.igvBrowser = browser;
                 c.igvStatus = "ready";
                 c.chromLocString = options.initialLocus;
@@ -281,12 +285,12 @@ HTMLWidgets.widget({
              .catch(function (error) {
                 // If a newer renderValue was initiated while this browser was loading,
                 // ignore errors from this superseded render.
-                if (renderId !== currentRenderId) {
+                if (renderId !== currentRenderId || document.getElementById(htmlContainerID) !== el) {
                    igvshiny_log("createBrowser failed for stale renderId " + renderId + " (current is " + currentRenderId + "); ignoring.");
                    return;
                 }
 
-                var container = document.getElementById(htmlContainerID) || el;
+                var container = el;
                 container.igvBrowser = null;
                 container.igvStatus = "failed";
 

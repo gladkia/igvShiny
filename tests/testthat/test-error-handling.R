@@ -73,6 +73,27 @@ test_that("widget runtime handles re-render, error banner escaping, and queue li
   # 4. Early startup message is preserved and flushed on first render (#185 non-regression)
   expect_equal(res$queueStartup$loaded, "ribo:earlyStartup")
 
+  # Pending results belong to an element instance, not only its output ID.
+  expect_equal(res$staleRejection$status, "ready")
+  expect_equal(res$staleRejection$activeBrowser, "mm10")
+  expect_equal(res$staleRejection$loaded, "mm10:afterOldError")
+  expect_false(res$staleRejection$hasBanner)
+  expect_length(res$staleRejection$errorEvents, 0)
+  expect_equal(NROW(res$widgetReplacement), 4L)
+  for (i in seq_len(NROW(res$widgetReplacement))) {
+    replacement <- res$widgetReplacement[i, ]
+    expect_equal(replacement$status, "ready")
+    expect_equal(replacement$activeBrowser, "mm10")
+    expect_equal(replacement$loaded[[1]],
+                 c("mm10:replacementStartup", "mm10:forMm10", "mm10:afterOld"))
+    expect_equal(replacement$removed[[1]],
+                 if (replacement$outcome == "resolve") "hg38" else character())
+    expect_false(replacement$hasBanner)
+    expect_equal(replacement$readyEvents[[1]], rep("replacement", 2))
+    expect_length(replacement$errorEvents[[1]], 0)
+  }
+  expect_equal(res$startupWithoutContainer$loaded, "ribo:beforeContainer")
+
   # 5. Error banner escaping and event emission (#189 finding 4)
   expect_true(res$bannerEscaping$hasBanner)
   expect_false(grepl("<script>", res$bannerEscaping$templateHTML, fixed = TRUE))

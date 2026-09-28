@@ -170,6 +170,93 @@ function runHarness(jsPath, scenario) {
          global.document.getElementById = prevGetEl;
       }
 
+      if (!scenario || scenario === 'stale-rejection') {
+         pend.length = 0;
+         loaded.length = 0;
+         inputs.length = 0;
+         w.renderValue(opts('hg38'));
+         w.renderValue(opts('mm10'));
+         pend[1].res(mkBrowser('mm10'));
+         await tick();
+         pend[0].rej(new Error('superseded genome failed'));
+         await tick();
+         handlers.loadBedGraphTrack({ elementID: 'igv1', trackName: 'afterOldError', tbl: {} });
+         results.staleRejection = {
+            status: el.igvStatus,
+            activeBrowser: el.igvBrowser ? el.igvBrowser.g : null,
+            loaded: loaded.slice(),
+            hasBanner: !!el.firstChild,
+            errorEvents: inputs.filter((i) => i.key === 'igvError')
+         };
+      }
+
+      if (!scenario || scenario === 'widget-replacement') {
+         results.widgetReplacement = [];
+         for (const outcome of ['resolve', 'reject']) {
+            for (const oldFirst of [true, false]) {
+               pend.length = 0;
+               loaded.length = 0;
+               removed.length = 0;
+               inputs.length = 0;
+               const id = 'replacement';
+               let currentEl = makeElement(id);
+               const prevGetEl = global.document.getElementById;
+               global.document.getElementById = (key) => key === id ? currentEl : prevGetEl(key);
+               const oldWidget = factory(currentEl, 500, 300);
+               oldWidget.renderValue(opts('hg38'));
+               handlers.loadBedGraphTrack({ elementID: id, trackName: 'forHg38', tbl: {} });
+
+               // A new DOM element means a new htmlwidgets factory, even with the same output ID.
+               currentEl = makeElement(id);
+               const newWidget = factory(currentEl, 500, 300);
+               handlers.loadBedGraphTrack({ elementID: id, trackName: 'replacementStartup', tbl: {} });
+               newWidget.renderValue(opts('mm10'));
+               handlers.loadBedGraphTrack({ elementID: id, trackName: 'forMm10', tbl: {} });
+
+               const finishOld = () => outcome === 'resolve'
+                  ? pend[0].res(mkBrowser('hg38'))
+                  : pend[0].rej(new Error('removed genome failed'));
+               if (oldFirst) {
+                  finishOld();
+                  await tick();
+               }
+               pend[1].res(mkBrowser('mm10'));
+               await tick();
+               if (!oldFirst) {
+                  finishOld();
+                  await tick();
+               }
+               handlers.loadBedGraphTrack({ elementID: id, trackName: 'afterOld', tbl: {} });
+               results.widgetReplacement.push({
+                  outcome, oldFirst,
+                  status: currentEl.igvStatus,
+                  activeBrowser: currentEl.igvBrowser ? currentEl.igvBrowser.g : null,
+                  loaded: loaded.slice(),
+                  removed: removed.slice(),
+                  hasBanner: !!currentEl.firstChild,
+                  readyEvents: inputs.filter((i) => i.key === 'igvReady').map((i) => i.value),
+                  errorEvents: inputs.filter((i) => i.key === 'igvError')
+               });
+               global.document.getElementById = prevGetEl;
+            }
+         }
+      }
+
+      if (!scenario || scenario === 'startup-without-container') {
+         pend.length = 0;
+         loaded.length = 0;
+         const id = 'notYetMounted';
+         handlers.loadBedGraphTrack({ elementID: id, trackName: 'beforeContainer', tbl: {} });
+         const mounted = makeElement(id);
+         const prevGetEl = global.document.getElementById;
+         global.document.getElementById = (key) => key === id ? mounted : prevGetEl(key);
+         factory(mounted, 500, 300).renderValue(opts('ribo'));
+         pend[0].res(mkBrowser('ribo'));
+         await tick();
+         results.startupWithoutContainer = { loaded: loaded.slice() };
+         global.document.getElementById = prevGetEl;
+      }
+
       if (!scenario || scenario === 'banner-escaping') {
          // Scenario 5: Error banner escapes special chars and emits igvError
          const elErr = makeElement('igv3');
