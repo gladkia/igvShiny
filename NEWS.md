@@ -1,6 +1,6 @@
 ## igvShiny 1.9.50
 * Fix pending-message queue lifecycle across re-render and failed start (#189)
-* Escape genomeName and error message in error banner (#189)
+* Fix error banner escaping for genomeName and error message (#189)
 * Add Node.js runtime test harness for widget lifecycle and error handling (#189)
 
 ## igvShiny 1.9.49

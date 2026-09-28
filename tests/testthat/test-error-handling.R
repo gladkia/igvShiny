@@ -75,6 +75,8 @@ test_that("widget runtime handles re-render, error banner escaping, and queue li
 
   # 5. Error banner escaping and event emission (#189 finding 4)
   expect_true(res$bannerEscaping$hasBanner)
+  expect_false(grepl("<script>", res$bannerEscaping$templateHTML, fixed = TRUE))
+  expect_false(grepl("<img", res$bannerEscaping$templateHTML, fixed = TRUE))
   expect_equal(res$bannerEscaping$genomeText, "<script>alert('genome')</script>")
   expect_equal(res$bannerEscaping$detailText, "<img src=x onerror=alert('err')>")
   expect_true(length(res$bannerEscaping$errorEvents) >= 1)

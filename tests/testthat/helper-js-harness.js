@@ -196,6 +196,7 @@ function runHarness(jsPath, scenario) {
 
          results.bannerEscaping = {
             hasBanner: !!banner,
+            templateHTML: banner ? banner.innerHTML : null,
             genomeText: genomeNode ? genomeNode.textContent : null,
             detailText: detailNode ? detailNode.textContent : null,
             errorEvents: inputs.filter((i) => i.key === 'igvError').map((i) => i.value)
