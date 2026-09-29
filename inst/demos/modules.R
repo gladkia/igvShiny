@@ -8,7 +8,7 @@ library(shiny)
 library(bslib)
 library(igvShiny)
 
-tbl.bed <- data.frame(chr = c("1", "1", "1"),
+tbl.bed <- data.frame(chr = c("chr1", "chr1", "chr1"),
                       start = c(7432951, 7437000, 7438000),
                       end   = c(7436000, 7437500, 7440000),
                       value = c(-2.239, 3.0, 0.5),

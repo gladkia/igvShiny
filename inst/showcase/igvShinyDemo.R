@@ -25,7 +25,7 @@ f <- system.file(package = "igvShiny", "extdata", "gwas.RData")
 stopifnot(file.exists(f))
 tbl.gwas <- get(load(f))
 
-tbl.bed5 <- data.frame(chr = c("1", "1", "1"),
+tbl.bed5 <- data.frame(chr = c("chr1", "chr1", "chr1"),
                        start = c(7432951, 7437000, 7438000),
                        end   = c(7436000, 7437500, 7440000),
                        value = c(-2.239, 3.0, 0.5),

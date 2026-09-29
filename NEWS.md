@@ -1,3 +1,6 @@
+## igvShiny 1.9.51
+* Fix demo BED and bedGraph tables that named chromosome 1 as '1' on hg38, tripping the reference check
+
 ## igvShiny 1.9.50
 * Fix pending-message queue lifecycle across re-render, widget replacement, and failed start (#189)
 * Fix error banner escaping for genomeName and error message (#189)
