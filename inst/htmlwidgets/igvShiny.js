@@ -41,9 +41,20 @@ function addBrowserMessageHandler(name, handler) {
       if (container && container.igvBrowser) {
          return handler(message);
       }
+      var status = container ? container.igvStatus : undefined;
+      if (status === "failed") {
+         console.warn("igvShiny: igv browser failed to start; dropped queued call: " + name);
+         return;
+      }
       igvshiny_log("igv browser not ready for " + message.elementID + ", queueing " + name);
+      var currentRenderId = container ? (container.igvRenderId || 0) : 0;
       var queue = igvPendingMessages[message.elementID] || [];
-      queue.push({name: name, run: function() { handler(message); }});
+      queue.push({
+         name: name,
+         container: container,
+         renderId: currentRenderId,
+         run: function() { handler(message); }
+      });
       igvPendingMessages[message.elementID] = queue;
    });
 }
@@ -51,7 +62,15 @@ function addBrowserMessageHandler(name, handler) {
 function flushPendingMessages(elementID) {
    var queue = igvPendingMessages[elementID] || [];
    delete igvPendingMessages[elementID];
+   var container = document.getElementById(elementID);
+   var currentRenderId = container ? container.igvRenderId : null;
    queue.forEach(function(entry) {
+      if (entry.container && entry.container !== container) {
+         return;
+      }
+      if (entry.renderId && currentRenderId && entry.renderId !== currentRenderId) {
+         return;
+      }
       try {
          entry.run();
       } catch (e) {
@@ -109,7 +128,38 @@ HTMLWidgets.widget({
          igvshiny_log(options);
 
          var htmlContainerID = el.id;
-         var container = document.getElementById(htmlContainerID) || el;
+         var container = el;
+         container.igvRenderId = renderId;
+         container.igvStatus = "loading";
+
+         if (igvPendingMessages[htmlContainerID]) {
+            var existingQueue = igvPendingMessages[htmlContainerID];
+            // Retain startup calls for this element, not a previous instance with the same ID.
+            var kept = [];
+            var dropped = [];
+            existingQueue.forEach(function(entry) {
+               if (renderId === 1 && entry.renderId === 0 &&
+                   (!entry.container || entry.container === el)) {
+                  entry.container = el;
+                  entry.renderId = renderId;
+                  kept.push(entry);
+               } else if (entry.container === el && entry.renderId === renderId) {
+                  kept.push(entry);
+               } else {
+                  dropped.push(entry);
+               }
+            });
+            if (dropped.length > 0) {
+               console.warn("igvShiny: dropped " + dropped.length +
+                            " queued call(s) from superseded render: " +
+                            dropped.map(function(e) { return e.name; }).join(", "));
+            }
+            if (kept.length > 0) {
+               igvPendingMessages[htmlContainerID] = kept;
+            } else {
+               delete igvPendingMessages[htmlContainerID];
+            }
+         }
 
          // Dispose previously active igv.js browser instance if present
          if (igvWidget) {
@@ -162,7 +212,7 @@ HTMLWidgets.widget({
              .then(function (browser) {
                 // If a newer renderValue was initiated while this browser was loading,
                 // discard and dispose this stale browser instance.
-                if (renderId !== currentRenderId) {
+                if (renderId !== currentRenderId || document.getElementById(htmlContainerID) !== el) {
                    igvshiny_log("createBrowser fulfilled for stale renderId " + renderId + " (current is " + currentRenderId + "); disposing.");
                    try {
                       igv.removeBrowser(browser);
@@ -173,8 +223,9 @@ HTMLWidgets.widget({
                 igvshiny_log("createBrowser promise fulfilled");
                 igvWidget = browser;
                 igvshiny_log("about to save igv browser");
-                var c = document.getElementById(htmlContainerID) || el;
+                var c = el;
                 c.igvBrowser = browser;
+                c.igvStatus = "ready";
                 c.chromLocString = options.initialLocus;
                 igvWidget.on('locuschange', debounce(function (referenceFrameList){
                    igvshiny_log("---- locuschange, referenceFrameList: ")
@@ -234,10 +285,14 @@ HTMLWidgets.widget({
              .catch(function (error) {
                 // If a newer renderValue was initiated while this browser was loading,
                 // ignore errors from this superseded render.
-                if (renderId !== currentRenderId) {
+                if (renderId !== currentRenderId || document.getElementById(htmlContainerID) !== el) {
                    igvshiny_log("createBrowser failed for stale renderId " + renderId + " (current is " + currentRenderId + "); ignoring.");
                    return;
                 }
+
+                var container = el;
+                container.igvBrowser = null;
+                container.igvStatus = "failed";
 
                 igvshiny_log("createBrowser failed: " + error);
                 console.error("igvShiny: Failed to initialize igv.js browser", error);
@@ -252,7 +307,6 @@ HTMLWidgets.widget({
                    el.removeChild(el.firstChild);
                 }
 
-                var container = document.getElementById(htmlContainerID) || el;
                 var errorDiv = document.createElement("div");
                 errorDiv.className = "alert alert-warning igvshiny-error-banner";
                 errorDiv.style.margin = "20px";
@@ -271,10 +325,14 @@ HTMLWidgets.widget({
                    "<span style='font-size:1.3em;margin-right:8px;'>&#9888;</span> " +
                    "Unable to load genome browser</h5>" +
                    "<p style='margin-bottom:8px;font-size:0.95em;'>" +
-                   "Failed to initialize reference genome <strong>" + genomeName + "</strong>. " +
+                   "Failed to initialize reference genome <strong class='igvshiny-genome-name'></strong>. " +
                    "The remote genome asset server (such as igv.org or UCSC) may be offline, timing out, or unreachable.</p>" +
-                   "<div style='margin-top:10px;padding:8px;background:rgba(0,0,0,0.05);border-radius:4px;font-size:0.85em;font-family:monospace;white-space:pre-wrap;word-break:break-word;'>" +
-                   errorMsg + "</div>";
+                   "<div class='igvshiny-error-detail' style='margin-top:10px;padding:8px;background:rgba(0,0,0,0.05);border-radius:4px;font-size:0.85em;font-family:monospace;white-space:pre-wrap;word-break:break-word;'>" +
+                   "</div>";
+
+                // textContent, never string concatenation: genomeName and the error text are not HTML (#189)
+                errorDiv.querySelector(".igvshiny-genome-name").textContent = genomeName;
+                errorDiv.querySelector(".igvshiny-error-detail").textContent = errorMsg;
 
                 container.appendChild(errorDiv);
 

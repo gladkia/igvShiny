@@ -1,3 +1,8 @@
+## igvShiny 1.9.50
+* Fix pending-message queue lifecycle across re-render, widget replacement, and failed start (#189)
+* Fix error banner escaping for genomeName and error message (#189)
+* Add Node.js runtime test harness for widget lifecycle and error handling (#189)
+
 ## igvShiny 1.9.49
 * Fix track loaders dropped when called before the igv browser is ready (#185)
 
