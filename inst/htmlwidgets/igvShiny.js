@@ -330,30 +330,9 @@ HTMLWidgets.widget({
                    "<div class='igvshiny-error-detail' style='margin-top:10px;padding:8px;background:rgba(0,0,0,0.05);border-radius:4px;font-size:0.85em;font-family:monospace;white-space:pre-wrap;word-break:break-word;'>" +
                    "</div>";
 
-                if (errorDiv.querySelector) {
-                   var genomeEl = errorDiv.querySelector(".igvshiny-genome-name");
-                   if (genomeEl) {
-                      genomeEl.textContent = genomeName;
-                   }
-                   var detailEl = errorDiv.querySelector(".igvshiny-error-detail");
-                   if (detailEl) {
-                      detailEl.textContent = errorMsg;
-                   }
-                } else {
-                   // Fallback for minimal headless stubs without full DOM querySelector
-                   var escapeHtml = function(s) {
-                      return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                   };
-                   errorDiv.innerHTML =
-                      "<h5 style='margin-top:0;margin-bottom:8px;font-weight:600;display:flex;align-items:center;'>" +
-                      "<span style='font-size:1.3em;margin-right:8px;'>&#9888;</span> " +
-                      "Unable to load genome browser</h5>" +
-                      "<p style='margin-bottom:8px;font-size:0.95em;'>" +
-                      "Failed to initialize reference genome <strong class='igvshiny-genome-name'>" + escapeHtml(genomeName) + "</strong>. " +
-                      "The remote genome asset server (such as igv.org or UCSC) may be offline, timing out, or unreachable.</p>" +
-                      "<div class='igvshiny-error-detail' style='margin-top:10px;padding:8px;background:rgba(0,0,0,0.05);border-radius:4px;font-size:0.85em;font-family:monospace;white-space:pre-wrap;word-break:break-word;'>" +
-                      escapeHtml(errorMsg) + "</div>";
-                }
+                // textContent, never string concatenation: genomeName and the error text are not HTML (#189)
+                errorDiv.querySelector(".igvshiny-genome-name").textContent = genomeName;
+                errorDiv.querySelector(".igvshiny-error-detail").textContent = errorMsg;
 
                 container.appendChild(errorDiv);
 
