@@ -92,7 +92,7 @@ track <-
     pval.col = 28
   )
 getUrl(track)
-#> [1] "/tmp/RtmpYaScoe/tracks/file19ca5eed3f1a.gwas"
+#> [1] "/tmp/RtmpPGeBAG/tracks/file194f65f12ec5.gwas"
 
 # a remote gwas file: the constructor checks that the url resolves, so this
 # block reaches the network and stays out of R CMD check
@@ -111,7 +111,7 @@ track <- GWASTrack(
 )
 #> Error in GWASTrack("remote url gwas", url, chrom.col = 3, pos.col = 4,     pval.col = 10, autoscale = FALSE, minY = 0, maxY = 300, trackHeight = 100): error: putative gwas file url unreachable: 'https://gladki.pl/igvShiny/gwas_sample.tsv.gz'
 getUrl(track)
-#> [1] "/tmp/RtmpYaScoe/tracks/file19ca5eed3f1a.gwas"
+#> [1] "/tmp/RtmpPGeBAG/tracks/file194f65f12ec5.gwas"
 # }
 
 # colors picked per chromosome, with "*" covering the rest
