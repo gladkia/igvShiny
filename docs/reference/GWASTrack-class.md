@@ -92,7 +92,7 @@ track <-
     pval.col = 28
   )
 getUrl(track)
-#> [1] "/tmp/RtmpzhJPlW/tracks/file1b6b1324c4c9.gwas"
+#> [1] "/tmp/Rtmpl7Sgqg/tracks/file1954630a2f79.gwas"
 
 # a remote gwas file: the constructor checks that the url resolves, so this
 # block reaches the network and stays out of R CMD check
