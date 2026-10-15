@@ -43,7 +43,7 @@ is handed — including the defaults the loader fills in:
 `#> loadBedTrackFromFile`\
 `#>   elementID: igv`\
 `#>   trackName: my regions`\
-`#>   bedFilepath: tracks/file1cf918647ffa.bed`\
+`#>   bedFilepath: tracks/file1cf18ff1a9a.bed`\
 `#>   color: `\
 `#>   trackHeight: 50`\
 `#>   displayMode: EXPANDED`\
@@ -337,7 +337,7 @@ without it the parser guesses the layout from header names it recognises
 `#> loadGwasTrack`\
 `#>   elementID: igv`\
 `#>   trackName: gwas`\
-`#>   gwasDataFilepath: tracks/file1cf939fe98fd.gwas`\
+`#>   gwasDataFilepath: tracks/file1cf12ba8d774.gwas`\
 `#>   color: red`\
 `#>   trackHeight: 200`\
 `#>   autoscale: FALSE`\
@@ -535,7 +535,7 @@ options that are useful from R, and it grows.
 `#> [22] futile.logger_1.4.9     cachem_1.1.0            yaml_2.3.12            `\
 `#> [25] otel_0.2.0              Rtsne_0.17              tools_4.6.1            `\
 `#> [28] checkmate_2.3.4         colorspace_2.1-4        httpuv_1.6.17          `\
-`#> [31] GenomeInfoDbData_1.2.15 lambda.r_1.2.6          curl_8.0.0             `\
+`#> [31] GenomeInfoDbData_1.2.15 lambda.r_1.2.6          curl_8.1.0             `\
 `#> [34] R6_2.6.1                mime_0.13               lifecycle_1.0.5        `\
 `#> [37] stringr_1.6.0           fs_2.1.0                V8_8.2.0               `\
 `#> [40] htmlwidgets_1.6.4       cluster_2.1.8.3         ragg_1.5.2             `\
