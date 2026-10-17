@@ -444,7 +444,7 @@ reports the directory in use.
 [`sessionInfo`](https://rdrr.io/r/utils/sessionInfo.html)`(``)`\
 `#> R version 4.6.1 (2026-06-24)`\
 `#> Platform: x86_64-pc-linux-gnu`\
-`#> Running under: Ubuntu 24.04.4 LTS`\
+`#> Running under: Ubuntu 24.04.5 LTS`\
 `#> `\
 `#> Matrix products: default`\
 `#> BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 `\
@@ -487,6 +487,6 @@ reports the directory in use.
 `#> [40] htmlwidgets_1.6.4       cluster_2.1.8.3         ragg_1.5.2             `\
 `#> [43] desc_1.4.3              pkgdown_2.2.1           bslib_0.12.0           `\
 `#> [46] later_1.4.8             glue_1.8.1              Rcpp_1.1.2             `\
-`#> [49] systemfonts_1.3.2       xfun_0.61               knitr_1.52             `\
+`#> [49] systemfonts_1.3.2       xfun_0.62               knitr_1.52             `\
 `#> [52] farver_2.1.2            xtable_1.8-8            htmltools_0.5.9        `\
 `#> [55] rmarkdown_2.32          compiler_4.6.1`
