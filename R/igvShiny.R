@@ -605,10 +605,6 @@ loadBedTrack <-
            quiet = TRUE,
            trackConfig = list(),
            validateReference = TRUE) {
-    if (color == "random")
-      color <-
-        randomColors[sample(seq_along(randomColors), 1)]
-
     if (!quiet) {
       flog.debug("--- igvShiny::loadBedTrack")
 
@@ -622,57 +618,112 @@ loadBedTrack <-
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
 
-    if (colnames(tbl)[1] == "chrom")
-      colnames(tbl)[1] <- "chr"
-
-    if (all(colnames(tbl)[c(1, 2, 3)] != c("chr", "start", "end"))) {
-      lmsg <- sprintf("found these colnames: %s",
-                      toString(colnames(tbl)))
-      lmsg2 <- sprintf("            required: %s",
-                       toString(c("chr", "start", "end")))
-      flog.debug(lmsg)
-      flog.debug(lmsg2)
-      stop("improper columns in bed track data.frame")
-    }
+    tbl <- .normalizeBedColumns(tbl)
 
     .validateTrackReference(session, id, trackName, tbl,
                             validateReference = validateReference)
 
-    stopifnot(is(tbl$chr, "character"))
-    stopifnot(is(tbl$start, "numeric"))
-    stopifnot(is(tbl$end, "numeric"))
-    new.order <- order(tbl$start, decreasing = FALSE)
-    tbl <- tbl[new.order, ]
+    payload <- .bedTrackPayload(trackName, tbl,
+                                path = .trackFile(session, ".bed"),
+                                color = color,
+                                trackHeight = trackHeight,
+                                trackConfig = trackConfig)
 
-    temp.file <-
-      .trackFile(session, ".bed")
-    write.table(
-      tbl,
-      sep = "\t",
-      row.names = FALSE,
-      col.names = FALSE,
-      quote = FALSE,
-      file = temp.file
-    )
-    lmsg <- sprintf("--- igvShiny.R, loadBedTrack wrote %d,%d to %s",
-                    NROW(tbl),
-                    NCOL(tbl),
-                    temp.file)
-    flog.debug(lmsg)
-    flog.debug(sprintf("exists? %s", file.exists(temp.file)))
-
-    base.msg.to.igv <- list(
-      elementID = id,
-      trackName = trackName,
-      bedFilepath = file.path("tracks", basename(temp.file)),
-      color = color,
-      trackHeight = trackHeight
-    )
-
-    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    msg.to.igv <- c(list(elementID = id), payload$config)
     session$sendCustomMessage("loadBedTrackFromFile", msg.to.igv)
 
   } # loadBedTrack
+
+#-------------------------------------------------------------------------------
+#' Give a bed-like data.frame the chr/start/end column names loaders expect
+#'
+#' @description Renames a leading "chrom" column to "chr" and fails when the
+#' first three columns are not chr, start and end.
+#'
+#' @param tbl data.frame, with at least "chrom" (or "chr") "start" "end" columns
+#'
+#' @return the data.frame, its first column possibly renamed
+#'
+#' @keywords internal
+.normalizeBedColumns <- function(tbl) {
+  checkmate::assert_data_frame(tbl, min.cols = 3L)
+
+  if (colnames(tbl)[1] == "chrom")
+    colnames(tbl)[1] <- "chr"
+
+  if (all(colnames(tbl)[c(1, 2, 3)] != c("chr", "start", "end"))) {
+    flog.debug("found these colnames: %s", toString(colnames(tbl)))
+    flog.debug("            required: %s", toString(c("chr", "start", "end")))
+    stop("improper columns in bed track data.frame")
+  }
+
+  tbl
+} # .normalizeBedColumns
+
+#-------------------------------------------------------------------------------
+#' Build the payload of a bed track from a data.frame
+#'
+#' @description The browser-free half of \code{loadBedTrack}: checks and sorts
+#' the table, writes it to \code{path} as headerless bed, and returns the
+#' message body the \code{loadBedTrackFromFile} handler in igvShiny.js reads.
+#' It touches no session; the caller picks the path (in a sender, with
+#' \code{.trackFile()}) and adds the element id.
+#'
+#' @param trackName character string
+#' @param tbl data.frame, with at least "chrom" (or "chr") "start" "end" columns
+#' @param path character string, the file to write; its basename is what the
+#' browser fetches from the \code{tracks/} resource path
+#' @param color character string, a legal CSS color, or "random"
+#' @param trackHeight an integer, 50 (pixels) by default
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options, merged onto the defaults
+#'
+#' @return a list with \code{config}, the message body without
+#' \code{elementID}, and \code{files}, the paths written (here: \code{path})
+#'
+#' @keywords internal
+.bedTrackPayload <- function(trackName,
+                             tbl,
+                             path,
+                             color = "",
+                             trackHeight = 50,
+                             trackConfig = list()) {
+  checkmate::assert_string(trackName)
+  checkmate::assert_string(path)
+  checkmate::assert_string(color)
+
+  if (color == "random")
+    color <- randomColors[sample(seq_along(randomColors), 1)]
+
+  tbl <- .normalizeBedColumns(tbl)
+
+  stopifnot(is(tbl$chr, "character"))
+  stopifnot(is(tbl$start, "numeric"))
+  stopifnot(is(tbl$end, "numeric"))
+  new.order <- order(tbl$start, decreasing = FALSE)
+  tbl <- tbl[new.order, ]
+
+  write.table(
+    tbl,
+    sep = "\t",
+    row.names = FALSE,
+    col.names = FALSE,
+    quote = FALSE,
+    file = path
+  )
+  flog.debug("--- igvShiny.R, .bedTrackPayload wrote %d,%d to %s",
+             NROW(tbl), NCOL(tbl), path)
+
+  config <- list(
+    trackName = trackName,
+    bedFilepath = file.path("tracks", basename(path)),
+    color = color,
+    trackHeight = trackHeight
+  )
+
+  list(config = .sanitizeAndMergeOptions(config, trackConfig),
+       files = path)
+} # .bedTrackPayload
 
 #-------------------------------------------------------------------------------
 #' load a bedgraph track from a URL
@@ -728,10 +779,6 @@ loadBedGraphTrackFromURL <-
            trackConfig = list()) {
     message("---- loadBedGraphTrackFromURL")
 
-    if (color == "random")
-      color <-
-        randomColors[sample(seq_along(randomColors), 1)]
-
     if (!quiet) {
       lmsg <- sprintf("--- igvShiny::loadBedGraphTrackFromURL: %s",
                       trackName)
@@ -751,20 +798,15 @@ loadBedGraphTrackFromURL <-
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
 
-    base.msg.to.igv <-
-      list(
-        elementID = id,
-        trackName = trackName,
-        url = url,
-        color = color,
-        trackHeight = trackHeight,
-        autoscale = autoscale,
-        min = min,
-        max = max,
-        autoscaleGroup = autoscaleGroup
-      )
-
-    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    payload <- .bedGraphUrlTrackPayload(trackName, url,
+                                        color = color,
+                                        trackHeight = trackHeight,
+                                        autoscale = autoscale,
+                                        min = min,
+                                        max = max,
+                                        autoscaleGroup = autoscaleGroup,
+                                        trackConfig = trackConfig)
+    msg.to.igv <- c(list(elementID = id), payload$config)
 
     flog.debug("--- igvShiny.R loadBedGraphTrackFromURL, msg.to.igv: ")
     futile.logger::flog.info(jsonlite::toJSON(msg.to.igv))
@@ -773,6 +815,59 @@ loadBedGraphTrackFromURL <-
     flog.debug("--- loadBedGraphTrackFromURL, after sendingCustomMessage")
 
   } # loadBedGraphTrackFromURL
+
+#-------------------------------------------------------------------------------
+#' Build the payload of a quantitative track read from a URL
+#'
+#' @description The browser-free half of \code{loadBedGraphTrackFromURL}:
+#' returns the message body the \code{loadBedGraphTrackFromURL} handler in
+#' igvShiny.js reads. Nothing is written, so \code{files} is empty.
+#'
+#' @param trackName character string
+#' @param url character string, a bedGraph, wig or bigwig URL
+#' @param color character string, a legal CSS color, or "random"
+#' @param trackHeight an integer, 30 (pixels) by default
+#' @param autoscale logical
+#' @param min numeric, consulted when autoscale is FALSE
+#' @param max numeric, consulted when autoscale is FALSE
+#' @param autoscaleGroup numeric(1), -1 (no group) by default
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options, merged onto the defaults
+#'
+#' @return a list with \code{config}, the message body without
+#' \code{elementID}, and \code{files}, \code{character(0)}
+#'
+#' @keywords internal
+.bedGraphUrlTrackPayload <- function(trackName,
+                                     url,
+                                     color = "gray",
+                                     trackHeight = 30,
+                                     autoscale = TRUE,
+                                     min = 0,
+                                     max = 1,
+                                     autoscaleGroup = -1,
+                                     trackConfig = list()) {
+  checkmate::assert_string(trackName)
+  checkmate::assert_string(url)
+  checkmate::assert_string(color)
+
+  if (color == "random")
+    color <- randomColors[sample(seq_along(randomColors), 1)]
+
+  config <- list(
+    trackName = trackName,
+    url = url,
+    color = color,
+    trackHeight = trackHeight,
+    autoscale = autoscale,
+    min = min,
+    max = max,
+    autoscaleGroup = autoscaleGroup
+  )
+
+  list(config = .sanitizeAndMergeOptions(config, trackConfig),
+       files = character(0))
+} # .bedGraphUrlTrackPayload
 
 #-------------------------------------------------------------------------------
 #' load a scored genome annotation track provided as a data.frame
@@ -832,10 +927,6 @@ loadBedGraphTrack <-
            validateReference = TRUE) {
     stopifnot(NCOL(tbl) >= 4)
 
-    if (color == "random")
-      color <-
-        randomColors[sample(seq_along(randomColors), 1)]
-
     if (!quiet) {
       flog.debug("--- igvShiny::loadGenomeAnnotationTrack: %s",
                  trackName)
@@ -854,47 +945,111 @@ loadBedGraphTrack <-
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
 
-    if (colnames(tbl)[1] == "chrom")
-      colnames(tbl)[1] <- "chr"
-
-    colnames(tbl)[4] <- "value"
-
-    if (all(colnames(tbl)[c(1, 2, 3)] != c("chr", "start", "end"))) {
-      flog.debug("found these colnames: %s",
-                 toString(colnames(tbl)[c(1, 2, 3)]))
-      flog.debug("            required: %s",
-                 toString(c("chr", "start", "end")))
-      stop("improper columns in bed track data.frame")
-    }
+    tbl <- .normalizeBedGraphColumns(tbl)
 
     .validateTrackReference(session, id, trackName, tbl,
                             validateReference = validateReference)
 
-    stopifnot(is(tbl$chr, "character"))
-    stopifnot(is(tbl$start, "numeric"))
-    stopifnot(is(tbl$end, "numeric"))
-    stopifnot(is(tbl$value, "numeric"))
+    payload <- .bedGraphTrackPayload(trackName, tbl,
+                                     color = color,
+                                     trackHeight = trackHeight,
+                                     autoscale = autoscale,
+                                     autoscaleGroup = autoscaleGroup,
+                                     min = min,
+                                     max = max,
+                                     trackConfig = trackConfig)
 
-    new.order <- order(tbl$start, decreasing = FALSE)
-    tbl <- tbl[new.order, ]
-
-    base.msg.to.igv <-
-      list(
-        elementID = id,
-        trackName = trackName,
-        tbl = jsonlite::toJSON(tbl),
-        color = color,
-        trackHeight = trackHeight,
-        autoscale = autoscale,
-        min = min,
-        max = max,
-        autoscaleGroup = autoscaleGroup
-      )  # -1 means no grouping
-
-    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    msg.to.igv <- c(list(elementID = id), payload$config)
     session$sendCustomMessage("loadBedGraphTrack", msg.to.igv)
 
   } # loadBedGraphTrack
+
+#-------------------------------------------------------------------------------
+#' Give a bedGraph-like data.frame the chr/start/end/value column names
+#'
+#' @description Renames a leading "chrom" column to "chr" and the fourth column
+#' to "value", then applies the chr/start/end check of
+#' \code{.normalizeBedColumns}.
+#'
+#' @param tbl data.frame, with at least four columns: chrom (or chr), start,
+#' end and a numeric score
+#'
+#' @return the data.frame, with its columns renamed
+#'
+#' @keywords internal
+.normalizeBedGraphColumns <- function(tbl) {
+  checkmate::assert_data_frame(tbl, min.cols = 4L)
+
+  if (colnames(tbl)[1] == "chrom")
+    colnames(tbl)[1] <- "chr"
+
+  colnames(tbl)[4] <- "value"
+
+  .normalizeBedColumns(tbl)
+} # .normalizeBedGraphColumns
+
+#-------------------------------------------------------------------------------
+#' Build the payload of a bedGraph track from a data.frame
+#'
+#' @description The browser-free half of \code{loadBedGraphTrack}: checks and
+#' sorts the table and returns the message body the \code{loadBedGraphTrack}
+#' handler in igvShiny.js reads. The features travel inline as JSON, so
+#' \code{files} is empty.
+#'
+#' @param trackName character string
+#' @param tbl data.frame, with at least "chrom" "start" "end" "score" columns
+#' @param color character string, a legal CSS color, or "random"
+#' @param trackHeight an integer, 30 (pixels) by default
+#' @param autoscale logical
+#' @param autoscaleGroup numeric(1), -1 (no group) by default
+#' @param min numeric, consulted when autoscale is FALSE
+#' @param max numeric, consulted when autoscale is FALSE
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options, merged onto the defaults
+#'
+#' @return a list with \code{config}, the message body without
+#' \code{elementID}, and \code{files}, \code{character(0)}
+#'
+#' @keywords internal
+.bedGraphTrackPayload <- function(trackName,
+                                  tbl,
+                                  color = "gray",
+                                  trackHeight = 30,
+                                  autoscale,
+                                  autoscaleGroup = -1,
+                                  min = NA_real_,
+                                  max = NA_real_,
+                                  trackConfig = list()) {
+  checkmate::assert_string(trackName)
+  checkmate::assert_string(color)
+
+  if (color == "random")
+    color <- randomColors[sample(seq_along(randomColors), 1)]
+
+  tbl <- .normalizeBedGraphColumns(tbl)
+
+  stopifnot(is(tbl$chr, "character"))
+  stopifnot(is(tbl$start, "numeric"))
+  stopifnot(is(tbl$end, "numeric"))
+  stopifnot(is(tbl$value, "numeric"))
+
+  new.order <- order(tbl$start, decreasing = FALSE)
+  tbl <- tbl[new.order, ]
+
+  config <- list(
+    trackName = trackName,
+    tbl = jsonlite::toJSON(tbl),
+    color = color,
+    trackHeight = trackHeight,
+    autoscale = autoscale,
+    min = min,
+    max = max,
+    autoscaleGroup = autoscaleGroup
+  )  # -1 means no grouping
+
+  list(config = .sanitizeAndMergeOptions(config, trackConfig),
+       files = character(0))
+} # .bedGraphTrackPayload
 #-------------------------------------------------------------------------------
 #' load a seg track provided as a data.frame
 #'
