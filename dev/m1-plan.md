@@ -7,7 +7,7 @@ track loader into a pure **payload builder** and a thin **sender**.
 
 - [x] 1. Inventory + pattern: this file, `^dev$` in `.Rbuildignore`,
       builder/sender split of the BED and bedGraph loaders, tests
-- [ ] 2. Builder/sender split for all remaining loaders in `R/igvShiny.R`
+- [x] 2. Builder/sender split for all remaining loaders in `R/igvShiny.R`
       (VCF, seg, GWAS, BAM/CRAM, URL loaders, GFF3, splice junctions), tests
 - [ ] 3. Port `Track`, `QuantitativeTrack`, `igvAnnotationTrack` (needed as the
       parent, see below), `GRangesAnnotationTrack`, `DataFrameAnnotationTrack`,
@@ -131,3 +131,62 @@ still calls `message()` (untouched pre-existing line).
    later for igvR to reuse, or have igvR call `loadTrack()` only?
 3. `GWASTrack` reconciliation (see hazards) — confirm the "keep igvShiny's
    class, add a `loadTrack` method" default before stage 4.
+
+**Stage 2 (done):** split every remaining loader in `R/igvShiny.R` into a
+builder + sender, same pattern as stage 1. New internal builders:
+
+| exported loader(s) | builder | writes |
+|---|---|---|
+| `loadSegTrack` | `.segTrackPayload` | — (inline JSON) |
+| `loadVcfTrack` | `.vcfTrackPayload` | `path` (VariantAnnotation, guarded) |
+| `loadGwasTrack` | `.gwasTrackPayload` | `path` |
+| `loadBamTrackFromURL`, `loadBamTrackFromLocalFile` | `.bamUrlTrackPayload` | — |
+| `loadBamTrackFromLocalData` | `.bamLocalDataTrackPayload` | `path` + `path.bai` (rtracklayer/Rsamtools, guarded) |
+| `loadCramTrackFromURL`, `loadCramTrackFromLocalData` (= `...LocalFile`) | `.cramUrlTrackPayload` | — |
+| `loadGFF3TrackFromURL` | `.gff3UrlTrackPayload` | — |
+| `loadGFF3TrackFromLocalData` | `.gff3TrackPayload` | `path` |
+| `loadSpliceJunctionTrackFromURL` | `.spliceJunctionUrlTrackPayload` | — |
+| `loadSpliceJunctionTrackFromLocalData` | `.spliceJunctionTrackPayload` (calls the url builder) | `path` |
+
+Plus helper `.normalizeJunctionColumns` (the old inline checks, so the sender
+still rejects a bad table before it sends `removeTracksByName`). The local
+file loaders keep `serveLocalFile()` in the sender and pass the served urls to
+the url builder, so "local file" and "url" share one builder per format.
+Optional keys (`height`, and `showAllBases` for the local-file bam loader,
+which never sent it) are left out of `config` when `NULL`, so every wire
+message keeps its keys and key order; `test-trackPayloads.R` checks builder
+vs. sender output for every stage 2 loader. No new igv.js option keys, no
+DESCRIPTION/NEWS changes, nothing moved to Imports.
+
+Behavioural nuances (intentional, small):
+- New checkmate asserts in builders: `trackName` and urls/paths are single
+  strings; seg/gwas/gff3 tables must be `data.frame`s (a matrix was accepted
+  before and written by `write.table`); `vcfData` must be a `VCF`;
+  `showAllBases` a flag; `trackHeight` a number >= 1 or NULL (all bam/cram
+  loaders already asserted that). The GFF3 builders keep the loaders' lack of
+  defaults for `colorTable`, `colorByAttribute`, `displayMode`,
+  `visibilityWindow`.
+- `loadSpliceJunctionTrackFromURL`'s "indexURL must be a single character
+  string" `warning()` moved into the builder unchanged (still a base
+  `warning()`, tests expect it); it still fires before `removeTracksByName`.
+- As in stage 1, an `elementID` in `trackConfig` is dropped as "invalid"
+  rather than "conflicting".
+
+Skipped / left for later:
+- `display()` for igvShiny's `GWASTrack` (`R/GWASTrack.R`) still builds its
+  `loadGwasTrackFlexibleSource` message inline — it is not a loader in
+  `R/igvShiny.R`; stage 4 should extract `.gwasTrackObjectPayload` when it
+  reconciles `GWASTrack`.
+- `loadBamTrackFromLocalData` still serves its exported bam from the static
+  `tracks/` path, not `serveLocalFile()`; changing that changes the wire
+  message (`bamDataFilepath`) and the JS handler, so it is out of scope.
+- `loadBedGraphTrackFromURL`'s pre-existing `message()` call is untouched.
+
+**Open questions for the human (stage 2):**
+4. `.bamLocalDataTrackPayload` writes a large file to the static `tracks/`
+   dir. Should it switch to `serveLocalFile()` (repo rule for range-read
+   files)? That needs the `loadBamTrackFromLocalData` JS handler to accept a
+   served url.
+5. OK to keep the data.frame/VCF asserts in builders, or should builders be
+   as permissive as the old loaders (matrix input for gwas/gff3/seg)?
+

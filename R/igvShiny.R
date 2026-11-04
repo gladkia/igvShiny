@@ -1102,18 +1102,42 @@ loadSegTrack <-
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
 
-    base.msg.to.igv <-
-      list(
-        elementID = id,
-        trackName = trackName,
-        tbl = jsonlite::toJSON(tbl)
-      )
+    payload <- .segTrackPayload(trackName, tbl, trackConfig = trackConfig)
 
-    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    msg.to.igv <- c(list(elementID = id), payload$config)
     flog.debug("about to send loadSegTrack message")
     session$sendCustomMessage("loadSegTrack", msg.to.igv)
 
   } # loadSegTrack
+
+#-------------------------------------------------------------------------------
+#' Build the payload of a seg track from a data.frame
+#'
+#' @description The browser-free half of \code{loadSegTrack}: returns the
+#' message body the \code{loadSegTrack} handler in igvShiny.js reads. The
+#' segments travel inline as JSON, so \code{files} is empty.
+#'
+#' @param trackName character string
+#' @param tbl data.frame of segments, written through as is
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options, merged onto the defaults
+#'
+#' @return a list with \code{config}, the message body without
+#' \code{elementID}, and \code{files}, \code{character(0)}
+#'
+#' @keywords internal
+.segTrackPayload <- function(trackName, tbl, trackConfig = list()) {
+  checkmate::assert_string(trackName)
+  checkmate::assert_class(tbl, "data.frame")
+
+  config <- list(
+    trackName = trackName,
+    tbl = jsonlite::toJSON(tbl)
+  )
+
+  list(config = .sanitizeAndMergeOptions(config, trackConfig),
+       files = character(0))
+} # .segTrackPayload
 
 #-------------------------------------------------------------------------------
 #' load a VCF (variant) track provided as a Bioconductor
@@ -1169,28 +1193,54 @@ loadVcfTrack <- function(session,
 
   state[["userAddedTracks"]] <-
     unique(c(state[["userAddedTracks"]], trackName))
-  temp.file <- .trackFile(session, ".vcf")
-  lmsg <- sprintf("igvShiny::loadVcfTrack, about to write to file '%s'",
-                  temp.file)
-  flog.debug(lmsg)
-  VariantAnnotation::writeVcf(vcfData, temp.file)
-  lmsg2 <- sprintf("igvShiny::loadVcfTrack, file.exists(%s)? %s",
-                   temp.file,
-                   file.exists(temp.file))
-  flog.debug(lmsg2)
+  payload <- .vcfTrackPayload(trackName, vcfData,
+                              path = .trackFile(session, ".vcf"),
+                              trackConfig = trackConfig)
 
-  path <- file.path("tracks", basename(temp.file))
-  base.msg.to.igv <-
-    list(
-      elementID = id,
-      trackName = trackName,
-      vcfDataFilepath = path
-    )
-
-  msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+  msg.to.igv <- c(list(elementID = id), payload$config)
   session$sendCustomMessage("loadVcfTrack", msg.to.igv)
 
 } # loadVcfTrack
+
+#-------------------------------------------------------------------------------
+#' Build the payload of a VCF track from a VariantAnnotation object
+#'
+#' @description The browser-free half of \code{loadVcfTrack}: writes
+#' \code{vcfData} to \code{path} with \code{VariantAnnotation::writeVcf} and
+#' returns the message body the \code{loadVcfTrack} handler in igvShiny.js
+#' reads. Needs VariantAnnotation (Suggests).
+#'
+#' @param trackName character string
+#' @param vcfData a \code{VCF} object from VariantAnnotation
+#' @param path character string, the file to write; its basename is what the
+#' browser fetches from the \code{tracks/} resource path
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options, merged onto the defaults
+#'
+#' @return a list with \code{config}, the message body without
+#' \code{elementID}, and \code{files}, the paths written (here: \code{path})
+#'
+#' @keywords internal
+.vcfTrackPayload <- function(trackName, vcfData, path, trackConfig = list()) {
+  if (!requireNamespace("VariantAnnotation", quietly = TRUE))
+    stop("install VariantAnnotation to use this function")
+  checkmate::assert_string(trackName)
+  checkmate::assert_class(vcfData, "VCF")
+  checkmate::assert_string(path)
+
+  flog.debug("igvShiny::.vcfTrackPayload, about to write to file '%s'", path)
+  VariantAnnotation::writeVcf(vcfData, path)
+  flog.debug("igvShiny::.vcfTrackPayload, file.exists(%s)? %s",
+             path, file.exists(path))
+
+  config <- list(
+    trackName = trackName,
+    vcfDataFilepath = file.path("tracks", basename(path))
+  )
+
+  list(config = .sanitizeAndMergeOptions(config, trackConfig),
+       files = path)
+} # .vcfTrackPayload
 
 #-------------------------------------------------------------------------------
 #' load a GWAS (genome-wide association study) track
@@ -1246,39 +1296,70 @@ loadGwasTrack <- function(session,
   state[["userAddedTracks"]] <-
     unique(c(state[["userAddedTracks"]], trackName))
 
-  temp.file <-
-    .trackFile(session, ".gwas")
+  payload <- .gwasTrackPayload(trackName, tbl.gwas,
+                               path = .trackFile(session, ".gwas"),
+                               ymin = ymin,
+                               ymax = ymax,
+                               trackConfig = trackConfig)
+
+  msg.to.igv <- c(list(elementID = id), payload$config)
+  session$sendCustomMessage("loadGwasTrack", msg.to.igv)
+
+} # loadGwasTrack
+
+#-------------------------------------------------------------------------------
+#' Build the payload of a GWAS track from a data.frame
+#'
+#' @description The browser-free half of \code{loadGwasTrack}: writes the table
+#' with its header to \code{path} and returns the message body the
+#' \code{loadGwasTrack} handler in igvShiny.js reads.
+#'
+#' @param trackName character string
+#' @param tbl.gwas data.frame, the GWAS table
+#' @param path character string, the file to write; its basename is what the
+#' browser fetches from the \code{tracks/} resource path
+#' @param ymin numeric defaults to 0
+#' @param ymax numeric defaults to 35
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options, merged onto the defaults
+#'
+#' @return a list with \code{config}, the message body without
+#' \code{elementID}, and \code{files}, the paths written (here: \code{path})
+#'
+#' @keywords internal
+.gwasTrackPayload <- function(trackName,
+                              tbl.gwas,
+                              path,
+                              ymin = 0,
+                              ymax = 35,
+                              trackConfig = list()) {
+  checkmate::assert_string(trackName)
+  checkmate::assert_class(tbl.gwas, "data.frame")
+  checkmate::assert_string(path)
+
   write.table(
     tbl.gwas,
     sep = "\t",
     row.names = FALSE,
     quote = FALSE,
-    file = temp.file
+    file = path
   )
-  lmsg <- sprintf(
-    "--- igvShiny.R, loadGwasTrack wrote %d,%d to %s",
-    NROW(tbl.gwas),
-    NCOL(tbl.gwas),
-    temp.file
+  flog.debug("--- igvShiny.R, .gwasTrackPayload wrote %d,%d to %s",
+             NROW(tbl.gwas), NCOL(tbl.gwas), path)
+
+  config <- list(
+    trackName = trackName,
+    gwasDataFilepath = file.path("tracks", basename(path)),
+    color = "red",
+    trackHeight = 200,
+    autoscale = FALSE,
+    min = ymin,
+    max = ymax
   )
-  flog.debug(lmsg)
-  flog.debug(sprintf("exists? %s", file.exists(temp.file)))
-  base.msg.to.igv <-
-    list(
-      elementID = id,
-      trackName = trackName,
-      gwasDataFilepath = file.path("tracks", basename(temp.file)),
-      color = "red",
-      trackHeight = 200,
-      autoscale = FALSE,
-      min = ymin,
-      max = ymax
-    )
 
-  msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
-  session$sendCustomMessage("loadGwasTrack", msg.to.igv)
-
-} # loadGwasTrack
+  list(config = .sanitizeAndMergeOptions(config, trackConfig),
+       files = path)
+} # .gwasTrackPayload
 
 #-------------------------------------------------------------------------------
 #' load a bam track which, with index, is served up by http
@@ -1341,24 +1422,70 @@ loadBamTrackFromURL <-
 
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
-    base.msg.to.igv <-
-      list(
-        elementID = id,
-        trackName = trackName,
-        bam = bamURL,
-        index = indexURL,
-        displayMode = displayMode,
-        showAllBases = showAllBases
-      )
-    if (!is.null(trackHeight)) {
-      base.msg.to.igv$height <- trackHeight
-    }
 
-    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    payload <- .bamUrlTrackPayload(trackName, bamURL, indexURL,
+                                   displayMode = displayMode,
+                                   showAllBases = showAllBases,
+                                   trackHeight = trackHeight,
+                                   trackConfig = trackConfig)
+
+    msg.to.igv <- c(list(elementID = id), payload$config)
     flog.debug("--- about to send message, loadBamTrack")
     session$sendCustomMessage("loadBamTrackFromURL", msg.to.igv)
 
   } # loadBamTrackFromURL
+
+#-------------------------------------------------------------------------------
+#' Build the payload of a bam track read by url
+#'
+#' @description The browser-free half of \code{loadBamTrackFromURL} and
+#' \code{loadBamTrackFromLocalFile}: returns the message body the
+#' \code{loadBamTrackFromURL} handler in igvShiny.js reads. The urls are used
+#' as given (remote, or app-relative from \code{serveLocalFile()}); nothing is
+#' written, so \code{files} is empty.
+#'
+#' @param trackName character string
+#' @param bamURL character string, url of the bam file
+#' @param indexURL character string, url of the bam index
+#' @param displayMode character string, "EXPANDED" (default), "SQUISHED" or
+#' "COLLAPSED"
+#' @param showAllBases logical, or NULL to leave the key out of the message
+#' (what \code{loadBamTrackFromLocalFile} has always sent)
+#' @param trackHeight numeric track height in pixels, or NULL for the igv.js
+#' default
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options, merged onto the defaults
+#'
+#' @return a list with \code{config}, the message body without
+#' \code{elementID}, and \code{files}, \code{character(0)}
+#'
+#' @keywords internal
+.bamUrlTrackPayload <- function(trackName,
+                                bamURL,
+                                indexURL,
+                                displayMode = "EXPANDED",
+                                showAllBases = FALSE,
+                                trackHeight = NULL,
+                                trackConfig = list()) {
+  checkmate::assert_string(trackName)
+  checkmate::assert_string(bamURL)
+  checkmate::assert_string(indexURL)
+  checkmate::assert_flag(showAllBases, null.ok = TRUE)
+  checkmate::assert_number(trackHeight, lower = 1, finite = TRUE,
+                           null.ok = TRUE)
+
+  config <- list(
+    trackName = trackName,
+    bam = bamURL,
+    index = indexURL,
+    displayMode = displayMode
+  )
+  config$showAllBases <- showAllBases
+  config$height <- trackHeight
+
+  list(config = .sanitizeAndMergeOptions(config, trackConfig),
+       files = character(0))
+} # .bamUrlTrackPayload
 
 #-------------------------------------------------------------------------------
 #' load GenomicAlignments data as an igv.js alignment track
@@ -1433,29 +1560,72 @@ loadBamTrackFromLocalData <-
     # never see; it is served alongside, so it goes at session end too
     .registerTrackFile(session, paste0(fpath, ".bai"))
 
-    lmsg <-
-      sprintf("igvShiny::load bam from local data, about to write to file '%s'",
-              fpath)
-    flog.debug(lmsg)
-    rtracklayer::export(data, fpath, format = "BAM")
+    payload <- .bamLocalDataTrackPayload(trackName, data,
+                                         path = fpath,
+                                         displayMode = displayMode,
+                                         trackHeight = trackHeight,
+                                         trackConfig = trackConfig)
 
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
 
-    base.msg.to.igv <-
-      list(
-        elementID = id,
-        trackName = trackName,
-        bamDataFilepath = file.path("tracks", basename(fpath)),
-        displayMode = displayMode
-      )
-    if (!is.null(trackHeight)) {
-      base.msg.to.igv$height <- trackHeight
-    }
-    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    msg.to.igv <- c(list(elementID = id), payload$config)
     session$sendCustomMessage("loadBamTrackFromLocalData", msg.to.igv)
 
   } # loadBamTrackFromLocalData
+
+#-------------------------------------------------------------------------------
+#' Build the payload of a bam track from in-memory alignments
+#'
+#' @description The browser-free half of \code{loadBamTrackFromLocalData}:
+#' exports \code{data} to \code{path} as bam with \code{rtracklayer::export},
+#' which also writes the index \code{paste0(path, ".bai")}, and returns the
+#' message body the \code{loadBamTrackFromLocalData} handler in igvShiny.js
+#' reads. Needs rtracklayer and Rsamtools (Suggests).
+#'
+#' @param trackName character string
+#' @param data a \code{GAlignments} object (GenomicAlignments)
+#' @param path character string, the bam file to write; its basename is what
+#' the browser fetches from the \code{tracks/} resource path
+#' @param displayMode character string, "EXPANDED" (default), "SQUISHED" or
+#' "COLLAPSED"
+#' @param trackHeight numeric track height in pixels, or NULL for the igv.js
+#' default
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options, merged onto the defaults
+#'
+#' @return a list with \code{config}, the message body without
+#' \code{elementID}, and \code{files}, the bam and its index
+#'
+#' @keywords internal
+.bamLocalDataTrackPayload <- function(trackName,
+                                      data,
+                                      path,
+                                      displayMode = "EXPANDED",
+                                      trackHeight = NULL,
+                                      trackConfig = list()) {
+  if (!requireNamespace("rtracklayer", quietly = TRUE))
+    stop("install rtracklayer to use loadBamTrackFromLocalData")
+  if (!requireNamespace("Rsamtools", quietly = TRUE))
+    stop("install Rsamtools to use loadBamTrackFromLocalData")
+  checkmate::assert_string(trackName)
+  checkmate::assert_string(path)
+  checkmate::assert_number(trackHeight, lower = 1, finite = TRUE,
+                           null.ok = TRUE)
+
+  flog.debug("igvShiny::.bamLocalDataTrackPayload, writing '%s'", path)
+  rtracklayer::export(data, path, format = "BAM")
+
+  config <- list(
+    trackName = trackName,
+    bamDataFilepath = file.path("tracks", basename(path)),
+    displayMode = displayMode
+  )
+  config$height <- trackHeight
+
+  list(config = .sanitizeAndMergeOptions(config, trackConfig),
+       files = c(path, paste0(path, ".bai")))
+} # .bamLocalDataTrackPayload
 
 #-------------------------------------------------------------------------------
 #' Load a BAM Track from a Local File via HTTP Range Requests
@@ -1530,18 +1700,13 @@ loadBamTrackFromLocalFile <-
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
 
-    base.msg.to.igv <-
-      list(
-        elementID = id,
-        trackName = trackName,
-        bam = bamUrl,
-        index = baiUrl,
-        displayMode = displayMode
-      )
-    if (!is.null(trackHeight)) {
-      base.msg.to.igv$height <- trackHeight
-    }
-    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    payload <- .bamUrlTrackPayload(trackName, bamUrl, baiUrl,
+                                   displayMode = displayMode,
+                                   showAllBases = NULL,
+                                   trackHeight = trackHeight,
+                                   trackConfig = trackConfig)
+
+    msg.to.igv <- c(list(elementID = id), payload$config)
     session$sendCustomMessage("loadBamTrackFromURL", msg.to.igv)
 
   } # loadBamTrackFromLocalFile
@@ -1599,20 +1764,57 @@ loadCramTrackFromURL <-
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
 
-    base.msg.to.igv <-
-      list(
-        elementID = id,
-        trackName = trackName,
-        cram = cramURL,
-        index = indexURL
-      )
-    if (!is.null(trackHeight)) {
-      base.msg.to.igv$height <- trackHeight
-    }
-    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    payload <- .cramUrlTrackPayload(trackName, cramURL, indexURL,
+                                    trackHeight = trackHeight,
+                                    trackConfig = trackConfig)
+
+    msg.to.igv <- c(list(elementID = id), payload$config)
     session$sendCustomMessage("loadCramTrackFromURL", msg.to.igv)
 
   } # loadCramTrackFromURL
+
+#-------------------------------------------------------------------------------
+#' Build the payload of a cram track read by url
+#'
+#' @description The browser-free half of \code{loadCramTrackFromURL} and
+#' \code{loadCramTrackFromLocalData}: returns the message body the
+#' \code{loadCramTrackFromURL} handler in igvShiny.js reads. The urls are used
+#' as given (remote, or app-relative from \code{serveLocalFile()}); nothing is
+#' written, so \code{files} is empty.
+#'
+#' @param trackName character string
+#' @param cramURL character string, url of the cram file
+#' @param indexURL character string, url of the crai index
+#' @param trackHeight numeric track height in pixels, or NULL for the igv.js
+#' default
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options, merged onto the defaults
+#'
+#' @return a list with \code{config}, the message body without
+#' \code{elementID}, and \code{files}, \code{character(0)}
+#'
+#' @keywords internal
+.cramUrlTrackPayload <- function(trackName,
+                                 cramURL,
+                                 indexURL,
+                                 trackHeight = NULL,
+                                 trackConfig = list()) {
+  checkmate::assert_string(trackName)
+  checkmate::assert_string(cramURL)
+  checkmate::assert_string(indexURL)
+  checkmate::assert_number(trackHeight, lower = 1, finite = TRUE,
+                           null.ok = TRUE)
+
+  config <- list(
+    trackName = trackName,
+    cram = cramURL,
+    index = indexURL
+  )
+  config$height <- trackHeight
+
+  list(config = .sanitizeAndMergeOptions(config, trackConfig),
+       files = character(0))
+} # .cramUrlTrackPayload
 
 #-------------------------------------------------------------------------------
 #' load a cram file sitting on the same machine as the shiny app
@@ -1681,17 +1883,11 @@ loadCramTrackFromLocalData <-
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
 
-    base.msg.to.igv <-
-      list(
-        elementID = id,
-        trackName = trackName,
-        cram = cramPath,
-        index = indexPath
-      )
-    if (!is.null(trackHeight)) {
-      base.msg.to.igv$height <- trackHeight
-    }
-    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    payload <- .cramUrlTrackPayload(trackName, cramPath, indexPath,
+                                    trackHeight = trackHeight,
+                                    trackConfig = trackConfig)
+
+    msg.to.igv <- c(list(elementID = id), payload$config)
     # the payload is what the remote loader sends, only with app-relative urls,
     # so the browser side needs no handler of its own
     session$sendCustomMessage("loadCramTrackFromURL", msg.to.igv)
@@ -1768,24 +1964,76 @@ loadGFF3TrackFromURL <-
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
 
-    base.msg.to.igv <-
-      list(
-        elementID = id,
-        trackName = trackName,
-        dataURL = gff3URL,
-        indexURL = indexURL,
-        color = color,
-        colorTable = colorTable,
-        colorByAttribute = colorByAttribute,
-        displayMode = displayMode,
-        trackHeight = trackHeight,
-        visibilityWindow = visibilityWindow
-      )
+    payload <- .gff3UrlTrackPayload(trackName, gff3URL, indexURL,
+                                    color = color,
+                                    colorTable = colorTable,
+                                    colorByAttribute = colorByAttribute,
+                                    displayMode = displayMode,
+                                    trackHeight = trackHeight,
+                                    visibilityWindow = visibilityWindow,
+                                    trackConfig = trackConfig)
 
-    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    msg.to.igv <- c(list(elementID = id), payload$config)
     session$sendCustomMessage("loadGFF3TrackFromURL", msg.to.igv)
 
   } # loadGFF3TrackFromURL
+
+#-------------------------------------------------------------------------------
+#' Build the payload of a GFF3 track read by url
+#'
+#' @description The browser-free half of \code{loadGFF3TrackFromURL}: returns
+#' the message body the \code{loadGFF3TrackFromURL} handler in igvShiny.js
+#' reads. Nothing is written, so \code{files} is empty. Like the loader, it
+#' has no defaults for the colour, display and window arguments.
+#'
+#' @param trackName character string
+#' @param gff3URL character string, url of the gff3 file
+#' @param indexURL character string, url of its index
+#' @param color character #RGB or a recognized color name.  ignored if
+#' colorTable and colorByAttribute provided
+#' @param colorTable list, mapping a gff3 attribute, typically biotype,
+#' to a color
+#' @param colorByAttribute character, name of a gff3 attribute in column 9,
+#' typically "biotype"
+#' @param displayMode character,  "EXPANDED",  "SQUISHED" or "COLLAPSED"
+#' @param trackHeight numeric defaults to 50
+#' @param visibilityWindow numeric, Maximum window size in base pairs
+#' for which indexed annotations or variants are displayed
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options, merged onto the defaults
+#'
+#' @return a list with \code{config}, the message body without
+#' \code{elementID}, and \code{files}, \code{character(0)}
+#'
+#' @keywords internal
+.gff3UrlTrackPayload <- function(trackName,
+                                 gff3URL,
+                                 indexURL,
+                                 color = "gray",
+                                 colorTable,
+                                 colorByAttribute,
+                                 displayMode,
+                                 trackHeight = 50,
+                                 visibilityWindow,
+                                 trackConfig = list()) {
+  checkmate::assert_string(trackName)
+  checkmate::assert_string(gff3URL)
+
+  config <- list(
+    trackName = trackName,
+    dataURL = gff3URL,
+    indexURL = indexURL,
+    color = color,
+    colorTable = colorTable,
+    colorByAttribute = colorByAttribute,
+    displayMode = displayMode,
+    trackHeight = trackHeight,
+    visibilityWindow = visibilityWindow
+  )
+
+  list(config = .sanitizeAndMergeOptions(config, trackConfig),
+       files = character(0))
+} # .gff3UrlTrackPayload
 #-------------------------------------------------------------------------------
 #' load a GFF3 track defined by local data
 #'
@@ -1848,42 +2096,88 @@ loadGFF3TrackFromLocalData <-
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
 
-    gff3.filePath <-
-      .trackFile(session, ".gff3")
-    write.table(
-      tbl.gff3,
-      sep = "\t",
-      row.names = FALSE,
-      quote = FALSE,
-      file = gff3.filePath
-    )
-    lmsg <- sprintf(
-      "--- igvShiny.R, loadGFF3TrackFromLocalData wrote %d,%d to %s",
-      NROW(tbl.gff3),
-      NCOL(tbl.gff3),
-      gff3.filePath
-    )
-    flog.debug(lmsg)
+    payload <- .gff3TrackPayload(trackName, tbl.gff3,
+                                 path = .trackFile(session, ".gff3"),
+                                 color = color,
+                                 colorTable = colorTable,
+                                 colorByAttribute = colorByAttribute,
+                                 displayMode = displayMode,
+                                 trackHeight = trackHeight,
+                                 visibilityWindow = visibilityWindow,
+                                 trackConfig = trackConfig)
 
-    flog.debug(sprintf("exists? %s", file.exists(gff3.filePath)))
-
-    base.msg.to.igv <-
-      list(
-        elementID = id,
-        trackName = trackName,
-        filePath = file.path("tracks", basename(gff3.filePath)),
-        color = color,
-        colorTable = colorTable,
-        colorByAttribute = colorByAttribute,
-        displayMode = displayMode,
-        trackHeight = trackHeight,
-        visibilityWindow = visibilityWindow
-      )
-
-    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    msg.to.igv <- c(list(elementID = id), payload$config)
     session$sendCustomMessage("loadGFF3TrackFromLocalData", msg.to.igv)
 
   } # loadGFF3TrackFromLocalData
+
+#-------------------------------------------------------------------------------
+#' Build the payload of a GFF3 track from a data.frame
+#'
+#' @description The browser-free half of \code{loadGFF3TrackFromLocalData}:
+#' writes the table, header line included as before, to \code{path} and
+#' returns the message body the \code{loadGFF3TrackFromLocalData} handler in
+#' igvShiny.js reads.
+#'
+#' @param trackName character string
+#' @param tbl.gff3 data.frame in standard 9-column GFF3 format
+#' @param path character string, the file to write; its basename is what the
+#' browser fetches from the \code{tracks/} resource path
+#' @param color character #RGB or a recognized color name.  ignored if
+#' colorTable and colorByAttribute provided
+#' @param colorTable list, mapping a gff3 attribute, typically biotype,
+#' to a color
+#' @param colorByAttribute character, name of a gff3 attribute in column 9,
+#' typically "biotype"
+#' @param displayMode character,  "EXPANDED",  "SQUISHED" or "COLLAPSED"
+#' @param trackHeight numeric defaults to 50
+#' @param visibilityWindow numeric, Maximum window size in base pairs
+#' for which indexed annotations or variants are displayed
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options, merged onto the defaults
+#'
+#' @return a list with \code{config}, the message body without
+#' \code{elementID}, and \code{files}, the paths written (here: \code{path})
+#'
+#' @keywords internal
+.gff3TrackPayload <- function(trackName,
+                              tbl.gff3,
+                              path,
+                              color = "gray",
+                              colorTable,
+                              colorByAttribute,
+                              displayMode,
+                              trackHeight = 50,
+                              visibilityWindow,
+                              trackConfig = list()) {
+  checkmate::assert_string(trackName)
+  checkmate::assert_class(tbl.gff3, "data.frame")
+  checkmate::assert_string(path)
+
+  write.table(
+    tbl.gff3,
+    sep = "\t",
+    row.names = FALSE,
+    quote = FALSE,
+    file = path
+  )
+  flog.debug("--- igvShiny.R, .gff3TrackPayload wrote %d,%d to %s",
+             NROW(tbl.gff3), NCOL(tbl.gff3), path)
+
+  config <- list(
+    trackName = trackName,
+    filePath = file.path("tracks", basename(path)),
+    color = color,
+    colorTable = colorTable,
+    colorByAttribute = colorByAttribute,
+    displayMode = displayMode,
+    trackHeight = trackHeight,
+    visibilityWindow = visibilityWindow
+  )
+
+  list(config = .sanitizeAndMergeOptions(config, trackConfig),
+       files = path)
+} # .gff3TrackPayload
 #-------------------------------------------------------------------------------
 #' load a splice junction track served up by http
 #'
@@ -1944,17 +2238,11 @@ loadSpliceJunctionTrackFromURL <-
            displayMode = "COLLAPSED",
            deleteTracksOfSameName = TRUE,
            trackConfig = list()) {
-    # A usable index is a single non-empty, non-NA character string; anything
-    # else means "no index". NULL is the trap: list() keeps it, shiny sends it
-    # as JSON null, and the handler reads .length off it. That throws, so the
-    # track never loads and R sees nothing at all - the failure shows up only
-    # in the browser console.
-    if (!is.character(indexURL) || length(indexURL) != 1L || is.na(indexURL)) {
-      if (length(indexURL) > 0L) {
-        warning("indexURL must be a single character string. Ignoring it.")
-      }
-      indexURL <- ""
-    }
+    payload <- .spliceJunctionUrlTrackPayload(trackName, url,
+                                              indexURL = indexURL,
+                                              trackHeight = trackHeight,
+                                              displayMode = displayMode,
+                                              trackConfig = trackConfig)
 
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
@@ -1963,20 +2251,65 @@ loadSpliceJunctionTrackFromURL <-
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
 
-    base.msg.to.igv <-
-      list(
-        elementID = id,
-        trackName = trackName,
-        url = url,
-        indexURL = indexURL,
-        trackHeight = trackHeight,
-        displayMode = displayMode
-      )
-
-    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    msg.to.igv <- c(list(elementID = id), payload$config)
     session$sendCustomMessage("loadSpliceJunctionTrackFromURL", msg.to.igv)
 
   } # loadSpliceJunctionTrackFromURL
+
+#-------------------------------------------------------------------------------
+#' Build the payload of a splice junction track read by url
+#'
+#' @description The browser-free half of
+#' \code{loadSpliceJunctionTrackFromURL} (and, with an app-relative url, of
+#' \code{loadSpliceJunctionTrackFromLocalData}): returns the message body the
+#' \code{loadSpliceJunctionTrackFromURL} handler in igvShiny.js reads. Nothing
+#' is written, so \code{files} is empty.
+#'
+#' @param trackName character string
+#' @param url character string, url of the junction bed file
+#' @param indexURL character string, url of a tabix index, or "" for none;
+#' anything but a single non-NA string is turned into "" with a warning
+#' @param trackHeight an integer, 100 (pixels) by default
+#' @param displayMode character, "COLLAPSED", "EXPANDED" or "SQUISHED"
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options, merged onto the defaults
+#'
+#' @return a list with \code{config}, the message body without
+#' \code{elementID}, and \code{files}, \code{character(0)}
+#'
+#' @keywords internal
+.spliceJunctionUrlTrackPayload <- function(trackName,
+                                           url,
+                                           indexURL = "",
+                                           trackHeight = 100,
+                                           displayMode = "COLLAPSED",
+                                           trackConfig = list()) {
+  checkmate::assert_string(trackName)
+  checkmate::assert_string(url)
+
+  # A usable index is a single non-empty, non-NA character string; anything
+  # else means "no index". NULL is the trap: list() keeps it, shiny sends it
+  # as JSON null, and the handler reads .length off it. That throws, so the
+  # track never loads and R sees nothing at all - the failure shows up only
+  # in the browser console.
+  if (!is.character(indexURL) || length(indexURL) != 1L || is.na(indexURL)) {
+    if (length(indexURL) > 0L) {
+      warning("indexURL must be a single character string. Ignoring it.")
+    }
+    indexURL <- ""
+  }
+
+  config <- list(
+    trackName = trackName,
+    url = url,
+    indexURL = indexURL,
+    trackHeight = trackHeight,
+    displayMode = displayMode
+  )
+
+  list(config = .sanitizeAndMergeOptions(config, trackConfig),
+       files = character(0))
+} # .spliceJunctionUrlTrackPayload
 #-------------------------------------------------------------------------------
 # The per-junction attributes SpliceJunctionTrack reads off the bed name
 # column, in the spelling igv.js looks for.
@@ -2084,19 +2417,7 @@ loadSpliceJunctionTrackFromLocalData <-
            displayMode = "COLLAPSED",
            deleteTracksOfSameName = TRUE,
            trackConfig = list()) {
-    stopifnot(is.data.frame(tbl))
-
-    if ("chrom" %in% colnames(tbl)) {
-      colnames(tbl)[colnames(tbl) == "chrom"] <- "chr"
-    }
-    missingColumns <- setdiff(c("chr", "start", "end"), colnames(tbl))
-    if (length(missingColumns) > 0) {
-      fmt <- "improper columns in splice junction data.frame, missing: %s"
-      stop(sprintf(fmt, toString(missingColumns)))
-    }
-    stopifnot(is(tbl$chr, "character"))
-    stopifnot(is(tbl$start, "numeric"))
-    stopifnot(is(tbl$end, "numeric"))
+    tbl <- .normalizeJunctionColumns(tbl)
 
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
@@ -2105,63 +2426,131 @@ loadSpliceJunctionTrackFromLocalData <-
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
 
-    name <- if ("name" %in% colnames(tbl)) {
-      as.character(tbl$name)
-    } else {
-      .packJunctionAttributes(tbl)
-    }
-    # igv.js reads the bed score as the uniquely mapped spanning read count and
-    # sizes the arcs by it, so a uniquely_mapped column stands in for a score
-    # column when the caller gives one and not the other. 1000 is the score the
-    # bed decoder itself falls back to.
-    score <- if ("score" %in% colnames(tbl)) {
-      tbl$score
-    } else if ("uniquely_mapped" %in% colnames(tbl)) {
-      tbl$uniquely_mapped
-    } else {
-      1000
-    }
-    strand <- if ("strand" %in% colnames(tbl)) as.character(tbl$strand) else "."
+    payload <- .spliceJunctionTrackPayload(trackName, tbl,
+                                           path = .trackFile(session, ".bed"),
+                                           trackHeight = trackHeight,
+                                           displayMode = displayMode,
+                                           trackConfig = trackConfig)
 
-    tbl.bed <- data.frame(
-      chr = tbl$chr,
-      start = tbl$start,
-      end = tbl$end,
-      name = name,
-      score = score,
-      strand = strand,
-      stringsAsFactors = FALSE
-    )
-
-    bed.filePath <- .trackFile(session, ".bed")
-    write.table(
-      tbl.bed,
-      file = bed.filePath,
-      sep = "\t",
-      quote = FALSE,
-      row.names = FALSE,
-      col.names = FALSE
-    )
-    lmsg <- sprintf(
-      "--- igvShiny.R, loadSpliceJunctionTrackFromLocalData wrote %d to %s",
-      NROW(tbl.bed), bed.filePath
-    )
-    flog.debug(lmsg)
-
-    base.msg.to.igv <-
-      list(
-        elementID = id,
-        trackName = trackName,
-        url = file.path("tracks", basename(bed.filePath)),
-        indexURL = "",
-        trackHeight = trackHeight,
-        displayMode = displayMode
-      )
-
-    msg.to.igv <- .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig)
+    msg.to.igv <- c(list(elementID = id), payload$config)
     # The url handler takes it from here: an unindexed bed served by shiny is
     # the same job as an unindexed bed served by anyone else.
     session$sendCustomMessage("loadSpliceJunctionTrackFromURL", msg.to.igv)
 
   } # loadSpliceJunctionTrackFromLocalData
+
+#-------------------------------------------------------------------------------
+#' Give a junction data.frame the chr/start/end column names and check them
+#'
+#' @description Renames a "chrom" column to "chr" and fails when chr, start
+#' or end is missing or of the wrong type.
+#'
+#' @param tbl data.frame, with at least "chrom" (or "chr") "start" "end" columns
+#'
+#' @return the data.frame, its "chrom" column possibly renamed
+#'
+#' @keywords internal
+.normalizeJunctionColumns <- function(tbl) {
+  stopifnot(is.data.frame(tbl))
+
+  if ("chrom" %in% colnames(tbl)) {
+    colnames(tbl)[colnames(tbl) == "chrom"] <- "chr"
+  }
+  missingColumns <- setdiff(c("chr", "start", "end"), colnames(tbl))
+  if (length(missingColumns) > 0) {
+    fmt <- "improper columns in splice junction data.frame, missing: %s"
+    stop(sprintf(fmt, toString(missingColumns)))
+  }
+  stopifnot(is(tbl$chr, "character"))
+  stopifnot(is(tbl$start, "numeric"))
+  stopifnot(is(tbl$end, "numeric"))
+
+  tbl
+} # .normalizeJunctionColumns
+
+#-------------------------------------------------------------------------------
+#' Build the payload of a splice junction track from a data.frame
+#'
+#' @description The browser-free half of
+#' \code{loadSpliceJunctionTrackFromLocalData}: writes the six-column junction
+#' bed to \code{path} and returns the message body of
+#' \code{.spliceJunctionUrlTrackPayload} pointed at it, which is what the
+#' \code{loadSpliceJunctionTrackFromURL} handler in igvShiny.js reads.
+#'
+#' @param trackName character string
+#' @param tbl data.frame, with at least "chrom" (or "chr") "start" "end"
+#' columns, in bed coordinates; see \code{loadSpliceJunctionTrackFromLocalData}
+#' for the optional columns
+#' @param path character string, the file to write; its basename is what the
+#' browser fetches from the \code{tracks/} resource path
+#' @param trackHeight an integer, 100 (pixels) by default
+#' @param displayMode character, "COLLAPSED", "EXPANDED" or "SQUISHED"
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options, merged onto the defaults
+#'
+#' @return a list with \code{config}, the message body without
+#' \code{elementID}, and \code{files}, the paths written (here: \code{path})
+#'
+#' @keywords internal
+.spliceJunctionTrackPayload <- function(trackName,
+                                        tbl,
+                                        path,
+                                        trackHeight = 100,
+                                        displayMode = "COLLAPSED",
+                                        trackConfig = list()) {
+  checkmate::assert_string(trackName)
+  checkmate::assert_string(path)
+
+  tbl <- .normalizeJunctionColumns(tbl)
+
+  name <- if ("name" %in% colnames(tbl)) {
+    as.character(tbl$name)
+  } else {
+    .packJunctionAttributes(tbl)
+  }
+  # igv.js reads the bed score as the uniquely mapped spanning read count and
+  # sizes the arcs by it, so a uniquely_mapped column stands in for a score
+  # column when the caller gives one and not the other. 1000 is the score the
+  # bed decoder itself falls back to.
+  score <- if ("score" %in% colnames(tbl)) {
+    tbl$score
+  } else if ("uniquely_mapped" %in% colnames(tbl)) {
+    tbl$uniquely_mapped
+  } else {
+    1000
+  }
+  strand <- if ("strand" %in% colnames(tbl)) as.character(tbl$strand) else "."
+
+  tbl.bed <- data.frame(
+    chr = tbl$chr,
+    start = tbl$start,
+    end = tbl$end,
+    name = name,
+    score = score,
+    strand = strand,
+    stringsAsFactors = FALSE
+  )
+
+  write.table(
+    tbl.bed,
+    file = path,
+    sep = "\t",
+    quote = FALSE,
+    row.names = FALSE,
+    col.names = FALSE
+  )
+  flog.debug("--- igvShiny.R, .spliceJunctionTrackPayload wrote %d to %s",
+             NROW(tbl.bed), path)
+
+  payload <- .spliceJunctionUrlTrackPayload(
+    trackName,
+    url = file.path("tracks", basename(path)),
+    indexURL = "",
+    trackHeight = trackHeight,
+    displayMode = displayMode,
+    trackConfig = trackConfig
+  )
+  payload$files <- path
+  payload
+} # .spliceJunctionTrackPayload
 #-------------------------------------------------------------------------------
