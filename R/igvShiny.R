@@ -646,7 +646,8 @@ loadBedTrack <-
 #'
 #' @keywords internal
 .normalizeBedColumns <- function(tbl) {
-  checkmate::assert_data_frame(tbl, min.cols = 3L)
+  checkmate::assert_class(tbl, "data.frame")
+  checkmate::assert_true(NCOL(tbl) >= 3L)
 
   if (colnames(tbl)[1] == "chrom")
     colnames(tbl)[1] <- "chr"
@@ -978,7 +979,8 @@ loadBedGraphTrack <-
 #'
 #' @keywords internal
 .normalizeBedGraphColumns <- function(tbl) {
-  checkmate::assert_data_frame(tbl, min.cols = 4L)
+  checkmate::assert_class(tbl, "data.frame")
+  checkmate::assert_true(NCOL(tbl) >= 4L)
 
   if (colnames(tbl)[1] == "chrom")
     colnames(tbl)[1] <- "chr"
