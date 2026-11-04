@@ -31,7 +31,7 @@ track
 #> GWASTrack object
 #>   trackName:  gwas 5k
 #>   dataMode:   local.url
-#>   url:        /tmp/RtmpNQXRSK/tracks/file1a8d7c00207.gwas
+#>   url:        /tmp/RtmpCSln1M/tracks/file1a8a1df51b6c.gwas
 #>   columns:    chrom=12 pos=13 pval=28
 #>   trackHeight: 50 
 #>   autoscale:  TRUE
