@@ -1,7 +1,7 @@
 ## igvShiny 1.9.52
-* Add S4 Track classes ported from igvR and an exported loadTrack(session, id, track) that dispatches on them
+* Add S4 Track classes ported from igvR and loadTrack(), which also loads a plain igv.js track config list (#111)
 * Refactor every track loader into a pure payload builder and a thin sender, unit-tested without a browser
-* Add a bedpe interaction track handler and loadTrack() support for the existing GWASTrack class
+* Add a bedpe track handler and make getGenomicRegion, showGenomicRegion, removeTracksByName S4 generics
 
 ## igvShiny 1.9.51
 * Fix demo BED and bedGraph tables that named chromosome 1 as '1' on hg38, tripping the reference check
