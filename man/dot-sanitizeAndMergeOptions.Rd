@@ -4,12 +4,19 @@
 \alias{.sanitizeAndMergeOptions}
 \title{Sanitize and merge track configuration options}
 \usage{
-.sanitizeAndMergeOptions(baseOptions, userOptions)
+.sanitizeAndMergeOptions(
+  baseOptions,
+  userOptions,
+  allowed = .validIgvTrackOptions
+)
 }
 \arguments{
 \item{baseOptions}{A list of default options set by the R function.}
 
 \item{userOptions}{A list of options provided by the user via trackConfig.}
+
+\item{allowed}{character, the option names igv.js reads for this kind of
+track; defaults to the global allowlist}
 }
 \value{
 A merged and sanitized list of options ready to be sent to

@@ -17,5 +17,6 @@ list(config = the message body, files = character(0))
 The browser-free half of \code{loadTrack(<list>)}. The config
 goes through \code{.sanitizeAndMergeOptions()} like every loader's
 \code{trackConfig}: keys igv.js does not read are dropped with a warning.
+The genotype colors are allowed when \code{type} is \code{"variant"}.
 }
 \keyword{internal}

@@ -1575,6 +1575,7 @@ setMethod("loadTrack", "GWASTrack",
 #' @description The browser-free half of \code{loadTrack(<list>)}. The config
 #' goes through \code{.sanitizeAndMergeOptions()} like every loader's
 #' \code{trackConfig}: keys igv.js does not read are dropped with a warning.
+#' The genotype colors are allowed when \code{type} is \code{"variant"}.
 #'
 #' @param track a named list, an igv.js track configuration with at least
 #' \code{name}, \code{url} and one of \code{type} or \code{format}
@@ -1599,7 +1600,11 @@ setMethod("loadTrack", "GWASTrack",
     track[["indexURL"]] <- track[["index"]]
     track[["index"]] <- NULL
   }
-  list(config = .sanitizeAndMergeOptions(list(), track),
+  # the genotype colors are read by a variant track only
+  allowed <- .validIgvTrackOptions
+  if (identical(tolower(toString(track[["type"]])), "variant"))
+    allowed <- c(allowed, .variantTrackOptions)
+  list(config = .sanitizeAndMergeOptions(list(), track, allowed = allowed),
        files = character(0))
 }
 

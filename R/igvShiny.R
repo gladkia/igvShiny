@@ -56,14 +56,18 @@
   ## alignment track sizing, coverage display and read row heights
   "coverageTrackHeight", "showCoverage", "showAlignments",
   "alignmentRowHeight", "squishedRowHeight",
-  ## variant track genotype colors (VariantTrack slots)
-  "homvarColor", "hetvarColor", "homrefColor",
   ## annotation track row height in EXPANDED mode, sent by loadTrack
   "expandedRowHeight"
   # Add other valid igv.js track options here as needed in the future
   # "tracks" is deliberately absent: it is meaningful on a merged track only,
   # and .sanitizeTrack handles it there.
 )
+
+# Genotype colors only a variant track reads. They are kept out of the global
+# allowlist so that bed, bedGraph, ... loaders still warn and drop them; the
+# vcf builder, VariantTrack and a "variant" config list or startup track add
+# them through the `allowed` argument of .sanitizeAndMergeOptions.
+.variantTrackOptions <- c("homvarColor", "hetvarColor", "homrefColor")
 
 #-------------------------------------------------------------------------------
 # A merged track may itself hold merged tracks - igv.js builds its members
@@ -76,10 +80,14 @@
 #' Sanitize and merge track configuration options
 #' @param baseOptions A list of default options set by the R function.
 #' @param userOptions A list of options provided by the user via trackConfig.
+#' @param allowed character, the option names igv.js reads for this kind of
+#' track; defaults to the global allowlist
 #' @return A merged and sanitized list of options ready to be sent to
 #' JavaScript.
 #' @keywords igvShiny
-.sanitizeAndMergeOptions <- function(baseOptions, userOptions) {
+.sanitizeAndMergeOptions <- function(baseOptions, userOptions,
+                                     allowed = .validIgvTrackOptions) {
+  checkmate::assert_character(allowed, any.missing = FALSE)
   if (is.null(userOptions) || length(userOptions) == 0) {
     return(baseOptions)
   }
@@ -118,7 +126,7 @@
   }
 
   # Filter user options against the allowlist of valid igv.js parameters
-  invalidKeys <- setdiff(names(userOptions), .validIgvTrackOptions)
+  invalidKeys <- setdiff(names(userOptions), allowed)
   if (length(invalidKeys) > 0) {
     fmt <- paste("Ignoring invalid or unsupported track options in",
                  "trackConfig: %s")
@@ -185,7 +193,11 @@
     track[["index"]] <- NULL
   }
 
-  invalidKeys <- setdiff(names(track), .validIgvTrackOptions)
+  allowed <- .validIgvTrackOptions
+  if (is.character(type) && length(type) == 1L && !is.na(type) &&
+      identical(tolower(type), "variant"))
+    allowed <- c(allowed, .variantTrackOptions)
+  invalidKeys <- setdiff(names(track), allowed)
   if (length(invalidKeys) > 0) {
     fmt <- paste("Ignoring invalid or unsupported track options in",
                  "'tracks': %s")
@@ -1305,7 +1317,9 @@ loadVcfTrack <- function(session,
     vcfDataFilepath = file.path("tracks", basename(path))
   )
 
-  list(config = .sanitizeAndMergeOptions(config, trackConfig),
+  allowed <- c(.validIgvTrackOptions, .variantTrackOptions)
+  list(config = .sanitizeAndMergeOptions(config, trackConfig,
+                                         allowed = allowed),
        files = path)
 } # .vcfTrackPayload
 
