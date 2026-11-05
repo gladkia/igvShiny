@@ -9,6 +9,7 @@ function runHarness(jsPath, scenario) {
    const inputs = [];
    const removed = [];
    const loaded = [];
+   const configs = [];
    let factory;
    let pend = [];
 
@@ -82,7 +83,7 @@ function runHarness(jsPath, scenario) {
 
    const mkBrowser = (g) => ({
       g,
-      loadTrack: (c) => loaded.push(g + ':' + c.name),
+      loadTrack: (c) => { configs.push(c); loaded.push(g + ':' + c.name); },
       on: () => {},
       trackViews: []
    });
@@ -289,6 +290,81 @@ function runHarness(jsPath, scenario) {
             errorEvents: inputs.filter((i) => i.key === 'igvError').map((i) => i.value)
          };
          global.document.getElementById = prevGetEl;
+      }
+
+      if (scenario === 'bedpe-handler') {
+         // Only on request: the bedpe handler builds an igv.js interact track
+         global.location = { href: 'http://127.0.0.1:1234/?x=1' };
+         pend.length = 0;
+         configs.length = 0;
+         w.renderValue(opts('hg38'));
+         pend[0].res(mkBrowser('hg38'));
+         await tick();
+         handlers.loadBedpeTrackFromFile({
+            elementID: 'igv1', trackName: 'loops',
+            bedpeFilepath: 'tracks/a.bedpe', color: 'red', trackHeight: 70
+         });
+         results.bedpeHandler = configs.slice();
+      }
+
+      if (scenario === 'annotation-slots') {
+         // Only on request: annotation Track slots reach the igv.js config
+         global.location = { href: 'http://127.0.0.1:1234/?x=1' };
+         pend.length = 0;
+         configs.length = 0;
+         w.renderValue(opts('hg38'));
+         pend[0].res(mkBrowser('hg38'));
+         await tick();
+         const bed = { elementID: 'igv1', bedFilepath: 'tracks/a.bed',
+                       color: 'red', trackHeight: 50 };
+         handlers.loadBedTrackFromFile(Object.assign({}, bed, {
+            trackName: 'slots', displayMode: 'COLLAPSED',
+            expandedRowHeight: 31, squishedRowHeight: 11, maxRows: 7,
+            searchable: true, visibilityWindow: 5000
+         }));
+         handlers.loadBedTrackFromFile(Object.assign({}, bed, {
+            trackName: 'plain'
+         }));
+         handlers.loadBedGraphTrack({
+            elementID: 'igv1', trackName: 'quant', tbl: {},
+            visibilityWindow: 7000
+         });
+         results.annotationSlots = configs.slice();
+      }
+
+      if (scenario === 'variant-slots') {
+         // Only on request: VariantTrack slots reach the igv.js config
+         global.location = { href: 'http://127.0.0.1:1234/' };
+         pend.length = 0;
+         configs.length = 0;
+         w.renderValue(opts('hg38'));
+         pend[0].res(mkBrowser('hg38'));
+         await tick();
+         const vcf = { elementID: 'igv1', vcfDataFilepath: 'tracks/a.vcf' };
+         handlers.loadVcfTrack(Object.assign({}, vcf, {
+            trackName: 'slots', displayMode: 'COLLAPSED', height: 80,
+            visibilityWindow: 5000
+         }));
+         handlers.loadVcfTrack(Object.assign({}, vcf, { trackName: 'plain' }));
+         results.variantSlots = configs.slice();
+      }
+
+      if (scenario === 'track-config') {
+         // Only on request: a config list from loadTrack() reaches igv.js
+         pend.length = 0;
+         configs.length = 0;
+         w.renderValue(opts('hg38'));
+         pend[0].res(mkBrowser('hg38'));
+         await tick();
+         handlers.loadTrackConfig({
+            elementID: 'igv1', name: 'bb', type: 'annotation',
+            format: 'bigBed', url: 'https://example.org/a.bb'
+         });
+         handlers.loadTrackConfig({
+            elementID: 'igv1', name: 'ordered', format: 'bigWig',
+            url: 'https://example.org/a.bw', order: 3
+         });
+         results.trackConfig = configs.slice();
       }
 
       return results;

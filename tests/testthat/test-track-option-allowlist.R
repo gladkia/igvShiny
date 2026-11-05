@@ -24,7 +24,8 @@ test_that("every allowlisted track option is one igv.js reads", {
     grepl(pattern, src, perl = TRUE, useBytes = TRUE)
   }
 
-  options <- igvShiny:::.validIgvTrackOptions
+  options <- c(igvShiny:::.validIgvTrackOptions,
+               igvShiny:::.variantTrackOptions)
   found <- vapply(options, reads, logical(1))
   expect_equal(options[!found], character(0))
 
@@ -36,4 +37,36 @@ test_that("every allowlisted track option is one igv.js reads", {
                "colorByAttribute", "hideEmptyTracks", "maxPanelHeight",
                "separateBam")
   expect_equal(removed[vapply(removed, reads, logical(1))], character(0))
+})
+
+test_that("genotype colors are allowed on variant tracks only", {
+  tbl <- data.frame(chrom = "chr1", start = 100, end = 200,
+                    stringsAsFactors = FALSE)
+  session <- fake_session()
+  expect_warning(
+    loadBedTrack(session, "igvShiny_0", "bed", tbl,
+                 trackConfig = list(homvarColor = "red"),
+                 validateReference = FALSE),
+    "homvarColor"
+  )
+  msg <- last_message(session, "loadBedTrackFromFile")
+  expect_false("homvarColor" %in% names(msg))
+  end_session(session)
+
+  config <- list(name = "v", type = "variant", format = "vcf",
+                 url = "https://example.org/a.vcf.gz", homvarColor = "red")
+  payload <- igvShiny:::.configListTrackPayload(config)
+  expect_identical(payload$config$homvarColor, "red")
+  config$type <- "annotation"
+  expect_warning(payload <- igvShiny:::.configListTrackPayload(config),
+                 "homvarColor")
+  expect_false("homvarColor" %in% names(payload$config))
+
+  tracks <- list(list(name = "v", type = "variant", url = "a.vcf.gz",
+                      hetvarColor = "blue"),
+                 list(name = "b", type = "annotation", url = "a.bed",
+                      hetvarColor = "blue"))
+  expect_warning(out <- igvShiny:::.sanitizeTracks(tracks), "hetvarColor")
+  expect_identical(out[[1]]$hetvarColor, "blue")
+  expect_null(out[[2]]$hetvarColor)
 })

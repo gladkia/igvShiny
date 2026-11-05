@@ -761,7 +761,9 @@ addBrowserMessageHandler("loadBedTrackFromFile",
                     order: Number.MAX_VALUE,
                     url: dataURL,
                     indexed: false,
-                    displayMode: "EXPANDED",
+                    // loadTrack(<annotation track>) sends its displayMode
+                    // slot; the other bed loaders never do and stay EXPANDED
+                    displayMode: message.displayMode || "EXPANDED",
                     color: color,
                     height: trackHeight
                     };
@@ -769,6 +771,45 @@ addBrowserMessageHandler("loadBedTrackFromFile",
       igvBrowser.loadTrack(config);
       }
 
+
+);
+//------------------------------------------------------------------------------------------------------------------------
+addBrowserMessageHandler("loadBedpeTrackFromFile",
+
+   function(message){
+      igvshiny_log("=== loadBedpeTrackFromFile");
+      var igvBrowser = document.getElementById(message.elementID).igvBrowser;
+      // If a query string is present the url before that is used
+      var dataURL = window.location.href.split('?')[0] + message.bedpeFilepath;
+
+      var config = {format: "bedpe",
+                    name: message.trackName,
+                    type: "interact",
+                    order: Number.MAX_VALUE,
+                    url: dataURL,
+                    color: message.color,
+                    height: message.trackHeight
+                    };
+      config = mergeExtraParameters(config, message);
+      igvBrowser.loadTrack(config);
+      }
+
+);
+//------------------------------------------------------------------------------------------------------------------------
+addBrowserMessageHandler("loadTrackConfig",
+
+   // loadTrack(session, id, <list>): the message body is an igv.js track
+   // config already filtered by the R allowlist, so it is loaded as sent;
+   // only a missing order is filled in, as every other handler sets one
+   function(message){
+      igvshiny_log("=== loadTrackConfig");
+      var igvBrowser = document.getElementById(message.elementID).igvBrowser;
+      var config = mergeExtraParameters({}, message);
+      if (config.order === undefined) {
+         config.order = Number.MAX_VALUE;
+      }
+      igvBrowser.loadTrack(config);
+      }
 
 );
 //------------------------------------------------------------------------------------------------------------------------
@@ -903,10 +944,14 @@ addBrowserMessageHandler("loadVcfTrack",
                      url: dataURL,
                      order: Number.MAX_VALUE,
                      indexed: false,
-                     displayMode: "EXPANDED",
+                     // loadTrack(<VariantTrack>) sends these three slots;
+                     // loadVcfTrack never does and keeps the defaults
+                     displayMode: message.displayMode || "EXPANDED",
                      sourceType: "file",
-                     height: 100,
-                     visibilityWindow: 1000000,
+                     height: message.height !== undefined ?
+                             message.height : 100,
+                     visibilityWindow: message.visibilityWindow !== undefined ?
+                                       message.visibilityWindow : 1000000,
                      //homvarColor: homvarColor,
                      //hetvarColor: hetvarColor,
                      //homrefColor: homrefColor,

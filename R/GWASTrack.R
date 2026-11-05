@@ -273,46 +273,60 @@ setMethod("display",
             state[["userAddedTracks"]] <-
               unique(c(state[["userAddedTracks"]], obj@trackName))
 
-            # javascript function consults dataMode,
-            # modifies dataUrl if local.url,
-            # prepending the http host of the modest RStudio/Shiny webserver
-            # make sure the embedded shiny webserver can find it by:
-            #   - adding a resource path with a convenient shorthand name,
-            #   pointing to the typically long and cryptic actual local host
-            #   temporary directory
-            #   - adjusting message$dataUrl to use that shorthand directory name
-
-            message <- list(
-              elementID = id,
-              trackName = obj@trackName,
-              dataMode = obj@data.mode,
-              dataUrl = obj@url,
-              # without an explicit mapping igv.js guesses the columns from the
-              # header names, which only works for tables spelled its way
-              columns = list(
-                chromosome = obj@chrom.col,
-                position = obj@pos.col,
-                value = obj@pval.col
-              ),
-              trackHeight = obj@trackHeight,
-              autoscale = obj@autoscale,
-              min = obj@minY,
-              max = obj@maxY
-            )
-
-            if (length(obj@chromosomeColorMap) > 0) {
-              message$colorTable <- obj@chromosomeColorMap
-            }
-
-            if (obj@data.mode == "local.url") {
-              directory.name <- dirname(obj@url)
-              file.name      <-  basename(obj@url)
-              message$dataUrl <- file.path("tracks", file.name)
-            }
+            payload <- .gwasTrackObjectPayload(obj)
+            message <- c(list(elementID = id), payload$config)
 
             session$sendCustomMessage("loadGwasTrackFlexibleSource", message)
 
           }) # display
+#-------------------------------------------------------------------------------
+#' Build the payload of a GWASTrack object
+#'
+#' @description The browser-free half of \code{display()} (and of
+#' \code{loadTrack()} for a GWASTrack): returns the message body the
+#' \code{loadGwasTrackFlexibleSource} handler in igvShiny.js reads. The
+#' constructor already wrote a data.frame to the tracks directory; a local
+#' file is sent by its \code{tracks/} path. The builder writes nothing, so
+#' \code{files} is empty.
+#'
+#' @param obj a GWASTrack object
+#'
+#' @return a list with \code{config}, the message body without
+#' \code{elementID}, and \code{files}, \code{character(0)}
+#'
+#' @keywords internal
+.gwasTrackObjectPayload <- function(obj) {
+  checkmate::assert_class(obj, "GWASTrack")
+
+  # javascript function consults dataMode and, for local.url, prepends the
+  # http host of the shiny webserver to the "tracks/..." path sent here
+  config <- list(
+    trackName = obj@trackName,
+    dataMode = obj@data.mode,
+    dataUrl = obj@url,
+    # without an explicit mapping igv.js guesses the columns from the
+    # header names, which only works for tables spelled its way
+    columns = list(
+      chromosome = obj@chrom.col,
+      position = obj@pos.col,
+      value = obj@pval.col
+    ),
+    trackHeight = obj@trackHeight,
+    autoscale = obj@autoscale,
+    min = obj@minY,
+    max = obj@maxY
+  )
+
+  if (length(obj@chromosomeColorMap) > 0) {
+    config$colorTable <- obj@chromosomeColorMap
+  }
+
+  if (obj@data.mode == "local.url") {
+    config$dataUrl <- file.path("tracks", basename(obj@url))
+  }
+
+  list(config = config, files = character(0))
+} # .gwasTrackObjectPayload
 #-------------------------------------------------------------------------------
 #' the url of the gwas table
 #'

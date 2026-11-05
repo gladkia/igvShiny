@@ -16,3 +16,4 @@
 ^\.uvr$
 ^igvShiny_.*\.tar\.gz$
 ^.*\.Rcheck$
+^dev$
