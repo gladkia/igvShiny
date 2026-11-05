@@ -1161,14 +1161,15 @@ loadSegTrack <-
                trackName,
                NROW(tbl))
 
+    # built before anything is sent: bad input removes no track
+    payload <- .segTrackPayload(trackName, tbl, trackConfig = trackConfig)
+
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
     }
 
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
-
-    payload <- .segTrackPayload(trackName, tbl, trackConfig = trackConfig)
 
     msg.to.igv <- c(list(elementID = id), payload$config)
     flog.debug("about to send loadSegTrack message")
@@ -1355,18 +1356,19 @@ loadGwasTrack <- function(session,
                           trackConfig = list()) {
   flog.debug("======== entering igvShiny::loadGwasTrack")
 
+  # built before anything is sent: bad input removes no track
+  payload <- .gwasTrackPayload(trackName, tbl.gwas,
+                               path = .trackFile(session, ".gwas"),
+                               ymin = ymin,
+                               ymax = ymax,
+                               trackConfig = trackConfig)
+
   if (deleteTracksOfSameName) {
     removeTracksByName(session, id, trackName)
   }
 
   state[["userAddedTracks"]] <-
     unique(c(state[["userAddedTracks"]], trackName))
-
-  payload <- .gwasTrackPayload(trackName, tbl.gwas,
-                               path = .trackFile(session, ".gwas"),
-                               ymin = ymin,
-                               ymax = ymax,
-                               trackConfig = trackConfig)
 
   msg.to.igv <- c(list(elementID = id), payload$config)
   session$sendCustomMessage("loadGwasTrack", msg.to.igv)

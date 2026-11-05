@@ -445,3 +445,16 @@ test_that("the navigation and removal helpers send their own messages", {
   removeUserAddedTracks(session, ELEMENT_ID)
   expect_gt(length(sent_messages(session, "removeTracksByName")), 1L)
 })
+
+test_that("seg and gwas loaders reject bad input before removing a track", {
+  session <- fake_session()
+  id <- "igvShiny_0"
+  expect_error(loadSegTrack(session, id, "seg", "not a table"),
+               "data.frame")
+  expect_error(loadGwasTrack(session, id, "gwas", list(chr = "chr1")),
+               "data.frame")
+  # nothing reached the browser, so a track of the same name is still there
+  expect_length(sent_messages(session), 0L)
+  expect_false(any(c("seg", "gwas") %in% igvShiny:::state[["userAddedTracks"]]))
+  end_session(session)
+})
