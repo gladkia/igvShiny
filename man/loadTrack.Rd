@@ -100,7 +100,14 @@ loadTrack(session, id, track, ...)
   validateReference = TRUE
 )
 
-\S4method{loadTrack}{list}(session, id, track, deleteTracksOfSameName = TRUE)
+\S4method{loadTrack}{list}(
+  session,
+  id,
+  track,
+  deleteTracksOfSameName = TRUE,
+  trackConfig = list(),
+  validateReference = TRUE
+)
 }
 \arguments{
 \item{session}{an environment or list, provided and managed by shiny}
@@ -140,8 +147,8 @@ inline, exactly as with \code{\link{loadBedTrack}} and
 with at least \code{name}, \code{url} and one of \code{type} or
 \code{format}. It loads any track type igv.js reads from a url, e.g. a
 bigBed file, without a dedicated loader. Keys igv.js does not read are
-dropped with a warning, as with \code{trackConfig}; the config itself
-takes no \code{trackConfig}.
+dropped with a warning, as with \code{trackConfig}; a \code{trackConfig}
+passed with a config list is ignored with a logged warning.
 }
 \examples{
 tbl <- data.frame(chrom = "chr1", start = c(100, 300), end = c(200, 400),

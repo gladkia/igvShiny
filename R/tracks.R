@@ -780,8 +780,8 @@ setMethod(".trackPayload", "QuantitativeTrack",
 #' with at least \code{name}, \code{url} and one of \code{type} or
 #' \code{format}. It loads any track type igv.js reads from a url, e.g. a
 #' bigBed file, without a dedicated loader. Keys igv.js does not read are
-#' dropped with a warning, as with \code{trackConfig}; the config itself
-#' takes no \code{trackConfig}.
+#' dropped with a warning, as with \code{trackConfig}; a \code{trackConfig}
+#' passed with a config list is ignored with a logged warning.
 #'
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
@@ -1615,9 +1615,18 @@ setMethod("loadTrack", "GWASTrack",
 
 #' @rdname loadTrack
 setMethod("loadTrack", "list",
-          function(session, id, track, deleteTracksOfSameName = TRUE) {
+          function(session, id, track, deleteTracksOfSameName = TRUE,
+                   trackConfig = list(), validateReference = TRUE) {
   checkmate::assert_string(id)
   checkmate::assert_flag(deleteTracksOfSameName)
+  checkmate::assert_flag(validateReference)
+  # accepted for a uniform loadTrack() call: the list is the whole config,
+  # and a url track has nothing local to check against the reference
+  if (length(trackConfig) > 0L) {
+    futile.logger::flog.warn(paste(
+      "loadTrack: trackConfig is ignored for a config list;",
+      "put the options in the list itself"))
+  }
 
   # built before anything is sent: a bad config removes no track
   payload <- .configListTrackPayload(track)

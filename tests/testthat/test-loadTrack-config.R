@@ -89,3 +89,15 @@ test_that("the loadTrackConfig handler hands the config to igv.js", {
   expect_gt(configs[[1]]$order, 1e300)
   expect_identical(configs[[2]]$order, 3L)
 })
+
+test_that("loadTrack ignores trackConfig for a config list", {
+  session <- fake_session()
+  logged <- utils::capture.output(
+    loadTrack(session, "igvShiny_0", bigbed_config(),
+              trackConfig = list(color = "red"), validateReference = FALSE)
+  )
+  expect_true(any(grepl("trackConfig is ignored", logged)))
+  msg <- last_message(session, "loadTrackConfig")
+  expect_identical(msg, c(list(elementID = "igvShiny_0"), bigbed_config()))
+  end_session(session)
+})
