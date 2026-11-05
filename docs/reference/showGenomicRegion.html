@@ -11,7 +11,7 @@ return the current region displayed by your igv instance"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.51</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.52</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,12 @@ or gene symbol</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">showGenomicRegion</span><span class="op">(</span><span class="va">session</span>, <span class="va">id</span>, <span class="va">region</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># S4 method for class 'ANY'</span></span>
+<span><span class="fu">showGenomicRegion</span><span class="op">(</span><span class="va">session</span>, <span class="va">id</span>, <span class="va">region</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">getGenomicRegion</span><span class="op">(</span><span class="va">session</span>, <span class="va">id</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'ANY'</span></span>
 <span><span class="fu">getGenomicRegion</span><span class="op">(</span><span class="va">session</span>, <span class="va">id</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -76,6 +82,16 @@ or "MEF2C"</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>a character string of format "chrom:start-end"</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p><code>showGenomicRegion</code>, <code>getGenomicRegion</code> and
+<code>removeTracksByName</code> are S4 generics dispatching on their first
+argument. The default method (signature <code>"ANY"</code>) handles a shiny
+session (a <code>ShinySession</code>, a module <code>session_proxy</code> or any
+object with a <code>sendCustomMessage</code> method), so packages that build on
+igvShiny can add methods for their own classes without masking these
+functions.</p>
     </div>
 
     <div class="section level2">

@@ -6,6 +6,9 @@ delete tracks on the browser
 
 ``` r
 removeTracksByName(session, id, trackNames)
+
+# S4 method for class 'ANY'
+removeTracksByName(session, id, trackNames)
 ```
 
 ## Arguments
@@ -25,6 +28,11 @@ removeTracksByName(session, id, trackNames)
 ## Value
 
 nothing
+
+## Details
+
+An S4 generic dispatching on `session`; the default method (signature
+`"ANY"`) sends the message through a shiny session.
 
 ## Examples
 

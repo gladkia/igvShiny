@@ -165,9 +165,45 @@ Arkadiusz Gladki.
   : load a splice junction track from a data.frame
 - [`loadSpliceJunctionTrackFromURL()`](https://gladkia.github.io/igvShiny/reference/loadSpliceJunctionTrackFromURL.md)
   : load a splice junction track served up by http
+- [`loadTrack()`](https://gladkia.github.io/igvShiny/reference/loadTrack.md)
+  : Display a track object in an igvShiny widget
 - [`loadVcfTrack()`](https://gladkia.github.io/igvShiny/reference/loadVcfTrack.md)
   : load a VCF (variant) track provided as a Bioconductor
   VariantAnnotation object
+
+## Track classes
+
+- [`BedpeInteractionsTrack()`](https://gladkia.github.io/igvShiny/reference/BedpeInteractionsTrack-class.md)
+  : BedpeInteractionsTrack: paired-end interactions from a bedpe
+  data.frame
+- [`GFF3Track()`](https://gladkia.github.io/igvShiny/reference/GFF3Track-class.md)
+  : GFF3Track: gene models from a GFF3 data.frame or url
+- [`GenomicAlignmentTrack()`](https://gladkia.github.io/igvShiny/reference/GenomicAlignmentTrack-class.md)
+  [`RemoteAlignmentTrack()`](https://gladkia.github.io/igvShiny/reference/GenomicAlignmentTrack-class.md)
+  [`CramTrack()`](https://gladkia.github.io/igvShiny/reference/GenomicAlignmentTrack-class.md)
+  : Alignment tracks: in-memory reads, a bam url or a cram url
+- [`QuantitativeTrack()`](https://gladkia.github.io/igvShiny/reference/QuantitativeTrack-class.md)
+  [`DataFrameQuantitativeTrack()`](https://gladkia.github.io/igvShiny/reference/QuantitativeTrack-class.md)
+  [`GRangesQuantitativeTrack()`](https://gladkia.github.io/igvShiny/reference/QuantitativeTrack-class.md)
+  [`UCSCBedGraphQuantitativeTrack()`](https://gladkia.github.io/igvShiny/reference/QuantitativeTrack-class.md)
+  : Quantitative tracks: scored intervals from a data.frame, GRanges or
+  UCSCData
+- [`Track()`](https://gladkia.github.io/igvShiny/reference/Track-class.md)
+  : Track: the base class of igvShiny's S4 tracks
+- [`VariantTrack()`](https://gladkia.github.io/igvShiny/reference/VariantTrack-class.md)
+  : VariantTrack: variants from a VariantAnnotation VCF object
+- [`DataFrameAnnotationTrack()`](https://gladkia.github.io/igvShiny/reference/igvAnnotationTrack-class.md)
+  [`GRangesAnnotationTrack()`](https://gladkia.github.io/igvShiny/reference/igvAnnotationTrack-class.md)
+  [`UCSCBedAnnotationTrack()`](https://gladkia.github.io/igvShiny/reference/igvAnnotationTrack-class.md)
+  : Annotation tracks: bed-like features from a data.frame, GRanges or
+  UCSCData
+- [`igvAnnotationTrack()`](https://gladkia.github.io/igvShiny/reference/igvAnnotationTrack.md)
+  : Build an annotation track from whatever annotation object is at hand
+- [`show(`*`<Track>`*`)`](https://gladkia.github.io/igvShiny/reference/show-Track.md)
+  : Print a summary of a track object
+- [`trackInfo()`](https://gladkia.github.io/igvShiny/reference/trackInfo.md)
+  [`trackSize()`](https://gladkia.github.io/igvShiny/reference/trackInfo.md)
+  : Basic facts about a track
 
 ## GWASTrack class
 

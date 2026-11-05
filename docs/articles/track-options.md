@@ -43,7 +43,7 @@ is handed — including the defaults the loader fills in:
 `#> loadBedTrackFromFile`\
 `#>   elementID: igv`\
 `#>   trackName: my regions`\
-`#>   bedFilepath: tracks/file1e0c5ac15a7e.bed`\
+`#>   bedFilepath: tracks/file22a42b37d633.bed`\
 `#>   color: `\
 `#>   trackHeight: 50`\
 `#>   displayMode: EXPANDED`\
@@ -168,12 +168,12 @@ thing.
 `        logScale ``=`` ``FALSE`\
 `        ``)`\
 `    ``)`\
+`#> Warning in .sanitizeAndMergeOptions(config, trackConfig): User-provided`\
+`#> trackConfig options conflict with function arguments and will be ignored:`\
+`#> autoscaleGroup`\
 `#> removeTracksByName`\
 `#>   trackNames: coverage`\
 `#>   elementID: igv`\
-`#> Warning in .sanitizeAndMergeOptions(base.msg.to.igv, trackConfig):`\
-`#> User-provided trackConfig options conflict with function arguments and will be`\
-`#> ignored: autoscaleGroup`\
 `#> loadBedGraphTrack`\
 `#>   elementID: igv`\
 `#>   trackName: coverage`\
@@ -337,7 +337,7 @@ without it the parser guesses the layout from header names it recognises
 `#> loadGwasTrack`\
 `#>   elementID: igv`\
 `#>   trackName: gwas`\
-`#>   gwasDataFilepath: tracks/file1e0c488b842a.gwas`\
+`#>   gwasDataFilepath: tracks/file22a4302e44d8.gwas`\
 `#>   color: red`\
 `#>   trackHeight: 200`\
 `#>   autoscale: FALSE`\
@@ -520,7 +520,7 @@ options that are useful from R, and it grows.
 `#> [8] base     `\
 `#> `\
 `#> other attached packages:`\
-`#> [1] igvShiny_1.9.51      shiny_1.14.0         GenomicRanges_1.65.4`\
+`#> [1] igvShiny_1.9.52      shiny_1.14.0         GenomicRanges_1.65.4`\
 `#> [4] Seqinfo_1.3.2        IRanges_2.47.5       S4Vectors_0.51.10   `\
 `#> [7] BiocGenerics_0.59.12 generics_0.1.4       BiocStyle_2.41.0    `\
 `#> `\

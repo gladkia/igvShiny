@@ -10,6 +10,12 @@ return the current region displayed by your igv instance
 ``` r
 showGenomicRegion(session, id, region)
 
+# S4 method for class 'ANY'
+showGenomicRegion(session, id, region)
+
+getGenomicRegion(session, id)
+
+# S4 method for class 'ANY'
 getGenomicRegion(session, id)
 ```
 
@@ -31,6 +37,15 @@ getGenomicRegion(session, id)
 ## Value
 
 a character string of format "chrom:start-end"
+
+## Details
+
+`showGenomicRegion`, `getGenomicRegion` and `removeTracksByName` are S4
+generics dispatching on their first argument. The default method
+(signature `"ANY"`) handles a shiny session (a `ShinySession`, a module
+`session_proxy` or any object with a `sendCustomMessage` method), so
+packages that build on igvShiny can add methods for their own classes
+without masking these functions.
 
 ## Examples
 

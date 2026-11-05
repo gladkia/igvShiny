@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.51</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.52</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,12 @@
       <small>Source: <a href="https://github.com/gladkia/igvShiny/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.9.52" id="igvshiny-1952">igvShiny 1.9.52<a class="anchor" aria-label="anchor" href="#igvshiny-1952"></a></h2>
+<ul><li>Add S4 Track classes ported from igvR and loadTrack(), which also loads a plain igv.js track config list (<a href="https://github.com/gladkia/igvShiny/issues/111" class="external-link">#111</a>)</li>
+<li>Refactor every track loader into a pure payload builder and a thin sender, unit-tested without a browser</li>
+<li>Add a bedpe track handler and make getGenomicRegion, showGenomicRegion, removeTracksByName S4 generics</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.9.51" id="igvshiny-1951">igvShiny 1.9.51<a class="anchor" aria-label="anchor" href="#igvshiny-1951"></a></h2>
 <ul><li>Fix demo BED and bedGraph tables that named chromosome 1 as ‘1’ on hg38, tripping the reference check</li>

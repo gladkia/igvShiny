@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.51</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.52</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,10 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">removeTracksByName</span><span class="op">(</span><span class="va">session</span>, <span class="va">id</span>, <span class="va">trackNames</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">removeTracksByName</span><span class="op">(</span><span class="va">session</span>, <span class="va">id</span>, <span class="va">trackNames</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'ANY'</span></span>
+<span><span class="fu">removeTracksByName</span><span class="op">(</span><span class="va">session</span>, <span class="va">id</span>, <span class="va">trackNames</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -67,6 +70,11 @@
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>nothing</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>An S4 generic dispatching on <code>session</code>; the default method
+(signature <code>"ANY"</code>) sends the message through a shiny session.</p>
     </div>
 
     <div class="section level2">
