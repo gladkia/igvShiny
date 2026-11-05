@@ -18,6 +18,9 @@ reference:
 - title: Track loaders
 - contents:
   - has_keyword("track_loaders")
+- title: Track classes
+- contents:
+  - has_keyword("track_classes")
 - title: GWASTrack class
 - contents:
   - has_keyword("GWASTrack_class")

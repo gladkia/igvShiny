@@ -9,7 +9,7 @@ track loader into a pure **payload builder** and a thin **sender**.
       builder/sender split of the BED and bedGraph loaders, tests
 - [x] 2. Builder/sender split for all remaining loaders in `R/igvShiny.R`
       (VCF, seg, GWAS, BAM/CRAM, URL loaders, GFF3, splice junctions), tests
-- [ ] 3. Port `Track`, `QuantitativeTrack`, `igvAnnotationTrack` (needed as the
+- [x] 3. Port `Track`, `QuantitativeTrack`, `igvAnnotationTrack` (needed as the
       parent, see below), `GRangesAnnotationTrack`, `DataFrameAnnotationTrack`,
       `UCSCBedAnnotationTrack`, `GRangesQuantitativeTrack`,
       `DataFrameQuantitativeTrack`, `UCSCBedGraphQuantitativeTrack` into
@@ -190,3 +190,72 @@ Skipped / left for later:
 5. OK to keep the data.frame/VCF asserts in builders, or should builders be
    as permissive as the old loaders (matrix input for gwas/gff3/seg)?
 
+
+**Stage 3 (done):** new `R/tracks.R` (Collate: after `rangeServer.R`, before
+`igvShiny.R`) with the classes `Track`, `igvAnnotationTrack` (class only),
+`DataFrameAnnotationTrack`, `GRangesAnnotationTrack`,
+`UCSCBedAnnotationTrack`, `QuantitativeTrack`, `DataFrameQuantitativeTrack`,
+`GRangesQuantitativeTrack`, `UCSCBedGraphQuantitativeTrack`, their
+constructors, the igvR generics `trackInfo()` / `trackSize()`, and the
+exported S4 generic `loadTrack(session, id, track, ...)`. Tests:
+`tests/testthat/test-tracks.R`. The class docs carry the new keyword
+`track_classes`, indexed by a new "Track classes" section in `_pkgdown.yml`
+(pkgdown fails on exported topics missing from the index). No DESCRIPTION
+Imports change, no new igv.js
+option keys, no JS change.
+
+How it is wired:
+- Internal generics `.trackTable(track)` (coreObject -> the data.frame the
+  builders take; GRanges/UCSCData go through `.granges2bedTable` /
+  `.granges2bedGraphTable`, 1-based starts -> 0-based) and
+  `.trackPayload(track, path = NULL, trackConfig = list())` (the builder:
+  `igvAnnotationTrack` -> `.bedTrackPayload`, `QuantitativeTrack` ->
+  `.bedGraphTrackPayload`; `Track` -> error).
+- `loadTrack` methods for `igvAnnotationTrack` (handler
+  `loadBedTrackFromFile`, file from `.trackFile(session, ".bed")`) and
+  `QuantitativeTrack` (`loadBedGraphTrack`, inline), both through the
+  internal sender `.sendTrack()`; method args `deleteTracksOfSameName`,
+  `trackConfig`, `validateReference` as on the old loaders. Tests check that
+  `loadTrack()` puts the same message on the wire as `loadBedTrack()` /
+  `loadBedGraphTrack()` with equivalent arguments.
+- Slots sent to the browser are the ones igvR sent: annotation -> color,
+  height, `displayMode`; quantitative -> color, height, autoscale, min, max.
+  The other slots (row heights, maxRows, searchable, visibilityWindow,
+  auto/min/maxTrackHeight) are stored but not sent, as in igvR. Slot values
+  win over `trackConfig`, which only adds keys (same rule as the loaders).
+
+Deviations from igvR (intentional):
+- `stopifnot`/`ncol`/RColorBrewer replaced by checkmate, `NCOL`,
+  `randomColors`; `Track()` now `match.arg()`s trackType/sourceType/
+  fileFormat (igvR stored the whole choice vector when an argument was
+  omitted) and gives defaults to the numeric slots; the bed9 strand check
+  logs via `flog.warn` instead of `warning()`.
+- UCSCData slots are typed `GRanges` (its parent) plus a validity check, so
+  rtracklayer stays in Suggests; the UCSC constructors `requireNamespace()`.
+- `UCSCBedGraphQuantitativeTrack` honours `trackHeight` (igvR hard-coded 50).
+- `trackSize()` is one method on `Track` (rows/length of `coreObject`, `NA`
+  without one); igvR's `QuantitativeTrack` method referenced a non-existent
+  `vcf.obj` slot.
+- GRanges annotation tracks are written by hand as 6-column bed (name/score
+  from mcols or `.`/0, strand `*` -> `.`) instead of `rtracklayer::export`.
+- Annotation tables are sorted by start only (the existing `.bedTrackPayload`
+  behaviour); igvR sorted by chrom, then start.
+
+Skipped / left for stage 4:
+- `igvAnnotationTrack()` constructor (igvR's ignores its `annotation`
+  argument and builds a track with no data); only the class is ported.
+- A bare `QuantitativeTrack` (and `Track`) has no data, so `loadTrack()`
+  errors on it ("no feature table" / "no method").
+
+**Open questions for the human (stage 3):**
+6. `displayMode` is sent, but the `loadBedTrackFromFile` JS handler sets
+   `displayMode: "EXPANDED"` in its config and `mergeExtraParameters()` skips
+   keys already in the config, so the slot (and a user
+   `trackConfig$displayMode` on `loadBedTrack`) has no effect in the browser
+   today. Fix in JS (let message keys override handler defaults for an
+   allowlisted set)? Out of M1 scope as written; not changed.
+7. igvR exports the same class and constructor names. Once igvShiny is
+   released with them, should igvR import them from igvShiny (and drop its
+   own copies) to avoid masking when both are attached?
+8. Should `loadTrack()` also return the payload (invisibly) for debugging?
+   It returns `NULL` now, like the other loaders.

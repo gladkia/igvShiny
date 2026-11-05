@@ -64,6 +64,7 @@ Collate:
     'referenceCheck.R'
     'GWASTrack.R'
     'rangeServer.R'
+    'tracks.R'
     'igvShiny.R'
     'packages.R'
     'utils.R'
