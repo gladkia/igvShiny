@@ -12,6 +12,7 @@
 \alias{loadTrack,GFF3Track-method}
 \alias{loadTrack,BedpeInteractionsTrack-method}
 \alias{loadTrack,GWASTrack-method}
+\alias{loadTrack,list-method}
 \title{Display a track object in an igvShiny widget}
 \usage{
 loadTrack(session, id, track, ...)
@@ -98,6 +99,8 @@ loadTrack(session, id, track, ...)
   trackConfig = list(),
   validateReference = TRUE
 )
+
+\S4method{loadTrack}{list}(session, id, track, deleteTracksOfSameName = TRUE)
 }
 \arguments{
 \item{session}{an environment or list, provided and managed by shiny}
@@ -106,7 +109,8 @@ loadTrack(session, id, track, ...)
 
 \item{track}{an object of a Track subclass, e.g.
 \code{\link{DataFrameAnnotationTrack}} or
-\code{\link{GRangesQuantitativeTrack}}}
+\code{\link{GRangesQuantitativeTrack}}, or a named list holding an
+igv.js track configuration}
 
 \item{...}{arguments of the methods: \code{deleteTracksOfSameName}
 (logical, default TRUE), \code{trackConfig} (a named list of additional
@@ -131,6 +135,13 @@ it to the browser, removing an earlier track of the same name first.
 Annotation tracks are served as a bed file, quantitative tracks travel
 inline, exactly as with \code{\link{loadBedTrack}} and
 \code{\link{loadBedGraphTrack}}.
+
+\code{track} can also be a plain igv.js track configuration, a named list
+with at least \code{name}, \code{url} and one of \code{type} or
+\code{format}. It loads any track type igv.js reads from a url, e.g. a
+bigBed file, without a dedicated loader. Keys igv.js does not read are
+dropped with a warning, as with \code{trackConfig}; the config itself
+takes no \code{trackConfig}.
 }
 \examples{
 tbl <- data.frame(chrom = "chr1", start = c(100, 300), end = c(200, 400),
@@ -139,6 +150,14 @@ track <- DataFrameAnnotationTrack("demo", tbl, color = "red")
 if (interactive()) {
   # inside a shiny server function, with an igvShiny output "igvShiny_0":
   # loadTrack(session, "igvShiny_0", track)
+}
+
+# any igv.js track type from a url, here a bigBed file; nothing is
+# fetched until the browser draws the track
+bigBed <- list(name = "genes", type = "annotation", format = "bigBed",
+               url = "https://example.org/genes.bb")
+if (interactive()) {
+  # loadTrack(session, "igvShiny_0", bigBed)
 }
 
 }

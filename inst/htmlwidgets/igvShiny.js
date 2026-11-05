@@ -796,6 +796,23 @@ addBrowserMessageHandler("loadBedpeTrackFromFile",
 
 );
 //------------------------------------------------------------------------------------------------------------------------
+addBrowserMessageHandler("loadTrackConfig",
+
+   // loadTrack(session, id, <list>): the message body is an igv.js track
+   // config already filtered by the R allowlist, so it is loaded as sent;
+   // only a missing order is filled in, as every other handler sets one
+   function(message){
+      igvshiny_log("=== loadTrackConfig");
+      var igvBrowser = document.getElementById(message.elementID).igvBrowser;
+      var config = mergeExtraParameters({}, message);
+      if (config.order === undefined) {
+         config.order = Number.MAX_VALUE;
+      }
+      igvBrowser.loadTrack(config);
+      }
+
+);
+//------------------------------------------------------------------------------------------------------------------------
 addBrowserMessageHandler("loadBedGraphTrack",
 
    function(message){

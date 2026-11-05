@@ -349,6 +349,24 @@ function runHarness(jsPath, scenario) {
          results.variantSlots = configs.slice();
       }
 
+      if (scenario === 'track-config') {
+         // Only on request: a config list from loadTrack() reaches igv.js
+         pend.length = 0;
+         configs.length = 0;
+         w.renderValue(opts('hg38'));
+         pend[0].res(mkBrowser('hg38'));
+         await tick();
+         handlers.loadTrackConfig({
+            elementID: 'igv1', name: 'bb', type: 'annotation',
+            format: 'bigBed', url: 'https://example.org/a.bb'
+         });
+         handlers.loadTrackConfig({
+            elementID: 'igv1', name: 'ordered', format: 'bigWig',
+            url: 'https://example.org/a.bw', order: 3
+         });
+         results.trackConfig = configs.slice();
+      }
+
       return results;
    })();
 }

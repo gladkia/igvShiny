@@ -776,11 +776,19 @@ setMethod(".trackPayload", "QuantitativeTrack",
 #' inline, exactly as with \code{\link{loadBedTrack}} and
 #' \code{\link{loadBedGraphTrack}}.
 #'
+#' \code{track} can also be a plain igv.js track configuration, a named list
+#' with at least \code{name}, \code{url} and one of \code{type} or
+#' \code{format}. It loads any track type igv.js reads from a url, e.g. a
+#' bigBed file, without a dedicated loader. Keys igv.js does not read are
+#' dropped with a warning, as with \code{trackConfig}; the config itself
+#' takes no \code{trackConfig}.
+#'
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
 #' @param track an object of a Track subclass, e.g.
 #' \code{\link{DataFrameAnnotationTrack}} or
-#' \code{\link{GRangesQuantitativeTrack}}
+#' \code{\link{GRangesQuantitativeTrack}}, or a named list holding an
+#' igv.js track configuration
 #' @param ... arguments of the methods: \code{deleteTracksOfSameName}
 #' (logical, default TRUE), \code{trackConfig} (a named list of additional
 #' igv.js track configuration options, merged onto the track's own) and
@@ -796,6 +804,14 @@ setMethod(".trackPayload", "QuantitativeTrack",
 #' if (interactive()) {
 #'   # inside a shiny server function, with an igvShiny output "igvShiny_0":
 #'   # loadTrack(session, "igvShiny_0", track)
+#' }
+#'
+#' # any igv.js track type from a url, here a bigBed file; nothing is
+#' # fetched until the browser draws the track
+#' bigBed <- list(name = "genes", type = "annotation", format = "bigBed",
+#'                url = "https://example.org/genes.bb")
+#' if (interactive()) {
+#'   # loadTrack(session, "igvShiny_0", bigBed)
 #' }
 #'
 #' @rdname loadTrack
@@ -1551,4 +1567,60 @@ setMethod("loadTrack", "GWASTrack",
     futile.logger::flog.warn(
       "loadTrack: trackConfig is ignored for a GWASTrack")
   display(track, session, id, deleteTracksOfSameName = deleteTracksOfSameName)
+})
+
+#-------------------------------------------------------------------------------
+#' Build the payload of a track given as a plain igv.js track config
+#'
+#' @description The browser-free half of \code{loadTrack(<list>)}. The config
+#' goes through \code{.sanitizeAndMergeOptions()} like every loader's
+#' \code{trackConfig}: keys igv.js does not read are dropped with a warning.
+#'
+#' @param track a named list, an igv.js track configuration with at least
+#' \code{name}, \code{url} and one of \code{type} or \code{format}
+#'
+#' @return list(config = the message body, files = character(0))
+#'
+#' @keywords internal
+.configListTrackPayload <- function(track) {
+  checkmate::assert_list(track, names = "unique", min.len = 1L)
+  checkmate::assert_string(track[["name"]], min.chars = 1L,
+                           .var.name = "track$name")
+  checkmate::assert_string(track[["url"]], min.chars = 1L,
+                           .var.name = "track$url")
+  checkmate::assert(
+    checkmate::check_string(track[["type"]], min.chars = 1L),
+    checkmate::check_string(track[["format"]], min.chars = 1L),
+    combine = "or", .var.name = "track$type or track$format"
+  )
+
+  # index is the igv.js alias of indexURL, as in the startup 'tracks'
+  if ("index" %in% names(track) && !"indexURL" %in% names(track)) {
+    track[["indexURL"]] <- track[["index"]]
+    track[["index"]] <- NULL
+  }
+  list(config = .sanitizeAndMergeOptions(list(), track),
+       files = character(0))
+}
+
+#' @rdname loadTrack
+setMethod("loadTrack", "list",
+          function(session, id, track, deleteTracksOfSameName = TRUE) {
+  checkmate::assert_string(id)
+  checkmate::assert_flag(deleteTracksOfSameName)
+
+  # built before anything is sent: a bad config removes no track
+  payload <- .configListTrackPayload(track)
+  trackName <- payload$config[["name"]]
+  flog.debug("--- igvShiny::loadTrack %s (config list)", trackName)
+
+  if (deleteTracksOfSameName) {
+    removeTracksByName(session, id, trackName)
+  }
+  state[["userAddedTracks"]] <-
+    unique(c(state[["userAddedTracks"]], trackName))
+
+  session$sendCustomMessage("loadTrackConfig",
+                            c(list(elementID = id), payload$config))
+  invisible(NULL)
 })
