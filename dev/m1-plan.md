@@ -254,6 +254,8 @@ Skipped / left for stage 4:
    `trackConfig$displayMode` on `loadBedTrack`) has no effect in the browser
    today. Fix in JS (let message keys override handler defaults for an
    allowlisted set)? Out of M1 scope as written; not changed.
+   After the gate review, the roxygen of the track classes says so: the slots
+   that are stored but not sent are documented as such.
 7. igvR exports the same class and constructor names. Once igvShiny is
    released with them, should igvR import them from igvShiny (and drop its
    own copies) to avoid masking when both are attached?

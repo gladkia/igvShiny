@@ -97,7 +97,9 @@ test_that("a DataFrameAnnotationTrack builds the payload loadBedTrack builds", {
   payload <- igvShiny:::.trackPayload(track, path = path)
   expected <- igvShiny:::.bedTrackPayload(
     "df", tbl, expected_path, color = "blue", trackHeight = 77,
-    trackConfig = list(displayMode = "SQUISHED")
+    trackConfig = list(displayMode = "SQUISHED", expandedRowHeight = 30,
+                       squishedRowHeight = 15, maxRows = 500,
+                       searchable = FALSE, visibilityWindow = 100000)
   )
 
   expect_named(payload, c("config", "files"))
@@ -119,12 +121,12 @@ test_that("an annotation track's slots win over trackConfig, which only adds", {
   expect_warning(
     payload <- igvShiny:::.trackPayload(
       track, path = path,
-      trackConfig = list(displayMode = "COLLAPSED", maxRows = 10)
+      trackConfig = list(displayMode = "COLLAPSED", graphType = "points")
     ),
     "conflict"
   )
   expect_identical(payload$config$displayMode, "EXPANDED")
-  expect_identical(payload$config$maxRows, 10)
+  expect_identical(payload$config$graphType, "points")
 })
 
 test_that("a GRangesAnnotationTrack writes 0-based bed with name and score", {
@@ -163,7 +165,7 @@ test_that("quantitative tracks build the payload loadBedGraphTrack builds", {
   payload <- igvShiny:::.trackPayload(track)
   expected <- igvShiny:::.bedGraphTrackPayload(
     "q", tbl, color = "red", trackHeight = 40, autoscale = FALSE,
-    min = 0, max = 2
+    min = 0, max = 2, trackConfig = list(visibilityWindow = 100000)
   )
   expect_identical(payload, expected)
   expect_identical(payload$files, character(0))
@@ -245,7 +247,12 @@ test_that("loadTrack sends an annotation track like loadBedTrack does", {
                                      trackHeight = 77),
             validateReference = FALSE)
   loadBedTrack(session, TRACKS_ELEMENT_ID, "df", tbl, color = "blue",
-               trackHeight = 77, trackConfig = list(displayMode = "SQUISHED"),
+               trackHeight = 77,
+               trackConfig = list(displayMode = "SQUISHED",
+                                  expandedRowHeight = 30,
+                                  squishedRowHeight = 15, maxRows = 500,
+                                  searchable = FALSE,
+                                  visibilityWindow = 100000),
                validateReference = FALSE)
 
   msgs <- sent_messages(session, "loadBedTrackFromFile")
@@ -274,6 +281,7 @@ test_that("loadTrack sends a quantitative track like loadBedGraphTrack does", {
             deleteTracksOfSameName = FALSE, validateReference = FALSE)
   loadBedGraphTrack(session, TRACKS_ELEMENT_ID, "q", tbl, color = "red",
                     trackHeight = 40, autoscale = FALSE, min = 0, max = 2,
+                    trackConfig = list(visibilityWindow = 100000),
                     deleteTracksOfSameName = FALSE, validateReference = FALSE)
 
   msgs <- sent_messages(session, "loadBedGraphTrack")
@@ -302,4 +310,94 @@ test_that("loadTrack passes trackConfig through and fails before sending", {
 
   track <- DataFrameAnnotationTrack("df", tracks_bed_tbl())
   expect_error(loadTrack(session, 1, track))
+})
+
+test_that("annotation trackConfig is sanitized once, as on loadBedTrack", {
+  track <- DataFrameAnnotationTrack("df", tracks_bed_tbl())
+  path <- tempfile(fileext = ".bed")
+  on.exit(unlink(path))
+
+  # trackHeight conflicts with the builder's argument and is dropped, not
+  # silently rewritten to height
+  expect_warning(
+    payload <- igvShiny:::.trackPayload(track, path = path,
+                                        trackConfig = list(trackHeight = 200)),
+    "conflict"
+  )
+  expect_false("height" %in% names(payload$config))
+  expect_identical(payload$config$trackHeight, 50)
+  expect_identical(payload$config$displayMode, "SQUISHED")
+
+  expect_warning(
+    payload <- igvShiny:::.trackPayload(track, path = path,
+                                        trackConfig = list(notAnOption = 1)),
+    "invalid or unsupported"
+  )
+  expect_false("notAnOption" %in% names(payload$config))
+})
+
+test_that("annotation and quantitative slots reach the track options", {
+  track <- DataFrameAnnotationTrack("df", tracks_bed_tbl(),
+                                    displayMode = "COLLAPSED",
+                                    expandedRowHeight = 31,
+                                    squishedRowHeight = 11, maxRows = 7,
+                                    searchable = TRUE,
+                                    visibilityWindow = 5000)
+  session <- fake_session()
+  expect_warning(
+    loadTrack(session, TRACKS_ELEMENT_ID, track,
+              trackConfig = list(maxRows = 2, graphType = "points"),
+              validateReference = FALSE),
+    "conflict"
+  )
+  msg <- last_message(session, "loadBedTrackFromFile")
+  expect_identical(msg[c("displayMode", "expandedRowHeight",
+                         "squishedRowHeight", "maxRows", "searchable",
+                         "visibilityWindow")],
+                   list(displayMode = "COLLAPSED", expandedRowHeight = 31,
+                        squishedRowHeight = 11, maxRows = 7,
+                        searchable = TRUE, visibilityWindow = 5000))
+  expect_identical(msg$graphType, "points")
+  expect_true(all(names(msg) %in% c(igvShiny:::.validIgvTrackOptions,
+                                    "elementID", "trackName", "bedFilepath",
+                                    "trackHeight")))
+
+  # an NA visibilityWindow is not sent
+  quant <- DataFrameQuantitativeTrack("q", tracks_bed_tbl(), autoscale = TRUE,
+                                      visibilityWindow = NA_real_)
+  loadTrack(session, TRACKS_ELEMENT_ID, quant, validateReference = FALSE)
+  expect_false("visibilityWindow" %in%
+                 names(last_message(session, "loadBedGraphTrack")))
+  quant <- DataFrameQuantitativeTrack("q", tracks_bed_tbl(), autoscale = TRUE,
+                                      visibilityWindow = 7000)
+  loadTrack(session, TRACKS_ELEMENT_ID, quant, validateReference = FALSE)
+  expect_identical(last_message(session, "loadBedGraphTrack")$visibilityWindow,
+                   7000)
+})
+
+test_that("igv.js receives the annotation slots in the browser stub", {
+  skip_if_not(nzchar(Sys.which("node")), "Node.js not available")
+  binding <- system.file("htmlwidgets", "igvShiny.js", package = "igvShiny")
+  harness <- test_path("helper-js-harness.js")
+  out <- system2(Sys.which("node"),
+                 args = c(shQuote(harness), shQuote(binding),
+                          "annotation-slots"),
+                 stdout = TRUE)
+  configs <- jsonlite::fromJSON(paste(out, collapse = "\n"),
+                                simplifyVector = FALSE)$annotationSlots
+  expect_length(configs, 3L)
+  slots <- configs[[1]]
+  expect_identical(slots$name, "slots")
+  # COLLAPSED in, COLLAPSED out
+  expect_identical(slots$displayMode, "COLLAPSED")
+  expect_identical(slots$expandedRowHeight, 31L)
+  expect_identical(slots$squishedRowHeight, 11L)
+  expect_identical(slots$maxRows, 7L)
+  expect_true(slots$searchable)
+  expect_identical(slots$visibilityWindow, 5000L)
+  expect_identical(slots$url, "http://127.0.0.1:1234/tracks/a.bed")
+  # no displayMode sent: the bed handler keeps its EXPANDED default
+  expect_identical(configs[[2]]$displayMode, "EXPANDED")
+  expect_null(configs[[2]]$maxRows)
+  expect_identical(configs[[3]]$visibilityWindow, 7000L)
 })

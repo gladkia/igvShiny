@@ -307,6 +307,32 @@ function runHarness(jsPath, scenario) {
          results.bedpeHandler = configs.slice();
       }
 
+      if (scenario === 'annotation-slots') {
+         // Only on request: annotation Track slots reach the igv.js config
+         global.location = { href: 'http://127.0.0.1:1234/?x=1' };
+         pend.length = 0;
+         configs.length = 0;
+         w.renderValue(opts('hg38'));
+         pend[0].res(mkBrowser('hg38'));
+         await tick();
+         const bed = { elementID: 'igv1', bedFilepath: 'tracks/a.bed',
+                       color: 'red', trackHeight: 50 };
+         handlers.loadBedTrackFromFile(Object.assign({}, bed, {
+            trackName: 'slots', displayMode: 'COLLAPSED',
+            expandedRowHeight: 31, squishedRowHeight: 11, maxRows: 7,
+            searchable: true, visibilityWindow: 5000
+         }));
+         handlers.loadBedTrackFromFile(Object.assign({}, bed, {
+            trackName: 'plain'
+         }));
+         handlers.loadBedGraphTrack({
+            elementID: 'igv1', trackName: 'quant', tbl: {},
+            visibilityWindow: 7000
+         });
+         results.annotationSlots = configs.slice();
+      }
+
+
       return results;
    })();
 }

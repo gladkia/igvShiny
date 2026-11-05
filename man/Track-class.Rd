@@ -80,13 +80,14 @@ with \code{\link{loadTrack}}.
 
 \item{\code{height}}{numeric, track height in pixels}
 
-\item{\code{autoTrackHeight}}{logical}
+\item{\code{autoTrackHeight}}{logical; stored, not sent to igv.js yet}
 
-\item{\code{minTrackHeight}}{numeric, pixels}
+\item{\code{minTrackHeight}}{numeric, pixels; stored, not sent to igv.js yet}
 
-\item{\code{maxTrackHeight}}{numeric, pixels}
+\item{\code{maxTrackHeight}}{numeric, pixels; stored, not sent to igv.js yet}
 
-\item{\code{visibilityWindow}}{numeric, base pairs}
+\item{\code{visibilityWindow}}{numeric, base pairs; sent to igv.js by the
+annotation and quantitative \code{loadTrack} methods (NA: not sent)}
 }}
 
 \examples{

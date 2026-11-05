@@ -57,7 +57,9 @@
   "coverageTrackHeight", "showCoverage", "showAlignments",
   "alignmentRowHeight", "squishedRowHeight",
   ## variant track genotype colors (VariantTrack slots)
-  "homvarColor", "hetvarColor", "homrefColor"
+  "homvarColor", "hetvarColor", "homrefColor",
+  ## annotation track row height in EXPANDED mode, sent by loadTrack
+  "expandedRowHeight"
   # Add other valid igv.js track options here as needed in the future
   # "tracks" is deliberately absent: it is meaningful on a merged track only,
   # and .sanitizeTrack handles it there.
