@@ -467,7 +467,9 @@ renderIgvShiny <- function(expr,
 #' @keywords igvShiny
 #' @export
 setGeneric("showGenomicRegion", signature = "session",
-           function(session, id, region) standardGeneric("showGenomicRegion"))
+           function(session, id, region) {
+             standardGeneric("showGenomicRegion")
+           })
 
 #' @rdname showGenomicRegion
 #' @export
@@ -501,7 +503,9 @@ setMethod("showGenomicRegion", "ANY", function(session, id, region) {
 #' @keywords igvShiny
 #' @export
 setGeneric("getGenomicRegion", signature = "session",
-           function(session, id) standardGeneric("getGenomicRegion"))
+           function(session, id) {
+             standardGeneric("getGenomicRegion")
+           })
 
 #' @rdname showGenomicRegion
 #' @export
@@ -539,8 +543,9 @@ setMethod("getGenomicRegion", "ANY", function(session, id) {
 #' @keywords igvShiny
 #' @export
 setGeneric("removeTracksByName", signature = "session",
-           function(session, id, trackNames)
-             standardGeneric("removeTracksByName"))
+           function(session, id, trackNames) {
+             standardGeneric("removeTracksByName")
+           })
 
 #' @rdname removeTracksByName
 #' @export
