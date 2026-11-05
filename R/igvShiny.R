@@ -69,6 +69,17 @@
 # them through the `allowed` argument of .sanitizeAndMergeOptions.
 .variantTrackOptions <- c("homvarColor", "hetvarColor", "homrefColor")
 
+# Is this igv.js track config a variant track? As igv.js decides it: an
+# explicit type ("variant", or the deprecated alias "vcf"), else the type
+# igv.js infers from the format (inferTrackType in igv-3.8.4.min.js).
+.isVariantTrackConfig <- function(track) {
+  is_one <- function(x) is.character(x) && length(x) == 1L && !is.na(x)
+  type <- track[["type"]]
+  if (is_one(type)) return(tolower(type) %in% c("variant", "vcf"))
+  fmt <- track[["format"]]
+  is_one(fmt) && tolower(fmt) %in% c("vcf", "vcftabix", "vcf.list")
+}
+
 #-------------------------------------------------------------------------------
 # A merged track may itself hold merged tracks - igv.js builds its members
 # through the same factory as top-level tracks, and nothing there stops the
@@ -194,8 +205,7 @@
   }
 
   allowed <- .validIgvTrackOptions
-  if (is.character(type) && length(type) == 1L && !is.na(type) &&
-      identical(tolower(type), "variant"))
+  if (.isVariantTrackConfig(track))
     allowed <- c(allowed, .variantTrackOptions)
   invalidKeys <- setdiff(names(track), allowed)
   if (length(invalidKeys) > 0) {

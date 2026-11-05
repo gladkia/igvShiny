@@ -374,3 +374,13 @@ test_that("a local GFF3Track is checked against the reference", {
                               validateReference = FALSE))
   expect_identical(length(sent_notifications(session)), n)
 })
+
+test_that("an alignment track takes displayMode from trackConfig", {
+  expect_no_warning(p <- igvShiny:::.trackPayload(
+    RemoteAlignmentTrack("b", "https://example.org/a.bam"),
+    trackConfig = list(displayMode = "SQUISHED")))
+  expect_identical(p$config$displayMode, "SQUISHED")
+  p <- igvShiny:::.trackPayload(
+    RemoteAlignmentTrack("b", "https://example.org/a.bam"))
+  expect_identical(p$config$displayMode, "EXPANDED")
+})

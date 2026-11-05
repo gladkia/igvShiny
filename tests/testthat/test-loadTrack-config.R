@@ -102,3 +102,18 @@ test_that("loadTrack ignores trackConfig for a config list", {
   expect_identical(msg, c(list(elementID = "igvShiny_0"), bigbed_config()))
   end_session(session)
 })
+
+test_that("a vcf format without a type keeps the genotype colors", {
+  for (cfg in list(list(name = "v", format = "vcf", url = "a.vcf"),
+                   list(name = "v", format = "VCFtabix", url = "a.vcf.gz"),
+                   list(name = "v", type = "vcf", url = "a.vcf"))) {
+    cfg$homvarColor <- "red"
+    expect_no_warning(p <- igvShiny:::.configListTrackPayload(cfg))
+    expect_identical(p$config$homvarColor, "red")
+  }
+  expect_warning(
+    p <- igvShiny:::.configListTrackPayload(
+      list(name = "b", format = "bed", url = "a.bed", homvarColor = "red")),
+    "homvarColor")
+  expect_null(p$config$homvarColor)
+})

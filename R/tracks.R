@@ -171,6 +171,33 @@ setMethod("trackSize", "Track", function(obj) {
 })
 
 #-------------------------------------------------------------------------------
+#' Print a summary of a track object
+#'
+#' @description One method for the whole \code{\linkS4class{Track}} hierarchy:
+#' class, name, type, format, source and, when the track holds data, its size.
+#'
+#' @param object a \code{Track}
+#'
+#' @examples
+#' DataFrameAnnotationTrack("demo",
+#'   data.frame(chr = "chr1", start = 10, end = 20))
+#'
+#' @return nothing; called for the side effect of printing a summary
+#'
+#' @keywords track_classes
+#' @rdname show-Track
+#' @export
+setMethod("show", "Track", function(object) {
+  cat(class(object)[1], " '", object@trackName, "'\n", sep = "")
+  cat("  type:   ", object@trackType, "\n", sep = "")
+  cat("  format: ", object@fileFormat, "\n", sep = "")
+  cat("  source: ", object@sourceType, "\n", sep = "")
+  n <- trackSize(object)
+  if (!is.na(n)) cat("  size:   ", n, "\n", sep = "")
+  invisible(NULL)
+})
+
+#-------------------------------------------------------------------------------
 #' Annotation tracks: bed-like features from a data.frame, GRanges or UCSCData
 #'
 #' @description \code{igvAnnotationTrack} adds the slots of igv.js annotation
@@ -818,6 +845,14 @@ setMethod(".trackPayload", "QuantitativeTrack",
 .slotsOverConfig <- function(slotOptions, trackConfig) {
   keep <- vapply(slotOptions, function(x) !anyNA(x), logical(1))
   slotOptions <- slotOptions[keep]
+  # a malformed trackConfig is dropped here, on its own: merged with the
+  # slots first, the builder would reject the whole list, slots included
+  if (length(trackConfig) > 0L &&
+      (!is.list(trackConfig) || is.null(names(trackConfig)) ||
+       anyNA(names(trackConfig)) || any(names(trackConfig) == ""))) {
+    warning("trackConfig must be a named list. Ignoring.")
+    trackConfig <- list()
+  }
   clash <- intersect(names(trackConfig), names(slotOptions))
   if (length(clash) > 0L) {
     warning(sprintf(paste("User-provided trackConfig options conflict with",
@@ -1495,34 +1530,59 @@ setMethod(".trackTable", "BedpeInteractionsTrack", function(track) {
 # builder in igvShiny.R. Slots are merged in as defaults, so trackConfig only
 # adds keys, the same rule as the loaders.
 #-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+#' Slot options and display mode of a BAM alignment track
+#'
+#' @description The BAM builders set \code{displayMode} themselves, with
+#' "EXPANDED" as default, so a \code{displayMode} in trackConfig would be a
+#' conflict there and get dropped. It goes to the builder argument instead;
+#' the remaining keys are merged under the slot options once, by
+#' \code{.slotsOverConfig}, and sanitized once, by the builder.
+#'
+#' @param options named list of slot options
+#' @param trackConfig named list of user track options
+#'
+#' @return a list with \code{displayMode} and \code{trackConfig}
+#'
+#' @keywords internal
+.alignmentConfig <- function(options, trackConfig) {
+  merged <- .slotsOverConfig(options, trackConfig)
+  mode <- merged[["displayMode"]]
+  merged[["displayMode"]] <- NULL
+  if (is.null(mode)) mode <- "EXPANDED"
+  checkmate::assert_string(mode)
+  list(displayMode = mode, trackConfig = merged)
+}
+
 setMethod(".trackPayload", "GenomicAlignmentTrack",
           function(track, path = NULL, trackConfig = list()) {
   options <- list(color = track@color,
                   visibilityWindow = track@visibilityWindow)
-  trackConfig <- .sanitizeAndMergeOptions(options, trackConfig)
+  cfg <- .alignmentConfig(options, trackConfig)
   .bamLocalDataTrackPayload(track@trackName, track@alignment, path,
+                            displayMode = cfg$displayMode,
                             trackHeight = track@height,
-                            trackConfig = trackConfig)
+                            trackConfig = cfg$trackConfig)
 })
 
 setMethod(".trackPayload", "RemoteAlignmentTrack",
           function(track, path = NULL, trackConfig = list()) {
   options <- list(color = track@color,
                   visibilityWindow = track@visibilityWindow)
-  trackConfig <- .sanitizeAndMergeOptions(options, trackConfig)
+  cfg <- .alignmentConfig(options, trackConfig)
   .bamUrlTrackPayload(track@trackName, track@bamUrl, track@bamIndex,
+                      displayMode = cfg$displayMode,
                       trackHeight = track@height,
-                      trackConfig = trackConfig)
+                      trackConfig = cfg$trackConfig)
 })
 
 setMethod(".trackPayload", "CramTrack",
           function(track, path = NULL, trackConfig = list()) {
   options <- list(color = track@color,
                   visibilityWindow = track@visibilityWindow)
-  trackConfig <- .sanitizeAndMergeOptions(options, trackConfig)
   .cramUrlTrackPayload(track@trackName, track@cramUrl, track@indexUrl,
                        trackHeight = track@height,
-                       trackConfig = trackConfig)
+                       trackConfig = .slotsOverConfig(options, trackConfig))
 })
 
 setMethod(".trackPayload", "VariantTrack",
@@ -1649,7 +1709,8 @@ setMethod("loadTrack", "GWASTrack",
 #' @description The browser-free half of \code{loadTrack(<list>)}. The config
 #' goes through \code{.sanitizeAndMergeOptions()} like every loader's
 #' \code{trackConfig}: keys igv.js does not read are dropped with a warning.
-#' The genotype colors are allowed when \code{type} is \code{"variant"}.
+#' The genotype colors are allowed for a variant track: \code{type}
+#' \code{"variant"}, or no type and a vcf \code{format}, as igv.js infers it.
 #'
 #' @param track a named list, an igv.js track configuration with at least
 #' \code{name}, \code{url} and one of \code{type} or \code{format}
@@ -1680,7 +1741,7 @@ setMethod("loadTrack", "GWASTrack",
   }
   # the genotype colors are read by a variant track only
   allowed <- .validIgvTrackOptions
-  if (identical(tolower(toString(track[["type"]])), "variant"))
+  if (.isVariantTrackConfig(track))
     allowed <- c(allowed, .variantTrackOptions)
   list(config = .sanitizeAndMergeOptions(list(), track, allowed = allowed),
        files = character(0))

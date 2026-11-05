@@ -420,3 +420,24 @@ test_that("a GRanges without BED12 columns still writes six columns", {
                            path = out)
   expect_identical(NCOL(tracks_read_bed(out)), 6L)
 })
+
+test_that("a malformed trackConfig keeps the annotation slots", {
+  track <- DataFrameAnnotationTrack("x", tracks_bed_tbl(),
+                                    displayMode = "COLLAPSED",
+                                    visibilityWindow = 5000)
+  expect_warning(p <- igvShiny:::.trackPayload(track, path = tempfile(),
+                                               trackConfig = list("bad")),
+                 "named list")
+  expect_identical(p$config$displayMode, "COLLAPSED")
+  expect_identical(p$config$visibilityWindow, 5000)
+})
+
+test_that("show() prints a summary for every track class", {
+  out <- capture.output(DataFrameAnnotationTrack("demo", tracks_bed_tbl()))
+  expect_match(out[1], "DataFrameAnnotationTrack 'demo'")
+  expect_true(any(grepl("size:   3", out, fixed = TRUE)))
+  out <- capture.output(show(RemoteAlignmentTrack("b",
+                                                  "https://example.org/a.bam")))
+  expect_match(out[1], "RemoteAlignmentTrack 'b'")
+  expect_false(any(grepl("size", out)))
+})
