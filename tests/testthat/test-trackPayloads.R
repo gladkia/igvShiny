@@ -511,3 +511,22 @@ test_that("local bam and cram senders reuse the url builders", {
   expect_identical(msg, c(list(elementID = id), expected))
   end_session(session)
 })
+
+test_that("a rejected input leaves the existing track in place", {
+  # the builder runs before removeTracksByName, so a bad table cannot remove
+  # a same-named track and then fail to replace it
+  session <- fake_session()
+  id <- "igvShiny_0"
+  m <- matrix(1, nrow = 2, ncol = 4)
+  expect_error(loadSegTrack(session, id, "seg", m))
+  expect_error(loadGwasTrack(session, id, "gwas", m))
+  expect_error(loadBamTrackFromURL(session, id, "bam", NULL, "a.bai"))
+  expect_error(loadCramTrackFromURL(session, id, "cram", NULL, "a.crai"))
+  expect_error(loadGFF3TrackFromLocalData(session, id, "gff3", "not a table",
+                                          colorTable = list(),
+                                          colorByAttribute = "biotype",
+                                          displayMode = "EXPANDED",
+                                          visibilityWindow = 10))
+  expect_length(sent_messages(session, "removeTracksByName"), 0L)
+  end_session(session)
+})

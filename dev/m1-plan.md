@@ -171,6 +171,10 @@ Behavioural nuances (intentional, small):
   `warning()`, tests expect it); it still fires before `removeTracksByName`.
 - As in stage 1, an `elementID` in `trackConfig` is dropped as "invalid"
   rather than "conflicting".
+- Senders of the seg, VCF, GWAS, bam/cram url and GFF3 loaders call their
+  builder *before* `removeTracksByName()`, so input a builder rejects leaves a
+  same-named track in place instead of removing it and failing (review of
+  #196). Stage 1's bed/bedGraph senders still remove first.
 
 Skipped / left for later:
 - `display()` for igvShiny's `GWASTrack` (`R/GWASTrack.R`) still builds its
