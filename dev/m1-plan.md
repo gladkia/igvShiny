@@ -122,6 +122,13 @@ Behavioural nuances (intentional, small):
 Skipped / left for stage 2: every other loader. `loadBedGraphTrackFromURL`
 still calls `message()` (untouched pre-existing line).
 
+**For stage 3 (from the stage 1 gate review):** `displayMode` passed through
+`trackConfig` to `loadBedTrack` is merged in R but ignored in the browser:
+`igvShiny.js` hard-codes `displayMode: "EXPANDED"` in the
+`loadBedTrackFromFile` handler, and `mergeExtraParameters()` skips keys the
+handler already set. `igvAnnotationTrack@displayMode` will hit this; it needs a
+JS-side fix or a decision before the annotation `loadTrack()` methods land.
+
 **Open questions for the human:**
 1. Should builders eventually return a genuine igv.js track config (with
    `type`, `format`, `url`, ...) so one generic JS handler can serve
@@ -171,6 +178,10 @@ Behavioural nuances (intentional, small):
   `warning()`, tests expect it); it still fires before `removeTracksByName`.
 - As in stage 1, an `elementID` in `trackConfig` is dropped as "invalid"
   rather than "conflicting".
+- Senders of the seg, VCF, GWAS, bam/cram url and GFF3 loaders call their
+  builder *before* `removeTracksByName()`, so input a builder rejects leaves a
+  same-named track in place instead of removing it and failing (review of
+  #196). Stage 1's bed/bedGraph senders still remove first.
 
 Skipped / left for later:
 - `display()` for igvShiny's `GWASTrack` (`R/GWASTrack.R`) still builds its
