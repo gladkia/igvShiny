@@ -1020,7 +1020,9 @@ CramTrack <- function(trackName,
 #' suggested package VariantAnnotation), written to a vcf file at display
 #' time, or the urls of a served vcf and its index. Display it with
 #' \code{\link{loadTrack}}; color (from \code{anchorColor}) and the three
-#' genotype colors are sent to igv.js. Url tracks have no igvShiny browser
+#' genotype colors are sent to igv.js. displayMode, trackHeight and
+#' visibilityWindow are stored but not applied yet: the browser handler fixes
+#' them at EXPANDED, 100 pixels and 1 Mb. Url tracks have no igvShiny browser
 #' handler yet, so \code{loadTrack} refuses them.
 #'
 #' @slot displayMode character, "COLLAPSED", "SQUISHED" or "EXPANDED"
@@ -1503,6 +1505,11 @@ setMethod("loadTrack", "BedpeInteractionsTrack",
 # display() under the M1 name, so both put the same message on the wire.
 #' @rdname loadTrack
 setMethod("loadTrack", "GWASTrack",
-          function(session, id, track, deleteTracksOfSameName = TRUE) {
+          function(session, id, track, deleteTracksOfSameName = TRUE,
+                   trackConfig = list(), validateReference = TRUE) {
+  # accepted for a uniform loadTrack() call; display() has neither
+  if (length(trackConfig) > 0L)
+    futile.logger::flog.warn(
+      "loadTrack: trackConfig is ignored for a GWASTrack")
   display(track, session, id, deleteTracksOfSameName = deleteTracksOfSameName)
 })

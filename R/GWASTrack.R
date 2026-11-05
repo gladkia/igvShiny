@@ -286,13 +286,13 @@ setMethod("display",
 #' \code{loadTrack()} for a GWASTrack): returns the message body the
 #' \code{loadGwasTrackFlexibleSource} handler in igvShiny.js reads. The
 #' constructor already wrote a data.frame to the tracks directory; a local
-#' file is sent by its \code{tracks/} path and listed in \code{files}.
+#' file is sent by its \code{tracks/} path. The builder writes nothing, so
+#' \code{files} is empty.
 #'
 #' @param obj a GWASTrack object
 #'
 #' @return a list with \code{config}, the message body without
-#' \code{elementID}, and \code{files}, the served local file or
-#' \code{character(0)} for a remote url
+#' \code{elementID}, and \code{files}, \code{character(0)}
 #'
 #' @keywords internal
 .gwasTrackObjectPayload <- function(obj) {
@@ -321,13 +321,11 @@ setMethod("display",
     config$colorTable <- obj@chromosomeColorMap
   }
 
-  files <- character(0)
   if (obj@data.mode == "local.url") {
     config$dataUrl <- file.path("tracks", basename(obj@url))
-    files <- obj@url
   }
 
-  list(config = config, files = files)
+  list(config = config, files = character(0))
 } # .gwasTrackObjectPayload
 #-------------------------------------------------------------------------------
 #' the url of the gwas table

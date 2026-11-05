@@ -303,7 +303,7 @@ test_that("loadTrack on a GWASTrack sends what display() sends", {
                      pval.col = 10, chromosomeColorMap = list(chr1 = "red"))
 
   payload <- igvShiny:::.gwasTrackObjectPayload(track)
-  expect_identical(payload$files, getUrl(track))
+  expect_identical(payload$files, character(0))
   expect_match(payload$config$dataUrl, "^tracks/")
   expect_identical(payload$config$colorTable, list(chr1 = "red"))
 
@@ -315,6 +315,7 @@ test_that("loadTrack on a GWASTrack sends what display() sends", {
   expect_identical(msgs[[1]]$message, msgs[[2]]$message)
   expect_identical(names(msgs[[1]]$message)[1:2], c("elementID", "trackName"))
 
-  loadTrack(session, STAGE4_ID, track, deleteTracksOfSameName = FALSE)
+  loadTrack(session, STAGE4_ID, track, deleteTracksOfSameName = FALSE,
+            trackConfig = list(color = "red"), validateReference = FALSE)
   expect_length(sent_messages(session, "removeTracksByName"), 2L)
 })

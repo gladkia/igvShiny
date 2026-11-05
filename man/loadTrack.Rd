@@ -90,7 +90,14 @@ loadTrack(session, id, track, ...)
   validateReference = TRUE
 )
 
-\S4method{loadTrack}{GWASTrack}(session, id, track, deleteTracksOfSameName = TRUE)
+\S4method{loadTrack}{GWASTrack}(
+  session,
+  id,
+  track,
+  deleteTracksOfSameName = TRUE,
+  trackConfig = list(),
+  validateReference = TRUE
+)
 }
 \arguments{
 \item{session}{an environment or list, provided and managed by shiny}

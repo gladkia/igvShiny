@@ -11,14 +11,14 @@
 }
 \value{
 a list with \code{config}, the message body without
-\code{elementID}, and \code{files}, the served local file or
-\code{character(0)} for a remote url
+\code{elementID}, and \code{files}, \code{character(0)}
 }
 \description{
 The browser-free half of \code{display()} (and of
 \code{loadTrack()} for a GWASTrack): returns the message body the
 \code{loadGwasTrackFlexibleSource} handler in igvShiny.js reads. The
 constructor already wrote a data.frame to the tracks directory; a local
-file is sent by its \code{tracks/} path and listed in \code{files}.
+file is sent by its \code{tracks/} path. The builder writes nothing, so
+\code{files} is empty.
 }
 \keyword{internal}
