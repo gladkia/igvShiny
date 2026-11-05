@@ -2,12 +2,18 @@
 % Please edit documentation in R/igvShiny.R
 \name{showGenomicRegion}
 \alias{showGenomicRegion}
+\alias{showGenomicRegion,ANY-method}
 \alias{getGenomicRegion}
+\alias{getGenomicRegion,ANY-method}
 \title{focus igv on a region}
 \usage{
 showGenomicRegion(session, id, region)
 
+\S4method{showGenomicRegion}{ANY}(session, id, region)
+
 getGenomicRegion(session, id)
+
+\S4method{getGenomicRegion}{ANY}(session, id)
 }
 \arguments{
 \item{session}{an environment or list, provided and managed by shiny}
@@ -25,6 +31,15 @@ zoom in or out to show the nominated region, by chromosome locus
 or gene symbol
 
 return the current region displayed by your igv instance
+}
+\details{
+\code{showGenomicRegion}, \code{getGenomicRegion} and
+\code{removeTracksByName} are S4 generics dispatching on their first
+argument. The default method (signature \code{"ANY"}) handles a shiny
+session (a \code{ShinySession}, a module \code{session_proxy} or any
+object with a \code{sendCustomMessage} method), so packages that build on
+igvShiny can add methods for their own classes without masking these
+functions.
 }
 \examples{
 library(igvShiny)
