@@ -1589,10 +1589,14 @@ setMethod("loadTrack", "GWASTrack",
                            .var.name = "track$name")
   checkmate::assert_string(track[["url"]], min.chars = 1L,
                            .var.name = "track$url")
-  checkmate::assert(
-    checkmate::check_string(track[["type"]], min.chars = 1L),
-    checkmate::check_string(track[["format"]], min.chars = 1L),
-    combine = "or", .var.name = "track$type or track$format"
+  # each is checked on its own: a bad type must not pass on a good format
+  checkmate::assert_string(track[["type"]], min.chars = 1L, null.ok = TRUE,
+                           .var.name = "track$type")
+  checkmate::assert_string(track[["format"]], min.chars = 1L, null.ok = TRUE,
+                           .var.name = "track$format")
+  checkmate::assert_true(
+    !is.null(track[["type"]]) || !is.null(track[["format"]]),
+    .var.name = "track$type or track$format is set"
   )
 
   # index is the igv.js alias of indexURL, as in the startup 'tracks'

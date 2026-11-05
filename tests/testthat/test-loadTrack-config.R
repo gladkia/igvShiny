@@ -39,6 +39,13 @@ test_that(".configListTrackPayload requires name, url and type or format", {
   expect_error(build(c(cfg, list(url = "b.bb"))))
   no_kind <- cfg[setdiff(names(cfg), c("type", "format"))]
   expect_error(build(no_kind), "type or track\\$format")
+  # a bad type is rejected even next to a valid format
+  expect_error(build(c(no_kind, list(type = c("variant", "bed"),
+                                     format = "vcf"))), "track\\$type")
+  expect_error(build(c(no_kind, list(type = NA_character_,
+                                     format = "vcf"))), "track\\$type")
+  expect_error(build(c(no_kind, list(type = "variant",
+                                     format = ""))), "track\\$format")
   expect_identical(build(c(no_kind, list(format = "bigBed")))$config$format,
                    "bigBed")
   expect_error(build(c(cfg[setdiff(names(cfg), "url")], list(url = 1))))
