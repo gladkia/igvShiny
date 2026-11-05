@@ -47,11 +47,10 @@ An object of class VariantTrack
 A \code{VariantTrack} holds a \code{VCF} object (needs the
 suggested package VariantAnnotation), written to a vcf file at display
 time, or the urls of a served vcf and its index. Display it with
-\code{\link{loadTrack}}; color (from \code{anchorColor}) and the three
-genotype colors are sent to igv.js. displayMode, trackHeight and
-visibilityWindow are stored but not applied yet: the browser handler fixes
-them at EXPANDED, 100 pixels and 1 Mb. Url tracks have no igvShiny browser
-handler yet, so \code{loadTrack} refuses them.
+\code{\link{loadTrack}}, which sends color (from \code{anchorColor}),
+the three genotype colors, displayMode, trackHeight (as height) and
+visibilityWindow to igv.js. Url tracks have no igvShiny browser handler
+yet, so \code{loadTrack} refuses them.
 }
 \section{Slots}{
 

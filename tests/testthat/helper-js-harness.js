@@ -332,6 +332,22 @@ function runHarness(jsPath, scenario) {
          results.annotationSlots = configs.slice();
       }
 
+      if (scenario === 'variant-slots') {
+         // Only on request: VariantTrack slots reach the igv.js config
+         global.location = { href: 'http://127.0.0.1:1234/' };
+         pend.length = 0;
+         configs.length = 0;
+         w.renderValue(opts('hg38'));
+         pend[0].res(mkBrowser('hg38'));
+         await tick();
+         const vcf = { elementID: 'igv1', vcfDataFilepath: 'tracks/a.vcf' };
+         handlers.loadVcfTrack(Object.assign({}, vcf, {
+            trackName: 'slots', displayMode: 'COLLAPSED', height: 80,
+            visibilityWindow: 5000
+         }));
+         handlers.loadVcfTrack(Object.assign({}, vcf, { trackName: 'plain' }));
+         results.variantSlots = configs.slice();
+      }
 
       return results;
    })();

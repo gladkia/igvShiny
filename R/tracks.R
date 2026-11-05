@@ -1056,11 +1056,10 @@ CramTrack <- function(trackName,
 #' @description A \code{VariantTrack} holds a \code{VCF} object (needs the
 #' suggested package VariantAnnotation), written to a vcf file at display
 #' time, or the urls of a served vcf and its index. Display it with
-#' \code{\link{loadTrack}}; color (from \code{anchorColor}) and the three
-#' genotype colors are sent to igv.js. displayMode, trackHeight and
-#' visibilityWindow are stored but not applied yet: the browser handler fixes
-#' them at EXPANDED, 100 pixels and 1 Mb. Url tracks have no igvShiny browser
-#' handler yet, so \code{loadTrack} refuses them.
+#' \code{\link{loadTrack}}, which sends color (from \code{anchorColor}),
+#' the three genotype colors, displayMode, trackHeight (as height) and
+#' visibilityWindow to igv.js. Url tracks have no igvShiny browser handler
+#' yet, so \code{loadTrack} refuses them.
 #'
 #' @slot displayMode character, "COLLAPSED", "SQUISHED" or "EXPANDED"
 #' @slot vcf.obj a \code{VCF} object, or NULL for a url track
@@ -1438,13 +1437,16 @@ setMethod(".trackPayload", "CramTrack",
 
 setMethod(".trackPayload", "VariantTrack",
           function(track, path = NULL, trackConfig = list()) {
-  # displayMode, height and visibilityWindow are fixed by the loadVcfTrack
-  # handler in igvShiny.js, so only the colors reach igv.js
+  # the loadVcfTrack handler in igvShiny.js uses displayMode, height and
+  # visibilityWindow when sent, its own defaults otherwise
   options <- list(color = track@anchorColor,
                   homvarColor = track@homvarColor,
                   hetvarColor = track@hetvarColor,
-                  homrefColor = track@homrefColor)
-  trackConfig <- .sanitizeAndMergeOptions(options, trackConfig)
+                  homrefColor = track@homrefColor,
+                  displayMode = track@displayMode,
+                  height = track@height,
+                  visibilityWindow = track@visibilityWindow)
+  trackConfig <- .slotsOverConfig(options, trackConfig)
   .vcfTrackPayload(track@trackName, .trackReferenceData(track), path,
                    trackConfig = trackConfig)
 })

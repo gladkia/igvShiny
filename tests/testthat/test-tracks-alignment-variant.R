@@ -144,7 +144,9 @@ test_that("a VariantTrack from a VCF is sent like loadVcfTrack, plus colors", {
                trackConfig = list(color = "red",
                                   homvarColor = "rgb(17,248,254)",
                                   hetvarColor = "rgb(34,12,253)",
-                                  homrefColor = "rgb(200,200,200)"),
+                                  homrefColor = "rgb(200,200,200)",
+                                  displayMode = "EXPANDED", height = 50,
+                                  visibilityWindow = 100000),
                validateReference = FALSE)
   msgs <- sent_messages(session, "loadVcfTrack")
   expect_length(msgs, 2L)
@@ -155,6 +157,39 @@ test_that("a VariantTrack from a VCF is sent like loadVcfTrack, plus colors", {
                       basename(msgs[[1]]$message$vcfDataFilepath))
   expect_true(file.exists(served))
   end_session(session)
+})
+
+test_that("VariantTrack slots reach the message and the igv.js config", {
+  skip_if_not_installed("VariantAnnotation")
+  f <- system.file(package = "igvShiny", "extdata", "chr19-cebpaRegion.vcf.gz")
+  track <- VariantTrack("v", VariantAnnotation::readVcf(f),
+                        displayMode = "COLLAPSED", trackHeight = 80,
+                        visibilityWindow = 5000)
+  session <- fake_session()
+  loadTrack(session, STAGE4_ID, track, validateReference = FALSE)
+  msg <- last_message(session, "loadVcfTrack")
+  expect_identical(msg[c("displayMode", "height", "visibilityWindow")],
+                   list(displayMode = "COLLAPSED", height = 80,
+                        visibilityWindow = 5000))
+  end_session(session)
+
+  skip_if_not(nzchar(Sys.which("node")), "Node.js not available")
+  binding <- system.file("htmlwidgets", "igvShiny.js", package = "igvShiny")
+  harness <- test_path("helper-js-harness.js")
+  out <- system2(Sys.which("node"),
+                 args = c(shQuote(harness), shQuote(binding), "variant-slots"),
+                 stdout = TRUE)
+  configs <- jsonlite::fromJSON(paste(out, collapse = "\n"),
+                                simplifyVector = FALSE)$variantSlots
+  expect_length(configs, 2L)
+  # COLLAPSED in, COLLAPSED out
+  expect_identical(configs[[1]]$displayMode, "COLLAPSED")
+  expect_identical(configs[[1]]$height, 80L)
+  expect_identical(configs[[1]]$visibilityWindow, 5000L)
+  # loadVcfTrack sends none of them: the handler defaults stay
+  expect_identical(configs[[2]]$displayMode, "EXPANDED")
+  expect_identical(configs[[2]]$height, 100L)
+  expect_identical(configs[[2]]$visibilityWindow, 1000000L)
 })
 
 test_that("a url VariantTrack is stored but not sent", {

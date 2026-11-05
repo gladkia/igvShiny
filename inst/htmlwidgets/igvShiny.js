@@ -927,10 +927,14 @@ addBrowserMessageHandler("loadVcfTrack",
                      url: dataURL,
                      order: Number.MAX_VALUE,
                      indexed: false,
-                     displayMode: "EXPANDED",
+                     // loadTrack(<VariantTrack>) sends these three slots;
+                     // loadVcfTrack never does and keeps the defaults
+                     displayMode: message.displayMode || "EXPANDED",
                      sourceType: "file",
-                     height: 100,
-                     visibilityWindow: 1000000,
+                     height: message.height !== undefined ?
+                             message.height : 100,
+                     visibilityWindow: message.visibilityWindow !== undefined ?
+                                       message.visibilityWindow : 1000000,
                      //homvarColor: homvarColor,
                      //hetvarColor: hetvarColor,
                      //homrefColor: homrefColor,
