@@ -5,6 +5,9 @@
 \alias{trackSize}
 \alias{trackInfo,Track-method}
 \alias{trackSize,Track-method}
+\alias{trackSize,GenomicAlignmentTrack-method}
+\alias{trackSize,VariantTrack-method}
+\alias{trackSize,GFF3Track-method}
 \title{Basic facts about a track}
 \usage{
 trackInfo(obj)
@@ -14,6 +17,12 @@ trackSize(obj)
 \S4method{trackInfo}{Track}(obj)
 
 \S4method{trackSize}{Track}(obj)
+
+\S4method{trackSize}{GenomicAlignmentTrack}(obj)
+
+\S4method{trackSize}{VariantTrack}(obj)
+
+\S4method{trackSize}{GFF3Track}(obj)
 }
 \arguments{
 \item{obj}{An object of base class Track}

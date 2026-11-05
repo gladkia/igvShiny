@@ -8,10 +8,11 @@
 \title{Track: the base class of igvShiny's S4 tracks}
 \usage{
 Track(
-  trackType = c("annotation", "quantitative", "alignment", "variant", "gwas"),
+  trackType = c("annotation", "quantitative", "alignment", "variant", "gwas",
+    "genomicAlignment", "remoteAlignment", "pairedEndAnnotation"),
   sourceType = c("file", "url", "gcs", "ga4gh"),
   fileFormat = c("bed", "gff", "gff3", "gtf", "wig", "bigWig", "bedGraph", "bam", "vcf",
-    "seg", "gwas"),
+    "seg", "gwas", "cram", "bedpe"),
   trackName,
   onScreenOrder = NA_real_,
   color = "gray",
@@ -24,12 +25,13 @@ Track(
 }
 \arguments{
 \item{trackType}{One of "annotation", "quantitative", "alignment",
-"variant", "gwas"}
+"variant", "gwas", "genomicAlignment", "remoteAlignment",
+"pairedEndAnnotation"}
 
 \item{sourceType}{One of "file", "url", "gcs", "ga4gh"}
 
 \item{fileFormat}{One of "bed", "gff", "gff3", "gtf", "wig", "bigWig",
-"bedGraph", "bam", "vcf", "seg", "gwas"}
+"bedGraph", "bam", "vcf", "seg", "gwas", "cram", "bedpe"}
 
 \item{trackName}{A character string, used as track label by igv; we
 recommend unique names per track}

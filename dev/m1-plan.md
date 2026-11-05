@@ -15,7 +15,7 @@ track loader into a pure **payload builder** and a thin **sender**.
       `DataFrameQuantitativeTrack`, `UCSCBedGraphQuantitativeTrack` into
       `R/tracks.R` (Collate before `igvShiny.R`); a builder method per class;
       exported `loadTrack(session, id, track)` generic + methods; tests
-- [ ] 4. `GenomicAlignmentTrack`, `VariantTrack`, `BedpeInteractionsTrack`,
+- [x] 4. `GenomicAlignmentTrack`, `VariantTrack`, `BedpeInteractionsTrack`,
       `GFF3Track`, `CramTrack`, `RemoteAlignmentTrack`, `igvAnnotationTrack`;
       reconcile with igvShiny's `GWASTrack`; tests; roxygen pass; NEWS.md and
       DESCRIPTION Version/Date
@@ -259,3 +259,67 @@ Skipped / left for stage 4:
    own copies) to avoid masking when both are attached?
 8. Should `loadTrack()` also return the payload (invisibly) for debugging?
    It returns `NULL` now, like the other loaders.
+
+
+**Stage 4 (done):** ported `GenomicAlignmentTrack`, `RemoteAlignmentTrack`,
+`CramTrack`, `VariantTrack`, `GFF3Track`, `BedpeInteractionsTrack` and an
+`igvAnnotationTrack()` constructor into `R/tracks.R`, each with a
+`.trackPayload` method that reuses the stage 2 builder of its loader
+(`.bamLocalDataTrackPayload`, `.bamUrlTrackPayload`, `.cramUrlTrackPayload`,
+`.vcfTrackPayload`, `.gff3TrackPayload` / `.gff3UrlTrackPayload`) and a
+`loadTrack()` method. Tests: `tests/testthat/test-tracks-alignment-variant.R`.
+Each one checks that `loadTrack()` sends the same message as the matching
+loader given equivalent arguments. NEWS 1.9.52, DESCRIPTION Version and Date
+bumped. Imports are unchanged.
+
+What changed besides the class port:
+- `.sendTrack()` validates against `.trackReferenceData(track)`, a new
+  internal generic. It returns the feature table by default, the
+  GAlignments/VCF object for alignment and variant tracks, both bedpe anchors
+  for bedpe, and NULL for url tracks, which skips the check as the url
+  loaders do. After the builder runs, it also registers extra written files
+  (the bam `.bai`) for session cleanup.
+- `Track()` accepts igvR's trackType values `genomicAlignment`,
+  `remoteAlignment` and `pairedEndAnnotation`, and the file formats `cram` and
+  `bedpe`.
+- Slots typed with Suggests classes (`alignment`, `vcf.obj`) are `"ANY"`, with
+  a validity check, as stage 3 proposed.
+- New `homvarColor`, `hetvarColor` and `homrefColor` in
+  `.validIgvTrackOptions`. Each identifier appears in the igv-3.8.4 bundle as
+  a VariantTrack config default.
+- **bedpe:** new builder `.bedpeTrackPayload` (R/igvShiny.R) and a new JS
+  handler `loadBedpeTrackFromFile` (igv.js type `interact`, format `bedpe`).
+  This is the only JS change in M1. It has a node harness scenario
+  (`bedpe-handler`, which runs only when requested) but was never checked in
+  a real browser. There is no exported data.frame loader for it.
+
+**GWASTrack decision:** igvShiny's `GWASTrack` stays as it is: no `Track`
+parent, same slots, `display()` and `getUrl()` unchanged. Its message
+building moved into the builder `.gwasTrackObjectPayload(obj)` in
+`R/GWASTrack.R`, and the wire message is unchanged. `loadTrack(session, id,
+<GWASTrack>)` is a method that calls `display()`. igvR's `GWASTrack` and
+`GWASUrlTrack` are not ported; their name clashes with igvShiny's class.
+
+Deviations from igvR:
+- igvR's `VariantTrack` never stored `anchorColor`; it is stored now.
+- igvR's `GFF3Track` errored on a `colorTable` without a "default" entry; that
+  is fixed.
+- `GFF3Track` now has defaults (EXPANDED, 50, 1e5).
+- `RemoteAlignmentTrack` defaults `bamIndex` to `<bamUrl>.bai`; igvR's NULL
+  default could not fill its character slot.
+- Colors are sent as given; igvR converted them to hex with `col2rgb`.
+
+Skipped / open questions for the human (stage 4):
+9. A url `VariantTrack` (`vcf = list(data, index)`) is constructed, but
+   `loadTrack()` refuses it. The `loadVcfTrack` JS handler prepends the app
+   url, so a remote vcf needs a new handler. Add one?
+10. The `loadVcfTrack` handler hard-codes `displayMode`, `height` and
+    `visibilityWindow`, so those VariantTrack slots are not sent; only the
+    colors reach igv.js. This is the same problem as question 6.
+11. Keep the bedpe JS handler, which is unverified in a real browser? Also add
+    an exported `loadBedpeTrack()` data.frame loader?
+12. `GenomicAlignmentTrack` serves its bam from the static `tracks/` path,
+    like `loadBamTrackFromLocalData` (see question 4).
+13. The `GWASTrack()` constructor still writes with
+    `tempfile(tmpdir = .tracksDir())`, because it has no session. Move the
+    write into `display()`/`loadTrack()` via `.trackFile()`?

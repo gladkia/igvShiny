@@ -55,7 +55,9 @@
   "alpha",
   ## alignment track sizing, coverage display and read row heights
   "coverageTrackHeight", "showCoverage", "showAlignments",
-  "alignmentRowHeight", "squishedRowHeight"
+  "alignmentRowHeight", "squishedRowHeight",
+  ## variant track genotype colors (VariantTrack slots)
+  "homvarColor", "hetvarColor", "homrefColor"
   # Add other valid igv.js track options here as needed in the future
   # "tracks" is deliberately absent: it is meaningful on a merged track only,
   # and .sanitizeTrack handles it there.
@@ -725,6 +727,68 @@ loadBedTrack <-
   list(config = .sanitizeAndMergeOptions(config, trackConfig),
        files = path)
 } # .bedTrackPayload
+
+#-------------------------------------------------------------------------------
+#' Build the payload of a bedpe interaction track from a data.frame
+#'
+#' @description The browser-free builder of \code{BedpeInteractionsTrack}:
+#' sorts the table by chrom1 and start1, writes it to \code{path} as
+#' headerless bedpe, and returns the message body the
+#' \code{loadBedpeTrackFromFile} handler in igvShiny.js reads. It has no
+#' exported data.frame loader; \code{loadTrack()} is its sender.
+#'
+#' @param trackName character string
+#' @param tbl data.frame, bedpe: chrom1, start1, end1, chrom2, start2, end2,
+#' then optional columns
+#' @param path character string, the file to write; its basename is what the
+#' browser fetches from the \code{tracks/} resource path
+#' @param color character string, a legal CSS color, or "random"
+#' @param trackHeight numeric, pixels
+#' @param trackConfig a named list of additional igv.js track configuration
+#' options, merged onto the defaults
+#'
+#' @return a list with \code{config}, the message body without
+#' \code{elementID}, and \code{files}, the paths written (here: \code{path})
+#'
+#' @keywords internal
+.bedpeTrackPayload <- function(trackName,
+                               tbl,
+                               path,
+                               color = "darkBlue",
+                               trackHeight = 50,
+                               trackConfig = list()) {
+  checkmate::assert_string(trackName)
+  checkmate::assert_class(tbl, "data.frame")
+  checkmate::assert_true(NCOL(tbl) >= 6L)
+  checkmate::assert_string(path)
+  checkmate::assert_string(color)
+  checkmate::assert_number(trackHeight, lower = 1)
+
+  if (color == "random")
+    color <- randomColors[sample(seq_along(randomColors), 1)]
+
+  tbl <- tbl[order(tbl[[1]], tbl[[2]]), , drop = FALSE]
+  write.table(
+    tbl,
+    sep = "\t",
+    row.names = FALSE,
+    col.names = FALSE,
+    quote = FALSE,
+    file = path
+  )
+  flog.debug("--- igvShiny.R, .bedpeTrackPayload wrote %d,%d to %s",
+             NROW(tbl), NCOL(tbl), path)
+
+  config <- list(
+    trackName = trackName,
+    bedpeFilepath = file.path("tracks", basename(path)),
+    color = color,
+    trackHeight = trackHeight
+  )
+
+  list(config = .sanitizeAndMergeOptions(config, trackConfig),
+       files = path)
+} # .bedpeTrackPayload
 
 #-------------------------------------------------------------------------------
 #' load a bedgraph track from a URL

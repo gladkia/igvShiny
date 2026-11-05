@@ -772,6 +772,28 @@ addBrowserMessageHandler("loadBedTrackFromFile",
 
 );
 //------------------------------------------------------------------------------------------------------------------------
+addBrowserMessageHandler("loadBedpeTrackFromFile",
+
+   function(message){
+      igvshiny_log("=== loadBedpeTrackFromFile");
+      var igvBrowser = document.getElementById(message.elementID).igvBrowser;
+      // If a query string is present the url before that is used
+      var dataURL = window.location.href.split('?')[0] + message.bedpeFilepath;
+
+      var config = {format: "bedpe",
+                    name: message.trackName,
+                    type: "interact",
+                    order: Number.MAX_VALUE,
+                    url: dataURL,
+                    color: message.color,
+                    height: message.trackHeight
+                    };
+      config = mergeExtraParameters(config, message);
+      igvBrowser.loadTrack(config);
+      }
+
+);
+//------------------------------------------------------------------------------------------------------------------------
 addBrowserMessageHandler("loadBedGraphTrack",
 
    function(message){

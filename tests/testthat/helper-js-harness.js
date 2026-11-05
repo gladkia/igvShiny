@@ -9,6 +9,7 @@ function runHarness(jsPath, scenario) {
    const inputs = [];
    const removed = [];
    const loaded = [];
+   const configs = [];
    let factory;
    let pend = [];
 
@@ -82,7 +83,7 @@ function runHarness(jsPath, scenario) {
 
    const mkBrowser = (g) => ({
       g,
-      loadTrack: (c) => loaded.push(g + ':' + c.name),
+      loadTrack: (c) => { configs.push(c); loaded.push(g + ':' + c.name); },
       on: () => {},
       trackViews: []
    });
@@ -289,6 +290,21 @@ function runHarness(jsPath, scenario) {
             errorEvents: inputs.filter((i) => i.key === 'igvError').map((i) => i.value)
          };
          global.document.getElementById = prevGetEl;
+      }
+
+      if (scenario === 'bedpe-handler') {
+         // Only on request: the bedpe handler builds an igv.js interact track
+         global.location = { href: 'http://127.0.0.1:1234/?x=1' };
+         pend.length = 0;
+         configs.length = 0;
+         w.renderValue(opts('hg38'));
+         pend[0].res(mkBrowser('hg38'));
+         await tick();
+         handlers.loadBedpeTrackFromFile({
+            elementID: 'igv1', trackName: 'loops',
+            bedpeFilepath: 'tracks/a.bedpe', color: 'red', trackHeight: 70
+         });
+         results.bedpeHandler = configs.slice();
       }
 
       return results;

@@ -29,10 +29,11 @@
 #' @slot visibilityWindow numeric, base pairs
 #'
 #' @param trackType One of "annotation", "quantitative", "alignment",
-#' "variant", "gwas"
+#' "variant", "gwas", "genomicAlignment", "remoteAlignment",
+#' "pairedEndAnnotation"
 #' @param sourceType One of "file", "url", "gcs", "ga4gh"
 #' @param fileFormat One of "bed", "gff", "gff3", "gtf", "wig", "bigWig",
-#' "bedGraph", "bam", "vcf", "seg", "gwas"
+#' "bedGraph", "bam", "vcf", "seg", "gwas", "cram", "bedpe"
 #' @param trackName A character string, used as track label by igv; we
 #' recommend unique names per track
 #' @param onScreenOrder Numeric, for explicit placement of track within the
@@ -79,10 +80,12 @@
 #' @rdname Track-class
 #' @export
 Track <- function(trackType = c("annotation", "quantitative", "alignment",
-                                "variant", "gwas"),
+                                "variant", "gwas", "genomicAlignment",
+                                "remoteAlignment", "pairedEndAnnotation"),
                   sourceType = c("file", "url", "gcs", "ga4gh"),
                   fileFormat = c("bed", "gff", "gff3", "gtf", "wig", "bigWig",
-                                 "bedGraph", "bam", "vcf", "seg", "gwas"),
+                                 "bedGraph", "bam", "vcf", "seg", "gwas",
+                                 "cram", "bedpe"),
                   trackName,
                   onScreenOrder = NA_real_,
                   color = "gray",
@@ -818,9 +821,9 @@ setMethod("loadTrack", "QuantitativeTrack",
   trackName <- track@trackName
   flog.debug("--- igvShiny::loadTrack %s (%s)", trackName, class(track)[1])
 
-  # the table is built before anything is sent, so a bad coreObject fails
-  # without removing the track it was meant to replace
-  tbl <- .trackTable(track)
+  # the reference data is built before anything is sent, so a bad coreObject
+  # fails without removing the track it was meant to replace
+  refData <- .trackReferenceData(track)
 
   if (deleteTracksOfSameName) {
     removeTracksByName(session, id, trackName)
@@ -829,12 +832,677 @@ setMethod("loadTrack", "QuantitativeTrack",
   state[["userAddedTracks"]] <-
     unique(c(state[["userAddedTracks"]], trackName))
 
-  .validateTrackReference(session, id, trackName, tbl,
-                          validateReference = validateReference)
+  # url tracks have nothing local to check, as with their url loaders
+  if (!is.null(refData))
+    .validateTrackReference(session, id, trackName, refData,
+                            validateReference = validateReference)
 
   path <- if (is.null(ext)) NULL else .trackFile(session, ext)
   payload <- .trackPayload(track, path = path, trackConfig = trackConfig)
+  # files written next to path (the bam index) go at session end too
+  for (extra in setdiff(payload$files, path))
+    .registerTrackFile(session, extra)
 
   session$sendCustomMessage(handler, c(list(elementID = id), payload$config))
   invisible(NULL)
 } # .sendTrack
+
+#-------------------------------------------------------------------------------
+# M1 stage 4: the remaining igvR classes. Classes from suggested packages
+# (GAlignments, VCF) cannot type a slot here, so those slots are "ANY" and a
+# validity function checks the class; the constructors requireNamespace().
+#-------------------------------------------------------------------------------
+
+#' Build an annotation track from whatever annotation object is at hand
+#'
+#' @description igvR's \code{igvAnnotationTrack()} built a track that held no
+#' data. Here it picks the subclass that fits \code{annotation}: a data.frame
+#' gives a \code{DataFrameAnnotationTrack}, a \code{UCSCData} a
+#' \code{UCSCBedAnnotationTrack} and any other \code{GRanges} a
+#' \code{GRangesAnnotationTrack}.
+#'
+#' @param trackName A character string, used as track label by igv
+#' @param annotation a data.frame, \code{GRanges} or \code{UCSCData}
+#' @param ... further arguments of the subclass constructor, e.g. color,
+#' displayMode, trackHeight
+#'
+#' @return an object of a subclass of \code{igvAnnotationTrack}
+#'
+#' @examples
+#' tbl <- data.frame(chrom = "chr1", start = 100, end = 200,
+#'                   stringsAsFactors = FALSE)
+#' class(igvAnnotationTrack("demo", tbl))
+#'
+#' @keywords track_classes
+#' @export
+igvAnnotationTrack <- function(trackName, annotation, ...) {
+  checkmate::assert_multi_class(annotation, c("data.frame", "GRanges"))
+  if (is.data.frame(annotation))
+    return(DataFrameAnnotationTrack(trackName, annotation, ...))
+  if (is(annotation, "UCSCData"))
+    return(UCSCBedAnnotationTrack(trackName, annotation, ...))
+  GRangesAnnotationTrack(trackName, annotation, ...)
+} # igvAnnotationTrack
+
+#-------------------------------------------------------------------------------
+#' Alignment tracks: in-memory reads, a bam url or a cram url
+#'
+#' @description \code{GenomicAlignmentTrack} holds a \code{GAlignments}
+#' object (GenomicAlignments, written to a bam file at display time; needs the
+#' suggested packages GenomicAlignments, rtracklayer and Rsamtools).
+#' \code{RemoteAlignmentTrack} and \code{CramTrack} point igv.js at a served
+#' bam or cram file and its index. Display them with \code{\link{loadTrack}};
+#' color, height and visibilityWindow are sent to igv.js.
+#'
+#' @slot alignment a \code{GAlignments} object
+#' @slot bamUrl character, url of the bam file
+#' @slot bamIndex character, url of its index
+#' @slot cramUrl character, url of the cram file
+#' @slot indexUrl character, url of its crai index
+#'
+#' @param trackName A character string, used as track label by igv
+#' @param alignment a \code{GAlignments} object
+#' @param bamUrl url of a bam file
+#' @param bamIndex url of its index; by default \code{bamUrl} with ".bai"
+#' appended
+#' @param cramUrl url of a cram file
+#' @param indexUrl url of its crai index
+#' @param trackHeight track height in pixels
+#' @param visibilityWindow Maximum window size in base pairs for which reads
+#' are displayed
+#' @param color A CSS color name (e.g., "red" or "#FF0000"), or "random"
+#'
+#' @return An object of the named class
+#'
+#' @examples
+#' track <- CramTrack("cram demo", "https://example.com/reads.cram",
+#'                    "https://example.com/reads.cram.crai")
+#' trackInfo(track)
+#'
+#' @keywords track_classes
+#' @name GenomicAlignmentTrack-class
+#' @rdname GenomicAlignmentTrack-class
+#' @aliases RemoteAlignmentTrack-class CramTrack-class
+#' @exportClass GenomicAlignmentTrack
+.GenomicAlignmentTrack <- setClass(
+  "GenomicAlignmentTrack",
+  contains = "Track",
+  slots = c(alignment = "ANY"),
+  validity = function(object) {
+    if (is(object@alignment, "GAlignments")) TRUE else
+      "alignment must be a GAlignments object (GenomicAlignments)"
+  }
+)
+
+#' @rdname GenomicAlignmentTrack-class
+#' @exportClass RemoteAlignmentTrack
+.RemoteAlignmentTrack <- setClass(
+  "RemoteAlignmentTrack",
+  contains = "Track",
+  slots = c(bamUrl = "character", bamIndex = "character")
+)
+
+#' @rdname GenomicAlignmentTrack-class
+#' @exportClass CramTrack
+.CramTrack <- setClass(
+  "CramTrack",
+  contains = "Track",
+  slots = c(cramUrl = "character", indexUrl = "character")
+)
+
+# The Track part the three alignment constructors share.
+.alignmentTrackBase <- function(trackName, trackType, fileFormat, sourceType,
+                                trackHeight, visibilityWindow, color) {
+  Track(
+    trackType = trackType,
+    sourceType = sourceType,
+    fileFormat = fileFormat,
+    trackName = trackName,
+    onScreenOrder = 1,
+    color = color,
+    height = trackHeight,
+    visibilityWindow = visibilityWindow
+  )
+} # .alignmentTrackBase
+
+#' @rdname GenomicAlignmentTrack-class
+#' @export
+GenomicAlignmentTrack <- function(trackName,
+                                  alignment,
+                                  trackHeight = 50,
+                                  visibilityWindow = 30000,
+                                  color = "gray") {
+  if (!requireNamespace("GenomicAlignments", quietly = TRUE))
+    stop("GenomicAlignmentTrack needs the GenomicAlignments package")
+  checkmate::assert_class(alignment, "GAlignments")
+
+  base <- .alignmentTrackBase(trackName, "genomicAlignment", "bam", "file",
+                              trackHeight, visibilityWindow, color)
+  .GenomicAlignmentTrack(base, alignment = alignment)
+} # GenomicAlignmentTrack
+
+#' @rdname GenomicAlignmentTrack-class
+#' @export
+RemoteAlignmentTrack <- function(trackName,
+                                 bamUrl,
+                                 bamIndex = paste0(bamUrl, ".bai"),
+                                 trackHeight = 50,
+                                 visibilityWindow = 30000,
+                                 color = "gray") {
+  checkmate::assert_string(bamUrl, min.chars = 1L)
+  checkmate::assert_string(bamIndex, min.chars = 1L)
+
+  base <- .alignmentTrackBase(trackName, "remoteAlignment", "bam", "url",
+                              trackHeight, visibilityWindow, color)
+  .RemoteAlignmentTrack(base, bamUrl = bamUrl, bamIndex = bamIndex)
+} # RemoteAlignmentTrack
+
+#' @rdname GenomicAlignmentTrack-class
+#' @export
+CramTrack <- function(trackName,
+                      cramUrl,
+                      indexUrl,
+                      trackHeight = 50,
+                      visibilityWindow = 30000,
+                      color = "gray") {
+  checkmate::assert_string(cramUrl, min.chars = 1L)
+  checkmate::assert_string(indexUrl, min.chars = 1L)
+
+  base <- .alignmentTrackBase(trackName, "alignment", "cram", "url",
+                              trackHeight, visibilityWindow, color)
+  .CramTrack(base, cramUrl = cramUrl, indexUrl = indexUrl)
+} # CramTrack
+
+#-------------------------------------------------------------------------------
+#' VariantTrack: variants from a VariantAnnotation VCF object
+#'
+#' @description A \code{VariantTrack} holds a \code{VCF} object (needs the
+#' suggested package VariantAnnotation), written to a vcf file at display
+#' time, or the urls of a served vcf and its index. Display it with
+#' \code{\link{loadTrack}}; color (from \code{anchorColor}) and the three
+#' genotype colors are sent to igv.js. Url tracks have no igvShiny browser
+#' handler yet, so \code{loadTrack} refuses them.
+#'
+#' @slot displayMode character, "COLLAPSED", "SQUISHED" or "EXPANDED"
+#' @slot vcf.obj a \code{VCF} object, or NULL for a url track
+#' @slot vcf.url list with the urls \code{data} and \code{index}, or empty
+#' @slot anchorColor character, the variant color
+#' @slot homvarColor character, homozygous variant genotype color
+#' @slot hetvarColor character, heterozygous variant genotype color
+#' @slot homrefColor character, homozygous reference genotype color
+#'
+#' @param trackName A character string, used as track label by igv
+#' @param vcf a \code{VCF} object, or a list with the urls \code{data} and
+#' \code{index}
+#' @param trackHeight track height in pixels
+#' @param anchorColor CSS color of the variant row
+#' @param homvarColor CSS color of homozygous variant genotypes
+#' @param hetvarColor CSS color of heterozygous variant genotypes
+#' @param homrefColor CSS color of homozygous reference genotypes
+#' @param displayMode "COLLAPSED", "SQUISHED" or "EXPANDED"
+#' @param visibilityWindow Maximum window size in base pairs for which
+#' variants are displayed
+#'
+#' @return An object of class VariantTrack
+#'
+#' @examples
+#' if (requireNamespace("VariantAnnotation", quietly = TRUE)) {
+#'   f <- system.file(package = "igvShiny", "extdata",
+#'                    "chr19-cebpaRegion.vcf.gz")
+#'   vcf <- VariantAnnotation::readVcf(f, "hg38")
+#'   track <- VariantTrack("cebpa variants", vcf)
+#'   trackSize(track)
+#' }
+#'
+#' @keywords track_classes
+#' @name VariantTrack-class
+#' @rdname VariantTrack-class
+#' @exportClass VariantTrack
+.VariantTrack <- setClass(
+  "VariantTrack",
+  contains = "Track",
+  slots = c(
+    displayMode = "character",
+    vcf.obj = "ANY",
+    vcf.url = "list",
+    anchorColor = "character",
+    homvarColor = "character",
+    hetvarColor = "character",
+    homrefColor = "character"
+  ),
+  validity = function(object) {
+    if (is.null(object@vcf.obj) || is(object@vcf.obj, "VCF")) TRUE else
+      "vcf.obj must be a VCF object (VariantAnnotation) or NULL"
+  }
+)
+
+#' @rdname VariantTrack-class
+#' @export
+VariantTrack <- function(trackName,
+                         vcf,
+                         trackHeight = 50,
+                         anchorColor = "pink",
+                         homvarColor = "rgb(17,248,254)",
+                         hetvarColor = "rgb(34,12,253)",
+                         homrefColor = "rgb(200,200,200)",
+                         displayMode = "EXPANDED",
+                         visibilityWindow = 100000) {
+  checkmate::assert_choice(displayMode,
+                           c("COLLAPSED", "SQUISHED", "EXPANDED"))
+  checkmate::assert_string(anchorColor)
+  checkmate::assert_string(homvarColor)
+  checkmate::assert_string(hetvarColor)
+  checkmate::assert_string(homrefColor)
+
+  vcf.obj <- NULL
+  vcf.url <- list()
+  if (is(vcf, "VCF")) {
+    if (!requireNamespace("VariantAnnotation", quietly = TRUE))
+      stop("VariantTrack needs the VariantAnnotation package")
+    vcf.obj <- vcf
+  } else if (is.list(vcf) && setequal(names(vcf), c("data", "index"))) {
+    checkmate::assert_string(vcf$data, min.chars = 1L)
+    checkmate::assert_string(vcf$index)
+    vcf.url <- vcf
+  } else {
+    stop("vcf argument neither a VCF nor a list of data & index urls")
+  }
+
+  base <- Track(
+    trackType = "variant",
+    sourceType = if (is.null(vcf.obj)) "url" else "file",
+    fileFormat = "vcf",
+    trackName = trackName,
+    onScreenOrder = 1,
+    color = anchorColor,
+    height = trackHeight,
+    visibilityWindow = visibilityWindow
+  )
+  .VariantTrack(base,
+                displayMode = displayMode,
+                vcf.obj = vcf.obj,
+                vcf.url = vcf.url,
+                anchorColor = base@color,
+                homvarColor = homvarColor,
+                hetvarColor = hetvarColor,
+                homrefColor = homrefColor)
+} # VariantTrack
+
+#-------------------------------------------------------------------------------
+#' GFF3Track: gene models from a GFF3 data.frame or url
+#'
+#' @description A \code{GFF3Track} holds either a 9-column GFF3 table
+#' (\code{tbl}), served as a file, or the url of a GFF3 file and optionally
+#' its index. Features are colored by \code{trackColor}, or by the
+#' \code{colorByAttribute} attribute through \code{colorTable}. Display it
+#' with \code{\link{loadTrack}}.
+#'
+#' @slot tbl data.frame, the GFF3 table, or an empty data.frame
+#' @slot url character, the GFF3 url, or NA
+#' @slot indexURL character, the index url, or NA
+#' @slot colorByAttribute character, a column 9 attribute, or NA
+#' @slot colorTable list, attribute value to color; a "default" entry is
+#' renamed "*", igv.js's fallback key
+#'
+#' @param trackName A character string, used as track label by igv
+#' @param tbl.track a data.frame in standard 9-column GFF3 format
+#' @param url url of a GFF3 file, used when \code{tbl.track} is empty
+#' @param indexURL url of its index
+#' @param trackColor A CSS color, used unless colorTable is given
+#' @param colorByAttribute name of a GFF3 attribute in column 9, e.g. "biotype"
+#' @param colorTable a named list mapping attribute values to colors
+#' @param displayMode "COLLAPSED", "SQUISHED" or "EXPANDED"
+#' @param trackHeight track height in pixels
+#' @param visibilityWindow Maximum window size in base pairs for which
+#' features are displayed
+#'
+#' @return An object of class GFF3Track
+#'
+#' @examples
+#' f <- system.file(package = "igvShiny", "extdata", "GRCh38.94.NDUFS2.gff3")
+#' tbl <- utils::read.table(f, sep = "\t", header = FALSE, quote = "",
+#'                          stringsAsFactors = FALSE)
+#' track <- GFF3Track("NDUFS2", tbl, colorByAttribute = "biotype",
+#'                    colorTable = list(protein_coding = "blue",
+#'                                      default = "gray"))
+#' trackSize(track)
+#'
+#' @keywords track_classes
+#' @name GFF3Track-class
+#' @rdname GFF3Track-class
+#' @exportClass GFF3Track
+.GFF3Track <- setClass(
+  "GFF3Track",
+  contains = "igvAnnotationTrack",
+  slots = c(
+    tbl = "data.frame",
+    url = "character",
+    indexURL = "character",
+    colorByAttribute = "character",
+    colorTable = "list"
+  )
+)
+
+#' @rdname GFF3Track-class
+#' @export
+GFF3Track <- function(trackName,
+                      tbl.track = data.frame(),
+                      url = NA_character_,
+                      indexURL = NA_character_,
+                      trackColor = "black",
+                      colorByAttribute = NA_character_,
+                      colorTable = list(),
+                      displayMode = "EXPANDED",
+                      trackHeight = 50,
+                      visibilityWindow = 100000) {
+  checkmate::assert_class(tbl.track, "data.frame")
+  checkmate::assert_string(url, na.ok = TRUE)
+  checkmate::assert_string(indexURL, na.ok = TRUE)
+  checkmate::assert_string(colorByAttribute, na.ok = TRUE)
+  checkmate::assert_list(colorTable, names = "unique")
+  checkmate::assert_choice(displayMode,
+                           c("COLLAPSED", "SQUISHED", "EXPANDED"))
+  if (NROW(tbl.track) == 0L && is.na(url))
+    stop("GFF3Track needs a non-empty tbl.track or a url")
+  if (NROW(tbl.track) > 0L && NCOL(tbl.track) != 9L)
+    stop("GFF3Track: tbl.track must have the 9 GFF3 columns")
+
+  if (length(colorTable) > 0L) {
+    if (is.na(colorByAttribute) || nchar(colorByAttribute) < 3L)
+      stop(sprintf(paste("GFF3Track error: colorTable provided, but",
+                         "unusable 'colorByAttribute': %s"),
+                   colorByAttribute))
+    # igvR's version errored on a table without a default entry
+    names(colorTable)[names(colorTable) == "default"] <- "*"
+  }
+
+  base <- .igvAnnotationTrack(
+    Track(
+      trackType = "annotation",
+      sourceType = if (NROW(tbl.track) > 0L) "file" else "url",
+      fileFormat = "gff3",
+      trackName = trackName,
+      color = trackColor,
+      height = trackHeight,
+      maxTrackHeight = 2000,
+      visibilityWindow = visibilityWindow
+    ),
+    classTypeOfSuppliedObject = if (NROW(tbl.track) > 0L) "data.frame" else
+      "character",
+    displayMode = displayMode,
+    expandedRowHeight = 30,
+    squishedRowHeight = 15,
+    maxRows = 500,
+    searchable = FALSE
+  )
+
+  .GFF3Track(base,
+             tbl = tbl.track,
+             url = url,
+             indexURL = indexURL,
+             colorByAttribute = colorByAttribute,
+             colorTable = colorTable)
+} # GFF3Track
+
+#-------------------------------------------------------------------------------
+#' BedpeInteractionsTrack: paired-end interactions from a bedpe data.frame
+#'
+#' @description A \code{DataFrameAnnotationTrack} whose table is bedpe: chrom1,
+#' start1, end1, chrom2, start2, end2 (0-based starts), optionally followed by
+#' name and score. igv.js draws it as an "interact" track of arcs between the
+#' two anchors. Display it with \code{\link{loadTrack}}; color and height are
+#' sent to igv.js.
+#'
+#' @param trackName A character string, used as track label by igv
+#' @param table a bedpe data.frame, at least 6 columns
+#' @param color A CSS color name (e.g., "red" or "#FF0000"), or "random"
+#' @param trackHeight track height in pixels
+#' @param displayMode "COLLAPSED", "SQUISHED" or "EXPANDED"; stored, not sent
+#' @param visibilityWindow Maximum window size in base pairs; stored, not sent
+#'
+#' @return An object of class BedpeInteractionsTrack
+#'
+#' @examples
+#' f <- system.file(package = "igvShiny", "extdata", "sixColumn-demo1.bedpe")
+#' tbl <- utils::read.table(f, sep = "\t", header = TRUE,
+#'                          stringsAsFactors = FALSE)
+#' track <- BedpeInteractionsTrack("interactions", tbl)
+#' trackSize(track)
+#'
+#' @keywords track_classes
+#' @name BedpeInteractionsTrack-class
+#' @rdname BedpeInteractionsTrack-class
+#' @exportClass BedpeInteractionsTrack
+.BedpeInteractionsTrack <- setClass(
+  "BedpeInteractionsTrack",
+  contains = "DataFrameAnnotationTrack"
+)
+
+#' @rdname BedpeInteractionsTrack-class
+#' @export
+BedpeInteractionsTrack <- function(trackName,
+                                   table,
+                                   color = "darkBlue",
+                                   trackHeight = 50,
+                                   displayMode = "EXPANDED",
+                                   visibilityWindow = 100000) {
+  checkmate::assert_class(table, "data.frame")
+  checkmate::assert_true(NCOL(table) >= 6L)
+  for (column in c(2L, 3L, 5L, 6L))
+    checkmate::assert_numeric(table[[column]],
+                              .var.name = colnames(table)[column])
+
+  obj <- .BedpeInteractionsTrack(
+    DataFrameAnnotationTrack(trackName, table, color = color,
+                             displayMode = displayMode,
+                             trackHeight = trackHeight,
+                             visibilityWindow = visibilityWindow)
+  )
+  obj@trackType <- "pairedEndAnnotation"
+  obj@fileFormat <- "bedpe"
+  obj
+} # BedpeInteractionsTrack
+
+#-------------------------------------------------------------------------------
+#' @rdname trackInfo
+setMethod("trackSize", "GenomicAlignmentTrack", function(obj) {
+  length(obj@alignment)
+})
+
+#' @rdname trackInfo
+setMethod("trackSize", "VariantTrack", function(obj) {
+  if (is.null(obj@vcf.obj)) NA_integer_ else length(obj@vcf.obj)
+})
+
+#' @rdname trackInfo
+setMethod("trackSize", "GFF3Track", function(obj) {
+  if (NROW(obj@tbl) > 0L) NROW(obj@tbl) else NA_integer_
+})
+
+#-------------------------------------------------------------------------------
+#' What loadTrack checks against the reference genome
+#'
+#' @description What \code{.validateTrackReference} gets for a track: the
+#' feature table for the data.frame families, the Bioconductor object for
+#' alignment and variant tracks, and NULL (nothing checked, as with the url
+#' loaders) for tracks that only point at urls.
+#'
+#' @param track an object of a Track subclass
+#'
+#' @return a data.frame, a GAlignments or VCF object, or NULL
+#'
+#' @keywords internal
+setGeneric(".trackReferenceData", signature = "track",
+           function(track) standardGeneric(".trackReferenceData"))
+
+setMethod(".trackReferenceData", "Track", function(track) .trackTable(track))
+
+setMethod(".trackReferenceData", "GenomicAlignmentTrack",
+          function(track) track@alignment)
+
+setMethod(".trackReferenceData", "VariantTrack", function(track) {
+  if (is.null(track@vcf.obj))
+    stop("igvShiny: loadTrack cannot show a url VariantTrack yet; ",
+         "only VCF objects have a browser handler")
+  track@vcf.obj
+})
+
+setMethod(".trackReferenceData", "RemoteAlignmentTrack", function(track) NULL)
+setMethod(".trackReferenceData", "CramTrack", function(track) NULL)
+setMethod(".trackReferenceData", "GFF3Track", function(track) NULL)
+
+# both anchors of every interaction, as one bed table
+setMethod(".trackTable", "BedpeInteractionsTrack", function(track) {
+  tbl <- track@coreObject
+  data.frame(
+    chr = as.character(c(tbl[[1]], tbl[[4]])),
+    start = c(tbl[[2]], tbl[[5]]),
+    end = c(tbl[[3]], tbl[[6]]),
+    stringsAsFactors = FALSE
+  )
+})
+
+#-------------------------------------------------------------------------------
+# Builders of the stage 4 classes, each handing its slots to the loader
+# builder in igvShiny.R. Slots are merged in as defaults, so trackConfig only
+# adds keys, the same rule as the loaders.
+#-------------------------------------------------------------------------------
+setMethod(".trackPayload", "GenomicAlignmentTrack",
+          function(track, path = NULL, trackConfig = list()) {
+  options <- list(color = track@color,
+                  visibilityWindow = track@visibilityWindow)
+  trackConfig <- .sanitizeAndMergeOptions(options, trackConfig)
+  .bamLocalDataTrackPayload(track@trackName, track@alignment, path,
+                            trackHeight = track@height,
+                            trackConfig = trackConfig)
+})
+
+setMethod(".trackPayload", "RemoteAlignmentTrack",
+          function(track, path = NULL, trackConfig = list()) {
+  options <- list(color = track@color,
+                  visibilityWindow = track@visibilityWindow)
+  trackConfig <- .sanitizeAndMergeOptions(options, trackConfig)
+  .bamUrlTrackPayload(track@trackName, track@bamUrl, track@bamIndex,
+                      trackHeight = track@height,
+                      trackConfig = trackConfig)
+})
+
+setMethod(".trackPayload", "CramTrack",
+          function(track, path = NULL, trackConfig = list()) {
+  options <- list(color = track@color,
+                  visibilityWindow = track@visibilityWindow)
+  trackConfig <- .sanitizeAndMergeOptions(options, trackConfig)
+  .cramUrlTrackPayload(track@trackName, track@cramUrl, track@indexUrl,
+                       trackHeight = track@height,
+                       trackConfig = trackConfig)
+})
+
+setMethod(".trackPayload", "VariantTrack",
+          function(track, path = NULL, trackConfig = list()) {
+  # displayMode, height and visibilityWindow are fixed by the loadVcfTrack
+  # handler in igvShiny.js, so only the colors reach igv.js
+  options <- list(color = track@anchorColor,
+                  homvarColor = track@homvarColor,
+                  hetvarColor = track@hetvarColor,
+                  homrefColor = track@homrefColor)
+  trackConfig <- .sanitizeAndMergeOptions(options, trackConfig)
+  .vcfTrackPayload(track@trackName, .trackReferenceData(track), path,
+                   trackConfig = trackConfig)
+})
+
+setMethod(".trackPayload", "GFF3Track",
+          function(track, path = NULL, trackConfig = list()) {
+  # the igvShiny.js handlers test the length of colorByAttribute and indexURL
+  colorBy <- if (is.na(track@colorByAttribute)) "" else track@colorByAttribute
+  if (NROW(track@tbl) > 0L) {
+    return(.gff3TrackPayload(track@trackName, track@tbl, path,
+                             color = track@color,
+                             colorTable = track@colorTable,
+                             colorByAttribute = colorBy,
+                             displayMode = track@displayMode,
+                             trackHeight = track@height,
+                             visibilityWindow = track@visibilityWindow,
+                             trackConfig = trackConfig))
+  }
+  .gff3UrlTrackPayload(track@trackName, track@url,
+                       if (is.na(track@indexURL)) "" else track@indexURL,
+                       color = track@color,
+                       colorTable = track@colorTable,
+                       colorByAttribute = colorBy,
+                       displayMode = track@displayMode,
+                       trackHeight = track@height,
+                       visibilityWindow = track@visibilityWindow,
+                       trackConfig = trackConfig)
+})
+
+setMethod(".trackPayload", "BedpeInteractionsTrack",
+          function(track, path = NULL, trackConfig = list()) {
+  .bedpeTrackPayload(track@trackName, track@coreObject, path,
+                     color = track@color,
+                     trackHeight = track@height,
+                     trackConfig = trackConfig)
+})
+
+#-------------------------------------------------------------------------------
+#' @rdname loadTrack
+setMethod("loadTrack", "GenomicAlignmentTrack",
+          function(session, id, track, deleteTracksOfSameName = TRUE,
+                   trackConfig = list(), validateReference = TRUE) {
+  .sendTrack(session, id, track, "loadBamTrackFromLocalData", ".bam",
+             deleteTracksOfSameName, trackConfig, validateReference)
+})
+
+#' @rdname loadTrack
+setMethod("loadTrack", "RemoteAlignmentTrack",
+          function(session, id, track, deleteTracksOfSameName = TRUE,
+                   trackConfig = list(), validateReference = TRUE) {
+  .sendTrack(session, id, track, "loadBamTrackFromURL", NULL,
+             deleteTracksOfSameName, trackConfig, validateReference)
+})
+
+#' @rdname loadTrack
+setMethod("loadTrack", "CramTrack",
+          function(session, id, track, deleteTracksOfSameName = TRUE,
+                   trackConfig = list(), validateReference = TRUE) {
+  .sendTrack(session, id, track, "loadCramTrackFromURL", NULL,
+             deleteTracksOfSameName, trackConfig, validateReference)
+})
+
+#' @rdname loadTrack
+setMethod("loadTrack", "VariantTrack",
+          function(session, id, track, deleteTracksOfSameName = TRUE,
+                   trackConfig = list(), validateReference = TRUE) {
+  .sendTrack(session, id, track, "loadVcfTrack", ".vcf",
+             deleteTracksOfSameName, trackConfig, validateReference)
+})
+
+#' @rdname loadTrack
+setMethod("loadTrack", "GFF3Track",
+          function(session, id, track, deleteTracksOfSameName = TRUE,
+                   trackConfig = list(), validateReference = TRUE) {
+  if (NROW(track@tbl) > 0L) {
+    handler <- "loadGFF3TrackFromLocalData"
+    ext <- ".gff3"
+  } else {
+    handler <- "loadGFF3TrackFromURL"
+    ext <- NULL
+  }
+  .sendTrack(session, id, track, handler, ext,
+             deleteTracksOfSameName, trackConfig, validateReference)
+})
+
+#' @rdname loadTrack
+setMethod("loadTrack", "BedpeInteractionsTrack",
+          function(session, id, track, deleteTracksOfSameName = TRUE,
+                   trackConfig = list(), validateReference = TRUE) {
+  .sendTrack(session, id, track, "loadBedpeTrackFromFile", ".bedpe",
+             deleteTracksOfSameName, trackConfig, validateReference)
+})
+
+# igvShiny's own GWASTrack is not a Track (see dev/m1-plan.md): loadTrack is
+# display() under the M1 name, so both put the same message on the wire.
+#' @rdname loadTrack
+setMethod("loadTrack", "GWASTrack",
+          function(session, id, track, deleteTracksOfSameName = TRUE) {
+  display(track, session, id, deleteTracksOfSameName = deleteTracksOfSameName)
+})

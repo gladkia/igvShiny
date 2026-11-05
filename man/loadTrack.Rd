@@ -5,6 +5,13 @@
 \alias{loadTrack,Track-method}
 \alias{loadTrack,igvAnnotationTrack-method}
 \alias{loadTrack,QuantitativeTrack-method}
+\alias{loadTrack,GenomicAlignmentTrack-method}
+\alias{loadTrack,RemoteAlignmentTrack-method}
+\alias{loadTrack,CramTrack-method}
+\alias{loadTrack,VariantTrack-method}
+\alias{loadTrack,GFF3Track-method}
+\alias{loadTrack,BedpeInteractionsTrack-method}
+\alias{loadTrack,GWASTrack-method}
 \title{Display a track object in an igvShiny widget}
 \usage{
 loadTrack(session, id, track, ...)
@@ -28,6 +35,62 @@ loadTrack(session, id, track, ...)
   trackConfig = list(),
   validateReference = TRUE
 )
+
+\S4method{loadTrack}{GenomicAlignmentTrack}(
+  session,
+  id,
+  track,
+  deleteTracksOfSameName = TRUE,
+  trackConfig = list(),
+  validateReference = TRUE
+)
+
+\S4method{loadTrack}{RemoteAlignmentTrack}(
+  session,
+  id,
+  track,
+  deleteTracksOfSameName = TRUE,
+  trackConfig = list(),
+  validateReference = TRUE
+)
+
+\S4method{loadTrack}{CramTrack}(
+  session,
+  id,
+  track,
+  deleteTracksOfSameName = TRUE,
+  trackConfig = list(),
+  validateReference = TRUE
+)
+
+\S4method{loadTrack}{VariantTrack}(
+  session,
+  id,
+  track,
+  deleteTracksOfSameName = TRUE,
+  trackConfig = list(),
+  validateReference = TRUE
+)
+
+\S4method{loadTrack}{GFF3Track}(
+  session,
+  id,
+  track,
+  deleteTracksOfSameName = TRUE,
+  trackConfig = list(),
+  validateReference = TRUE
+)
+
+\S4method{loadTrack}{BedpeInteractionsTrack}(
+  session,
+  id,
+  track,
+  deleteTracksOfSameName = TRUE,
+  trackConfig = list(),
+  validateReference = TRUE
+)
+
+\S4method{loadTrack}{GWASTrack}(session, id, track, deleteTracksOfSameName = TRUE)
 }
 \arguments{
 \item{session}{an environment or list, provided and managed by shiny}
