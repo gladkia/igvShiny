@@ -303,3 +303,27 @@ test_that("loadTrack passes trackConfig through and fails before sending", {
   track <- DataFrameAnnotationTrack("df", tracks_bed_tbl())
   expect_error(loadTrack(session, 1, track))
 })
+
+test_that("annotation trackConfig is sanitized once, as on loadBedTrack", {
+  track <- DataFrameAnnotationTrack("df", tracks_bed_tbl())
+  path <- tempfile(fileext = ".bed")
+  on.exit(unlink(path))
+
+  # trackHeight conflicts with the builder's argument and is dropped, not
+  # silently rewritten to height
+  expect_warning(
+    payload <- igvShiny:::.trackPayload(track, path = path,
+                                        trackConfig = list(trackHeight = 200)),
+    "conflict"
+  )
+  expect_false("height" %in% names(payload$config))
+  expect_identical(payload$config$trackHeight, 50)
+  expect_identical(payload$config$displayMode, "SQUISHED")
+
+  expect_warning(
+    payload <- igvShiny:::.trackPayload(track, path = path,
+                                        trackConfig = list(notAnOption = 1)),
+    "invalid or unsupported"
+  )
+  expect_false("notAnOption" %in% names(payload$config))
+})

@@ -96,8 +96,11 @@ data.frame, written as is), \code{GRangesAnnotationTrack} (a
 \code{GRanges}; 1-based starts become 0-based bed starts) and
 \code{UCSCBedAnnotationTrack} (an \code{rtracklayer} \code{UCSCData}, needs
 the suggested package rtracklayer). Display one with
-\code{\link{loadTrack}}; of the annotation slots, \code{displayMode} is
-sent to igv.js.
+\code{\link{loadTrack}}. Of the annotation slots only \code{displayMode}
+is sent to the browser, and the igvShiny.js bed handler currently overrides
+it with "EXPANDED"; \code{expandedRowHeight}, \code{squishedRowHeight},
+\code{maxRows}, \code{searchable} and \code{visibilityWindow} are stored
+for igvR compatibility but not sent yet.
 }
 \section{Slots}{
 

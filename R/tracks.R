@@ -23,10 +23,10 @@
 #' @slot onScreenOrder numeric, explicit placement of the track
 #' @slot color character, a CSS color
 #' @slot height numeric, track height in pixels
-#' @slot autoTrackHeight logical
-#' @slot minTrackHeight numeric, pixels
-#' @slot maxTrackHeight numeric, pixels
-#' @slot visibilityWindow numeric, base pairs
+#' @slot autoTrackHeight logical; stored, not sent to igv.js yet
+#' @slot minTrackHeight numeric, pixels; stored, not sent to igv.js yet
+#' @slot maxTrackHeight numeric, pixels; stored, not sent to igv.js yet
+#' @slot visibilityWindow numeric, base pairs; stored, not sent to igv.js yet
 #'
 #' @param trackType One of "annotation", "quantitative", "alignment",
 #' "variant", "gwas"
@@ -176,8 +176,11 @@ setMethod("trackSize", "Track", function(obj) {
 #' \code{GRanges}; 1-based starts become 0-based bed starts) and
 #' \code{UCSCBedAnnotationTrack} (an \code{rtracklayer} \code{UCSCData}, needs
 #' the suggested package rtracklayer). Display one with
-#' \code{\link{loadTrack}}; of the annotation slots, \code{displayMode} is
-#' sent to igv.js.
+#' \code{\link{loadTrack}}. Of the annotation slots only \code{displayMode}
+#' is sent to the browser, and the igvShiny.js bed handler currently overrides
+#' it with "EXPANDED"; \code{expandedRowHeight}, \code{squishedRowHeight},
+#' \code{maxRows}, \code{searchable} and \code{visibilityWindow} are stored
+#' for igvR compatibility but not sent yet.
 #'
 #' @slot classTypeOfSuppliedObject character
 #' @slot displayMode character, "COLLAPSED", "SQUISHED" or "EXPANDED"
@@ -388,7 +391,8 @@ UCSCBedAnnotationTrack <- function(trackName,
 #' (a \code{GRanges} with exactly one numeric metadata column) and
 #' \code{UCSCBedGraphQuantitativeTrack} (an \code{rtracklayer} \code{UCSCData}
 #' imported from bedGraph, needs the suggested package rtracklayer). Display
-#' one with \code{\link{loadTrack}}.
+#' one with \code{\link{loadTrack}}; \code{visibilityWindow} is stored for
+#' igvR compatibility but not sent to igv.js yet.
 #'
 #' @slot autoscale logical, scale the track to the maximum value in view
 #' @slot min numeric, y-axis minimum, used when autoscale is FALSE
@@ -707,12 +711,21 @@ setMethod(".trackPayload", "igvAnnotationTrack",
           function(track, path = NULL, trackConfig = list()) {
   # the slots igvR sent to the browser for this class: color, height (the
   # builder's own arguments) and displayMode
+  # Slot values win over trackConfig. trackConfig is sanitized only once,
+  # by the builder, so it behaves exactly as on loadBedTrack (e.g. a
+  # trackHeight key conflicts with the builder's argument and is dropped).
   slotOptions <- list(displayMode = track@displayMode)
+  clash <- intersect(names(trackConfig), names(slotOptions))
+  if (length(clash) > 0L) {
+    warning(sprintf(paste("User-provided trackConfig options conflict with",
+                          "track slots and will be ignored: %s"),
+                    toString(clash)))
+    trackConfig[clash] <- NULL
+  }
   .bedTrackPayload(track@trackName, .trackTable(track), path,
                    color = track@color,
                    trackHeight = track@height,
-                   trackConfig = .sanitizeAndMergeOptions(slotOptions,
-                                                          trackConfig))
+                   trackConfig = c(slotOptions, trackConfig))
 })
 
 setMethod(".trackPayload", "QuantitativeTrack",
