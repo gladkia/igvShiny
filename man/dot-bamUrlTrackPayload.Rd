@@ -11,8 +11,7 @@
   displayMode = "EXPANDED",
   showAllBases = FALSE,
   trackHeight = NULL,
-  trackConfig = list(),
-  withShowAllBases = TRUE
+  trackConfig = list()
 )
 }
 \arguments{
@@ -25,17 +24,14 @@
 \item{displayMode}{character string, "EXPANDED" (default), "SQUISHED" or
 "COLLAPSED"}
 
-\item{showAllBases}{logical, show all bases in the alignment; a NULL is
-sent as a JSON null, as \code{loadBamTrackFromURL} always did}
+\item{showAllBases}{logical, or NULL to leave the key out of the message
+(what \code{loadBamTrackFromLocalFile} has always sent)}
 
 \item{trackHeight}{numeric track height in pixels, or NULL for the igv.js
 default}
 
 \item{trackConfig}{a named list of additional igv.js track configuration
 options, merged onto the defaults}
-
-\item{withShowAllBases}{logical, FALSE to leave \code{showAllBases} out of
-the message (what \code{loadBamTrackFromLocalFile} has always sent)}
 }
 \value{
 a list with \code{config}, the message body without

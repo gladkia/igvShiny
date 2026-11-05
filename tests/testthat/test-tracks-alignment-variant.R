@@ -354,3 +354,23 @@ test_that("loadTrack on a GWASTrack sends what display() sends", {
             trackConfig = list(color = "red"), validateReference = FALSE)
   expect_length(sent_messages(session, "removeTracksByName"), 2L)
 })
+
+test_that("a local GFF3Track is checked against the reference", {
+  session <- fake_session()
+  on.exit(end_session(session), add = TRUE)
+  igvShiny:::.registerGenomeSpec(session, "igvTest",
+                                 list(genomeName = "hg38", stockGenome = TRUE))
+  gff <- data.frame(chr = "1", source = "x", type = "gene", start = 101,
+                    end = 500, score = ".", strand = "+", phase = ".",
+                    attr = "ID=x", stringsAsFactors = FALSE)
+
+  expect_warning(loadTrack(session, "igvTest", GFF3Track("g", gff)),
+                 "Reference incompatibility detected")
+  expect_match(last_notification(session)$message$html,
+               "Contig naming mismatch")
+
+  n <- length(sent_notifications(session))
+  expect_no_warning(loadTrack(session, "igvTest", GFF3Track("g2", gff),
+                              validateReference = FALSE))
+  expect_identical(length(sent_notifications(session)), n)
+})

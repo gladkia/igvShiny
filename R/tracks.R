@@ -644,7 +644,7 @@ setMethod(".trackTable", "UCSCBedGraphQuantitativeTrack", function(track) {
   strand <- as.character(BiocGenerics::strand(gr))
   strand[strand == "*"] <- "."
 
-  data.frame(
+  tbl <- data.frame(
     chr = as.character(GenomicRanges::seqnames(gr)),
     start = BiocGenerics::start(gr) - 1L,
     end = BiocGenerics::end(gr),
@@ -653,7 +653,69 @@ setMethod(".trackTable", "UCSCBedGraphQuantitativeTrack", function(track) {
     strand = strand,
     stringsAsFactors = FALSE
   )
+  bed12 <- c("thick", "itemRgb", "blocks")
+  if (any(bed12 %in% colnames(meta))) {
+    tbl <- cbind(tbl, .bed12Columns(gr, meta, tbl))
+  }
+  tbl
 } # .granges2bedTable
+
+#-------------------------------------------------------------------------------
+#' The BED columns 7-12 of a GRanges imported from BED12
+#'
+#' @description rtracklayer keeps BED columns 7-12 as the metadata columns
+#' \code{thick} (IRanges), \code{itemRgb} (character colors) and
+#' \code{blocks} (IRangesList, positions relative to the feature start).
+#' Writing them back keeps the exon structure of a transcript; without them
+#' igv.js draws one solid feature. Missing columns get the BED defaults.
+#'
+#' @param gr a GRanges
+#' @param meta its metadata columns
+#' @param tbl the BED6 table already built from \code{gr}
+#'
+#' @return a data.frame with thickStart, thickEnd, itemRgb, blockCount,
+#' blockSizes, blockStarts
+#'
+#' @keywords internal
+.bed12Columns <- function(gr, meta, tbl) {
+  thick <- meta[["thick"]]
+  thickStart <- if (is.null(thick)) tbl$start else
+    BiocGenerics::start(thick) - 1L
+  thickEnd <- if (is.null(thick)) tbl$end else BiocGenerics::end(thick)
+
+  rgb <- meta[["itemRgb"]]
+  itemRgb <- if (is.null(rgb)) rep("0", length(gr)) else
+    vapply(as.character(rgb), function(x) {
+      # rtracklayer gives "#RRGGBB"; anything else falls back to "0"
+      if (is.na(x) || !grepl("^#[0-9A-Fa-f]{6}", x)) return("0")
+      hex <- substring(x, c(2L, 4L, 6L), c(3L, 5L, 7L))
+      paste(strtoi(hex, 16L), collapse = ",")
+    }, character(1), USE.NAMES = FALSE)
+
+  blocks <- meta[["blocks"]]
+  one_block <- is.null(blocks)
+  joined <- function(i, f) {
+    if (one_block) {
+      return(if (identical(f, "size")) as.character(tbl$end[i] -
+        tbl$start[i]) else "0")
+    }
+    b <- blocks[[i]]
+    v <- if (identical(f, "size")) BiocGenerics::width(b) else
+      BiocGenerics::start(b) - 1L
+    paste(v, collapse = ",")
+  }
+  idx <- seq_along(gr)
+  data.frame(
+    thickStart = thickStart,
+    thickEnd = thickEnd,
+    itemRgb = itemRgb,
+    blockCount = if (one_block) rep(1L, length(gr)) else
+      vapply(idx, function(i) length(blocks[[i]]), integer(1)),
+    blockSizes = vapply(idx, joined, character(1), f = "size"),
+    blockStarts = vapply(idx, joined, character(1), f = "start"),
+    stringsAsFactors = FALSE
+  )
+} # .bed12Columns
 
 #' GRanges with one numeric metadata column to a bedGraph data.frame
 #'
@@ -1404,7 +1466,18 @@ setMethod(".trackReferenceData", "VariantTrack", function(track) {
 
 setMethod(".trackReferenceData", "RemoteAlignmentTrack", function(track) NULL)
 setMethod(".trackReferenceData", "CramTrack", function(track) NULL)
-setMethod(".trackReferenceData", "GFF3Track", function(track) NULL)
+# a URL track has nothing local to check; a local table does (GFF3 columns
+# 1, 4, 5 are seqid, 1-based start, end; the check reads bed coordinates)
+setMethod(".trackReferenceData", "GFF3Track", function(track) {
+  tbl <- track@tbl
+  if (NROW(tbl) == 0L) return(NULL)
+  data.frame(
+    chr = as.character(tbl[[1]]),
+    start = as.numeric(tbl[[4]]) - 1,
+    end = as.numeric(tbl[[5]]),
+    stringsAsFactors = FALSE
+  )
+})
 
 # both anchors of every interaction, as one bed table
 setMethod(".trackTable", "BedpeInteractionsTrack", function(track) {

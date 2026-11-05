@@ -401,3 +401,22 @@ test_that("igv.js receives the annotation slots in the browser stub", {
   expect_null(configs[[2]]$maxRows)
   expect_identical(configs[[3]]$visibilityWindow, 7000L)
 })
+
+test_that("a BED12 GRanges keeps its exon structure on disk", {
+  skip_if_not_installed("rtracklayer")
+  src <- tempfile(fileext = ".bed")
+  writeLines(paste("chr1", 100, 300, "gene", 0, "+", 120, 280,
+                   "255,0,0", 2, "50,50", "0,150", sep = "\t"), src)
+  gr <- rtracklayer::import(src, format = "bed")
+
+  out <- tempfile(fileext = ".bed")
+  igvShiny:::.trackPayload(GRangesAnnotationTrack("gene", gr), path = out)
+  expect_identical(readLines(out), readLines(src))
+})
+
+test_that("a GRanges without BED12 columns still writes six columns", {
+  out <- tempfile(fileext = ".bed")
+  igvShiny:::.trackPayload(GRangesAnnotationTrack("g", tracks_gr()),
+                           path = out)
+  expect_identical(NCOL(tracks_read_bed(out)), 6L)
+})
