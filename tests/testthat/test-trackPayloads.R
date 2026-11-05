@@ -150,23 +150,6 @@ test_that(".bedGraphUrlTrackPayload forwards the url and scaling settings", {
   expect_false("elementID" %in% names(payload$config))
 })
 
-test_that("senders put builder output on the wire behind the element id", {
-  session <- fake_session()
-  loadBedGraphTrack(session, "igvShiny_0", "bg", payload_bed_tbl(),
-                    autoscale = TRUE, validateReference = FALSE)
-  msg <- last_message(session, "loadBedGraphTrack")
-  expected <- igvShiny:::.bedGraphTrackPayload("bg", payload_bed_tbl(),
-                                               autoscale = TRUE)$config
-  expect_identical(names(msg), c("elementID", names(expected)))
-  expect_identical(msg[-1], expected)
-
-  url <- "https://example.org/data.bedGraph"
-  loadBedGraphTrackFromURL(session, "igvShiny_0", "remote", url)
-  msg <- last_message(session, "loadBedGraphTrackFromURL")
-  expect_identical(msg[-1],
-                   igvShiny:::.bedGraphUrlTrackPayload("remote", url)$config)
-})
-
 # ---- stage 2: the remaining loaders ------------------------------------------
 
 payload_junction_tbl <- function() {
@@ -185,12 +168,6 @@ payload_gff3_tbl <- function() {
   f <- system.file(package = "igvShiny", "extdata", "GRCh38.94.NDUFS2.gff3")
   utils::read.table(f, sep = "\t", header = FALSE, comment.char = "#",
                     quote = "", nrows = 20, stringsAsFactors = FALSE)
-}
-
-# Drop the key that carries a freshly drawn file name, so two payloads built
-# from the same input compare equal.
-without_key <- function(config, key) {
-  config[setdiff(names(config), key)]
 }
 
 test_that(".segTrackPayload inlines the table as JSON", {
@@ -408,106 +385,140 @@ test_that(".spliceJunctionTrackPayload rejects a table without chr/start/end", {
   expect_false(file.exists(path))
 })
 
-test_that("stage 2 senders put builder output on the wire unchanged", {
+# ---- the wire messages ---------------------------------------------------
+# Each vector below is the names() of the message the loader sent before the
+# builder/sender split (bd7a6a8, the commit before stage 1), recorded with
+# the same calls. igvShiny.js reads these keys, so the names and their order
+# are pinned literally rather than compared with the builder's own output.
+
+wire_names <- function(session, type) {
+  names(last_message(session, type))
+}
+
+test_that("bed and bedGraph loaders send their pre-refactor keys", {
   session <- fake_session()
   id <- "igvShiny_0"
+  loadBedTrack(session, id, "b", payload_bed_tbl(), validateReference = FALSE)
+  expect_identical(wire_names(session, "loadBedTrackFromFile"),
+                   c("elementID", "trackName", "bedFilepath", "color",
+                     "trackHeight"))
 
-  seg <- data.frame(chr = "chr1", start = 1, end = 2, value = 1)
-  loadSegTrack(session, id, "seg", seg)
-  msg <- last_message(session, "loadSegTrack")
-  expected <- igvShiny:::.segTrackPayload("seg", seg)$config
-  expect_identical(msg, c(list(elementID = id), expected))
+  loadBedGraphTrack(session, id, "g", payload_bed_tbl(), autoscale = TRUE,
+                    validateReference = FALSE)
+  expect_identical(wire_names(session, "loadBedGraphTrack"),
+                   c("elementID", "trackName", "tbl", "color", "trackHeight",
+                     "autoscale", "min", "max", "autoscaleGroup"))
 
-  loadBamTrackFromURL(session, id, "bam", "a.bam", "a.bai", trackHeight = 50)
-  msg <- last_message(session, "loadBamTrackFromURL")
-  expected <- igvShiny:::.bamUrlTrackPayload("bam", "a.bam", "a.bai",
-                                             trackHeight = 50)$config
-  expect_identical(msg, c(list(elementID = id), expected))
-
-  loadCramTrackFromURL(session, id, "cram", "a.cram", "a.crai")
-  msg <- last_message(session, "loadCramTrackFromURL")
-  expected <- igvShiny:::.cramUrlTrackPayload("cram", "a.cram", "a.crai")$config
-  expect_identical(msg, c(list(elementID = id), expected))
-
-  loadGFF3TrackFromURL(session, id, "gff3", "x.gff3", "x.tbi",
-                       colorTable = list(), colorByAttribute = "biotype",
-                       displayMode = "EXPANDED", visibilityWindow = 10)
-  msg <- last_message(session, "loadGFF3TrackFromURL")
-  expected <- igvShiny:::.gff3UrlTrackPayload(
-    "gff3", "x.gff3", "x.tbi", colorTable = list(),
-    colorByAttribute = "biotype", displayMode = "EXPANDED",
-    visibilityWindow = 10
-  )$config
-  expect_identical(msg, c(list(elementID = id), expected))
-
-  loadSpliceJunctionTrackFromURL(session, id, "sj", "x.bed")
-  msg <- last_message(session, "loadSpliceJunctionTrackFromURL")
-  expected <- igvShiny:::.spliceJunctionUrlTrackPayload("sj", "x.bed")$config
-  expect_identical(msg, c(list(elementID = id), expected))
+  loadBedGraphTrackFromURL(session, id, "u", "https://example.org/a.bw")
+  expect_identical(wire_names(session, "loadBedGraphTrackFromURL"),
+                   c("elementID", "trackName", "url", "color", "trackHeight",
+                     "autoscale", "min", "max", "autoscaleGroup"))
   end_session(session)
 })
 
-test_that("stage 2 file-writing senders match their builders", {
+test_that("seg and gwas loaders send their pre-refactor keys", {
   session <- fake_session()
   id <- "igvShiny_0"
-  scratch <- tempfile(fileext = ".tmp")
-  on.exit(unlink(scratch))
+  seg <- data.frame(chr = "chr1", start = 1, end = 2, value = 1)
+  loadSegTrack(session, id, "s", seg)
+  expect_identical(wire_names(session, "loadSegTrack"),
+                   c("elementID", "trackName", "tbl"))
 
   f <- system.file(package = "igvShiny", "extdata", "gwas.RData")
-  tbl.gwas <- get(load(f))
-  loadGwasTrack(session, id, "gwas", tbl.gwas, ymin = 1, ymax = 9)
-  msg <- last_message(session, "loadGwasTrack")
-  expected <- igvShiny:::.gwasTrackPayload("gwas", tbl.gwas, scratch,
-                                           ymin = 1, ymax = 9)$config
-  expect_identical(names(msg), c("elementID", names(expected)))
-  expect_identical(without_key(msg[-1], "gwasDataFilepath"),
-                   without_key(expected, "gwasDataFilepath"))
-
-  loadGFF3TrackFromLocalData(session, id, "gff3", payload_gff3_tbl(),
-                             colorTable = list(), colorByAttribute = "biotype",
-                             displayMode = "EXPANDED", visibilityWindow = 10)
-  msg <- last_message(session, "loadGFF3TrackFromLocalData")
-  expected <- igvShiny:::.gff3TrackPayload(
-    "gff3", payload_gff3_tbl(), scratch, colorTable = list(),
-    colorByAttribute = "biotype", displayMode = "EXPANDED",
-    visibilityWindow = 10
-  )$config
-  expect_identical(names(msg), c("elementID", names(expected)))
-  expect_identical(without_key(msg[-1], "filePath"),
-                   without_key(expected, "filePath"))
-
-  loadSpliceJunctionTrackFromLocalData(session, id, "sj",
-                                       payload_junction_tbl())
-  msg <- last_message(session, "loadSpliceJunctionTrackFromURL")
-  expected <- igvShiny:::.spliceJunctionTrackPayload(
-    "sj", payload_junction_tbl(), scratch
-  )$config
-  expect_identical(names(msg), c("elementID", names(expected)))
-  expect_identical(without_key(msg[-1], "url"), without_key(expected, "url"))
-  expect_identical(readLines(file.path(get_tracks_dir(), basename(msg$url))),
-                   readLines(scratch))
+  loadGwasTrack(session, id, "w", get(load(f)))
+  expect_identical(wire_names(session, "loadGwasTrack"),
+                   c("elementID", "trackName", "gwasDataFilepath", "color",
+                     "trackHeight", "autoscale", "min", "max"))
   end_session(session)
 })
 
-test_that("local bam and cram senders reuse the url builders", {
+test_that("bam and cram loaders send their pre-refactor keys", {
   session <- fake_session()
   id <- "igvShiny_0"
+  loadBamTrackFromURL(session, id, "bu", "a.bam", "a.bai")
+  expect_identical(wire_names(session, "loadBamTrackFromURL"),
+                   c("elementID", "trackName", "bam", "index", "displayMode",
+                     "showAllBases"))
+
   bam <- system.file(package = "igvShiny", "extdata", "tumor.bam")
-  loadBamTrackFromLocalFile(session, id, "bam", bam, validateReference = FALSE)
-  msg <- last_message(session, "loadBamTrackFromURL")
+  loadBamTrackFromLocalFile(session, id, "bf", bam, validateReference = FALSE)
   # the local-file loader has never sent showAllBases
-  expect_identical(names(msg),
+  expect_identical(wire_names(session, "loadBamTrackFromURL"),
                    c("elementID", "trackName", "bam", "index", "displayMode"))
+
+  loadCramTrackFromURL(session, id, "cu", "a.cram", "a.crai")
+  expect_identical(wire_names(session, "loadCramTrackFromURL"),
+                   c("elementID", "trackName", "cram", "index"))
 
   cram <- tempfile(fileext = ".cram")
   writeBin(charToRaw("CRAM"), cram)
   writeBin(charToRaw("CRAI"), paste0(cram, ".crai"))
   on.exit(unlink(c(cram, paste0(cram, ".crai"))))
-  loadCramTrackFromLocalData(session, id, "cram", cram, trackHeight = 60,
+  loadCramTrackFromLocalData(session, id, "cl", cram,
                              validateReference = FALSE)
-  msg <- last_message(session, "loadCramTrackFromURL")
-  expected <- igvShiny:::.cramUrlTrackPayload("cram", msg$cram, msg$index,
-                                              trackHeight = 60)$config
-  expect_identical(msg, c(list(elementID = id), expected))
+  expect_identical(wire_names(session, "loadCramTrackFromURL"),
+                   c("elementID", "trackName", "cram", "index"))
+  end_session(session)
+})
+
+test_that("local bam data loader sends its pre-refactor keys", {
+  skip_if_not_installed("GenomicAlignments")
+  skip_if_not_installed("Rsamtools")
+  skip_if_not_installed("rtracklayer")
+  session <- fake_session()
+  bam <- system.file(package = "igvShiny", "extdata", "tumor.bam")
+  ga <- GenomicAlignments::readGAlignments(bam)
+  loadBamTrackFromLocalData(session, "igvShiny_0", "bd", ga,
+                            validateReference = FALSE)
+  expect_identical(wire_names(session, "loadBamTrackFromLocalData"),
+                   c("elementID", "trackName", "bamDataFilepath",
+                     "displayMode"))
+  end_session(session)
+})
+
+test_that("vcf loader sends its pre-refactor keys", {
+  skip_if_not_installed("VariantAnnotation")
+  session <- fake_session()
+  f <- system.file("extdata", "chr22.vcf.gz", package = "VariantAnnotation")
+  vcf <- VariantAnnotation::readVcf(f, "hg19")
+  loadVcfTrack(session, "igvShiny_0", "v", vcf[1:5],
+               validateReference = FALSE)
+  expect_identical(wire_names(session, "loadVcfTrack"),
+                   c("elementID", "trackName", "vcfDataFilepath"))
+  end_session(session)
+})
+
+test_that("gff3 and splice junction loaders send their pre-refactor keys", {
+  session <- fake_session()
+  id <- "igvShiny_0"
+  gff3_keys <- c("color", "colorTable", "colorByAttribute", "displayMode",
+                 "trackHeight", "visibilityWindow")
+  loadGFF3TrackFromURL(session, id, "fu", "x.gff3", "x.tbi",
+                       colorTable = list(), colorByAttribute = "biotype",
+                       displayMode = "EXPANDED", visibilityWindow = 10)
+  expect_identical(wire_names(session, "loadGFF3TrackFromURL"),
+                   c("elementID", "trackName", "dataURL", "indexURL",
+                     gff3_keys))
+
+  loadGFF3TrackFromLocalData(session, id, "fl", payload_gff3_tbl(),
+                             colorTable = list(), colorByAttribute = "biotype",
+                             displayMode = "EXPANDED", visibilityWindow = 10)
+  expect_identical(wire_names(session, "loadGFF3TrackFromLocalData"),
+                   c("elementID", "trackName", "filePath", gff3_keys))
+
+  sj_keys <- c("elementID", "trackName", "url", "indexURL", "trackHeight",
+               "displayMode")
+  loadSpliceJunctionTrackFromURL(session, id, "ju", "x.bed")
+  expect_identical(wire_names(session, "loadSpliceJunctionTrackFromURL"),
+                   sj_keys)
+
+  loadSpliceJunctionTrackFromLocalData(session, id, "jl",
+                                       payload_junction_tbl())
+  msg <- last_message(session, "loadSpliceJunctionTrackFromURL")
+  expect_identical(names(msg), sj_keys)
+  # the served file is the six-column junction bed the builder writes
+  served <- readLines(file.path(get_tracks_dir(), basename(msg$url)))
+  expect_length(served, 2L)
+  expect_length(strsplit(served[[1]], "\t")[[1]], 6L)
   end_session(session)
 })
