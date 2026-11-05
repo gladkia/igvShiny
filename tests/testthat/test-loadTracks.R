@@ -470,9 +470,12 @@ expect_no_removal <- function(expr) {
 
 test_that("annotation and quantitative loaders reject before removing", {
   bad <- data.frame(a = "x", stringsAsFactors = FALSE)
-  expect_no_removal(function(s, id) loadBedTrack(s, id, "t", bad))
-  expect_no_removal(function(s, id) loadBedGraphTrack(s, id, "t", bad,
-                                                      autoscale = TRUE))
+  expect_no_removal(function(s, id) {
+    loadBedTrack(s, id, "t", bad)
+  })
+  expect_no_removal(function(s, id) {
+    loadBedGraphTrack(s, id, "t", bad, autoscale = TRUE)
+  })
   expect_no_removal(function(s, id) {
     loadBedGraphTrackFromURL(s, id, "t", url = 1)
   })
@@ -487,8 +490,12 @@ test_that("vcf loader rejects before removing", {
 })
 
 test_that("alignment loaders reject before removing", {
-  expect_no_removal(function(s, id) loadBamTrackFromURL(s, id, "t", 1, 2))
-  expect_no_removal(function(s, id) loadCramTrackFromURL(s, id, "t", 1, 2))
+  expect_no_removal(function(s, id) {
+    loadBamTrackFromURL(s, id, "t", 1, 2)
+  })
+  expect_no_removal(function(s, id) {
+    loadCramTrackFromURL(s, id, "t", 1, 2)
+  })
   expect_no_removal(function(s, id) {
     loadCramTrackFromLocalData(s, id, "t", tempfile(fileext = ".cram"),
                                validateReference = FALSE)
@@ -525,8 +532,9 @@ test_that("gff3 and splice junction loaders reject before removing", {
 
 test_that("loadTrack builds the payload before removing", {
   # no Track that passes validity makes its builder fail, so fail it here
-  local_mocked_bindings(.trackPayload = function(...) stop("bad payload"),
-                        .package = "igvShiny")
+  local_mocked_bindings(.trackPayload = function(...) {
+    stop("bad payload")
+  }, .package = "igvShiny")
   track <- DataFrameAnnotationTrack("t", data.frame(
     chrom = "chr1", start = 1, end = 2, stringsAsFactors = FALSE))
   expect_no_removal(function(s, id) {
