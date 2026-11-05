@@ -117,8 +117,7 @@ one with \code{\link{loadTrack}}.
 tbl <- data.frame(chrom = "chr1", start = c(100, 200), end = c(200, 300),
                   value = c(0.5, 2), stringsAsFactors = FALSE)
 track <- DataFrameQuantitativeTrack("bedGraph demo", tbl, autoscale = TRUE)
-gr <- GenomicRanges::GRanges("chr1", IRanges::IRanges(c(101, 201),
-                                                       width = 100),
+gr <- GenomicRanges::GRanges(c("chr1:101-200", "chr1:201-300"),
                              score = c(0.5, 2))
 track2 <- GRangesQuantitativeTrack("GRanges demo", gr)
 trackSize(track2)

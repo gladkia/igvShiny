@@ -18,8 +18,7 @@ tracks_bed_tbl <- function() {
 
 tracks_gr <- function(...) {
   GenomicRanges::GRanges(
-    c("chr1", "chr1", "chr2"),
-    IRanges::IRanges(start = c(101, 301, 11), end = c(200, 400, 20)),
+    c("chr1:101-200", "chr1:301-400", "chr2:11-20"),
     strand = c("+", "*", "-"),
     ...
   )

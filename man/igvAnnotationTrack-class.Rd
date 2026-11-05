@@ -126,8 +126,7 @@ tbl <- data.frame(chrom = rep("chr5", 3),
                   name = c("a", "b", "c"),
                   stringsAsFactors = FALSE)
 track <- DataFrameAnnotationTrack("data.frame demo", tbl, color = "red")
-gr <- GenomicRanges::GRanges("chr5", IRanges::IRanges(c(100, 300),
-                                                       width = 50))
+gr <- GenomicRanges::GRanges(c("chr5:100-149", "chr5:300-349"))
 track2 <- GRangesAnnotationTrack("GRanges demo", gr)
 trackSize(track2)
 

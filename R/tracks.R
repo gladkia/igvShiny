@@ -217,8 +217,7 @@ setMethod("trackSize", "Track", function(obj) {
 #'                   name = c("a", "b", "c"),
 #'                   stringsAsFactors = FALSE)
 #' track <- DataFrameAnnotationTrack("data.frame demo", tbl, color = "red")
-#' gr <- GenomicRanges::GRanges("chr5", IRanges::IRanges(c(100, 300),
-#'                                                        width = 50))
+#' gr <- GenomicRanges::GRanges(c("chr5:100-149", "chr5:300-349"))
 #' track2 <- GRangesAnnotationTrack("GRanges demo", gr)
 #' trackSize(track2)
 #'
@@ -417,8 +416,7 @@ UCSCBedAnnotationTrack <- function(trackName,
 #' tbl <- data.frame(chrom = "chr1", start = c(100, 200), end = c(200, 300),
 #'                   value = c(0.5, 2), stringsAsFactors = FALSE)
 #' track <- DataFrameQuantitativeTrack("bedGraph demo", tbl, autoscale = TRUE)
-#' gr <- GenomicRanges::GRanges("chr1", IRanges::IRanges(c(101, 201),
-#'                                                        width = 100),
+#' gr <- GenomicRanges::GRanges(c("chr1:101-200", "chr1:201-300"),
 #'                              score = c(0.5, 2))
 #' track2 <- GRangesQuantitativeTrack("GRanges demo", gr)
 #' trackSize(track2)
