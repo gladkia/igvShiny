@@ -468,12 +468,27 @@ renderIgvShiny <- function(expr,
 #'   shiny::runApp(demo_app_file)
 #' }
 #'
+#' @details \code{showGenomicRegion}, \code{getGenomicRegion} and
+#' \code{removeTracksByName} are S4 generics dispatching on their first
+#' argument. The default method (signature \code{"ANY"}) handles a shiny
+#' session (a \code{ShinySession}, a module \code{session_proxy} or any
+#' object with a \code{sendCustomMessage} method), so packages that build on
+#' igvShiny can add methods for their own classes without masking these
+#' functions.
+#'
 #' @keywords igvShiny
 #' @export
-showGenomicRegion <- function(session, id, region) {
+setGeneric("showGenomicRegion", signature = "session",
+           function(session, id, region) {
+             standardGeneric("showGenomicRegion")
+           })
+
+#' @rdname showGenomicRegion
+#' @export
+setMethod("showGenomicRegion", "ANY", function(session, id, region) {
   message <- list(region = region, elementID = id)
   session$sendCustomMessage("showGenomicRegion", message)
-} # showGenomicRegion
+}) # showGenomicRegion
 
 #-------------------------------------------------------------------------------
 #' return the current igv region
@@ -499,11 +514,17 @@ showGenomicRegion <- function(session, id, region) {
 #'
 #' @keywords igvShiny
 #' @export
+setGeneric("getGenomicRegion", signature = "session",
+           function(session, id) {
+             standardGeneric("getGenomicRegion")
+           })
 
-getGenomicRegion <- function(session, id) {
+#' @rdname showGenomicRegion
+#' @export
+setMethod("getGenomicRegion", "ANY", function(session, id) {
   message <- list(elementID = id)
   session$sendCustomMessage("getGenomicRegion", message)
-} # gertGenomicRegion
+}) # getGenomicRegion
 
 #-------------------------------------------------------------------------------
 #' remove tracks from the browser
@@ -516,7 +537,10 @@ getGenomicRegion <- function(session, id) {
 #' @param session an environment or list, provided and managed by shiny
 #' @param id character string, the html element id of this widget instance
 #' @param trackNames a vector of character strings
-
+#'
+#' @details An S4 generic dispatching on \code{session}; the default method
+#' (signature \code{"ANY"}) sends the message through a shiny session.
+#'
 #' @examples
 #' library(igvShiny)
 #' demo_app_file <-
@@ -530,15 +554,21 @@ getGenomicRegion <- function(session, id) {
 #'
 #' @keywords igvShiny
 #' @export
-removeTracksByName <- function(session, id, trackNames) {
+setGeneric("removeTracksByName", signature = "session",
+           function(session, id, trackNames) {
+             standardGeneric("removeTracksByName")
+           })
+
+#' @rdname removeTracksByName
+#' @export
+setMethod("removeTracksByName", "ANY", function(session, id, trackNames) {
   message <- list(trackNames = trackNames, elementID = id)
   lmsg <-
     sprintf("--- igvShiny sending message to js, removeTracksByName, %s",
             toString(trackNames))
   flog.debug(lmsg)
   session$sendCustomMessage("removeTracksByName", message)
-
-} # removeTracksByName
+}) # removeTracksByName
 
 #-------------------------------------------------------------------------------
 #' remove only those tracks explicitly added by your app

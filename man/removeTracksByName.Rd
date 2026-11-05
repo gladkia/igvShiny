@@ -2,9 +2,12 @@
 % Please edit documentation in R/igvShiny.R
 \name{removeTracksByName}
 \alias{removeTracksByName}
+\alias{removeTracksByName,ANY-method}
 \title{remove tracks from the browser}
 \usage{
 removeTracksByName(session, id, trackNames)
+
+\S4method{removeTracksByName}{ANY}(session, id, trackNames)
 }
 \arguments{
 \item{session}{an environment or list, provided and managed by shiny}
@@ -18,6 +21,10 @@ nothing
 }
 \description{
 delete tracks on the browser
+}
+\details{
+An S4 generic dispatching on \code{session}; the default method
+(signature \code{"ANY"}) sends the message through a shiny session.
 }
 \examples{
 library(igvShiny)
