@@ -1450,8 +1450,10 @@ loadBamTrackFromURL <-
 #' @param indexURL character string, url of the bam index
 #' @param displayMode character string, "EXPANDED" (default), "SQUISHED" or
 #' "COLLAPSED"
-#' @param showAllBases logical, or NULL to leave the key out of the message
-#' (what \code{loadBamTrackFromLocalFile} has always sent)
+#' @param showAllBases logical, show all bases in the alignment; a NULL is
+#' sent as a JSON null, as \code{loadBamTrackFromURL} always did
+#' @param withShowAllBases logical, FALSE to leave \code{showAllBases} out of
+#' the message (what \code{loadBamTrackFromLocalFile} has always sent)
 #' @param trackHeight numeric track height in pixels, or NULL for the igv.js
 #' default
 #' @param trackConfig a named list of additional igv.js track configuration
@@ -1467,11 +1469,13 @@ loadBamTrackFromURL <-
                                 displayMode = "EXPANDED",
                                 showAllBases = FALSE,
                                 trackHeight = NULL,
-                                trackConfig = list()) {
+                                trackConfig = list(),
+                                withShowAllBases = TRUE) {
   checkmate::assert_string(trackName)
   checkmate::assert_string(bamURL)
   checkmate::assert_string(indexURL)
   checkmate::assert_flag(showAllBases, null.ok = TRUE)
+  checkmate::assert_flag(withShowAllBases)
   checkmate::assert_number(trackHeight, lower = 1, finite = TRUE,
                            null.ok = TRUE)
 
@@ -1481,7 +1485,9 @@ loadBamTrackFromURL <-
     index = indexURL,
     displayMode = displayMode
   )
-  config$showAllBases <- showAllBases
+  # single-bracket assignment keeps a NULL as a named entry, i.e. JSON null
+  if (withShowAllBases)
+    config["showAllBases"] <- list(showAllBases)
   config$height <- trackHeight
 
   list(config = .sanitizeAndMergeOptions(config, trackConfig),
@@ -1703,9 +1709,9 @@ loadBamTrackFromLocalFile <-
 
     payload <- .bamUrlTrackPayload(trackName, bamUrl, baiUrl,
                                    displayMode = displayMode,
-                                   showAllBases = NULL,
                                    trackHeight = trackHeight,
-                                   trackConfig = trackConfig)
+                                   trackConfig = trackConfig,
+                                   withShowAllBases = FALSE)
 
     msg.to.igv <- c(list(elementID = id), payload$config)
     session$sendCustomMessage("loadBamTrackFromURL", msg.to.igv)

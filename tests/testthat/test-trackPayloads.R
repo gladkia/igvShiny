@@ -167,6 +167,34 @@ test_that("senders put builder output on the wire behind the element id", {
                    igvShiny:::.bedGraphUrlTrackPayload("remote", url)$config)
 })
 
+# Literal key lists, copied from the loaders before the builder/sender split:
+# the test above compares a sender with its own builder, so only these catch a
+# reordered or renamed key on the wire
+test_that("senders keep the pre-split message keys and their order", {
+  bg_keys <- c("elementID", "trackName", "tbl", "color", "trackHeight",
+               "autoscale", "min", "max", "autoscaleGroup")
+  url_keys <- c("elementID", "trackName", "url", "color", "trackHeight",
+                "autoscale", "min", "max", "autoscaleGroup")
+  bed_keys <- c("elementID", "trackName", "bedFilepath", "color",
+                "trackHeight")
+
+  session <- fake_session()
+  loadBedTrack(session, "igvShiny_0", "bed", payload_bed_tbl(),
+               validateReference = FALSE)
+  expect_identical(names(last_message(session, "loadBedTrackFromFile")),
+                   bed_keys)
+
+  loadBedGraphTrack(session, "igvShiny_0", "bg", payload_bed_tbl(),
+                    autoscale = TRUE, validateReference = FALSE)
+  expect_identical(names(last_message(session, "loadBedGraphTrack")), bg_keys)
+
+  loadBedGraphTrackFromURL(session, "igvShiny_0", "remote",
+                           "https://example.org/data.bedGraph")
+  expect_identical(names(last_message(session, "loadBedGraphTrackFromURL")),
+                   url_keys)
+  end_session(session)
+})
+
 # ---- stage 2: the remaining loaders ------------------------------------------
 
 payload_junction_tbl <- function() {
@@ -279,11 +307,17 @@ test_that(".bamUrlTrackPayload sends the urls and leaves out unset keys", {
                         showAllBases = FALSE))
 
   payload <- igvShiny:::.bamUrlTrackPayload("bam", "a.bam", "a.bai",
-                                            showAllBases = NULL,
-                                            trackHeight = 120)
+                                            trackHeight = 120,
+                                            withShowAllBases = FALSE)
   expect_identical(names(payload$config),
                    c("trackName", "bam", "index", "displayMode", "height"))
   expect_identical(payload$config$height, 120)
+
+  # an explicit NULL stays on the wire as a JSON null, as before the split
+  payload <- igvShiny:::.bamUrlTrackPayload("bam", "a.bam", "a.bai",
+                                            showAllBases = NULL)
+  expect_true("showAllBases" %in% names(payload$config))
+  expect_null(payload$config$showAllBases)
 
   expect_error(igvShiny:::.bamUrlTrackPayload("bam", "a.bam", "a.bai",
                                               trackHeight = 0))
@@ -528,5 +562,60 @@ test_that("a rejected input leaves the existing track in place", {
                                           displayMode = "EXPANDED",
                                           visibilityWindow = 10))
   expect_length(sent_messages(session, "removeTracksByName"), 0L)
+  end_session(session)
+})
+
+# Literal key lists, copied from the stage 2 loaders before the split: the
+# sender-vs-builder tests above cannot catch a renamed or reordered key
+test_that("stage 2 senders keep the pre-split message keys and their order", {
+  session <- fake_session()
+  id <- "igvShiny_0"
+  keys <- function(type) names(last_message(session, type))
+
+  loadSegTrack(session, id, "seg",
+               data.frame(chr = "chr1", start = 1, end = 2, value = 1))
+  expect_identical(keys("loadSegTrack"), c("elementID", "trackName", "tbl"))
+
+  f <- system.file(package = "igvShiny", "extdata", "gwas.RData")
+  loadGwasTrack(session, id, "gwas", get(load(f)))
+  expect_identical(keys("loadGwasTrack"),
+                   c("elementID", "trackName", "gwasDataFilepath", "color",
+                     "trackHeight", "autoscale", "min", "max"))
+
+  loadBamTrackFromURL(session, id, "bam", "a.bam", "a.bai", trackHeight = 50)
+  expect_identical(keys("loadBamTrackFromURL"),
+                   c("elementID", "trackName", "bam", "index", "displayMode",
+                     "showAllBases", "height"))
+  loadBamTrackFromURL(session, id, "bam", "a.bam", "a.bai",
+                      showAllBases = NULL)
+  expect_identical(keys("loadBamTrackFromURL"),
+                   c("elementID", "trackName", "bam", "index", "displayMode",
+                     "showAllBases"))
+
+  loadCramTrackFromURL(session, id, "cram", "a.cram", "a.crai")
+  expect_identical(keys("loadCramTrackFromURL"),
+                   c("elementID", "trackName", "cram", "index"))
+
+  gff3_keys <- c("color", "colorTable", "colorByAttribute", "displayMode",
+                 "trackHeight", "visibilityWindow")
+  loadGFF3TrackFromURL(session, id, "gff3", "x.gff3", "x.tbi",
+                       colorTable = list(), colorByAttribute = "biotype",
+                       displayMode = "EXPANDED", visibilityWindow = 10)
+  expect_identical(keys("loadGFF3TrackFromURL"),
+                   c("elementID", "trackName", "dataURL", "indexURL",
+                     gff3_keys))
+  loadGFF3TrackFromLocalData(session, id, "gff3", payload_gff3_tbl(),
+                             colorTable = list(), colorByAttribute = "biotype",
+                             displayMode = "EXPANDED", visibilityWindow = 10)
+  expect_identical(keys("loadGFF3TrackFromLocalData"),
+                   c("elementID", "trackName", "filePath", gff3_keys))
+
+  sj_keys <- c("elementID", "trackName", "url", "indexURL", "trackHeight",
+               "displayMode")
+  loadSpliceJunctionTrackFromURL(session, id, "sj", "x.bed")
+  expect_identical(keys("loadSpliceJunctionTrackFromURL"), sj_keys)
+  loadSpliceJunctionTrackFromLocalData(session, id, "sj",
+                                       payload_junction_tbl())
+  expect_identical(keys("loadSpliceJunctionTrackFromURL"), sj_keys)
   end_session(session)
 })
