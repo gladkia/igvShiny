@@ -458,3 +458,78 @@ test_that("seg and gwas loaders reject bad input before removing a track", {
   expect_false(any(c("seg", "gwas") %in% igvShiny:::state[["userAddedTracks"]]))
   end_session(session)
 })
+
+# every loader builds and validates its payload before removing the track it
+# replaces, so bad input leaves the old track in place
+expect_no_removal <- function(expr) {
+  session <- fake_session()
+  on.exit(end_session(session))
+  expect_error(expr(session, "igvShiny_0"))
+  expect_length(sent_messages(session, "removeTracksByName"), 0L)
+}
+
+test_that("annotation and quantitative loaders reject before removing", {
+  bad <- data.frame(a = "x", stringsAsFactors = FALSE)
+  expect_no_removal(function(s, id) loadBedTrack(s, id, "t", bad))
+  expect_no_removal(function(s, id) loadBedGraphTrack(s, id, "t", bad,
+                                                      autoscale = TRUE))
+  expect_no_removal(function(s, id) {
+    loadBedGraphTrackFromURL(s, id, "t", url = 1)
+  })
+})
+
+test_that("vcf loader rejects before removing", {
+  skip_if_not_installed("VariantAnnotation")
+  expect_no_removal(function(s, id) {
+    loadVcfTrack(s, id, "t", vcfData = "not-a-vcf",
+                 validateReference = FALSE)
+  })
+})
+
+test_that("alignment loaders reject before removing", {
+  expect_no_removal(function(s, id) loadBamTrackFromURL(s, id, "t", 1, 2))
+  expect_no_removal(function(s, id) loadCramTrackFromURL(s, id, "t", 1, 2))
+  expect_no_removal(function(s, id) {
+    loadCramTrackFromLocalData(s, id, "t", tempfile(fileext = ".cram"),
+                               validateReference = FALSE)
+  })
+  skip_if_not_installed("rtracklayer")
+  skip_if_not_installed("Rsamtools")
+  expect_no_removal(function(s, id) {
+    loadBamTrackFromLocalData(s, id, "t", "not-alignments",
+                              validateReference = FALSE)
+  })
+  expect_no_removal(function(s, id) {
+    loadBamTrackFromLocalFile(s, id, "t", tempfile(fileext = ".bam"),
+                              validateReference = FALSE)
+  })
+})
+
+test_that("gff3 and splice junction loaders reject before removing", {
+  expect_no_removal(function(s, id) {
+    loadGFF3TrackFromURL(s, id, "t", 1, "x.tbi", colorTable = list(),
+                         colorByAttribute = "biotype")
+  })
+  expect_no_removal(function(s, id) {
+    loadGFF3TrackFromLocalData(s, id, "t", "not a table", colorTable = list(),
+                               colorByAttribute = "biotype")
+  })
+  bad <- data.frame(a = "chr1", b = 1, c = 2, stringsAsFactors = FALSE)
+  expect_no_removal(function(s, id) {
+    loadSpliceJunctionTrackFromLocalData(s, id, "t", bad)
+  })
+  expect_no_removal(function(s, id) {
+    loadSpliceJunctionTrackFromURL(s, id, "t", url = 1)
+  })
+})
+
+test_that("loadTrack builds the payload before removing", {
+  # no Track that passes validity makes its builder fail, so fail it here
+  local_mocked_bindings(.trackPayload = function(...) stop("bad payload"),
+                        .package = "igvShiny")
+  track <- DataFrameAnnotationTrack("t", data.frame(
+    chrom = "chr1", start = 1, end = 2, stringsAsFactors = FALSE))
+  expect_no_removal(function(s, id) {
+    loadTrack(s, id, track, validateReference = FALSE)
+  })
+})

@@ -627,13 +627,6 @@ loadBedTrack <-
       flog.debug(sprintf("rows: %d  cols: %d", NROW(tbl), NCOL(tbl)))
     }
 
-    if (deleteTracksOfSameName) {
-      removeTracksByName(session, id, trackName)
-    }
-
-    state[["userAddedTracks"]] <-
-      unique(c(state[["userAddedTracks"]], trackName))
-
     tbl <- .normalizeBedColumns(tbl)
 
     .validateTrackReference(session, id, trackName, tbl,
@@ -644,6 +637,13 @@ loadBedTrack <-
                                 color = color,
                                 trackHeight = trackHeight,
                                 trackConfig = trackConfig)
+
+    if (deleteTracksOfSameName) {
+      removeTracksByName(session, id, trackName)
+    }
+
+    state[["userAddedTracks"]] <-
+      unique(c(state[["userAddedTracks"]], trackName))
 
     msg.to.igv <- c(list(elementID = id), payload$config)
     session$sendCustomMessage("loadBedTrackFromFile", msg.to.igv)
@@ -864,6 +864,15 @@ loadBedGraphTrackFromURL <-
       flog.debug(lmsg)
     }
 
+    payload <- .bedGraphUrlTrackPayload(trackName, url,
+                                        color = color,
+                                        trackHeight = trackHeight,
+                                        autoscale = autoscale,
+                                        min = min,
+                                        max = max,
+                                        autoscaleGroup = autoscaleGroup,
+                                        trackConfig = trackConfig)
+
     if (deleteTracksOfSameName) {
       lmsg <- sprintf(
         "--- loadBedGraphTrackFromURL, calling removeTracksByName: %s, %s",
@@ -877,14 +886,6 @@ loadBedGraphTrackFromURL <-
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
 
-    payload <- .bedGraphUrlTrackPayload(trackName, url,
-                                        color = color,
-                                        trackHeight = trackHeight,
-                                        autoscale = autoscale,
-                                        min = min,
-                                        max = max,
-                                        autoscaleGroup = autoscaleGroup,
-                                        trackConfig = trackConfig)
     msg.to.igv <- c(list(elementID = id), payload$config)
 
     flog.debug("--- igvShiny.R loadBedGraphTrackFromURL, msg.to.igv: ")
@@ -1012,18 +1013,6 @@ loadBedGraphTrack <-
       flog.debug("    %d rows, %d columns", NROW(tbl), NCOL(tbl))
     }
 
-    if (deleteTracksOfSameName) {
-      flog.debug(
-        "--- igvShiny.R loadBedGraphTrack, calling removeTracksByName: %s, %s",
-        id,
-        trackName
-      )
-      removeTracksByName(session, id, trackName)
-    }
-
-    state[["userAddedTracks"]] <-
-      unique(c(state[["userAddedTracks"]], trackName))
-
     tbl <- .normalizeBedGraphColumns(tbl)
 
     .validateTrackReference(session, id, trackName, tbl,
@@ -1037,6 +1026,18 @@ loadBedGraphTrack <-
                                      min = min,
                                      max = max,
                                      trackConfig = trackConfig)
+
+    if (deleteTracksOfSameName) {
+      flog.debug(
+        "--- igvShiny.R loadBedGraphTrack, calling removeTracksByName: %s, %s",
+        id,
+        trackName
+      )
+      removeTracksByName(session, id, trackName)
+    }
+
+    state[["userAddedTracks"]] <-
+      unique(c(state[["userAddedTracks"]], trackName))
 
     msg.to.igv <- c(list(elementID = id), payload$config)
     session$sendCustomMessage("loadBedGraphTrack", msg.to.igv)
@@ -1266,15 +1267,17 @@ loadVcfTrack <- function(session,
                           validateReference = validateReference)
 
   flog.debug("======== igvShiny.R, loadVcfTrack")
+
+  payload <- .vcfTrackPayload(trackName, vcfData,
+                              path = .trackFile(session, ".vcf"),
+                              trackConfig = trackConfig)
+
   if (deleteTracksOfSameName) {
     removeTracksByName(session, id, trackName)
   }
 
   state[["userAddedTracks"]] <-
     unique(c(state[["userAddedTracks"]], trackName))
-  payload <- .vcfTrackPayload(trackName, vcfData,
-                              path = .trackFile(session, ".vcf"),
-                              trackConfig = trackConfig)
 
   msg.to.igv <- c(list(elementID = id), payload$config)
   session$sendCustomMessage("loadVcfTrack", msg.to.igv)
@@ -1498,18 +1501,19 @@ loadBamTrackFromURL <-
     if (!is.null(trackHeight)) {
       checkmate::assert_number(trackHeight, lower = 1, finite = TRUE)
     }
-    if (deleteTracksOfSameName) {
-      removeTracksByName(session, id, trackName)
-    }
-
-    state[["userAddedTracks"]] <-
-      unique(c(state[["userAddedTracks"]], trackName))
 
     payload <- .bamUrlTrackPayload(trackName, bamURL, indexURL,
                                    displayMode = displayMode,
                                    showAllBases = showAllBases,
                                    trackHeight = trackHeight,
                                    trackConfig = trackConfig)
+
+    if (deleteTracksOfSameName) {
+      removeTracksByName(session, id, trackName)
+    }
+
+    state[["userAddedTracks"]] <-
+      unique(c(state[["userAddedTracks"]], trackName))
 
     msg.to.igv <- c(list(elementID = id), payload$config)
     flog.debug("--- about to send message, loadBamTrack")
@@ -1630,9 +1634,6 @@ loadBamTrackFromLocalData <-
       stop("install rtracklayer to use loadBamTrackFromLocalData")
     if (!requireNamespace("Rsamtools"))
       stop("install Rsamtools to use loadBamTrackFromLocalData")
-    if (deleteTracksOfSameName) {
-      removeTracksByName(session, id, trackName)
-    }
 
     .validateTrackReference(session, id, trackName, data,
                             validateReference = validateReference)
@@ -1650,6 +1651,10 @@ loadBamTrackFromLocalData <-
 
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
+
+    if (deleteTracksOfSameName) {
+      removeTracksByName(session, id, trackName)
+    }
 
     msg.to.igv <- c(list(elementID = id), payload$config)
     session$sendCustomMessage("loadBamTrackFromLocalData", msg.to.igv)
@@ -1769,10 +1774,6 @@ loadBamTrackFromLocalFile <-
       checkmate::assert_number(trackHeight, lower = 1, finite = TRUE)
     }
 
-    if (deleteTracksOfSameName) {
-      removeTracksByName(session, id, trackName)
-    }
-
     .validateTrackReference(session, id, trackName, bamFile,
                             validateReference = validateReference)
 
@@ -1787,6 +1788,10 @@ loadBamTrackFromLocalFile <-
                                    showAllBases = NULL,
                                    trackHeight = trackHeight,
                                    trackConfig = trackConfig)
+
+    if (deleteTracksOfSameName) {
+      removeTracksByName(session, id, trackName)
+    }
 
     msg.to.igv <- c(list(elementID = id), payload$config)
     session$sendCustomMessage("loadBamTrackFromURL", msg.to.igv)
@@ -1839,16 +1844,17 @@ loadCramTrackFromURL <-
     if (!is.null(trackHeight)) {
       checkmate::assert_number(trackHeight, lower = 1, finite = TRUE)
     }
+
+    payload <- .cramUrlTrackPayload(trackName, cramURL, indexURL,
+                                    trackHeight = trackHeight,
+                                    trackConfig = trackConfig)
+
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
     }
 
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
-
-    payload <- .cramUrlTrackPayload(trackName, cramURL, indexURL,
-                                    trackHeight = trackHeight,
-                                    trackConfig = trackConfig)
 
     msg.to.igv <- c(list(elementID = id), payload$config)
     session$sendCustomMessage("loadCramTrackFromURL", msg.to.igv)
@@ -1951,9 +1957,6 @@ loadCramTrackFromLocalData <-
     if (!is.null(trackHeight)) {
       checkmate::assert_number(trackHeight, lower = 1, finite = TRUE)
     }
-    if (deleteTracksOfSameName) {
-      removeTracksByName(session, id, trackName)
-    }
 
     .validateTrackReference(session, id, trackName, cramFile,
                             validateReference = validateReference)
@@ -1968,6 +1971,10 @@ loadCramTrackFromLocalData <-
     payload <- .cramUrlTrackPayload(trackName, cramPath, indexPath,
                                     trackHeight = trackHeight,
                                     trackConfig = trackConfig)
+
+    if (deleteTracksOfSameName) {
+      removeTracksByName(session, id, trackName)
+    }
 
     msg.to.igv <- c(list(elementID = id), payload$config)
     # the payload is what the remote loader sends, only with app-relative urls,
@@ -2039,13 +2046,6 @@ loadGFF3TrackFromURL <-
            deleteTracksOfSameName = TRUE,
            trackConfig = list()) {
 
-    if (deleteTracksOfSameName) {
-      removeTracksByName(session, id, trackName)
-    }
-
-    state[["userAddedTracks"]] <-
-      unique(c(state[["userAddedTracks"]], trackName))
-
     payload <- .gff3UrlTrackPayload(trackName, gff3URL, indexURL,
                                     color = color,
                                     colorTable = colorTable,
@@ -2054,6 +2054,13 @@ loadGFF3TrackFromURL <-
                                     trackHeight = trackHeight,
                                     visibilityWindow = visibilityWindow,
                                     trackConfig = trackConfig)
+
+    if (deleteTracksOfSameName) {
+      removeTracksByName(session, id, trackName)
+    }
+
+    state[["userAddedTracks"]] <-
+      unique(c(state[["userAddedTracks"]], trackName))
 
     msg.to.igv <- c(list(elementID = id), payload$config)
     session$sendCustomMessage("loadGFF3TrackFromURL", msg.to.igv)
@@ -2171,13 +2178,6 @@ loadGFF3TrackFromLocalData <-
            trackConfig = list()) {
     flog.debug("--- entering loadGFF3TrackFromLocalData")
 
-    if (deleteTracksOfSameName) {
-      removeTracksByName(session, id, trackName)
-    }
-
-    state[["userAddedTracks"]] <-
-      unique(c(state[["userAddedTracks"]], trackName))
-
     payload <- .gff3TrackPayload(trackName, tbl.gff3,
                                  path = .trackFile(session, ".gff3"),
                                  color = color,
@@ -2187,6 +2187,13 @@ loadGFF3TrackFromLocalData <-
                                  trackHeight = trackHeight,
                                  visibilityWindow = visibilityWindow,
                                  trackConfig = trackConfig)
+
+    if (deleteTracksOfSameName) {
+      removeTracksByName(session, id, trackName)
+    }
+
+    state[["userAddedTracks"]] <-
+      unique(c(state[["userAddedTracks"]], trackName))
 
     msg.to.igv <- c(list(elementID = id), payload$config)
     session$sendCustomMessage("loadGFF3TrackFromLocalData", msg.to.igv)
@@ -2501,18 +2508,18 @@ loadSpliceJunctionTrackFromLocalData <-
            trackConfig = list()) {
     tbl <- .normalizeJunctionColumns(tbl)
 
+    payload <- .spliceJunctionTrackPayload(trackName, tbl,
+                                           path = .trackFile(session, ".bed"),
+                                           trackHeight = trackHeight,
+                                           displayMode = displayMode,
+                                           trackConfig = trackConfig)
+
     if (deleteTracksOfSameName) {
       removeTracksByName(session, id, trackName)
     }
 
     state[["userAddedTracks"]] <-
       unique(c(state[["userAddedTracks"]], trackName))
-
-    payload <- .spliceJunctionTrackPayload(trackName, tbl,
-                                           path = .trackFile(session, ".bed"),
-                                           trackHeight = trackHeight,
-                                           displayMode = displayMode,
-                                           trackConfig = trackConfig)
 
     msg.to.igv <- c(list(elementID = id), payload$config)
     # The url handler takes it from here: an unindexed bed served by shiny is

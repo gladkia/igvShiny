@@ -878,23 +878,24 @@ setMethod("loadTrack", "QuantitativeTrack",
   # fails without removing the track it was meant to replace
   refData <- .trackReferenceData(track)
 
+  # url tracks have nothing local to check, as with their url loaders
+  if (!is.null(refData))
+    .validateTrackReference(session, id, trackName, refData,
+                            validateReference = validateReference)
+
+  # the payload too is built before anything is sent
+  path <- if (is.null(ext)) NULL else .trackFile(session, ext)
+  payload <- .trackPayload(track, path = path, trackConfig = trackConfig)
+  # files written next to path (the bam index) go at session end too
+  for (extra in setdiff(payload$files, path))
+    .registerTrackFile(session, extra)
+
   if (deleteTracksOfSameName) {
     removeTracksByName(session, id, trackName)
   }
 
   state[["userAddedTracks"]] <-
     unique(c(state[["userAddedTracks"]], trackName))
-
-  # url tracks have nothing local to check, as with their url loaders
-  if (!is.null(refData))
-    .validateTrackReference(session, id, trackName, refData,
-                            validateReference = validateReference)
-
-  path <- if (is.null(ext)) NULL else .trackFile(session, ext)
-  payload <- .trackPayload(track, path = path, trackConfig = trackConfig)
-  # files written next to path (the bam index) go at session end too
-  for (extra in setdiff(payload$files, path))
-    .registerTrackFile(session, extra)
 
   session$sendCustomMessage(handler, c(list(elementID = id), payload$config))
   invisible(NULL)
