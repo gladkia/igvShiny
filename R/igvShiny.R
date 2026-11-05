@@ -55,7 +55,9 @@
   "alpha",
   ## alignment track sizing, coverage display and read row heights
   "coverageTrackHeight", "showCoverage", "showAlignments",
-  "alignmentRowHeight", "squishedRowHeight"
+  "alignmentRowHeight", "squishedRowHeight",
+  ## annotation track row height in EXPANDED mode, sent by loadTrack
+  "expandedRowHeight"
   # Add other valid igv.js track options here as needed in the future
   # "tracks" is deliberately absent: it is meaningful on a merged track only,
   # and .sanitizeTrack handles it there.

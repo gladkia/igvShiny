@@ -26,7 +26,8 @@
 #' @slot autoTrackHeight logical; stored, not sent to igv.js yet
 #' @slot minTrackHeight numeric, pixels; stored, not sent to igv.js yet
 #' @slot maxTrackHeight numeric, pixels; stored, not sent to igv.js yet
-#' @slot visibilityWindow numeric, base pairs; stored, not sent to igv.js yet
+#' @slot visibilityWindow numeric, base pairs; sent to igv.js by the
+#' annotation and quantitative \code{loadTrack} methods (NA: not sent)
 #'
 #' @param trackType One of "annotation", "quantitative", "alignment",
 #' "variant", "gwas"
@@ -176,17 +177,16 @@ setMethod("trackSize", "Track", function(obj) {
 #' \code{GRanges}; 1-based starts become 0-based bed starts) and
 #' \code{UCSCBedAnnotationTrack} (an \code{rtracklayer} \code{UCSCData}, needs
 #' the suggested package rtracklayer). Display one with
-#' \code{\link{loadTrack}}. Of the annotation slots only \code{displayMode}
-#' is sent to the browser, and the igvShiny.js bed handler currently overrides
-#' it with "EXPANDED"; \code{expandedRowHeight}, \code{squishedRowHeight},
-#' \code{maxRows}, \code{searchable} and \code{visibilityWindow} are stored
-#' for igvR compatibility but not sent yet.
+#' \code{\link{loadTrack}}, which sends \code{displayMode},
+#' \code{expandedRowHeight}, \code{squishedRowHeight}, \code{maxRows},
+#' \code{searchable} and \code{visibilityWindow} to igv.js. \code{nameField}
+#' is stored for igvR compatibility, not sent.
 #'
 #' @slot classTypeOfSuppliedObject character
 #' @slot displayMode character, "COLLAPSED", "SQUISHED" or "EXPANDED"
 #' @slot expandedRowHeight numeric, row height in "EXPANDED" mode
 #' @slot squishedRowHeight numeric, row height in "SQUISHED" mode
-#' @slot nameField character
+#' @slot nameField character; stored for igvR compatibility, not sent
 #' @slot maxRows numeric
 #' @slot searchable logical
 #' @slot coreObject the features: data.frame, GRanges or UCSCData
@@ -391,8 +391,8 @@ UCSCBedAnnotationTrack <- function(trackName,
 #' (a \code{GRanges} with exactly one numeric metadata column) and
 #' \code{UCSCBedGraphQuantitativeTrack} (an \code{rtracklayer} \code{UCSCData}
 #' imported from bedGraph, needs the suggested package rtracklayer). Display
-#' one with \code{\link{loadTrack}}; \code{visibilityWindow} is stored for
-#' igvR compatibility but not sent to igv.js yet.
+#' one with \code{\link{loadTrack}}, which also sends
+#' \code{visibilityWindow} to igv.js.
 #'
 #' @slot autoscale logical, scale the track to the maximum value in view
 #' @slot min numeric, y-axis minimum, used when autoscale is FALSE
@@ -709,23 +709,21 @@ setMethod(".trackPayload", "Track",
 
 setMethod(".trackPayload", "igvAnnotationTrack",
           function(track, path = NULL, trackConfig = list()) {
-  # the slots igvR sent to the browser for this class: color, height (the
-  # builder's own arguments) and displayMode
+  # color and height are the builder's own arguments; the other slots igv.js
+  # reads on an annotation track travel as track options.
   # Slot values win over trackConfig. trackConfig is sanitized only once,
   # by the builder, so it behaves exactly as on loadBedTrack (e.g. a
   # trackHeight key conflicts with the builder's argument and is dropped).
-  slotOptions <- list(displayMode = track@displayMode)
-  clash <- intersect(names(trackConfig), names(slotOptions))
-  if (length(clash) > 0L) {
-    warning(sprintf(paste("User-provided trackConfig options conflict with",
-                          "track slots and will be ignored: %s"),
-                    toString(clash)))
-    trackConfig[clash] <- NULL
-  }
+  slotOptions <- list(displayMode = track@displayMode,
+                      expandedRowHeight = track@expandedRowHeight,
+                      squishedRowHeight = track@squishedRowHeight,
+                      maxRows = track@maxRows,
+                      searchable = track@searchable,
+                      visibilityWindow = track@visibilityWindow)
   .bedTrackPayload(track@trackName, .trackTable(track), path,
                    color = track@color,
                    trackHeight = track@height,
-                   trackConfig = c(slotOptions, trackConfig))
+                   trackConfig = .slotsOverConfig(slotOptions, trackConfig))
 })
 
 setMethod(".trackPayload", "QuantitativeTrack",
@@ -736,8 +734,34 @@ setMethod(".trackPayload", "QuantitativeTrack",
                         autoscale = track@autoscale,
                         min = track@min,
                         max = track@max,
-                        trackConfig = trackConfig)
+                        trackConfig = .slotsOverConfig(
+                          list(visibilityWindow = track@visibilityWindow),
+                          trackConfig))
 })
+
+#' Merge track slot options over a user trackConfig
+#'
+#' @description Drops NA slot values, then drops (with a warning) the
+#' trackConfig keys the remaining slots set, so slot values win.
+#'
+#' @param slotOptions named list of track options taken from slots
+#' @param trackConfig named list of user track options
+#'
+#' @return a named list, the slot options followed by the user options
+#'
+#' @keywords internal
+.slotsOverConfig <- function(slotOptions, trackConfig) {
+  keep <- vapply(slotOptions, function(x) !anyNA(x), logical(1))
+  slotOptions <- slotOptions[keep]
+  clash <- intersect(names(trackConfig), names(slotOptions))
+  if (length(clash) > 0L) {
+    warning(sprintf(paste("User-provided trackConfig options conflict with",
+                          "track slots and will be ignored: %s"),
+                    toString(clash)))
+    trackConfig[clash] <- NULL
+  }
+  c(slotOptions, trackConfig)
+}
 
 #-------------------------------------------------------------------------------
 #' Display a track object in an igvShiny widget

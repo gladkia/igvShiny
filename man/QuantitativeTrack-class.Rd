@@ -99,8 +99,8 @@ start, end, value in bedGraph coordinates), \code{GRangesQuantitativeTrack}
 (a \code{GRanges} with exactly one numeric metadata column) and
 \code{UCSCBedGraphQuantitativeTrack} (an \code{rtracklayer} \code{UCSCData}
 imported from bedGraph, needs the suggested package rtracklayer). Display
-one with \code{\link{loadTrack}}; \code{visibilityWindow} is stored for
-igvR compatibility but not sent to igv.js yet.
+one with \code{\link{loadTrack}}, which also sends
+\code{visibilityWindow} to igv.js.
 }
 \section{Slots}{
 

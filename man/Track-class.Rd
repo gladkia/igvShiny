@@ -84,7 +84,8 @@ with \code{\link{loadTrack}}.
 
 \item{\code{maxTrackHeight}}{numeric, pixels; stored, not sent to igv.js yet}
 
-\item{\code{visibilityWindow}}{numeric, base pairs; stored, not sent to igv.js yet}
+\item{\code{visibilityWindow}}{numeric, base pairs; sent to igv.js by the
+annotation and quantitative \code{loadTrack} methods (NA: not sent)}
 }}
 
 \examples{

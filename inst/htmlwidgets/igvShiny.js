@@ -761,7 +761,9 @@ addBrowserMessageHandler("loadBedTrackFromFile",
                     order: Number.MAX_VALUE,
                     url: dataURL,
                     indexed: false,
-                    displayMode: "EXPANDED",
+                    // loadTrack(<annotation track>) sends its displayMode
+                    // slot; the other bed loaders never do and stay EXPANDED
+                    displayMode: message.displayMode || "EXPANDED",
                     color: color,
                     height: trackHeight
                     };
