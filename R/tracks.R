@@ -1508,8 +1508,9 @@ setMethod(".trackReferenceData", "GFF3Track", function(track) {
   if (NROW(tbl) == 0L) return(NULL)
   data.frame(
     chr = as.character(tbl[[1]]),
-    start = as.numeric(tbl[[4]]) - 1,
-    end = as.numeric(tbl[[5]]),
+    # via character: a factor column would give its level codes
+    start = as.numeric(as.character(tbl[[4]])) - 1,
+    end = as.numeric(as.character(tbl[[5]])),
     stringsAsFactors = FALSE
   )
 })

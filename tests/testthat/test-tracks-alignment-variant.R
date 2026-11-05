@@ -384,3 +384,14 @@ test_that("an alignment track takes displayMode from trackConfig", {
     RemoteAlignmentTrack("b", "https://example.org/a.bam"))
   expect_identical(p$config$displayMode, "EXPANDED")
 })
+
+test_that("factor GFF3 coordinates are checked by value, not level code", {
+  gff <- data.frame(chr = "chr1", source = "x", type = "gene",
+                    start = factor(c("101", "301"),
+                                   levels = c("301", "201", "101")),
+                    end = factor(c("200", "400")), score = ".",
+                    strand = "+", phase = ".", attr = "ID=x")
+  ref <- igvShiny:::.trackReferenceData(GFF3Track("g", gff))
+  expect_identical(ref$start, c(100, 300))
+  expect_identical(ref$end, c(200, 400))
+})
