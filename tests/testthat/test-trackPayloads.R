@@ -166,3 +166,31 @@ test_that("senders put builder output on the wire behind the element id", {
   expect_identical(msg[-1],
                    igvShiny:::.bedGraphUrlTrackPayload("remote", url)$config)
 })
+
+# Literal key lists, copied from the loaders before the builder/sender split:
+# the test above compares a sender with its own builder, so only these catch a
+# reordered or renamed key on the wire
+test_that("senders keep the pre-split message keys and their order", {
+  bg_keys <- c("elementID", "trackName", "tbl", "color", "trackHeight",
+               "autoscale", "min", "max", "autoscaleGroup")
+  url_keys <- c("elementID", "trackName", "url", "color", "trackHeight",
+                "autoscale", "min", "max", "autoscaleGroup")
+  bed_keys <- c("elementID", "trackName", "bedFilepath", "color",
+                "trackHeight")
+
+  session <- fake_session()
+  loadBedTrack(session, "igvShiny_0", "bed", payload_bed_tbl(),
+               validateReference = FALSE)
+  expect_identical(names(last_message(session, "loadBedTrackFromFile")),
+                   bed_keys)
+
+  loadBedGraphTrack(session, "igvShiny_0", "bg", payload_bed_tbl(),
+                    autoscale = TRUE, validateReference = FALSE)
+  expect_identical(names(last_message(session, "loadBedGraphTrack")), bg_keys)
+
+  loadBedGraphTrackFromURL(session, "igvShiny_0", "remote",
+                           "https://example.org/data.bedGraph")
+  expect_identical(names(last_message(session, "loadBedGraphTrackFromURL")),
+                   url_keys)
+  end_session(session)
+})
