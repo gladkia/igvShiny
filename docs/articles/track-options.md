@@ -43,7 +43,7 @@ is handed — including the defaults the loader fills in:
 `#> loadBedTrackFromFile`\
 `#>   elementID: igv`\
 `#>   trackName: my regions`\
-`#>   bedFilepath: tracks/file227d620e138c.bed`\
+`#>   bedFilepath: tracks/file22c81bc97f70.bed`\
 `#>   color: `\
 `#>   trackHeight: 50`\
 `#>   displayMode: EXPANDED`\
@@ -337,7 +337,7 @@ without it the parser guesses the layout from header names it recognises
 `#> loadGwasTrack`\
 `#>   elementID: igv`\
 `#>   trackName: gwas`\
-`#>   gwasDataFilepath: tracks/file227d5287e7a9.gwas`\
+`#>   gwasDataFilepath: tracks/file22c868c96050.gwas`\
 `#>   color: red`\
 `#>   trackHeight: 200`\
 `#>   autoscale: FALSE`\
@@ -522,7 +522,7 @@ options that are useful from R, and it grows.
 `#> other attached packages:`\
 `#> [1] igvShiny_1.9.52      shiny_1.14.0         GenomicRanges_1.65.4`\
 `#> [4] Seqinfo_1.3.2        IRanges_2.47.5       S4Vectors_0.51.10   `\
-`#> [7] BiocGenerics_0.59.12 generics_0.1.4       BiocStyle_2.41.0    `\
+`#> [7] BiocGenerics_0.59.13 generics_0.1.4       BiocStyle_2.41.0    `\
 `#> `\
 `#> loaded via a namespace (and not attached):`\
 `#>  [1] sass_0.4.10             futile.options_1.0.1    stringi_1.8.9          `\
