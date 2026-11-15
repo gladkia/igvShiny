@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">igvShiny</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.52</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.53</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,11 @@
       <small>Source: <a href="https://github.com/gladkia/igvShiny/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.9.53" id="igvshiny-1953">igvShiny 1.9.53<a class="anchor" aria-label="anchor" href="#igvshiny-1953"></a></h2>
+<ul><li>Fix local-file track urls on addresses with a query string: strip it for every loader, not just bed/bedpe (<a href="https://github.com/gladkia/igvShiny/issues/88" class="external-link">#88</a>)</li>
+<li>Fix get_css_genomes() raising on a failed registry connection instead of falling back to the built-in genome list (<a href="https://github.com/gladkia/igvShiny/issues/182" class="external-link">#182</a>)</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.9.52" id="igvshiny-1952">igvShiny 1.9.52<a class="anchor" aria-label="anchor" href="#igvshiny-1952"></a></h2>
 <ul><li>Add S4 Track classes ported from igvR and loadTrack(), which also loads a plain igv.js track config list (<a href="https://github.com/gladkia/igvShiny/issues/111" class="external-link">#111</a>)</li>

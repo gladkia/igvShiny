@@ -1,5 +1,14 @@
 # Changelog
 
+## igvShiny 1.9.53
+
+- Fix local-file track urls on addresses with a query string: strip it
+  for every loader, not just bed/bedpe
+  ([\#88](https://github.com/gladkia/igvShiny/issues/88))
+- Fix get_css_genomes() raising on a failed registry connection instead
+  of falling back to the built-in genome list
+  ([\#182](https://github.com/gladkia/igvShiny/issues/182))
+
 ## igvShiny 1.9.52
 
 - Add S4 Track classes ported from igvR and loadTrack(), which also
