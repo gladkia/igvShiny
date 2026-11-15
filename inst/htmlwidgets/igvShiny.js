@@ -104,6 +104,16 @@ function mergeExtraParameters(config, message) {
     return config;
 }
 //----------------------------------------------------------------------------------------------------
+// An app-relative path ("tracks/a.vcf") has to be appended to the app's base
+// url, not to window.location.href: on a bookmarked or Connect-routed session
+// the href carries a query string ("http://host/?x=1"), and appending gives
+// "http://host/?x=1tracks/a.vcf" - the server answers with the app's HTML and
+// igv.js silently loads nothing. loadBedTrackFromFile learned this in #88;
+// every local-file url is built here so the fix cannot be missed again.
+function appUrl(path) {
+   return window.location.href.split('?')[0] + path;
+}
+//----------------------------------------------------------------------------------------------------
 
 HTMLWidgets.widget({
 
@@ -475,8 +485,8 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
         minimumBases: 5,
         reference:{
             id: genomeName,
-            fastaURL: window.location.href + fasta,
-            indexURL: window.location.href + fastaIndex,
+            fastaURL: appUrl(fasta),
+            indexURL: appUrl(fastaIndex),
             indexed:  (fastaIndex == null)  ? false : true
             }
         }; // localCustomGenome_options
@@ -508,7 +518,7 @@ function genomeSpecificOptions(genomeName, stockGenome, dataMode, initialLocus, 
            }
         if(dataMode == "localFiles"){
            localCustomGenome_options.reference.tracks = [annotationTrack];
-           localCustomGenome_options.reference.tracks[0].url = window.location.href + annotation;
+           localCustomGenome_options.reference.tracks[0].url = appUrl(annotation);
            }
         } // if annotation (gff3) supplied
     
@@ -692,7 +702,7 @@ addBrowserMessageHandler("loadGenomeAnnotationTrackFromFile",
        var elementID = message.elementID;
        var igvBrowser = document.getElementById(elementID).igvBrowser;
 
-       var uri = window.location.href + "tracks/" + message.filename;
+       var uri = appUrl("tracks/" + message.filename);
        var config = {format: "gff3",
                      name: "gff3 track",
                      url: uri,
@@ -749,7 +759,7 @@ addBrowserMessageHandler("loadBedTrackFromFile",
       var igvBrowser = document.getElementById(elementID).igvBrowser;
       var trackName = message.trackName;
       var bedFile = message.bedFilepath;
-      var dataURL = window.location.href.split('?')[0] + bedFile; // If a query string is present the url before that is used
+      var dataURL = appUrl(bedFile);
       igvshiny_log("dataURL: " + dataURL);
 
       var color = message.color;
@@ -779,8 +789,7 @@ addBrowserMessageHandler("loadBedpeTrackFromFile",
    function(message){
       igvshiny_log("=== loadBedpeTrackFromFile");
       var igvBrowser = document.getElementById(message.elementID).igvBrowser;
-      // If a query string is present the url before that is used
-      var dataURL = window.location.href.split('?')[0] + message.bedpeFilepath;
+      var dataURL = appUrl(message.bedpeFilepath);
 
       var config = {format: "bedpe",
                     name: message.trackName,
@@ -936,7 +945,7 @@ addBrowserMessageHandler("loadVcfTrack",
       var igvBrowser = document.getElementById(elementID).igvBrowser;
       var trackName = message.trackName;
       var vcfFile = message.vcfDataFilepath;
-      var dataURL = window.location.href + message.vcfDataFilepath;
+      var dataURL = appUrl(message.vcfDataFilepath);
       igvshiny_log("dataURL: " + dataURL);
 
       var config = {format: "vcf",
@@ -982,7 +991,7 @@ addBrowserMessageHandler("loadGwasTrack",
       var max = message.max;
 
       var gwasFile = message.gwasDataFilepath;
-      var dataURL = window.location.href + gwasFile;
+      var dataURL = appUrl(gwasFile);
       igvshiny_log("dataURL: " + dataURL);
 
       var config = {format: "gwas",
@@ -1019,7 +1028,7 @@ addBrowserMessageHandler("loadGwasTrackFlexibleSource",
       var max = message.max;
 
       if(dataMode == "local.url")
-          url = window.location.href + url;
+          url = appUrl(url);
 
       igvshiny_log("loadGwasTrackFlexibleSource, url: " + url)
 
@@ -1076,7 +1085,7 @@ addBrowserMessageHandler("loadBamTrackFromLocalData",
       igvshiny_log(message)
       var elementID = message.elementID;
       var igvBrowser = document.getElementById(elementID).igvBrowser;
-      var dataURL = window.location.href + message.bamDataFilepath;
+      var dataURL = appUrl(message.bamDataFilepath);
       var trackName = message.trackName;
       var displayMode = message.displayMode;
 
@@ -1162,7 +1171,7 @@ addBrowserMessageHandler("loadGFF3TrackFromLocalData",
 
       var elementID = message.elementID;
       var igvBrowser = document.getElementById(elementID).igvBrowser;
-      var dataURL = window.location.href + message.filePath;
+      var dataURL = appUrl(message.filePath);
 
        var config = {type: "annotation",
                      format: "gff3",

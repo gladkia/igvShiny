@@ -349,6 +349,49 @@ function runHarness(jsPath, scenario) {
          results.variantSlots = configs.slice();
       }
 
+      if (scenario === 'local-urls') {
+         // Only on request: every app-relative file url is built from the
+         // base url with the query string stripped (#88), not just bed/bedpe
+         global.location = { href: 'http://127.0.0.1:1234/?x=1' };
+         pend.length = 0;
+         configs.length = 0;
+         const created = [];
+         const prevCreate = global.igv.createBrowser;
+         global.igv.createBrowser = (node, opts) => {
+            created.push(opts);
+            return prevCreate(node, opts);
+         };
+
+         // custom local genome: fasta, index and annotation track urls
+         w.renderValue({
+            genomeName: 'ribo', stockGenome: false, dataMode: 'localFiles',
+            initialLocus: 'all', moduleNS: '', tracks: [], trackHeight: '100',
+            fasta: 'tracks/genome.fa', fastaIndex: 'tracks/genome.fa.fai',
+            annotation: 'tracks/genes.gff3'
+         });
+         pend[0].res(mkBrowser('ribo'));
+         await tick();
+
+         handlers.loadGenomeAnnotationTrackFromFile({ elementID: 'igv1', filename: 'a.gff3' });
+         handlers.loadBedTrackFromFile({ elementID: 'igv1', trackName: 'bed', bedFilepath: 'tracks/a.bed' });
+         handlers.loadBedpeTrackFromFile({ elementID: 'igv1', trackName: 'bedpe', bedpeFilepath: 'tracks/a.bedpe' });
+         handlers.loadVcfTrack({ elementID: 'igv1', trackName: 'vcf', vcfDataFilepath: 'tracks/a.vcf' });
+         handlers.loadGwasTrack({ elementID: 'igv1', trackName: 'gwas', gwasDataFilepath: 'tracks/a.gwas' });
+         handlers.loadGwasTrackFlexibleSource({ elementID: 'igv1', trackName: 'gwasLocal',
+                                                dataMode: 'local.url', dataUrl: 'tracks/a.gwas' });
+         handlers.loadGwasTrackFlexibleSource({ elementID: 'igv1', trackName: 'gwasRemote',
+                                                dataMode: 'remote.url', dataUrl: 'https://example.org/a.gwas' });
+         handlers.loadBamTrackFromLocalData({ elementID: 'igv1', trackName: 'bam', bamDataFilepath: 'tracks/a.bam' });
+         handlers.loadGFF3TrackFromLocalData({ elementID: 'igv1', trackName: 'gff3', filePath: 'tracks/a.gff3',
+                                               colorTable: {}, colorByAttribute: '' });
+
+         results.localUrls = {
+            reference: created[0].reference,
+            tracks: configs.map((c) => ({ name: c.name, url: c.url }))
+         };
+         global.igv.createBrowser = prevCreate;
+      }
+
       if (scenario === 'track-config') {
          // Only on request: a config list from loadTrack() reaches igv.js
          pend.length = 0;
