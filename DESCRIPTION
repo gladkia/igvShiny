@@ -53,7 +53,7 @@ Suggests:
     Rsamtools,
     rtracklayer,
     shinytest2,
-    testthat,
+    testthat (>= 3.2.0),
     VariantAnnotation
 biocViews: Software, ShinyApps, Sequencing, Coverage
 License: MIT + file LICENSE

@@ -375,6 +375,10 @@ function runHarness(jsPath, scenario) {
          handlers.loadGenomeAnnotationTrackFromFile({ elementID: 'igv1', filename: 'a.gff3' });
          handlers.loadBedTrackFromFile({ elementID: 'igv1', trackName: 'bed', bedFilepath: 'tracks/a.bed' });
          handlers.loadBedpeTrackFromFile({ elementID: 'igv1', trackName: 'bedpe', bedpeFilepath: 'tracks/a.bedpe' });
+         // a resource path with its own query (the shape registerDataObj() returns):
+         // only the page query is dropped, the resource keeps w and nonce
+         handlers.loadBedTrackFromFile({ elementID: 'igv1', trackName: 'bedSession',
+                                         bedFilepath: 'session/tok/dataobj/a.bed?w=1&nonce=abc' });
          handlers.loadVcfTrack({ elementID: 'igv1', trackName: 'vcf', vcfDataFilepath: 'tracks/a.vcf' });
          handlers.loadGwasTrack({ elementID: 'igv1', trackName: 'gwas', gwasDataFilepath: 'tracks/a.gwas' });
          handlers.loadGwasTrackFlexibleSource({ elementID: 'igv1', trackName: 'gwasLocal',

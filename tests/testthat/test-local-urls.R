@@ -36,6 +36,10 @@ test_that("local-file urls drop the query string in every loader (#88)", {
   names(urls) <- vapply(res$tracks, `[[`, character(1), "name")
   expect_identical(unname(urls[names(expected)]), paste0(base, unname(expected)))
 
+  # only the page query is dropped: a resource path keeps its own query
+  expect_identical(urls[["bedSession"]],
+                   paste0(base, "session/tok/dataobj/a.bed?w=1&nonce=abc"))
+
   # a remote url is left untouched
   remote <- Filter(function(t) identical(t$name, "gwasRemote"), res$tracks)[[1]]
   expect_identical(remote$url, "https://example.org/a.gwas")
