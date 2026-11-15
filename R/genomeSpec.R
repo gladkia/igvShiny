@@ -63,11 +63,25 @@ get_css_genomes <- function(test = FALSE) {
   # file, genomes.json, still exists and lists ids 3.x cannot resolve by name.
   current.genomes.file <- "https://igv.org/genomes/genomes3.json"
 
-  if (httr::http_error(current.genomes.file))
+  # httr::http_error signals (rather than returns TRUE) when the connection
+  # itself fails - proxy refusal, DNS outage - which is exactly when the
+  # fallback matters most (#182). Treat any signalling as "unreachable".
+  unreachable <- tryCatch(httr::http_error(current.genomes.file),
+                          error = function(e) TRUE)
+
+  if (unreachable)
     return(get_basic_genomes())
 
-  current.genomes.raw <-
-    readLines(current.genomes.file, warn = FALSE, skipNul = TRUE)
+  # A successful HEAD probe does not guarantee the GET succeeds: the
+  # connection can still drop mid-transfer (#182). Guard the fetch only -
+  # malformed registry content is not an outage and must surface as an error.
+  current.genomes.raw <- tryCatch(
+    readLines(current.genomes.file, warn = FALSE, skipNul = TRUE),
+    error = function(e) NULL)
+
+  if (is.null(current.genomes.raw))
+    return(get_basic_genomes())
+
   tbl.genomes <- jsonlite::fromJSON(current.genomes.raw)
   tbl.genomes$id
 

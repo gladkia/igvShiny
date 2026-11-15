@@ -39,6 +39,11 @@ test_that("Cached (caas) genomes are retrieved quickly", {
   ))
 
   t2 <- system.time(cssg  <- get_css_genomes())
+  # with the registry reachable the fetch takes real time; when it is not
+  # (offline CI), get_css_genomes falls back to the built-in list instantly
+  # and there is nothing to time
+  skip_if(identical(cssg, get_basic_genomes()),
+          "genome registry unreachable, fell back to the built-in list")
   expect_true(t2[["elapsed"]] > 0.01)
 
   # Parsing a cached genome spec should be fast
@@ -64,6 +69,44 @@ test_that("Cached (caas) genomes are retrieved quickly", {
     )
   )
   expect_true(t4[["elapsed"]] > 0.01)
+})
+
+test_that("get_css_genomes falls back when the registry connection fails", {
+  # a refused proxy or DNS outage makes httr::http_error signal rather than
+  # return TRUE; the fallback has to hold then too (#182)
+  local_mocked_bindings(http_error = function(...) stop("connection refused"),
+                        .package = "httr")
+  expect_identical(get_css_genomes(), get_basic_genomes())
+})
+
+test_that("get_css_genomes falls back when the probe reports an HTTP error", {
+  local_mocked_bindings(http_error = function(...) TRUE, .package = "httr")
+  expect_identical(get_css_genomes(), get_basic_genomes())
+})
+
+test_that("get_css_genomes falls back when the fetch fails after a successful probe", {
+  # the HEAD probe can succeed and the GET still die mid-transfer (#182);
+  # only the fetch is guarded, so the fallback has to hold here too
+  local_mocked_bindings(http_error = function(...) FALSE, .package = "httr")
+  local_mocked_bindings(readLines = function(...) stop("GET connection reset"),
+                        .package = "base")
+  expect_identical(get_css_genomes(), get_basic_genomes())
+})
+
+test_that("get_css_genomes surfaces malformed registry content as an error", {
+  # a registry that answers with broken content is not an outage: the parse
+  # error must reach the caller rather than silently fall back (#182)
+  local_mocked_bindings(http_error = function(...) FALSE, .package = "httr")
+  local_mocked_bindings(readLines = function(...) "{not json", .package = "base")
+  expect_error(get_css_genomes())
+})
+
+test_that("get_css_genomes returns the registry ids on a successful fetch", {
+  local_mocked_bindings(http_error = function(...) FALSE, .package = "httr")
+  local_mocked_bindings(
+    readLines = function(...) '[{"id": "hg38"}, {"id": "mm10"}, {"id": "danRer11"}]',
+    .package = "base")
+  expect_identical(get_css_genomes(), c("hg38", "mm10", "danRer11"))
 })
 
 test_that("Parsing and validation of stock genome specs works", {
