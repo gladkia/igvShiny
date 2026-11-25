@@ -43,7 +43,7 @@ is handed — including the defaults the loader fills in:
 `#> loadBedTrackFromFile`\
 `#>   elementID: igv`\
 `#>   trackName: my regions`\
-`#>   bedFilepath: tracks/file24db379773b3.bed`\
+`#>   bedFilepath: tracks/file32e7645c0b7f.bed`\
 `#>   color: `\
 `#>   trackHeight: 50`\
 `#>   displayMode: EXPANDED`\
@@ -337,7 +337,7 @@ without it the parser guesses the layout from header names it recognises
 `#> loadGwasTrack`\
 `#>   elementID: igv`\
 `#>   trackName: gwas`\
-`#>   gwasDataFilepath: tracks/file24db43972d33.gwas`\
+`#>   gwasDataFilepath: tracks/file32e77108329a.gwas`\
 `#>   color: red`\
 `#>   trackHeight: 200`\
 `#>   autoscale: FALSE`\
@@ -520,9 +520,9 @@ options that are useful from R, and it grows.
 `#> [8] base     `\
 `#> `\
 `#> other attached packages:`\
-`#> [1] igvShiny_1.11.0      shiny_1.14.0         GenomicRanges_1.65.4`\
-`#> [4] Seqinfo_1.3.2        IRanges_2.47.5       S4Vectors_0.51.10   `\
-`#> [7] BiocGenerics_0.59.13 generics_0.1.4       BiocStyle_2.41.0    `\
+`#> [1] igvShiny_1.11.0      shiny_1.14.0         GenomicRanges_1.66.0`\
+`#> [4] Seqinfo_1.4.0        IRanges_2.48.0       S4Vectors_0.52.0    `\
+`#> [7] BiocGenerics_0.60.0  generics_0.1.4       BiocStyle_2.42.0    `\
 `#> `\
 `#> loaded via a namespace (and not attached):`\
 `#>  [1] sass_0.4.10             futile.options_1.0.1    stringi_1.8.9          `\

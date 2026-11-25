@@ -466,9 +466,9 @@ reports the directory in use.
 `#> [8] base     `\
 `#> `\
 `#> other attached packages:`\
-`#> [1] igvShiny_1.11.0      shiny_1.14.0         GenomicRanges_1.65.4`\
-`#> [4] Seqinfo_1.3.2        IRanges_2.47.5       S4Vectors_0.51.10   `\
-`#> [7] BiocGenerics_0.59.13 generics_0.1.4       BiocStyle_2.41.0    `\
+`#> [1] igvShiny_1.11.0      shiny_1.14.0         GenomicRanges_1.66.0`\
+`#> [4] Seqinfo_1.4.0        IRanges_2.48.0       S4Vectors_0.52.0    `\
+`#> [7] BiocGenerics_0.60.0  generics_0.1.4       BiocStyle_2.42.0    `\
 `#> `\
 `#> loaded via a namespace (and not attached):`\
 `#>  [1] sass_0.4.10             futile.options_1.0.1    stringi_1.8.9          `\
